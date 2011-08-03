@@ -3,7 +3,7 @@ package org.jasig.portlet.notice;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceData {
+public class NotificationData {
 	
 	private String serviceKey;
     private List<String> headerRow = new ArrayList<String>();

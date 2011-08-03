@@ -11,7 +11,7 @@
 
 	<context:annotation-config/>
     
-    <bean id="dataController" class="uk.ac.manchester.portlet.todo.mvc.controller.DataController">
+    <bean id="dataController" class="org.jasig.portlet.notice.mvc.controller.DataController">
     	<property name="services">
             <map>
 				<entry key="remedy" value-ref="remedyToDoAggregator"/>

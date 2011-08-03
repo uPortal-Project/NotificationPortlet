@@ -25,12 +25,12 @@
      +-->
      <bean id="financeReceiptToDoService" class="uk.ac.manchester.service.servicerequests.adaptor.ReceiptServiceRequestService">
 		<property name="financeService" ref="financeAppService"/>
-		<property name="cache" ref="todoCache"/>
+		<property name="cache" ref="notificationCache"/>
     </bean>
      
     <bean id="financeToDoService" class="uk.ac.manchester.service.servicerequests.adaptor.ApprovalsServiceRequestService">
 		<property name="financeService" ref="financeAppService"/>
-		<property name="cache" ref="todoCache"/>
+		<property name="cache" ref="notificationCache"/>
     </bean>
 	
 	<bean id="remedyToDoAggregator" class="uk.ac.manchester.service.servicerequests.impl.AggregratingServiceRequestServiceImpl">
@@ -50,7 +50,7 @@
 		<constructor-arg value="${remedyService.port}"/>
 		<constructor-arg value="${remedyService.requestType}"/>
     	
-    	<property name="cache" ref="todoCache"/>
+    	<property name="cache" ref="notificationCache"/>
 		<property name="baseUrl" value="${remedyService.baseUrl}"/>
     </bean>
     
@@ -62,7 +62,7 @@
 		<constructor-arg value="${remedyGroupService.port}"/>
 		<constructor-arg value="${remedyGroupService.requestType}"/>
     	
-    	<property name="cache" ref="todoCache"/>
+    	<property name="cache" ref="notificationCache"/>
 		<property name="baseUrl" value="${remedyGroupService.baseUrl}"/>
     </bean>
 	

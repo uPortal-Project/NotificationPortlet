@@ -14,4 +14,4 @@
 
 <portlet:defineObjects/>
 
-<link rel="stylesheet" href="<c:url value="/css/todo.css"/>" type="text/css" media="screen">
+<link rel="stylesheet" href="<c:url value="/css/notification.css"/>" type="text/css" media="screen">

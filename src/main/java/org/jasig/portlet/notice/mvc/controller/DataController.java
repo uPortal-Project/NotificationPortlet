@@ -14,9 +14,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import org.jasig.portlet.notice.servicerequests.ServiceRequest;
-import org.jasig.portlet.notice.ServiceData;
-import org.jasig.portlet.notice.servicerequests.iface.ServiceRequestService;
+import org.jasig.portlet.notice.servicerequests.NotificationRequest;
+import org.jasig.portlet.notice.NotificationData;
+import org.jasig.portlet.notice.servicerequests.iface.NotificationRequestService;
 
 @Controller
 public class DataController {
@@ -34,12 +34,12 @@ public class DataController {
 		String username = userData.get("username");
 		
 		String serviceName = key;
-		ServiceRequestService service = services.get(key); 
+		NotificationRequestService service = services.get(key); 
 
-		ServiceData sd = new ServiceData();
+		NotificationData sd = new NotificationData();
 		sd.setServiceKey(serviceName);
 			
-		List<ServiceRequest> requests = service.getCurrentRequests(umanPersonID, username);
+		List<NotificationRequest> requests = service.getCurrentRequests(umanPersonID, username);
 			
 	    Map<String,String> columns = additionalInformation.get(serviceName);
 
@@ -49,7 +49,7 @@ public class DataController {
 	        sd.addColumnToHeaderRow(theTitle); // setting the title TH
 	    }
 		    
-	    for(ServiceRequest r: requests) { // for each request
+	    for(NotificationRequest r: requests) { // for each request
 	    	List<String> td = new ArrayList<String>(); // add row to table
 	    	
 	    	Map<String,String> map = r.toMap();
@@ -71,8 +71,8 @@ public class DataController {
 	}
 
 	
-	private Map<String,ServiceRequestService> services;
-	public void setServices(Map<String, ServiceRequestService> services) {
+	private Map<String,NotificationRequestService> services;
+	public void setServices(Map<String, NotificationRequestService> services) {
 		this.services = services;
 	}
 	

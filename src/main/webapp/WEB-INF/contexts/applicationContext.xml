@@ -37,12 +37,12 @@
         </property>
     </bean>
     
-    <bean id="todoCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <bean id="notificationCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
         <property name="cacheManager">
             <ref local="cacheManager"/>
         </property>
         <property name="cacheName">
-            <value>todoCache</value>
+            <value>notificationCache</value>
         </property>
     </bean>
 

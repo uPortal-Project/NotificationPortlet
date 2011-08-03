@@ -28,7 +28,7 @@
         overflowToDisk="false"
         memoryStoreEvictionPolicy="LFU"/>
 
-    <cache name="todoCache"
+    <cache name="notificationCache"
         maxElementsInMemory="100"
         eternal="false"
         timeToLiveSeconds="900"

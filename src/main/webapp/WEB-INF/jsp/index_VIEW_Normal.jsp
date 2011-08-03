@@ -4,12 +4,12 @@
 <script type="text/javascript" src="${resourceURL}"></script>
 
 <script type="text/javascript">
-    	var todoPortlet = todoPortlet || {};
-    	todoPortlet.jQuery = jQuery.noConflict(true);
+    	var notificationPortlet = notificationPortlet || {};
+    	notificationPortlet.jQuery = jQuery.noConflict(true);
 
-    	todoPortlet.jQuery(function(){
+    	notificationPortlet.jQuery(function(){
 
-       		var $ = todoPortlet.jQuery;
+       		var $ = notificationPortlet.jQuery;
 
 			$(document).ready(function(){
 
@@ -39,7 +39,7 @@
    		});
 </script>
 
-<div class="fl-widget portlet uk-ac-manchester-portlet-todo" role="section">
+<div class="fl-widget portlet org-jasig-portlet-notice" role="section">
 
 	<div class="fl-widget-content portlet-body" role="main">
 

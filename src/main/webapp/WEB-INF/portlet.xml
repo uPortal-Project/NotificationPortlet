@@ -7,12 +7,12 @@
 	version="1.0">
 
     <portlet>
-        <portlet-name>todo</portlet-name>
+        <portlet-name>Notifications</portlet-name>
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <init-param>
             <name>contextConfigLocation</name>
             <value>
-            	/WEB-INF/contexts/portlet/ToDo.xml
+            	/WEB-INF/contexts/portlet/notification.xml
             </value>
         </init-param>
         <supports>
@@ -20,7 +20,7 @@
             <portlet-mode>view</portlet-mode>
         </supports>
         <portlet-info>
-            <title>ToDo list</title>
+            <title>Notifications list</title>
         </portlet-info>
     </portlet>
     <user-attribute>
