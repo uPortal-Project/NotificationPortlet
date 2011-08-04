@@ -33,22 +33,25 @@ public class NotificationController {
 	@RequestMapping
 	protected ModelAndView handleRenderRequestInternal(RenderRequest request,
 			RenderResponse response) throws Exception {
-
+	    HashMap<String, Object> model = new HashMap<String, Object>();
 		log.debug("In handleRenderRequestInternal");
 		
 		Map userInfo = (Map) request.getAttribute(PortletRequest.USER_INFO);
 		String umanPersonID = (String)userInfo.get("umanPersonID");
 		
-		Map<String, String> myUserInfo = new HashMap<String, String>();
+        Map<String, String> myUserInfo = new HashMap<String, String>();
 		myUserInfo.put("umanPersonID", umanPersonID);
 		myUserInfo.put("username", request.getRemoteUser());
 		PortletSession session = request.getPortletSession(true);
+		
+		// added to the session for the data controller
 		session.setAttribute("myUserInfo",myUserInfo,PortletSession.APPLICATION_SCOPE);
-		log.debug("Added userInfo to sesssion (e.g. "+(String) myUserInfo.get("username")+")");
+		log.debug("Added userInfo to sesssion (e.g. "+(String) model.get("username")+")");  // debug part of original manchester code
 		
 		List<NotificationData> serviceDataList = new ArrayList<NotificationData>();
 		
-		for(Map.Entry<String,NotificationRequestService> entry : services.entrySet()) {
+		// removed by landis, the services don't currently work so its always a null pointer ref.
+		/*for(Map.Entry<String,NotificationRequestService> entry : services.entrySet()) {
 			String serviceName = entry.getKey();
 			NotificationRequestService service = entry.getValue(); 
 
@@ -56,10 +59,12 @@ public class NotificationController {
 			sd.setServiceKey(serviceName);
 			
 		    serviceDataList.add(sd);
-		}
+		}*/
+		
+		model.put("serviceDataList", serviceDataList); //originally this was the only thing being passed to the modelAndView under ''serviceDataList''
 		
 		
-		return new ModelAndView("/index_VIEW_Normal", "serviceDataList", serviceDataList);
+		return new ModelAndView("/index_VIEW_Normal", model);
 	}
 
 	private Map<String,NotificationRequestService> services;

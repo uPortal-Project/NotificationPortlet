@@ -38,7 +38,9 @@
 			});	
    		});
 </script>
+I am sample text put here to show that everything in this JSP file is rendering properly.
 
+To be the new what is new or tasks portlet.
 <div class="fl-widget portlet org-jasig-portlet-notice" role="section">
 
 	<div class="fl-widget-content portlet-body" role="main">
