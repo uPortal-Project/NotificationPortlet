@@ -67,7 +67,7 @@ public class DataController {
 		model.put("serviceData", sd);
 		
 		model.put("namespace", request.getParameter("namespace"));
-		return "/data_AJAX";
+		return "/notAuthorized";
 	}
 
 	

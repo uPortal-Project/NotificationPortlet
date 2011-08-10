@@ -64,7 +64,8 @@ public class NotificationController {
 		model.put("serviceDataList", serviceDataList); //originally this was the only thing being passed to the modelAndView under ''serviceDataList''
 		
 		
-		return new ModelAndView("/index_VIEW_Normal", model);
+		//return new ModelAndView("/index_VIEW_Normal", model);
+		return new ModelAndView("/test", model);
 	}
 
 	private Map<String,NotificationRequestService> services;
