@@ -1,13 +1,13 @@
-package org.jasig.portlet.notice.servicerequests.iface;
+package org.jasig.portlet.notice.serviceresponse.iface;
 
 import java.util.List;
 
 import org.jasig.portlet.notice.source.NotificationIdentifier;
-import org.jasig.portlet.notice.servicerequests.NotificationRequest;
-import org.jasig.portlet.notice.servicerequests.iface.exceptions.NotificationRequestServiceException;
+import org.jasig.portlet.notice.serviceresponse.NotificationResponse;
+import org.jasig.portlet.notice.serviceresponse.iface.exceptions.NotificationResponseServiceException;
 
 
-public interface NotificationRequestService {
+public interface NotificationResponseService {
 
     /**
      * Retrieves a single ServiceRequest by uid for the requester from the configured DAO
@@ -18,7 +18,7 @@ public interface NotificationRequestService {
      * @return
      * @throws ServiceRequestServiceException
      */
-    public NotificationRequest getRequest(String partyNumber, String username, NotificationIdentifier sourceIdentifier) throws NotificationRequestServiceException;
+    public NotificationResponse getResponse(String partyNumber, String username, NotificationIdentifier sourceIdentifier) throws NotificationResponseServiceException;
     
     /**
      * Retrieves current service requests for requester
@@ -27,7 +27,7 @@ public interface NotificationRequestService {
      * @param username
      * @return List of service requests or an empty list
      */
-    public List<NotificationRequest> getCurrentRequests(String partyNumber, String username);
+    public List<NotificationResponse> getCurrentResponses(String partyNumber, String username);
     
     /**
      * Retrieves all available service requests for requester
@@ -36,7 +36,7 @@ public interface NotificationRequestService {
      * @param username
      * @return List of service requests or an empty list
      */
-    public List<NotificationRequest> getAllRequests(String partyNumber, String username);
+    public List<NotificationResponse> getAllResponses(String partyNumber, String username);
     
         
 }

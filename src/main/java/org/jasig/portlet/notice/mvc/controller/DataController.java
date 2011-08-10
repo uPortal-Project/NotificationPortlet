@@ -14,9 +14,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import org.jasig.portlet.notice.servicerequests.NotificationRequest;
 import org.jasig.portlet.notice.NotificationData;
-import org.jasig.portlet.notice.servicerequests.iface.NotificationRequestService;
+import org.jasig.portlet.notice.serviceresponse.NotificationResponse;
+import org.jasig.portlet.notice.serviceresponse.iface.NotificationResponseService;
 
 @Controller
 public class DataController {
@@ -34,12 +34,12 @@ public class DataController {
 		String username = userData.get("username");
 		
 		String serviceName = key;
-		NotificationRequestService service = services.get(key); 
+		NotificationResponseService service = services.get(key); 
 
 		NotificationData sd = new NotificationData();
 		sd.setServiceKey(serviceName);
 			
-		List<NotificationRequest> requests = service.getCurrentRequests(umanPersonID, username);
+		List<NotificationResponse> responses = service.getCurrentResponses(umanPersonID, username);
 			
 	    Map<String,String> columns = additionalInformation.get(serviceName);
 
@@ -49,10 +49,10 @@ public class DataController {
 	        sd.addColumnToHeaderRow(theTitle); // setting the title TH
 	    }
 		    
-	    for(NotificationRequest r: requests) { // for each request
-	    	List<String> td = new ArrayList<String>(); // add row to table
+	    for(NotificationResponse r: responses) { // for each request
+	    	List<Object> td = new ArrayList<Object>(); // add row to table
 	    	
-	    	Map<String,String> map = r.toMap();
+	    	Map<String,Object> map = r.toMap();
     		
 	    	for(Map.Entry<String, String> e : columns.entrySet()) { // move horizontally across the table columns
 	    		String theProperty = e.getKey();
@@ -67,12 +67,12 @@ public class DataController {
 		model.put("serviceData", sd);
 		
 		model.put("namespace", request.getParameter("namespace"));
-		return "/notAuthorized";
+		return "/data_AJAX";
 	}
 
 	
-	private Map<String,NotificationRequestService> services;
-	public void setServices(Map<String, NotificationRequestService> services) {
+	private Map<String,NotificationResponseService> services;
+	public void setServices(Map<String, NotificationResponseService> services) {
 		this.services = services;
 	}
 	

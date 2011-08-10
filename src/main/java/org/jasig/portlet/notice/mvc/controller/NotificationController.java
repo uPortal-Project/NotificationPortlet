@@ -13,7 +13,7 @@ import javax.portlet.RenderResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.NotificationData;
-import org.jasig.portlet.notice.servicerequests.iface.NotificationRequestService;
+import org.jasig.portlet.notice.serviceresponse.iface.NotificationResponseService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.ModelAndView;
@@ -68,8 +68,8 @@ public class NotificationController {
 		return new ModelAndView("/test", model);
 	}
 
-	private Map<String,NotificationRequestService> services;
-	public void setServices(Map<String, NotificationRequestService> services) {
+	private Map<String,NotificationResponseService> services;
+	public void setServices(Map<String, NotificationResponseService> services) {
 		this.services = services;
 	}
 	

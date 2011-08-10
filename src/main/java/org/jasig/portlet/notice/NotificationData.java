@@ -7,7 +7,7 @@ public class NotificationData {
 	
 	private String serviceKey;
     private List<String> headerRow = new ArrayList<String>();
-    private List<List<String>> dataRows  = new ArrayList<List<String>>();
+    private List<List<Object>> dataRows  = new ArrayList<List<Object>>();
     
     
 	/**
@@ -43,16 +43,16 @@ public class NotificationData {
 	/**
 	 * @return the dataRows
 	 */
-	public List<List<String>> getDataRows() {
+	public List<List<Object>> getDataRows() {
 		return dataRows;
 	}
 	/**
 	 * @param dataRows the dataRows to set
 	 */
-	public void setDataRows(List<List<String>> dataRows) {
+	public void setDataRows(List<List<Object>> dataRows) {
 		this.dataRows = dataRows;
 	}
-	public void addDataRow(List<String> dataRow) {
+	public void addDataRow(List<Object> dataRow) {
 		this.dataRows.add(dataRow);
 	}
     
