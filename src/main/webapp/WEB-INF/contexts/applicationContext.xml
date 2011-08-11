@@ -55,6 +55,8 @@
 		<property name="prefix" value="/WEB-INF/jsp/"/>
 		<property name="suffix" value=".jsp"/>
 	</bean>
+	
+	<bean class="org.jasig.web.service.AjaxPortletSupportService"/>
 
 	<!-- Abstract Default Exception Handler Bean -->
 	<bean id="defaultExceptionHandlerTemplate"
@@ -68,4 +70,13 @@
 			</props>
 		</property>
 	</bean>
+	
+	    <!-- Default Demo source -->
+    <bean id="notificationDemoService" class="org.jasig.portlet.notice.service.NotificationDemoService">
+    	<property name="filename" value="DemoNoticationResponse.dat"/>
+    </bean>
+ 
+    <bean id="notificationDemo2Service" class="org.jasig.portlet.notice.service.NotificationDemo2Service">
+    	<property name="filename" value="Demo2NoticationResponse.dat"/>
+    </bean>
 </beans>

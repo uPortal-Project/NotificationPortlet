@@ -33,14 +33,14 @@
 		<property name="cache" ref="notificationCache"/>
     </bean>
 	
-	<bean id="remedyToDoAggregator" class="uk.ac.manchester.service.servicerequests.impl.AggregratingServiceRequestServiceImpl">
+	<!-- <bean id="remedyToDoAggregator" class="uk.ac.manchester.service.servicerequests.impl.AggregratingServiceRequestServiceImpl">
 		<property name="services">
 			<map>
 				<entry key="remedy" value-ref="remedyToDoService"/>
 				<entry key="remedyGroup" value-ref="remedyGroupToDoService"/>
 			</map>
 		</property>
-    </bean>	
+    </bean>
 	
 	<bean id="remedyToDoService" class="uk.ac.manchester.service.servicerequests.adaptor.BmcServiceRequestService">
     	<constructor-arg value="${remedyService.username}"/>
@@ -64,6 +64,6 @@
     	
     	<property name="cache" ref="notificationCache"/>
 		<property name="baseUrl" value="${remedyGroupService.baseUrl}"/>
-    </bean>
+    </bean>	 -->
 	
 </beans>

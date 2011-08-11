@@ -1,8 +1,13 @@
 package org.jasig.portlet.notice.service;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +22,26 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
 public class NotificationDemoService implements NotificationResponseService{
+
+	private String demoFilename = "DemoNoticationResponse.dat";
+	
+	/**
+	 * Returns the name of the service.
+	 * @return String.
+	 */
+	public String getName()
+	{
+		return "DemoService";
+	}
+
+	/**
+	 * Set the filename of the demo data.
+	 * @param filename is the demo filename.
+	 */
+	public void setFilename(String filename)
+	{
+		demoFilename = filename;
+	}
 
     /**
      * Retrieves a single ServiceRequest by uid for the requester from the configured DAO
@@ -63,18 +88,16 @@ public class NotificationDemoService implements NotificationResponseService{
      */
     public List<NotificationResponse> getAllResponses(String partyNumber, String username)
     {
-    	NotificationResponse response = readFromFile(username);
+    	List<NotificationResponse> list = new ArrayList<NotificationResponse>();
+  	
+    	NotificationResponse response = readFromFile(demoFilename);
     	
     	if(response != null)
-    	{
-        	List<NotificationResponse> list = new ArrayList<NotificationResponse>();
-        	list.add(response);
-        	return list;
+    	{   	
+        	list.add(response);	
     	}
-    	else
-    	{
-    		return null;
-    	}
+    	
+    	return list;
     }
 
 	/**
@@ -84,7 +107,7 @@ public class NotificationDemoService implements NotificationResponseService{
 	 * @param filename is the path and name of the file to be written.
 	 * @return boolean, false if the data write fails.
 	 */
-	public static boolean writeToFile(NotificationResponse request, String filename)
+	public boolean writeToFile(NotificationResponse request, String filename)
 	{
 		try
 		{
@@ -114,16 +137,16 @@ public class NotificationDemoService implements NotificationResponseService{
 	 * @param filename is the path and name of the file to be read.
 	 * @return NotificationRequest, null if the de-serialization fails.
 	 */
-	public static NotificationResponse readFromFile(String filename)
+	public NotificationResponse readFromFile(String filename)
 	{
 		try
 		{
-			FileInputStream fis = new FileInputStream(filename);
+			InputStream fis = getClass().getClassLoader().getResourceAsStream(demoFilename);
 			int available = fis.available();
 			byte[] bytes = new byte[available];
 			fis.read(bytes);
 			fis.close();
-	
+
 			return NotificationResponse.fromJson(new String(bytes));
 		}
 		catch(JSONException je)

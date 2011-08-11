@@ -9,6 +9,12 @@ import org.jasig.portlet.notice.serviceresponse.iface.exceptions.NotificationRes
 
 public interface NotificationResponseService {
 
+	/**
+	 * Returns the name of the service.
+	 * @return String.
+	 */
+	public String getName();
+
     /**
      * Retrieves a single ServiceRequest by uid for the requester from the configured DAO
      * 

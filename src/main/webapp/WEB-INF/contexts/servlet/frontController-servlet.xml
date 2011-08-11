@@ -12,16 +12,16 @@
 	<context:annotation-config/>
     
     <bean id="dataController" class="org.jasig.portlet.notice.mvc.controller.DataController">
-    	<property name="services">
-            <map>
-				<entry key="remedy" value-ref="remedyToDoAggregator"/>
+    	<!-- <property name="services">
+            <map> -->
+				<!-- <entry key="remedy" value-ref="remedyToDoAggregator"/>
                 <entry key="finance"><ref bean="financeToDoService"/></entry>
-                <entry key="financeReceipt" value-ref="financeReceiptToDoService"/>
-			</map>
-        </property>
+                <entry key="financeReceipt" value-ref="financeReceiptToDoService"/> -->
+			<!-- </map>
+        </property> -->
         <property name="additionalInformation">
             <map>
-                <entry key="finance">
+                <!-- <entry key="finance">
                 	<map>
                 		<entry key="referenceIdentifier" value="Ref"/>
 						<entry key="submissionDate" value="Date"/>
@@ -55,8 +55,8 @@
                 		<entry key="assignedTo" value="Assigned to"/>
                 		<entry key="status" value="Status"/>
                 	</map>
-                </entry>
-			</map>
+                </entry>-->
+			</map> 
         </property>
     </bean>
     

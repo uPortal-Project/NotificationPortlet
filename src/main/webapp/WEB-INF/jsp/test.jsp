@@ -21,7 +21,7 @@
     ${n}.jQuery = jQuery.noConflict(true);
     ${n}.jQuery(document).ready(function () { 
         ${n}.jQuery("#${n}container").notifications({ 
-        url: '/data/dummy.json'
+        url: '<c:url value="/data"/>'
         });
     });
 </script>

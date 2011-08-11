@@ -34,6 +34,16 @@ public class NotificationResponse implements Serializable {
 	 *
 	 * @return String, null if the data is invalid.
 	 */
+	public String toJson()
+	{
+		return toJson(this);
+	}
+
+	/**
+	 * Write the instance data to a JSON data String.
+	 *
+	 * @return String, null if the data is invalid.
+	 */
 	public static String toJson(NotificationResponse request)
 	{
 		try
@@ -90,6 +100,17 @@ public class NotificationResponse implements Serializable {
 		return map;
 	}
 
+	/**
+	 * Extract the category and error data from the given response and
+	 * add it to this instance's data.
+	 * @param response the source of data
+	 */
+	public void addResponseData(NotificationResponse response)
+	{
+    	addCategories(response.getCategories());
+    	addErrors(response.getErrors());
+
+	}
 	public List<NotificationCategory> getCategories() {
 		return categories;
 	}
@@ -98,12 +119,49 @@ public class NotificationResponse implements Serializable {
 		this.categories = categories;
 	}
 
+	/** Insert the given categories and their entries into the any existing
+	 * categories of the same title. If a category doesn't match an existing
+	 * one, add it to the list.
+	 * @param newCategories collection of new categories and their entries.
+	 */
+	public void addCategories(List<NotificationCategory> newCategories) {
+		
+		//check if an existing category (by the same title) already exists
+		//if so, add the new categories entries to the existing category
+		for(NotificationCategory newCategory : newCategories) {
+			boolean found = false;
+
+			for(NotificationCategory myCategory : categories) {
+				if(myCategory.getTitle().toLowerCase().equals(newCategory.getTitle().toLowerCase())){
+					found = true;
+					myCategory.addEntries(newCategory.getEntries());
+				}
+			}
+			
+			if(!found)
+				categories.add(newCategory);
+		}
+	}
+
+	public void clearCategories() {
+		categories.clear();
+	}
+
 	public List<NotificationError> getErrors() {
 		return errors;
 	}
 
 	public void setErrors(List<NotificationError> errors) {
 		this.errors = errors;
+	}
+
+	public void addErrors(List<NotificationError> newErrors) {
+		for(NotificationError error : newErrors)
+			errors.add(error);
+	}
+
+	public void clearErrors() {
+		errors.clear();
 	}
 
 	public String toString() {

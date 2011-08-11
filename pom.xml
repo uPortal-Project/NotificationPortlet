@@ -143,6 +143,11 @@
 			</exclusions>
 		</dependency>
 
+        <dependency>
+            <groupId>org.jasig</groupId>
+            <artifactId>AjaxPortletSupport</artifactId>
+            <version>1.0.9</version> 
+        </dependency>
 		
         <!-- ===== Runtime Dependencies ================================== -->
 

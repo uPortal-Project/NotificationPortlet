@@ -47,6 +47,16 @@ public class NotificationCategory implements Serializable {
 		this.entries = entries;
 	}	                            
 
+	public void addEntries(List<NotificationEntry> newEntries) {
+		for(NotificationEntry entry : newEntries)
+			entries.add(entry);
+	}	                            
+
+	public void clearEntries() {
+		entries.size();
+	}	                            
+
+
 	public NotificationIdentifier getSource() {
 		return source;
 	}
