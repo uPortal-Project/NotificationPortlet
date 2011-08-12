@@ -10,34 +10,63 @@
     var defaults = {
       trigger : '.notification-trigger',
       content : '.notification-content',
+      symbol  : '.trigger-symbol',
       speed   : 'medium'
     };
 
+    // Merge options object with defaults
     var opts = $.extend(defaults, options);
     
-    var allTriggers = this.children(opts.trigger);
-    var allContent  = this.children(opts.content);
+    // Cache DOM elements
+    var allTriggers = this.children(opts.trigger),
+        allContent  = this.children(opts.content);
     
-    allTriggers
-      .click(function () {
-        var thisTrigger = $(this);
-        var thisContent = thisTrigger.next(opts.content);
-        var isHidden    = thisContent.is(":hidden");      
+    // Begin method chain on the triggers
+    allTriggers.
+    
+      // Remove trigger symbol if there's no content
+      each(function () {
+        var trigger = $(this);
+        
+        if ( noContent(trigger) ) {
+          trigger.find(opts.symbol).css("background", "none");
+        }
+      })
       
+      // Accordion click event
+      .click(function () {
+        var trigger  = $(this),
+            content  = trigger.next(opts.content),
+            isHidden = content.is(":hidden");
+              
         allTriggers.removeClass("active");
         allContent.stop(true,true).slideUp(opts.speed);
       
         if ( isHidden ) {
-          thisContent.stop(true,true).slideDown(opts.speed);
-          thisTrigger.addClass("active");
+          content.stop(true,true).slideDown(opts.speed);
+          trigger.addClass("active");
         }
-
+        
         return false;
       })
+      
+      // Add class 'hover' (because :hover is not widely supported
+      // on non-anchor elements)
       .hover(
-        function () { $(this).addClass("hover");    },
-        function () { $(this).removeClass("hover"); }
+        function () {
+          var trigger = $(this);
+          if ( !noContent(trigger) ) {
+            trigger.addClass("hover");
+          }
+        },
+        function () {
+          $(this).removeClass("hover");
+        }
       );
+      
+      function noContent(trigger) {
+        return trigger.next(opts.content).length < 1;
+      }
     
     return this;
   }

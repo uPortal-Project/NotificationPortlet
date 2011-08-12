@@ -1,109 +1,95 @@
-.container {
-  padding-top: 80px;
-  background: #fff;
-}
-
-.up-portlet-titlebar h2 {
-  text-indent: -5000px;
-}
-
-.up-portlet-wrapper {
-  width: 400px;
-  margin: 0 auto;
-}
-
-.notification-loading {
+.up .notification-loading {
   padding: 40px;
   margin: 40px 0;
   background: url("../images/loading.gif") no-repeat 50% 50%;
 }
-
-.notification-portlet-wrapper {
+.up .notification-portlet-wrapper {
   overflow: auto;
 }
-.notification-portlet-wrapper .notification-options {
+.up .notification-portlet-wrapper .notification-options {
   overflow: auto;
 }
-.notification-portlet-wrapper .notification-options .notification-date-filter {
+.up .notification-portlet-wrapper .notification-options .notification-date-filter {
   float: left;
 }
-.notification-portlet-wrapper .notification-options .notification-refresh {
+.up .notification-portlet-wrapper .notification-options .notification-refresh {
   float: right;
 }
-.notification-portlet-wrapper .notification-container .notification-trigger {
+.up .notification-portlet-wrapper .notification-container .notification-trigger {
   margin-bottom: 10px;
   cursor: pointer;
 }
-.notification-portlet-wrapper .notification-container .notification-trigger h3 {
-  padding-top: 0;
-}
-.notification-portlet-wrapper .notification-container .notification-content {
-  padding-bottom: 10px;
-}
-.notification-portlet-wrapper .notification-container .notification-content ul {
+.up .notification-portlet-wrapper .notification-container .notification-trigger h3 {
+  padding: 0;
   margin: 0;
 }
-.notification-portlet-wrapper .notification-detail-wrapper {
+.up .notification-portlet-wrapper .notification-container .notification-content {
+  padding-bottom: 10px;
+}
+.up .notification-portlet-wrapper .notification-container .notification-content ul {
+  margin: 0;
+}
+.up .notification-portlet-wrapper .notification-detail-wrapper {
   padding: 20px 20px;
 }
-.notification-portlet-wrapper .notification-detail-wrapper .notification-back-button {
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button {
   overflow: auto;
 }
-.notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a {
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a {
   display: block;
   float: left;
 }
-.notification-portlet-wrapper .portlet-msg-error {
+.up .notification-portlet-wrapper .portlet-msg-error {
   margin-top: 10px;
 }
 
-.notification-portlet-wrapper p {
+.up .notification-portlet-wrapper p {
   font-size: 11px;
   line-height: 18px;
 }
-.notification-portlet-wrapper .notification-trigger.hover h3, .notification-portlet-wrapper .notification-trigger.active h3 {
+.up .notification-portlet-wrapper .notification-trigger.hover h3, .up .notification-portlet-wrapper .notification-trigger.active h3 {
   color: #000 !important;
 }
-.notification-portlet-wrapper .notification-trigger h3 {
+.up .notification-portlet-wrapper .notification-trigger h3 {
   color: #444 !important;
   font-weight: normal !important;
   border: none;
 }
-.notification-portlet-wrapper .notification-content li {
+.up .notification-portlet-wrapper .notification-content li {
   list-style: none !important;
   line-height: 18px;
   font-size: 11px;
 }
-.notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a:link, .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a:visited {
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a:link, .up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a:visited {
   font-weight: normal !important;
   color: #444 !important;
 }
-.notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a:hover {
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a:hover {
   color: #000 !important;
 }
-.notification-portlet-wrapper .notification-detail-wrapper .notification-source {
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-source {
   font-family: georgia, serif;
   font-size: 10px;
   color: #888;
   font-style: italic;
   margin-top: -11px;
 }
-.notification-portlet-wrapper .notification-detail-wrapper .notification-source a {
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-source a {
   color: #888 !important;
   text-decoration: none !important;
 }
-.notification-portlet-wrapper .notification-detail-wrapper .notification-source a:hover {
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-source a:hover {
   color: #888 !important;
   text-decoration: underline !important;
 }
-.notification-portlet-wrapper .notification-detail-wrapper h3 {
+.up .notification-portlet-wrapper .notification-detail-wrapper h3 {
   margin-bottom: 3px;
 }
 
-.notification-portlet-wrapper {
+.up .notification-portlet-wrapper {
   overflow: auto;
 }
-.notification-portlet-wrapper .notification-container .notification-trigger {
+.up .notification-portlet-wrapper .notification-container .notification-trigger {
   padding: 10px;
   border: 1px solid #ccc;
   -webkit-border-radius: 6px;
@@ -113,27 +99,27 @@
   -khtml-border-radius: 6px;
   border-radius: 6px;
 }
-.notification-portlet-wrapper .notification-container .notification-trigger.active, .notification-portlet-wrapper .notification-container .notification-trigger.hover {
+.up .notification-portlet-wrapper .notification-container .notification-trigger.active, .up .notification-portlet-wrapper .notification-container .notification-trigger.hover {
   border-color: #000 !important;
 }
-.notification-portlet-wrapper .notification-container .notification-trigger.active h3 {
+.up .notification-portlet-wrapper .notification-container .notification-trigger.active h3 {
   background-image: url("../images/bullet-down.png");
 }
-.notification-portlet-wrapper .notification-container .notification-trigger h3 {
+.up .notification-portlet-wrapper .notification-container .notification-trigger .trigger-symbol {
   padding-left: 15px;
   background: url("../images/bullet-right.png") no-repeat left 50%;
 }
-.notification-portlet-wrapper .notification-container .notification-content ul {
+.up .notification-portlet-wrapper .notification-container .notification-content ul {
   margin: 0;
   padding-left: 11px;
 }
-.notification-portlet-wrapper .notification-detail-wrapper {
+.up .notification-portlet-wrapper .notification-detail-wrapper {
   padding: 20px 20px;
 }
-.notification-portlet-wrapper .notification-detail-wrapper .notification-back-button {
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button {
   overflow: auto;
 }
-.notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a {
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a {
   padding: 10px;
   padding-left: 25px;
   border: 1px solid #ccc;
@@ -147,7 +133,18 @@
   border-radius: 6px;
   background: url("../images/bullet-left.png") no-repeat 10px 50%;
 }
-.notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a:hover {
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button a:hover {
   border-color: #000 !important;
   text-decoration: none !important;
+}
+.up .notification-portlet-wrapper .notification-error-container .portlet-msg-error {
+  overflow: auto;
+}
+.up .notification-portlet-wrapper .notification-error-container .portlet-msg-error .remove {
+  display: block;
+  float: right;
+  background: url("../images/cross.png") no-repeat top left;
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
 }

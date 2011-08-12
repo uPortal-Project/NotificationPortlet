@@ -74,14 +74,6 @@ public class NotificationController {
 		
 		return new ModelAndView("/test", model);
 	}
-	
-	@RequestMapping(params="action=loadData")
-	public void loadData(ActionRequest request, ActionResponse response) throws Exception
-	{
-	    System.out.println("LAN- this especially happened");
-	    Map<String, Object> model = new HashMap<String, Object>();
-	    ajaxPortletSupportService.redirectAjaxResponse("data/data", model, request, response);
-	}
 
 	private List<NotificationResponseService> notificationServices;
     @Autowired

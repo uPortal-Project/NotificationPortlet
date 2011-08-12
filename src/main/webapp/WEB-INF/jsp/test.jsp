@@ -51,7 +51,7 @@
     </div>
 
     <!-- errors -->
-		<div class="portlet-msg-error" style="display: none;"></div>  
+		<div class="notification-error-container" style="display: none;"></div>  
 
 	</div>
 </div>

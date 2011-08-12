@@ -20,16 +20,16 @@
     var url = opts.url;
 
     // Cache existing DOM elements  
-    var portlet         = this.find(".notification-portlet-wrapper");
-    var links           = this.find(".notification-portlet-wrapper a");
-    var errorNotice     = this.find(".portlet-msg-error");
-    var loading         = this.find(".notification-loading");
-    var notifications   = this.find(".notification-container");
-    var detailView      = this.find(".notification-detail-wrapper");
-    var detailContainer = this.find(".notification-detail-container");
-    var backButton      = this.find(".notification-back-button a");
-    var refreshButton   = this.find(".notification-refresh a");
-    
+    var portlet         = this.find(".notification-portlet-wrapper"),
+        links           = this.find(".notification-portlet-wrapper a"),
+        errorContainer  = this.find(".notification-error-container"),
+        loading         = this.find(".notification-loading"),
+        notifications   = this.find(".notification-container"),
+        detailView      = this.find(".notification-detail-wrapper"),
+        detailContainer = this.find(".notification-detail-container"),
+        backButton      = this.find(".notification-back-button a"),
+        refreshButton   = this.find(".notification-refresh a")
+        
     // Notification gets cached in the AJAX callback
     // but is created here for scope
     var notification;
@@ -58,6 +58,9 @@
         bindEvent.viewDetail();
         bindEvent.goBack();
         bindEvent.refresh();
+        
+        // errors
+        errorHandling(data);
       });
 
       // TODO: Better error message when AJAX fails
@@ -74,22 +77,26 @@
       var html = '\
         {% _.each(categories, function(category) { %} \
           <div class="notification-trigger"> \
-            <h3 class="portlet-section-header" role="header"> \
+            <h3 class="portlet-section-header trigger-symbol" role="header"> \
               {{ category.title }} ({{ category.entries.length }}) \
             </h3> \
           </div> \
-          <div class="notification-content" style="display: none;"> \
-            <ul class="notifications"> \
-              {% _.each(category.entries, function(entry) { %} \
-                <li> \
-                  <a href="{{ entry.link }}" \
-                  data-detail="{{ entry.body }}" \
-                  data-title="{{ entry.title }}" \
-                  data-source="{{ category.source.title }}">{{ entry.title }}</a> \
-                </li> \
-              {% }); %} \
-            </ul> \
-          </div> \
+          {% if (category.entries.length < 1) { %} \
+            <!-- no notifications! --> \
+          {% } else { %} \
+            <div class="notification-content" style="display: none;"> \
+              <ul class="notifications"> \
+                {% _.each(category.entries, function(entry) { %} \
+                  <li> \
+                    <a href="{{ entry.link }}" \
+                    data-body="{{ entry.body }}" \
+                    data-title="{{ entry.title }}" \
+                    data-source="{{ category.source.title }}">{{ entry.title }}</a> \
+                  </li> \
+                {% }); %} \
+              </ul> \
+            </div> \
+          {% } %} \
         {% }); %} \
       ';
 
@@ -113,7 +120,7 @@
           // Notification detail is retrieved from 'data-' attributes
           // and stored in a notification object
           var notification = {
-            detail : $(this).data("detail"),
+            body   : $(this).data("body"),
             title  : $(this).data("title"),
             source : $(this).data("source"),
             link   : $(this).attr("href")
@@ -121,7 +128,7 @@
 
           var html = '\
             <h3><a href="{{ link }}">{{ title }}</a></h3> \
-            <p>{{ detail }}</p> \
+            <p>{{ body }}</p> \
             <p class="notification-source"> \
               Source: <a href="{{ link }}">{{ source }}</a> \
             </p> \
@@ -170,10 +177,11 @@
           // Unbind click events
           links.unbind("click");
 
-          // Clear out notifications div
+          // Clear out notifications and errors
           notifications.html(" ");
+          errorContainer.html(" ");
 
-          // Get new set of data
+          // Refresh
           init();
 
           return false;
@@ -181,6 +189,27 @@
       }
     }
     
+    // Broken feeds
+    function errorHandling(data) {
+      if ( data.errors ) {
+        var html = '\
+          {% _.each(errors, function(error) { %} \
+            <div class="portlet-msg-error"> \
+              {{ error.source.title }}: {{ error.error }} \
+              <a href="#" class="remove" title="Hide"></a> \
+            </div> \
+          {% }); %} \
+        ';
+        var compile = _.template(html, data);
+        
+        errorContainer.show().append(compile);
+        errorContainer.find(".remove").click(function () {
+          $(this).parent().fadeOut("fast");
+          return false;
+        });
+      }
+    }
+        
     init();
   }
   

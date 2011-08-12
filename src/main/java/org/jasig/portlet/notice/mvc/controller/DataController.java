@@ -42,7 +42,6 @@ public class DataController {
 	public void getData( HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    // RequestParam("key") String key, HttpServletRequest request, ModelMap model
 		log.debug("getData");
-		System.out.println("This happened - LAN2");
 		
 	        //test code to be moved to DataController when it is working
 	        NotificationResponse masterResponse = new NotificationResponse();
@@ -67,7 +66,6 @@ public class DataController {
 	        out.flush();
 	        out.close();
 		
-		System.out.println("Hey - LAN - That worked");
 		
 		
 		
