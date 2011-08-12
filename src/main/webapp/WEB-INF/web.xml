@@ -8,10 +8,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>
-        		/WEB-INF/contexts/applicationContext.xml
-                <!-- other stuff was here for service context.  Removed by landis, may need to be readded for manchester integration. -->
-        </param-value>
+        <param-value>/WEB-INF/contexts/applicationContext.xml</param-value>
     </context-param>
     <context-param>
         <param-name>log4jConfigLocation</param-name>
@@ -42,15 +39,11 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>
-            	/WEB-INF/contexts/servlet/frontController-servlet.xml
-            </param-value>
+            <param-value>/WEB-INF/contexts/servlet/frontController-servlet.xml</param-value>
         </init-param>
         <load-on-startup>3</load-on-startup>
     </servlet>
-    
-    <!-- [INSERT JSPC FRAGMENT HERE] -->
-    
+
     <servlet-mapping>
         <servlet-name>ViewRendererServlet</servlet-name>
         <url-pattern>/WEB-INF/servlet/view</url-pattern>
