@@ -11,9 +11,7 @@
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <init-param>
             <name>contextConfigLocation</name>
-            <value>
-            	/WEB-INF/contexts/portlet/notification.xml
-            </value>
+            <value>/WEB-INF/contexts/portlet/notification.xml</value>
         </init-param>
         <supports>
             <mime-type>text/html</mime-type>
@@ -23,8 +21,10 @@
             <title>Notifications list</title>
         </portlet-info>
     </portlet>
+
     <user-attribute>
-         <description>umanPersonID</description>
-         <name>umanPersonID</name>
-    </user-attribute>        	 
+        <description>Username attribute name for uPortal user</description>
+        <name>user.login.id</name>
+    </user-attribute>
+
 </portlet-app>
