@@ -2,17 +2,11 @@
  "errors":  [
     {
    "error": "Connection Timeout",
-   "source":    {
-    "identifier": "4321",
-    "title": "Housing"
-   }
+   "source": "Demo Service"
   },
     {
    "error": "Invalid Data",
-   "source":    {
-    "identifier": "8765",
-    "title": "Season Tickets"
-   }
+   "source": "Demo Service"
   }
  ],
  "categories":  [
@@ -47,7 +41,8 @@
       "year": 111
      },
      "summary": "You were issued a ticket for not registering your bike",
-     "title": "Bike License Ticket Was Issued"
+     "title": "Bike License Ticket Was Issued",
+     "source": "Demo Service"
     },
         {
      "body": "The parking ticket issued two weeks ago has not been paid. To avoid jail time, please pay the fee before the end of the week.",
@@ -78,13 +73,10 @@
       "year": 111
      },
      "summary": "The parking ticket issued two weeks ago has not been paid",
-     "title": "Past Due Parking Ticket"
+     "title": "Past Due Parking Ticket",
+     "source": "Demo Service"
     }
    ],
-   "source":    {
-    "identifier": "1234",
-    "title": "Campus Parking"
-   },
    "title": "Parking"
   },
     {
@@ -118,7 +110,8 @@
       "year": 111
      },
      "summary": "Principles of Electromagnetics is overdue",
-     "title": "Past Due Book"
+     "title": "Past Due Book",
+     "source": "Demo Service"
     },
         {
      "body": "Introduction to Basket Weaving is past due and must be returned today to avoid a late fee.",
@@ -149,7 +142,8 @@
       "year": 111
      },
      "summary": "Introduction to Basket Weaving is overdue",
-     "title": "Past Due Book"
+     "title": "Past Due Book",
+     "source": "Demo Service"
     },
         {
      "body": "You reserved Fundamentals of Marble Stacking, it is now available but you must check it out in the next three days.",
@@ -180,13 +174,10 @@
       "year": 111
      },
      "summary": "Fundamentals of Marble Stacking is now available for check out",
-     "title": "Book now available"
+     "title": "Book now available",
+     "source": "Demo Service"
     }
    ],
-   "source":    {
-    "identifier": "5678",
-    "title": "Campus Library"
-   },
    "title": "Library"
   },
     {
@@ -220,7 +211,8 @@
       "year": 111
      },
      "summary": "The Hello World assignment is due Tuesday",
-     "title": "Advanced Computer Engineering 524"
+     "title": "Advanced Computer Engineering 524",
+     "source": "Demo Service"
     },
         {
      "body": "We are coming to the end of another productive class. Please hand in your completed baskets Monday.",
@@ -251,7 +243,8 @@
       "year": 111
      },
      "summary": "All baskets must be completed and turned in next Monday",
-     "title": "Basket Weaving 303"
+     "title": "Basket Weaving 303",
+     "source": "Demo Service"
     },
         {
      "body": "You must write a 100 word summary of War and Peace. This is due on Friday.",
@@ -282,7 +275,8 @@
       "year": 111
      },
      "summary": "Summarize War And Peace for class on Friday",
-     "title": "English 101"
+     "title": "English 101",
+     "source": "Demo Service"
     },
         {
      "body": "Chapters 1 - 3 are due tomorrow. There will be a test on these chapters at the end of the week.",
@@ -313,13 +307,10 @@
       "year": 111
      },
      "summary": "Chapters 1 - 3 are due tomorrow",
-     "title": "Math 101"
+     "title": "Math 101",
+     "source": "Demo Service"
     }
    ],
-   "source":    {
-    "identifier": "901",
-    "title": "Class Assigments"
-   },
    "title": "Assignments"
   }
  ]

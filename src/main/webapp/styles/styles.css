@@ -20,8 +20,7 @@
   cursor: pointer;
 }
 .up .notification-portlet-wrapper .notification-container .notification-trigger h3 {
-  padding: 0;
-  margin: 0;
+  padding-top: 0;
 }
 .up .notification-portlet-wrapper .notification-container .notification-content {
   padding-bottom: 10px;
@@ -47,6 +46,10 @@
   font-size: 11px;
   line-height: 18px;
 }
+.up .notification-portlet-wrapper .notification-options p a.active {
+  color: #333 !important;
+  text-decoration: none !important;
+}
 .up .notification-portlet-wrapper .notification-trigger.hover h3, .up .notification-portlet-wrapper .notification-trigger.active h3 {
   color: #000 !important;
 }
@@ -54,6 +57,9 @@
   color: #444 !important;
   font-weight: normal !important;
   border: none;
+}
+.up .notification-portlet-wrapper .notification-trigger.disabled h3 {
+  color: #888 !important;
 }
 .up .notification-portlet-wrapper .notification-content li {
   list-style: none !important;

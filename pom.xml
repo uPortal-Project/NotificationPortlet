@@ -17,7 +17,7 @@
 
 	<properties>
         <resource-server.version>1.0.20</resource-server.version>
-        <filters.file>src/main/filters/notifications.properties</filters.file>
+        <filters.file>src/main/filters/NotificationsPortlet-filter.properties</filters.file>
 	</properties>
   	
 	<repositories>

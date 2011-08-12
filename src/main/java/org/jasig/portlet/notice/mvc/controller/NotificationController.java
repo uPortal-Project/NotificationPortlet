@@ -14,9 +14,8 @@ import javax.portlet.RenderResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jasig.portlet.notice.NotificationData;
-import org.jasig.portlet.notice.serviceresponse.NotificationResponse;
-import org.jasig.portlet.notice.serviceresponse.iface.NotificationResponseService;
+import org.jasig.portlet.notice.response.NotificationResponse;
+import org.jasig.portlet.notice.service.iface.INotificationService;
 import org.jasig.web.service.AjaxPortletSupportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,30 +54,6 @@ public class NotificationController {
 		session.setAttribute("myUserInfo",myUserInfo,PortletSession.APPLICATION_SCOPE);
 		log.debug("Added userInfo to sesssion (e.g. "+(String) model.get("username")+")");  // debug part of original manchester code
 		
-		List<NotificationData> serviceDataList = new ArrayList<NotificationData>();
-		
-		// removed by landis, the services don't currently work so its always a null pointer ref.
-		/*for(Map.Entry<String,NotificationRequestService> entry : services.entrySet()) {
-			String serviceName = entry.getKey();
-			NotificationRequestService service = entry.getValue(); 
-
-			NotificationData sd = new NotificationData();
-			sd.setServiceKey(serviceName);
-			
-		    serviceDataList.add(sd);
-		}*/
-
-
-		model.put("serviceDataList", serviceDataList); //originally this was the only thing being passed to the modelAndView under ''serviceDataList''
-		
-		
 		return new ModelAndView("/test", model);
-	}
-
-	private List<NotificationResponseService> notificationServices;
-    @Autowired
-    public void setNotificationService(List<NotificationResponseService> notificationServices) {
-        this.notificationServices = notificationServices;
-    }
-	
+	}	
 }

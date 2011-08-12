@@ -15,9 +15,6 @@
   };
   
   $.fn.notifications = function (opts) {
-    
-    // Store URL
-    var url = opts.url;
 
     // Cache existing DOM elements  
     var portlet         = this.find(".notification-portlet-wrapper"),
@@ -28,44 +25,51 @@
         detailView      = this.find(".notification-detail-wrapper"),
         detailContainer = this.find(".notification-detail-container"),
         backButton      = this.find(".notification-back-button a"),
-        refreshButton   = this.find(".notification-refresh a")
+        refreshButton   = this.find(".notification-refresh a"),
+        filterOptions   = this.find(".notification-options");
         
     // Notification gets cached in the AJAX callback
     // but is created here for scope
     var notification;
     
-    function init() {
+    function getNotifications(params) {    
+      $.ajax({
+        url      : opts.url,
+        type     : 'GET',
+        dataType : 'json',
+        data     : params,
+        
+        success: function (data) {
+          
+          // Build notifications
+          buildNotifications(data);
 
+          // Once notifications have been injected into the DOM
+          // we cache the notication element...
+          notification = $(".notifications a");
+
+          // ...and bind our events
+          bindEvent.accordion();
+          bindEvent.viewDetail();
+          bindEvent.goBack();
+          bindEvent.refresh();
+          bindEvent.filterOptions(data);
+
+          // Errors
+          errorHandling(data);
+        }
+      });
+      
+      // TODO: Better error message when AJAX fails
+      portlet.ajaxError(function () {
+        $(this).html(" ").text("AJAX failed. ~ THE END ~");
+      });
+      
       // Looading div is displayed by default
       // and is then hidden after the AJAX call   
       loading.ajaxStop(function () {
         $(this).hide();
         portlet.fadeIn("fast");
-      });
-
-      // Ajax call to get notification JSON
-      $.getJSON(url, function(data) {
-
-        // Build notifications
-        buildNotifications(data);
-
-        // Once notifications have been injected into the DOM
-        // we cache the notication element...
-        notification = $(".notifications a");
-
-        // ...and bind our events
-        bindEvent.accordion();
-        bindEvent.viewDetail();
-        bindEvent.goBack();
-        bindEvent.refresh();
-        
-        // errors
-        errorHandling(data);
-      });
-
-      // TODO: Better error message when AJAX fails
-      portlet.ajaxError(function () {
-        $(this).html(" ").text("AJAX failed.");
       });
     }
 
@@ -73,7 +77,7 @@
     // template method
     function buildNotifications(data) {
 
-      // HTML string parsed with underscore.js
+      // HTML string compiled with underscore.js
       var html = '\
         {% _.each(categories, function(category) { %} \
           <div class="notification-trigger"> \
@@ -91,7 +95,7 @@
                     <a href="{{ entry.link }}" \
                     data-body="{{ entry.body }}" \
                     data-title="{{ entry.title }}" \
-                    data-source="{{ category.source.title }}">{{ entry.title }}</a> \
+                    data-source="{{ entry.source }}">{{ entry.title }}</a> \
                   </li> \
                 {% }); %} \
               </ul> \
@@ -99,10 +103,10 @@
           {% } %} \
         {% }); %} \
       ';
+      var compiled = _.template(html, data);
 
       // Inject compiled markup into notifications container div
-      var compiled = _.template(html, data);
-      notifications.prepend(compiled);
+      notifications.html(" ").prepend(compiled);
     }
 
     // Bind events object helps keep event functions together 
@@ -133,7 +137,6 @@
               Source: <a href="{{ link }}">{{ source }}</a> \
             </p> \
           ';
-
           var compiled = _.template(html, notification);
 
           notifications.hide(
@@ -159,43 +162,71 @@
           return false;
         });
       },
-
-      // Refresh notifications
+      
       refresh: function () {
         refreshButton.click(function () {
-
-          // Hide detail view
-          if ( detailView.is(":visible") ) {
-            detailView.hide();
-            notifications.show();
-          }
-
-          // Show loading
-          portlet.hide();
-          loading.show();
-
-          // Unbind click events
-          links.unbind("click");
-
-          // Clear out notifications and errors
-          notifications.html(" ");
-          errorContainer.html(" ");
-
-          // Refresh
-          init();
-
-          return false;
+          refresh();
+        });
+      },
+      
+      filterOptions: function (data) {
+        var today = filterOptions.find(".today"),
+            all   = filterOptions.find(".all");
+            
+        today.click(function () {
+          filter($(this), {days: 1});
+        });
+        
+        all.click(function () {
+          filter($(this));
         });
       }
     }
     
-    // Broken feeds
-    function errorHandling(data) {
+    function filter(option, params) {      
+      if ( option.hasClass("active") ) {
+        return false;
+      } else {
+        refresh(params);
+        filterOptions.find("a").removeClass("active");
+        option.addClass("active");
+      }
+      
+      return false;
+    }
+    
+    // Refresh notifications
+    function refresh(params) {
+      // Hide detail view
+      if ( detailView.is(":visible") ) {
+        detailView.hide();
+        notifications.show();
+      }
+
+      // Show loading
+      portlet.hide();
+      loading.show();
+
+      // Unbind click events
+      links.unbind("click");
+
+      // Clear out notifications and errors
+      notifications.html(" ");
+      errorContainer.html(" ");
+
+      // Refresh
+      getNotifications(params);
+
+      return false;
+    }
+    
+    // Errors (broken feeds)
+    function errorHandling(data) {      
       if ( data.errors ) {
         var html = '\
           {% _.each(errors, function(error) { %} \
             <div class="portlet-msg-error"> \
-              {{ error.source.title }}: {{ error.error }} \
+              {{ error.source }}: {{ error.error }} \
               <a href="#" class="remove" title="Hide"></a> \
             </div> \
           {% }); %} \
@@ -210,7 +241,7 @@
       }
     }
         
-    init();
+    getNotifications();
   }
   
 })(jQuery);

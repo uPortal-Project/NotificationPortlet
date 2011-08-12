@@ -9,7 +9,6 @@
 	http://www.springmodules.org/schema/ehcache
 	http://www.springmodules.org/schema/cache/springmodules-ehcache.xsd">
 
-
 	<!-- Properties configuration -->
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" lazy-init="false">
 		<property name="locations">
@@ -69,12 +68,20 @@
 		</property>
 	</bean>
 	
-	    <!-- Default Demo source -->
-    <bean id="notificationDemoService" class="org.jasig.portlet.notice.service.NotificationDemoService">
-    	<property name="filename" value="DemoNoticationResponse.dat"/>
+  
+    <!-- Default Demo sources -->
+
+    <!-- Notification aggregation source -->
+    <bean id="cacheNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
+        <property name="embeddedServices">
+           <list>
+             <bean id="demoSource" class="org.jasig.portlet.notice.service.DemoNotificationService">
+                  <property name="filename" value="DemoNoticationResponse.dat"/>
+             </bean>
+             <bean id="demo2Source" class="org.jasig.portlet.notice.service.DemoNotificationService">
+                  <property name="filename" value="Demo2NoticationResponse.dat"/>
+             </bean>
+           </list>
+        </property>
     </bean>
- 
-    <bean id="notificationDemo2Service" class="org.jasig.portlet.notice.service.NotificationDemo2Service">
-    	<property name="filename" value="Demo2NoticationResponse.dat"/>
-    </bean>
-</beans>
+ </beans>

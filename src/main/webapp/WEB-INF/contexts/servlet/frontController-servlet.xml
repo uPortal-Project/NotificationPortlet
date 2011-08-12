@@ -12,52 +12,6 @@
 	<context:annotation-config/>
     
     <bean id="dataController" class="org.jasig.portlet.notice.mvc.controller.DataController">
-    	<!-- <property name="services">
-            <map> -->
-				<!-- <entry key="remedy" value-ref="remedyToDoAggregator"/>
-                <entry key="finance"><ref bean="financeToDoService"/></entry>
-                <entry key="financeReceipt" value-ref="financeReceiptToDoService"/> -->
-			<!-- </map>
-        </property> -->
-        <property name="additionalInformation">
-            <map>
-                <!-- <entry key="finance">
-                	<map>
-                		<entry key="referenceIdentifier" value="Ref"/>
-						<entry key="submissionDate" value="Date"/>
-						<entry key="type" value="Type"/>
-						<entry key="details" value="Description"/>
-                		<entry key="supplier" value="Supplier"/>
-					    <entry key="amount" value="Amount"/>
-                		<entry key="status" value="Status"/>
-                	</map>
-                </entry>
-                <entry key="financeReceipt">
-                	<map>
-                		<entry key="referenceIdentifier" value="Ref"/>
-						<entry key="submissionDate" value="Date"/>
-						<entry key="type" value="Type"/>
-						<entry key="details" value="Description"/>
-                		<entry key="supplier" value="Supplier"/>
-					    <entry key="buyer" value="Buyer"/>
-					    <entry key="qtyOrdered" value="Qty ordered"/>
-					    <entry key="qtyBilled" value="Qty billed"/>
-					    <entry key="qtyReceived" value="Qty recieved"/>
-					    <entry key="quantityNotReceived" value="Qty not recieved"/>
-                	</map>									
-                </entry>
-                 <entry key="remedy">
-                 	<map>
-                		<entry key="referenceIdentifier" value="Ref"/>
-						<entry key="submissionDate" value="Date"/>
-						<entry key="type" value="Type"/>
-						<entry key="details" value="Description"/>
-                		<entry key="assignedTo" value="Assigned to"/>
-                		<entry key="status" value="Status"/>
-                	</map>
-                </entry>-->
-			</map> 
-        </property>
     </bean>
     
 

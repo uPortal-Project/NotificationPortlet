@@ -33,11 +33,12 @@
 
   <div class="notification-portlet-wrapper" style="display: none;">
   
-    <!-- options menu -->
-    <div class="notification-options">
-      <p class="notification-date-filter">View: <a href="#">All</a> | <a href="#">Today</a></p>
-      <p class="notification-refresh"><a href="#">Refresh</a></p>
-    </div>
+	<!-- options menu -->
+	  <div class="notification-options">
+	    <p class="notification-date-filter">View: <a class="all active" href="#">All</a> | <a class="today" href="#">Today</a></p>
+	    <p class="notification-refresh"><a href="#">Refresh</a></p>
+	  </div>
+
   
     <!-- notifications -->
 	  <div class="notification-container"></div>

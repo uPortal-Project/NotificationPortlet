@@ -2,10 +2,8 @@
  "errors":  [
     {
    "error": "Service Not Available",
-   "source":    {
-    "identifier": "5665",
-    "title": "Campus Life"
-   }
+   "source": "Demo Service",
+   "category": "Student Services",
   }
  ],
  "categories":  [
@@ -40,13 +38,10 @@
       "year": 111
      },
      "summary": "The requested room is available",
-     "title": "Room Available"
+     "title": "Room Available",
+     "source": "Demo Service"
     }
    ],
-   "source":    {
-    "identifier": "3443",
-    "title": "Room Available"
-   },
    "title": "Student Life"
   }
  ]
