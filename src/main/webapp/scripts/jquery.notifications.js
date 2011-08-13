@@ -35,17 +35,17 @@
     function getNotifications(params) {    
       $.ajax({
         url      : opts.url,
-        type     : 'GET',
+        type     : 'POST',
         dataType : 'json',
         data     : params,
         
         success: function (data) {
           
           // Build notifications
-          buildNotifications(data);
+          buildNotifications(data.notificationResponse);
 
           // Once notifications have been injected into the DOM
-          // we cache the notication element...
+          // we cache the notification element...
           notification = $(".notifications a");
 
           // ...and bind our events
@@ -53,10 +53,10 @@
           bindEvent.viewDetail();
           bindEvent.goBack();
           bindEvent.refresh();
-          bindEvent.filterOptions(data);
+          bindEvent.filterOptions();
 
           // Errors
-          errorHandling(data);
+          errorHandling(data.notificationResponse);
         }
       });
       
@@ -169,7 +169,7 @@
         });
       },
       
-      filterOptions: function (data) {
+      filterOptions: function () {
         var today = filterOptions.find(".today"),
             all   = filterOptions.find(".all");
             

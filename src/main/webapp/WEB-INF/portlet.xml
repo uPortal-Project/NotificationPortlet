@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
-	                    http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
-	version="1.0">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+                        http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    version="1.0">
 
     <portlet>
         <portlet-name>Notifications</portlet-name>
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <init-param>
             <name>contextConfigLocation</name>
-            <value>/WEB-INF/contexts/portlet/notification.xml</value>
+            <value>/WEB-INF/context/portlet/notification.xml</value>
         </init-param>
         <supports>
             <mime-type>text/html</mime-type>

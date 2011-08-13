@@ -1,73 +1,75 @@
 package org.jasig.portlet.notice.mvc.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.portlet.ModelAndView;
 
-import org.jasig.portlet.notice.response.NotificationResponse;
-import org.jasig.portlet.notice.service.iface.INotificationService;
+import org.jasig.portlet.notice.serviceresponse.NotificationResponse;
+import org.jasig.portlet.notice.serviceresponse.iface.NotificationResponseService;
 import org.jasig.web.service.AjaxPortletSupportService;
 
 @Controller
-@RequestMapping("/data")
+@RequestMapping("VIEW")
 public class DataController {
 
-	private static Log log = LogFactory.getLog(DataController.class);
+	private Log log = LogFactory.getLog(getClass());
 	
 	@Autowired(required=true)
     private AjaxPortletSupportService ajaxPortletSupportService;
-	
-	@RequestMapping(method = RequestMethod.GET)
-	public void getData( HttpServletRequest request, HttpServletResponse response) throws Exception {
-	    // RequestParam("key") String key, HttpServletRequest request, ModelMap model
-		log.debug("getData");
-		
-		Map<String, String> userInfo = new HashMap<String, String>();
-		userInfo.put("id", "demo");
-        NotificationResponse notifications = aggregationService.getNotifications(userInfo);
-       
-        byte[] jsonData = notifications.toJson().getBytes();
-        response.setContentType("application/json;charset=UTF-8");
-        response.setContentLength(jsonData.length);
-        
-        InputStream stream = new ByteArrayInputStream(jsonData);
-	
-        OutputStream output = response.getOutputStream();
-        OutputStreamWriter out = new OutputStreamWriter(output , "UTF-8");
-        
-        IOUtils.copy(stream, output);
-        
-        out.flush();
-        out.close();
-	}
     
-	public void setAjaxPortletSupportService(AjaxPortletSupportService ajaxPortletSupportService) {
-        this.ajaxPortletSupportService = ajaxPortletSupportService;
-    }
-	
-	private INotificationService aggregationService;
-	@Autowired
-	public void setNotificationService(INotificationService aggregationService) {
-		this.aggregationService = aggregationService;
+    @Autowired(required=true)
+	private NotificationResponseService notificationService;
+
+    @RequestMapping(params="action=getNotifications")
+	public void getNotifications(ActionRequest req, ActionResponse res) throws IOException {
+
+	    // RequestParam("key") String key, HttpServletRequest request, ModelMap model
+		log.trace("In getNotifications");
+		
+        @SuppressWarnings("rawtypes")
+        Map userInfo = (Map) req.getAttribute(PortletRequest.USER_INFO);
+        String login = (String) userInfo.get("user.login.id");
+        
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("login", login);
+        params.put("username", req.getRemoteUser());
+        
+        Map<String, Object> model = new HashMap<String, Object>();
+        try {
+            
+            List<NotificationResponse> responses = notificationService.getCurrentResponses("id", "testuser");
+
+            NotificationResponse notificationResponse = new NotificationResponse();
+            for(NotificationResponse r: responses) { // for each request
+                notificationResponse.addResponseData(r);
+            }
+
+            model.put("notificationResponse", notificationResponse);
+            ajaxPortletSupportService.redirectAjaxResponse("ajax/json", model, req, res);
+
+        } catch (Exception ex) {
+            /* ********************************************************
+                In the case of an unknown error we want to send the
+                exception's message back to the portlet. This will
+                let implementers write specific instructions for
+                their service desks to follow for specific errors.
+            ******************************************************** */
+            model.put("errorMessage", ex.getMessage());
+            ajaxPortletSupportService.redirectAjaxResponse("ajax/json", model, req, res);
+            log.error( "Unanticipated Error", ex);
+        }
+
 	}
+
 }
