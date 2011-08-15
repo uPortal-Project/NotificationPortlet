@@ -35,7 +35,7 @@
   
     <!-- options menu -->
     <div class="notification-options">
-      <p class="notification-date-filter">View: <a href="#">All</a> | <a href="#">Today</a></p>
+      <p class="notification-date-filter">View: <a href="#">All</a> | <a href="#" class="active">Today</a></p>
       <p class="notification-refresh"><a href="#">Refresh</a></p>
     </div>
   

@@ -32,12 +32,40 @@
     // but is created here for scope
     var notification;
     
-    function getNotifications(params) {    
+    function getNotifications(params) {
+      
+      // Looading div is displayed by default
+      // and is then hidden after the AJAX call
+      loading.ajaxStop(function () {
+        $(this).hide();
+        portlet.fadeIn("fast");
+      });
+      
       $.ajax({
         url      : opts.url,
         type     : 'POST',
         dataType : 'json',
         data     : params,
+        
+        beforeSend: function () {
+          
+          // Hide detail view
+          if ( detailView.is(":visible") ) {
+            detailView.hide();
+            notifications.show();
+          }
+
+          // Show loading
+          portlet.hide();
+          loading.show();
+
+          // Unbind click events
+          links.unbind("click");
+
+          // Clear out notifications and errors
+          notifications.html(" ");
+          errorContainer.html(" ");
+        },
         
         success: function (data) {
           
@@ -57,19 +85,11 @@
 
           // Errors
           errorHandling(data.notificationResponse);
+        },
+        
+        error: function () {
+          $(this).html(" ").text("AJAX failed. ~ THE END ~");
         }
-      });
-      
-      // TODO: Better error message when AJAX fails
-      portlet.ajaxError(function () {
-        $(this).html(" ").text("AJAX failed. ~ THE END ~");
-      });
-      
-      // Looading div is displayed by default
-      // and is then hidden after the AJAX call   
-      loading.ajaxStop(function () {
-        $(this).hide();
-        portlet.fadeIn("fast");
       });
     }
 
@@ -79,29 +99,35 @@
 
       // HTML string compiled with underscore.js
       var html = '\
-        {% _.each(categories, function(category) { %} \
-          <div class="notification-trigger"> \
-            <h3 class="portlet-section-header trigger-symbol" role="header"> \
-              {{ category.title }} ({{ category.entries.length }}) \
-            </h3> \
+        {% if (categories.length < 1 ) { %} \
+          <div class="no-notifications-container"> \
+            <h3>You have 0 notifications.</h3> \
           </div> \
-          {% if (category.entries.length < 1) { %} \
-            <!-- no notifications! --> \
-          {% } else { %} \
-            <div class="notification-content" style="display: none;"> \
-              <ul class="notifications"> \
-                {% _.each(category.entries, function(entry) { %} \
-                  <li> \
-                    <a href="{{ entry.link }}" \
-                    data-body="{{ entry.body }}" \
-                    data-title="{{ entry.title }}" \
-                    data-source="{{ entry.source }}">{{ entry.title }}</a> \
-                  </li> \
-                {% }); %} \
-              </ul> \
+        {% } else { %} \
+          {% _.each(categories, function(category) { %} \
+            <div class="notification-trigger"> \
+              <h3 class="portlet-section-header trigger-symbol" role="header"> \
+                {{ category.title }} ({{ category.entries.length }}) \
+              </h3> \
             </div> \
-          {% } %} \
-        {% }); %} \
+            {% if (category.entries.length < 1) { %} \
+              <!-- no notifications --> \
+            {% } else { %} \
+              <div class="notification-content" style="display: none;"> \
+                <ul class="notifications"> \
+                  {% _.each(category.entries, function(entry) { %} \
+                    <li> \
+                      <a href="{{ entry.link }}" \
+                      data-body="{{ entry.body }}" \
+                      data-title="{{ entry.title }}" \
+                      data-source="{{ entry.source }}">{{ entry.title }}</a> \
+                    </li> \
+                  {% }); %} \
+                </ul> \
+              </div> \
+            {% } %} \
+          {% }); %} \
+        {% } %} \
       ';
       var compiled = _.template(html, data);
 
@@ -109,7 +135,7 @@
       notifications.html(" ").prepend(compiled);
     }
 
-    // Bind events object helps keep event functions together 
+    // Bind events object helps keep events together 
     var bindEvent = {
 
       // Accordion effect via plugin
@@ -165,7 +191,7 @@
       
       refresh: function () {
         refreshButton.click(function () {
-          refresh();
+          getNotifications({"days": 1});
         });
       },
       
@@ -183,40 +209,18 @@
       }
     }
     
-    function filter(option, params) {      
-      if ( option.hasClass("active") ) {
+    // Filter notifications by passing params
+    // to refresh, also adds/removes classes
+    // to the filter options links
+    function filter(link, params) {
+      if ( link.hasClass("active") ) {
         return false;
       } else {
-        refresh(params);
+        getNotifications(params);
         filterOptions.find("a").removeClass("active");
-        option.addClass("active");
+        link.addClass("active");
       }
       
-      return false;
-    }
-    
-    // Refresh notifications
-    function refresh(params) {
-      // Hide detail view
-      if ( detailView.is(":visible") ) {
-        detailView.hide();
-        notifications.show();
-      }
-
-      // Show loading
-      portlet.hide();
-      loading.show();
-
-      // Unbind click events
-      links.unbind("click");
-
-      // Clear out notifications and errors
-      notifications.html(" ");
-      errorContainer.html(" ");
-
-      // Refresh
-      getNotifications(params);
-
       return false;
     }
     
@@ -241,7 +245,7 @@
       }
     }
         
-    getNotifications();
+    getNotifications({"days": 1});
   }
   
 })(jQuery);
