@@ -28,31 +28,35 @@
 
 <div id="${n}container" class="notification-portlet">
 
-  <!-- loading -->
-  <div class="notification-loading"></div>
-
-  <div class="notification-portlet-wrapper" style="display: none;">
-  
-    <!-- options menu -->
-    <div class="notification-options">
-      <p class="notification-date-filter">View: <a href="#">All</a> | <a href="#" class="active">Today</a></p>
-      <p class="notification-refresh"><a href="#">Refresh</a></p>
-    </div>
-  
-    <!-- notifications -->
-	  <div class="notification-container"></div>
-
-    <!-- detail view -->
-    <div class="notification-detail-wrapper" style="display: none;">
-      <div class="notification-back-button">
-        <a href="#">Back</a>
-      </div>
-      <div class="notification-detail-container"></div>
-    </div>
-
-    <!-- errors -->
-		<div class="notification-error-container" style="display: none;"></div>  
-
+	<!-- options menu -->
+	<div class="notification-options" style="display: none;">
+		<p class="notification-date-filter">
+			View: <a class="all" href="#">All</a> | <a class="today active" href="#">Today</a>
+		</p>
+		<p class="notification-refresh"><a href="#">Refresh</a></p>
 	</div>
+
+     <!-- loading -->
+   <div class="notification-loading"></div>
+  
+            <!-- notifications -->
+            <div class="notification-portlet-wrapper" style="display: none;">
+            
+              <!-- accordion -->
+     <div class="notification-container"></div>
+
+              <!-- detail view -->
+              <div class="notification-detail-wrapper" style="display: none;">
+                <div class="notification-back-button">
+                  <span>Back</span>
+                </div>
+                <div class="notification-detail-container"></div>
+              </div>
+
+              <!-- errors -->
+              <div class="notification-error-container" style="display: none;"></div>
+  
+     </div>
+
 </div>
 

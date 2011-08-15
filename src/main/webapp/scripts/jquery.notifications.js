@@ -18,27 +18,35 @@
 
     // Cache existing DOM elements  
     var portlet         = this.find(".notification-portlet-wrapper"),
-        links           = this.find(".notification-portlet-wrapper a"),
+        links           = this.find(".notification-portlet a"),
         errorContainer  = this.find(".notification-error-container"),
         loading         = this.find(".notification-loading"),
         notifications   = this.find(".notification-container"),
         detailView      = this.find(".notification-detail-wrapper"),
         detailContainer = this.find(".notification-detail-container"),
-        backButton      = this.find(".notification-back-button a"),
+        backButton      = this.find(".notification-back-button"),
         refreshButton   = this.find(".notification-refresh a"),
-        filterOptions   = this.find(".notification-options");
+        filterOptions   = this.find(".notification-options"),
+        todayFilter     = filterOptions.find(".today"),
+        allFilter       = filterOptions.find(".all");
         
     // Notification gets cached in the AJAX callback
     // but is created here for scope
     var notification;
     
+    // Store filterState (notifications that are currently
+    // being displayed), defaults to today
+    // See: filter()
+    var filterState = {"days": 1};
+    
     function getNotifications(params) {
-      
+            
       // Looading div is displayed by default
       // and is then hidden after the AJAX call
       loading.ajaxStop(function () {
         $(this).hide();
         portlet.fadeIn("fast");
+        filterOptions.fadeIn("fast");
       });
       
       $.ajax({
@@ -61,6 +69,8 @@
 
           // Unbind click events
           links.unbind("click");
+          backButton.unbind("click");
+          filterOptions.find("a").unbind("click");
 
           // Clear out notifications and errors
           notifications.html(" ");
@@ -68,12 +78,13 @@
         },
         
         success: function (data) {
+          var data = data.notificationResponse;
           
           // Build notifications
-          buildNotifications(data.notificationResponse);
+          buildNotifications(data);
 
           // Once notifications have been injected into the DOM
-          // we cache the notification element...
+          // we cache the notication element...
           notification = $(".notifications a");
 
           // ...and bind our events
@@ -81,10 +92,10 @@
           bindEvent.viewDetail();
           bindEvent.goBack();
           bindEvent.refresh();
-          bindEvent.filterOptions();
+          bindEvent.filterOptions(data);
 
           // Errors
-          errorHandling(data.notificationResponse);
+          errorHandling(data);
         },
         
         error: function () {
@@ -147,8 +158,8 @@
       viewDetail: function () {
         notification.click(function () {
 
-          // Notification detail is retrieved from 'data-' attributes
-          // and stored in a notification object
+          // Notification detail is retrieved from 'data-' 
+          // attributes and stored in a notification object
           var notification = {
             body   : $(this).data("body"),
             title  : $(this).data("title"),
@@ -183,44 +194,48 @@
             "slide", {direction: "right"}, 200, function () {
               notifications.show();
             }
-          );
+          )
 
           return false;
-        });
+        })
+        .hover(
+          function () { $(this).addClass('hover'); },
+          function () { $(this).removeClass('hover') }
+        );
       },
       
       refresh: function () {
         refreshButton.click(function () {
-          getNotifications({"days": 1});
+          getNotifications(filterState);
         });
       },
       
-      filterOptions: function () {
-        var today = filterOptions.find(".today"),
-            all   = filterOptions.find(".all");
-            
-        today.click(function () {
-          filter($(this), {days: 1});
+      filterOptions: function (data) {
+        todayFilter.click(function () {
+          filter($(this), {"days":1});
         });
         
-        all.click(function () {
+        allFilter.click(function () {
           filter($(this));
         });
       }
     }
     
     // Filter notifications by passing params
-    // to refresh, also adds/removes classes
-    // to the filter options links
+    // via ajax ie {"days":1} is today, also
+    // stores and returns filterState
     function filter(link, params) {
+      filterState = params || {};
+      
       if ( link.hasClass("active") ) {
         return false;
       } else {
-        getNotifications(params);
+        getNotifications(filterState);
         filterOptions.find("a").removeClass("active");
         link.addClass("active");
       }
       
+      return filterState;
       return false;
     }
     
@@ -244,8 +259,9 @@
         });
       }
     }
-        
-    getNotifications({"days": 1});
+    
+    // Load notifications
+    getNotifications(filterState);
   }
   
 })(jQuery);
