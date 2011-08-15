@@ -34,4 +34,35 @@
     <context:component-scan base-package="org.jasig.portlet.notice.mvc.controller"/>
     
     <bean class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+
+    <!-- 
+     | Message source for this portlet, defined here (instead of applicationContext.xml) 
+     | to support the possibility of multiple portlets with different configurations. 
+     +-->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>messages</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 
+     | Notification Service bean (default is cache with 2 demo services), defined 
+     | here (instead of applicationContext.xml) to support the possibility of 
+     | multiple portlets with different configurations. 
+     +-->
+    <bean id="cacheNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
+        <property name="embeddedServices">
+            <util:list>
+                <bean id="demoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
+                   <property name="filename" value="DemoNoticationResponse.dat"/>
+                </bean>
+                <bean id="demoNotificationService2" class="org.jasig.portlet.notice.service.DemoNotificationService">
+                   <property name="filename" value="Demo2NoticationResponse.dat"/>
+                </bean>
+            </util:list>
+        </property>
+    </bean>
+
 </beans>

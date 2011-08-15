@@ -19,15 +19,6 @@
             </list>
         </property>
     </bean>
-    
-    <!-- Message source for this context, loaded from localized "messages_xx" files -->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basenames">
-            <list>
-                <value>messages</value>
-            </list>
-        </property>
-    </bean>
 
     <!-- EHCache Configuration -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
@@ -73,17 +64,4 @@
         </property>
     </bean>
     
-    <!-- Notification Service, cache with demo services -->
-    <bean id="cacheNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
-        <property name="embeddedServices">
-            <util:list>
-                <bean id="demoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
-                   <property name="filename" value="DemoNoticationResponse.dat"/>
-	            </bean>
-	        <bean id="demoNotificationService2" class="org.jasig.portlet.notice.service.DemoNotificationService">
-	               <property name="filename" value="Demo2NoticationResponse.dat"/>
-	        </bean>
-            </util:list>
-        </property>
-    </bean>
 </beans>
