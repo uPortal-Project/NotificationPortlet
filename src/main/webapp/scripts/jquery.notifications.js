@@ -100,6 +100,10 @@
         
         error: function () {
           $(this).html(" ").text("AJAX failed. ~ THE END ~");
+        },
+        
+        error: function () {
+          $(this).html(" ").text("AJAX failed. ~ THE END ~");
         }
       });
     }
@@ -244,19 +248,27 @@
       if ( data.errors ) {
         var html = '\
           {% _.each(errors, function(error) { %} \
-            <div class="portlet-msg-error"> \
+            <div class="portlet-msg-error" errorkey="{{ error.key }}"> \
               {{ error.source }}: {{ error.error }} \
               <a href="#" class="remove" title="Hide"></a> \
             </div> \
           {% }); %} \
-        ';
+        ';  
         var compile = _.template(html, data);
         
         errorContainer.show().append(compile);
         errorContainer.find(".remove").click(function () {
-          $(this).parent().fadeOut("fast");
+         var thisErrorContainer = $(this).parent();
+         thisErrorContainer.fadeOut("fast", function () {
+            var settings = [];
+            $.ajax({
+              url: (opts.hideErrorUrl).replace("ERRORKEY", thisErrorContainer.attr("errorkey")),
+              type: 'POST', 
+              success: function() { return false; }
+            });
+          });
           return false;
-        });
+        }); 
       }
     }
     

@@ -8,6 +8,7 @@
 <%@ taglib prefix="rs" uri="http://www.jasig.org/resource-server" %>
 <portlet:defineObjects/>
 <c:set var="n"><portlet:namespace/></c:set>
+<portlet:actionURL var="hideErrorUrl"><portlet:param name="action" value="hideError"/><portlet:param name="errorKey" value="ERRORKEY"/></portlet:actionURL>
 <link rel="stylesheet" href="<c:url value="/styles/styles.css"/>" type="text/css" media="screen" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"/>" type="text/javascript"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"/>" type="text/javascript"></script>
@@ -21,7 +22,8 @@
     ${n}.jQuery = jQuery.noConflict(true);
     ${n}.jQuery(document).ready(function () { 
         ${n}.jQuery("#${n}container").notifications({ 
-            url: '<portlet:actionURL><portlet:param name="action" value="getNotifications"/></portlet:actionURL>'
+            url: '<portlet:actionURL><portlet:param name="action" value="getNotifications"/></portlet:actionURL>',
+            hideErrorUrl: '${hideErrorUrl}'
         });
     });
 </script>

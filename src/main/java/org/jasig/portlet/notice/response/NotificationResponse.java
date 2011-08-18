@@ -3,6 +3,7 @@ package org.jasig.portlet.notice.response;
 import java.io.Serializable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
@@ -180,6 +181,7 @@ public class NotificationResponse implements Serializable {
 	}
 
 	public void filterErrors(Set<Integer> filterErrors) {
+	    Set iSetClone = new HashSet(filterErrors);
         for(NotificationError error : errors)
         {
             if(filterErrors.contains(error.getKey()))

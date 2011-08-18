@@ -60,6 +60,11 @@ public class DataController {
             PortletSession session = req.getPortletSession(true);
             @SuppressWarnings("unchecked")
             Set<Integer> hidden = (Set<Integer>) session.getAttribute(ATTRIBUTE_HIDDEN_ERRORS);
+            if (hidden == null)
+            {
+                hidden = new HashSet<Integer>();  // Creates an empty set and puts it into session to get around null pointer exception.
+                session.setAttribute(ATTRIBUTE_HIDDEN_ERRORS, hidden);
+            }
             notificationResponse.filterErrors(hidden);
             
             model.put("notificationResponse", notificationResponse);
@@ -79,7 +84,7 @@ public class DataController {
 	}
 
     @RequestMapping(params="action=hideError")
-    public void hideError(ActionRequest req, ActionResponse res, @RequestParam("errorKey") int errorKey) throws IOException {
+    public void hideError(ActionRequest req, ActionResponse res, @RequestParam("errorKey") String errorKey) throws IOException {
         PortletSession session = req.getPortletSession(true);
         @SuppressWarnings("unchecked")
         Set<Integer> hidden = (Set<Integer>) session.getAttribute(ATTRIBUTE_HIDDEN_ERRORS);
@@ -87,7 +92,15 @@ public class DataController {
             hidden = new HashSet<Integer>();
             session.setAttribute(ATTRIBUTE_HIDDEN_ERRORS, hidden);
         }
-        hidden.add(errorKey);
+        int errorKeyInt =0;
+        try {
+            log.error("Parsing the errorKey to hide errors: " + errorKey);
+            errorKeyInt = Integer.parseInt(errorKey);
+        } catch (Exception e)
+        {
+            log.error(e);
+        }
+        hidden.add(errorKeyInt);
     }
 
 }
