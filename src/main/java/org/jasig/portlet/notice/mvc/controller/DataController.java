@@ -1,6 +1,7 @@
 package org.jasig.portlet.notice.mvc.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class DataController {
     //Holds a list of the NotificationError keys that have been hidden by the user
     //This list is used to filter out the errors that were hidden so they
     //aren't displayed the next time page is refreshed.
-    List<Integer> hiddenErrorKeys;
+    List<Integer> hiddenErrorKeys = new ArrayList<Integer>();
     
     @RequestMapping(params="action=getNotifications")
 	public void getNotifications(ActionRequest req, ActionResponse res) throws IOException {

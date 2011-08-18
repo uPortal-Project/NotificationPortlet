@@ -179,15 +179,19 @@ public class NotificationResponse implements Serializable {
 	}
 
 	public void filterErrors(List<Integer> filterErrorKeys) {
-		for(Integer key : filterErrorKeys)
+		
+		if(errors != null && !errors.isEmpty() && filterErrorKeys != null)
 		{
-			for(NotificationError error : errors)
+			for(Integer key : filterErrorKeys)
 			{
-				if(error.getKey() == key.intValue())
+				for(NotificationError error : errors)
 				{
-					errors.remove(error);
-					break;
-				}	
+					if(error.getKey() == key.intValue())
+					{
+						errors.remove(error);
+						break;
+					}	
+				}
 			}
 		}
 	}
