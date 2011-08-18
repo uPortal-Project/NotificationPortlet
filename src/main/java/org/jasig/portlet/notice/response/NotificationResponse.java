@@ -181,8 +181,8 @@ public class NotificationResponse implements Serializable {
 	}
 
 	public void filterErrors(Set<Integer> filterErrors) {
-	    Set iSetClone = new HashSet(filterErrors);
-        for(NotificationError error : errors)
+	    List<NotificationError> iSetClone = new ArrayList(errors);
+        for(NotificationError error : iSetClone)
         {
             if(filterErrors.contains(error.getKey()))
             {
