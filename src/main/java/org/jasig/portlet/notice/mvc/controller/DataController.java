@@ -32,10 +32,10 @@ public class DataController {
     @Autowired(required=true)
 	private INotificationService notificationService;
 
-    //Holds a list of the errors that have been hidden by the user
+    //Holds a list of the NotificationError keys that have been hidden by the user
     //This list is used to filter out the errors that were hidden so they
-    //are displayed the next time page is refreshed.
-    List<NotificationError> hiddenErrors;
+    //aren't displayed the next time page is refreshed.
+    List<Integer> hiddenErrorKeys;
     
     @RequestMapping(params="action=getNotifications")
 	public void getNotifications(ActionRequest req, ActionResponse res) throws IOException {
@@ -58,7 +58,7 @@ public class DataController {
             NotificationResponse notificationResponse = notificationService.getNotifications(params);
 
             //filter out any errors that have been hidden by the user
-            notificationResponse.filterErrors(hiddenErrors);
+            notificationResponse.filterErrors(hiddenErrorKeys);
             
             model.put("notificationResponse", notificationResponse);
             ajaxPortletSupportService.redirectAjaxResponse("ajax/json", model, req, res);

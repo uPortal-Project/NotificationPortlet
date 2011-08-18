@@ -178,12 +178,12 @@ public class NotificationResponse implements Serializable {
 			errors.add(error);
 	}
 
-	public void filterErrors(List<NotificationError> filterErrors) {
-		for(NotificationError filterError : filterErrors)
+	public void filterErrors(List<Integer> filterErrorKeys) {
+		for(Integer key : filterErrorKeys)
 		{
 			for(NotificationError error : errors)
 			{
-				if(error.equals(filterError))
+				if(error.getKey() == key.intValue())
 				{
 					errors.remove(error);
 					break;
