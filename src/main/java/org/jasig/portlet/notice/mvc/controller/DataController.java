@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.jasig.portlet.notice.response.NotificationError;
 import org.jasig.portlet.notice.response.NotificationResponse;
 import org.jasig.portlet.notice.service.iface.INotificationService;
 import org.jasig.web.service.AjaxPortletSupportService;
@@ -31,6 +32,11 @@ public class DataController {
     @Autowired(required=true)
 	private INotificationService notificationService;
 
+    //Holds a list of the errors that have been hidden by the user
+    //This list is used to filter out the errors that were hidden so they
+    //are displayed the next time page is refreshed.
+    List<NotificationError> hiddenErrors;
+    
     @RequestMapping(params="action=getNotifications")
 	public void getNotifications(ActionRequest req, ActionResponse res) throws IOException {
 
@@ -48,8 +54,12 @@ public class DataController {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
 
+        	//get the notifications and any data retrieval errors
             NotificationResponse notificationResponse = notificationService.getNotifications(params);
 
+            //filter out any errors that have been hidden by the user
+            notificationResponse.filterErrors(hiddenErrors);
+            
             model.put("notificationResponse", notificationResponse);
             ajaxPortletSupportService.redirectAjaxResponse("ajax/json", model, req, res);
 
@@ -64,7 +74,5 @@ public class DataController {
             ajaxPortletSupportService.redirectAjaxResponse("ajax/json", model, req, res);
             log.error( "Unanticipated Error", ex);
         }
-
 	}
-
 }

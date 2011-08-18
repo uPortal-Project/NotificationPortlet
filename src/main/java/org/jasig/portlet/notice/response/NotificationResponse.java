@@ -178,6 +178,20 @@ public class NotificationResponse implements Serializable {
 			errors.add(error);
 	}
 
+	public void filterErrors(List<NotificationError> filterErrors) {
+		for(NotificationError filterError : filterErrors)
+		{
+			for(NotificationError error : errors)
+			{
+				if(error.equals(filterError))
+				{
+					errors.remove(error);
+					break;
+				}	
+			}
+		}
+	}
+
 	public void clearErrors() {
 		errors.clear();
 	}
