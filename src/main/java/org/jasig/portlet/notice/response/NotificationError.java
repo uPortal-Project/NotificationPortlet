@@ -12,7 +12,6 @@ public class NotificationError implements Serializable {
 
 	private String error;
 	private String source;
-	private int    key;   //hashcode of the "source:error"
 	
 	public NotificationError(){}
 	
@@ -20,7 +19,6 @@ public class NotificationError implements Serializable {
 	{
 		this.error = error;
 		this.source = source;
-		setKey(source, error);
 	}
 
 	public String getSource() {
@@ -29,7 +27,6 @@ public class NotificationError implements Serializable {
 
 	public void setSource(String source) {
 		this.source = source;
-		setKey(source, error);
 	}
 
 	public String getError() {
@@ -42,16 +39,11 @@ public class NotificationError implements Serializable {
 	}
 
 	public int getKey() {
-		return key;
-	}
-
-	public void setKey(int key) {
-		this.key = key;
+        String keyString = source + ":" + error;
+        return keyString.hashCode();
 	}
 
 	public void setKey(String source, String error) {
-		String keyString = source + ":" + error;
-		this.key = keyString.hashCode();
 	}
 
 	public boolean equals(Object object)
@@ -60,7 +52,7 @@ public class NotificationError implements Serializable {
 		{
 			NotificationError temp = (NotificationError)object;
 			
-			return (temp.key == key);
+			return (temp.getKey() == this.getKey());
 		}
 		
 		return false;
@@ -75,6 +67,6 @@ public class NotificationError implements Serializable {
 		return "org.jasig.portlet.notice.serverresponse.NotificationError\n"
 				+ "\tSource            = " + source  + "\n"
 				+ "\tError             = " + error  + "\n"
-				+ "\tKey               = " + key  + "\n";
+				+ "\tKey               = " + getKey()  + "\n";
 	}
 }

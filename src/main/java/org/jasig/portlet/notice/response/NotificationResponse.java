@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import net.sf.json.JSON;
 import net.sf.json.JSONException;
@@ -178,22 +179,14 @@ public class NotificationResponse implements Serializable {
 			errors.add(error);
 	}
 
-	public void filterErrors(List<Integer> filterErrorKeys) {
-		
-		if(errors != null && !errors.isEmpty() && filterErrorKeys != null)
-		{
-			for(Integer key : filterErrorKeys)
-			{
-				for(NotificationError error : errors)
-				{
-					if(error.getKey() == key.intValue())
-					{
-						errors.remove(error);
-						break;
-					}	
-				}
-			}
-		}
+	public void filterErrors(Set<Integer> filterErrors) {
+        for(NotificationError error : errors)
+        {
+            if(filterErrors.contains(error.getKey()))
+            {
+                errors.remove(error);
+            }   
+        }
 	}
 
 	public void clearErrors() {

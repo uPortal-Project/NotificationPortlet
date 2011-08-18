@@ -1,22 +1,23 @@
 package org.jasig.portlet.notice.mvc.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import org.jasig.portlet.notice.response.NotificationError;
 import org.jasig.portlet.notice.response.NotificationResponse;
 import org.jasig.portlet.notice.service.iface.INotificationService;
 import org.jasig.web.service.AjaxPortletSupportService;
@@ -24,6 +25,8 @@ import org.jasig.web.service.AjaxPortletSupportService;
 @Controller
 @RequestMapping("VIEW")
 public class DataController {
+    
+    public static final String ATTRIBUTE_HIDDEN_ERRORS = DataController.class.getName() + ".ATTRIBUTE_HIDDEN_ERRORS";
 
 	private Log log = LogFactory.getLog(getClass());
 
@@ -32,11 +35,6 @@ public class DataController {
 
     @Autowired(required=true)
 	private INotificationService notificationService;
-
-    //Holds a list of the NotificationError keys that have been hidden by the user
-    //This list is used to filter out the errors that were hidden so they
-    //aren't displayed the next time page is refreshed.
-    List<Integer> hiddenErrorKeys = new ArrayList<Integer>();
     
     @RequestMapping(params="action=getNotifications")
 	public void getNotifications(ActionRequest req, ActionResponse res) throws IOException {
@@ -59,7 +57,10 @@ public class DataController {
             NotificationResponse notificationResponse = notificationService.getNotifications(params);
 
             //filter out any errors that have been hidden by the user
-            notificationResponse.filterErrors(hiddenErrorKeys);
+            PortletSession session = req.getPortletSession(true);
+            @SuppressWarnings("unchecked")
+            Set<Integer> hidden = (Set<Integer>) session.getAttribute(ATTRIBUTE_HIDDEN_ERRORS);
+            notificationResponse.filterErrors(hidden);
             
             model.put("notificationResponse", notificationResponse);
             ajaxPortletSupportService.redirectAjaxResponse("ajax/json", model, req, res);
@@ -76,4 +77,17 @@ public class DataController {
             log.error( "Unanticipated Error", ex);
         }
 	}
+
+    @RequestMapping(params="action=hideError")
+    public void hideError(ActionRequest req, ActionResponse res, @RequestParam("errorKey") int errorKey) throws IOException {
+        PortletSession session = req.getPortletSession(true);
+        @SuppressWarnings("unchecked")
+        Set<Integer> hidden = (Set<Integer>) session.getAttribute(ATTRIBUTE_HIDDEN_ERRORS);
+        if (hidden == null) {
+            hidden = new HashSet<Integer>();
+            session.setAttribute(ATTRIBUTE_HIDDEN_ERRORS, hidden);
+        }
+        hidden.add(errorKey);
+    }
+
 }
