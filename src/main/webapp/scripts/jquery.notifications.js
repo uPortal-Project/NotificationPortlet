@@ -34,9 +34,8 @@
     // but is created here for scope
     var notification;
     
-    // Store filterState (notifications that are currently
-    // being displayed), defaults to today
-    // See: filter()
+    // Store the filter state (notifications that are 
+    // currently being displayed), defaults to today
     var filterState = {"days": 1};
     
     function getNotifications(params) {
@@ -88,7 +87,7 @@
           notification = $(".notifications a");
 
           // ...and bind our events
-          bindEvent.accordion();
+          bindEvent.accordion(data);
           bindEvent.viewDetail();
           bindEvent.goBack();
           bindEvent.refresh();
@@ -96,10 +95,6 @@
 
           // Errors
           errorHandling(data);
-        },
-        
-        error: function () {
-          $(this).html(" ").text("AJAX failed. ~ THE END ~");
         },
         
         error: function () {
@@ -119,10 +114,14 @@
             <h3>You have 0 notifications.</h3> \
           </div> \
         {% } else { %} \
+          {% var accordion = categories.length > 1; %} \
           {% _.each(categories, function(category) { %} \
             <div class="notification-trigger"> \
               <h3 class="portlet-section-header trigger-symbol" role="header"> \
-                {{ category.title }} ({{ category.entries.length }}) \
+                {{ category.title }} \
+                {% if (accordion) { %} \
+                  ({{ category.entries.length }}) \
+                {% } %} \
               </h3> \
             </div> \
             {% if (category.entries.length < 1) { %} \
@@ -132,10 +131,13 @@
                 <ul class="notifications"> \
                   {% _.each(category.entries, function(entry) { %} \
                     <li> \
+                      {% if (!accordion) { %} \
+                        &raquo; \
+                      {% } %} \
                       <a href="{{ entry.link }}" \
                       data-body="{{ entry.body }}" \
                       data-title="{{ entry.title }}" \
-                      data-source="{{ entry.source }}">{{ entry.title }}</a> \
+                      data-source="{{ entry.source }}"> {{ entry.title }}</a> \
                     </li> \
                   {% }); %} \
                 </ul> \
@@ -153,9 +155,15 @@
     // Bind events object helps keep events together 
     var bindEvent = {
 
-      // Accordion effect via plugin
-      accordion: function () {
-        notifications.accordion();
+      // Accordion via plugin
+      accordion: function (data) {
+        if ( data.categories.length === 1 ) {
+          portlet.removeClass("accordion");
+          notifications.children().show();
+        } else {
+          notifications.accordion();
+          portlet.addClass("accordion");
+        }
       },
 
       // View detail page
@@ -179,13 +187,14 @@
             </p> \
           ';
           var compiled = _.template(html, notification);
-
-          notifications.hide(
-            "slide", 200, function () {
-              detailContainer.html(" ").append(compiled);
-              detailView.show();
-            }
-          );
+          
+          $.each([notifications, errorContainer], function () {
+            $(this).hide(
+              "slide", 200, function () {
+                detailContainer.html(" ").append(compiled);
+                detailView.show();
+              });
+          });
 
           return false;
         });
@@ -197,6 +206,7 @@
           detailView.hide(
             "slide", {direction: "right"}, 200, function () {
               notifications.show();
+              errorContainer.show();
             }
           )
 
@@ -211,16 +221,19 @@
       refresh: function () {
         refreshButton.click(function () {
           getNotifications(filterState);
+          return false;
         });
       },
       
       filterOptions: function (data) {
         todayFilter.click(function () {
           filter($(this), {"days":1});
+          return false;
         });
         
         allFilter.click(function () {
           filter($(this));
+          return false;
         });
       }
     }
@@ -230,7 +243,6 @@
     // stores and returns filterState
     function filter(link, params) {
       filterState = params || {};
-      
       if ( link.hasClass("active") ) {
         return false;
       } else {
@@ -238,9 +250,7 @@
         filterOptions.find("a").removeClass("active");
         link.addClass("active");
       }
-      
       return filterState;
-      return false;
     }
     
     // Errors (broken feeds)

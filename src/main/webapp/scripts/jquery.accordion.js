@@ -8,10 +8,10 @@
   $.fn.accordion = function (options) {
     
     var defaults = {
-      trigger : '.notification-trigger',
-      content : '.notification-content',
-      symbol  : '.trigger-symbol',
-      speed   : 'medium'
+      trigger   : '.notification-trigger',
+      content   : '.notification-content',
+      symbol    : '.trigger-symbol',
+      speed     : 'medium'
     };
 
     // Merge options object with defaults
@@ -21,35 +21,36 @@
     var allTriggers = this.children(opts.trigger),
         allContent  = this.children(opts.content);
     
-    // Begin method chain on the triggers
-    allTriggers.
-    
+      // Begin accordion
+    allTriggers
+
       // Remove trigger symbol if there's no content
-      each(function () {
+      .each(function () { 
         var trigger = $(this);
-        
+    
         if ( noContent(trigger) ) {
-          trigger.find(opts.symbol).css("background", "none");
+          hideSymbol(trigger);
         }
       })
-      
+
       // Accordion click event
       .click(function () {
         var trigger  = $(this),
             content  = trigger.next(opts.content),
             isHidden = content.is(":hidden");
-              
+          
         allTriggers.removeClass("active");
-        allContent.stop(true,true).slideUp(opts.speed);
-      
+    
+        slide(allContent, "Up");
+  
         if ( isHidden ) {
-          content.stop(true,true).slideDown(opts.speed);
+          slide(content, "Down");
           trigger.addClass("active");
         }
-        
+    
         return false;
       })
-      
+  
       // Add class 'hover' (because :hover is not widely supported
       // on non-anchor elements)
       .hover(
@@ -64,9 +65,18 @@
         }
       );
       
-      function noContent(trigger) {
-        return trigger.next(opts.content).length < 1;
-      }
+    // Private helpers
+    function noContent(trigger) {
+      return trigger.next(opts.content).length < 1;
+    }
+    
+    function hideSymbol(trigger) {
+      trigger.find(opts.symbol).removeClass(opts.symbol.replace('.',''));
+    }
+
+    function slide(el, direction) {
+      el.stop(true,true)['slide' + direction](opts.speed);          
+    }
     
     return this;
   }

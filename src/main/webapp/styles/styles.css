@@ -16,8 +16,7 @@
   overflow: auto;
 }
 .up .notification-portlet-wrapper .notification-container .notification-trigger {
-  margin-bottom: 10px;
-  cursor: pointer;
+  margin-bottom: 5px;
 }
 .up .notification-portlet-wrapper .notification-container .notification-trigger h3 {
   padding-top: 0;
@@ -54,6 +53,7 @@
   padding: 0;
   font-weight: normal !important;
   border: none;
+  color: #333;
 }
 .up .notification-portlet-wrapper .notification-trigger.disabled h3 {
   color: #888 !important;
@@ -105,97 +105,8 @@
   overflow: auto;
 }
 .up .notification-portlet-wrapper .notification-trigger {
-  background: -moz-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
-  /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(243, 248, 249, 0)), color-stop(16%, rgba(243, 248, 249, 0.16)), color-stop(56%, rgba(228, 238, 242, 0.56)), color-stop(100%, #e4eef2));
-  /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
-  /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
-  /* Opera11.10+ */
-  background: -ms-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
-  /* IE10+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00f3f8f9', endColorstr='#e4eef2',GradientType=0 );
-  /* IE6-9 */
-  background: linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
-  /* W3C */
-}
-.up .notification-portlet-wrapper .notification-trigger.active, .up .notification-portlet-wrapper .notification-trigger.hover {
-  background: -moz-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
-  /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(224, 237, 240, 0)), color-stop(16%, rgba(224, 237, 240, 0.16)), color-stop(56%, rgba(189, 213, 223, 0.56)), color-stop(100%, #bdd5df));
-  /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
-  /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
-  /* Opera11.10+ */
-  background: -ms-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
-  /* IE10+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00e0edf0', endColorstr='#bdd5df',GradientType=0 );
-  /* IE6-9 */
-  background: linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
-  /* W3C */
-}
-.up .notification-portlet-wrapper .notification-trigger.hover h3, .up .notification-portlet-wrapper .notification-trigger.active h3 {
-  color: #3c5560 !important;
-}
-.up .notification-portlet-wrapper .notification-trigger h3 {
-  color: #3d4e55 !important;
-  font-weight: normal !important;
-  border: none;
-}
-.up .notification-portlet-wrapper .notification-back-button {
-  background: -moz-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
-  /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(243, 248, 249, 0)), color-stop(16%, rgba(243, 248, 249, 0.16)), color-stop(56%, rgba(228, 238, 242, 0.56)), color-stop(100%, #e4eef2));
-  /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
-  /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
-  /* Opera11.10+ */
-  background: -ms-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
-  /* IE10+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00f3f8f9', endColorstr='#e4eef2',GradientType=0 );
-  /* IE6-9 */
-  background: linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
-  /* W3C */
-}
-.up .notification-portlet-wrapper .notification-back-button.active, .up .notification-portlet-wrapper .notification-back-button.hover {
-  background: -moz-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
-  /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(224, 237, 240, 0)), color-stop(16%, rgba(224, 237, 240, 0.16)), color-stop(56%, rgba(189, 213, 223, 0.56)), color-stop(100%, #bdd5df));
-  /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
-  /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
-  /* Opera11.10+ */
-  background: -ms-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
-  /* IE10+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00e0edf0', endColorstr='#bdd5df',GradientType=0 );
-  /* IE6-9 */
-  background: linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
-  /* W3C */
-}
-.up .notification-portlet-wrapper .notification-container .notification-trigger {
-  padding: 10px;
-  border: 1px solid #ccc;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  -o-border-radius: 6px;
-  -ms-border-radius: 6px;
-  -khtml-border-radius: 6px;
-  border-radius: 6px;
-}
-.up .notification-portlet-wrapper .notification-container .notification-trigger.active h3 {
-  background-image: url("../images/bullet-down.png");
-}
-.up .notification-portlet-wrapper .notification-container .notification-trigger .trigger-symbol {
-  padding-left: 15px;
-  background: url("../images/bullet-right.png") no-repeat left 50%;
-}
-.up .notification-portlet-wrapper .notification-container .notification-content ul {
-  margin: 0;
-  padding-left: 11px;
+  padding: 10px 0 5px 0;
+  border-bottom: 1px solid #333;
 }
 .up .notification-portlet-wrapper .notification-detail-wrapper {
   padding: 20px 20px;
@@ -212,6 +123,36 @@
   -ms-border-radius: 6px;
   -khtml-border-radius: 6px;
   border-radius: 6px;
+  background: -moz-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(243, 248, 249, 0)), color-stop(16%, rgba(243, 248, 249, 0.16)), color-stop(56%, rgba(228, 238, 242, 0.56)), color-stop(100%, #e4eef2));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
+  /* Opera11.10+ */
+  background: -ms-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
+  /* IE10+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00f3f8f9', endColorstr='#e4eef2',GradientType=0 );
+  /* IE6-9 */
+  background: linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
+  /* W3C */
+}
+.up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button.active, .up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button.hover {
+  background: -moz-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(224, 237, 240, 0)), color-stop(16%, rgba(224, 237, 240, 0.16)), color-stop(56%, rgba(189, 213, 223, 0.56)), color-stop(100%, #bdd5df));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
+  /* Opera11.10+ */
+  background: -ms-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
+  /* IE10+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00e0edf0', endColorstr='#bdd5df',GradientType=0 );
+  /* IE6-9 */
+  background: linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
+  /* W3C */
 }
 .up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button span {
   padding-left: 15px;
@@ -227,4 +168,64 @@
   height: 16px;
   width: 16px;
   cursor: pointer;
+}
+
+.up .notification-portlet-wrapper.accordion .notification-trigger {
+  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc !important;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -o-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -khtml-border-radius: 6px;
+  border-radius: 6px;
+  background: -moz-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(243, 248, 249, 0)), color-stop(16%, rgba(243, 248, 249, 0.16)), color-stop(56%, rgba(228, 238, 242, 0.56)), color-stop(100%, #e4eef2));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
+  /* Opera11.10+ */
+  background: -ms-linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
+  /* IE10+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00f3f8f9', endColorstr='#e4eef2',GradientType=0 );
+  /* IE6-9 */
+  background: linear-gradient(top, rgba(243, 248, 249, 0) 0%, rgba(243, 248, 249, 0.16) 16%, rgba(228, 238, 242, 0.56) 56%, #e4eef2 100%);
+  /* W3C */
+}
+.up .notification-portlet-wrapper.accordion .notification-trigger.active, .up .notification-portlet-wrapper.accordion .notification-trigger.hover {
+  background: -moz-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(224, 237, 240, 0)), color-stop(16%, rgba(224, 237, 240, 0.16)), color-stop(56%, rgba(189, 213, 223, 0.56)), color-stop(100%, #bdd5df));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
+  /* Opera11.10+ */
+  background: -ms-linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
+  /* IE10+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00e0edf0', endColorstr='#bdd5df',GradientType=0 );
+  /* IE6-9 */
+  background: linear-gradient(top, rgba(224, 237, 240, 0) 0%, rgba(224, 237, 240, 0.16) 16%, rgba(189, 213, 223, 0.56) 56%, #bdd5df 100%);
+  /* W3C */
+}
+.up .notification-portlet-wrapper.accordion .notification-trigger.active h3, .up .notification-portlet-wrapper.accordion .notification-trigger.hover h3 {
+  background-image: url("../images/bullet-down.png");
+  color: #3c5560 !important;
+}
+.up .notification-portlet-wrapper.accordion .notification-trigger h3 {
+  color: #3d4e55 !important;
+  font-weight: normal !important;
+  border: none;
+}
+.up .notification-portlet-wrapper.accordion .notification-content ul {
+  margin: 0;
+  padding-left: 11px;
+}
+.up .notification-portlet-wrapper.accordion .trigger-symbol {
+  padding-left: 15px;
+  background: url("../images/bullet-right.png") no-repeat left 50%;
 }

@@ -94,7 +94,6 @@ public class DataController {
         }
         int errorKeyInt =0;
         try {
-            log.error("Parsing the errorKey to hide errors: " + errorKey);
             errorKeyInt = Integer.parseInt(errorKey);
         } catch (Exception e)
         {
