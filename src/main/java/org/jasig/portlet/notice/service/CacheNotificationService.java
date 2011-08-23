@@ -1,15 +1,13 @@
 package org.jasig.portlet.notice.service;
 
 import java.util.List;
-import java.util.Map;
-
+import javax.portlet.PortletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.response.NotificationResponse;
 import org.jasig.portlet.notice.service.exceptions.NotificationServiceException;
 import org.jasig.portlet.notice.service.iface.INotificationService;
-
 import com.googlecode.ehcache.annotations.Cacheable;
 
 /**
@@ -31,7 +29,8 @@ public class CacheNotificationService implements INotificationService {
 	}
 
 	@Cacheable(cacheName="notificationCache")
-	public NotificationResponse getNotifications(Map<String, String> userInfo)
+	@Override
+	public NotificationResponse getNotifications(PortletRequest req)
 		throws NotificationServiceException
 	{
 	    log.debug("Invoking embedded notification services...");
@@ -40,7 +39,7 @@ public class CacheNotificationService implements INotificationService {
 
 		for(INotificationService notificationService: embeddedServices)
 		{
-		    NotificationResponse response = notificationService.getNotifications(userInfo);
+		    NotificationResponse response = notificationService.getNotifications(req);
 		    masterResponse.addResponseData(response);
 		}
 		

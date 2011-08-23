@@ -1,16 +1,10 @@
 package org.jasig.portlet.notice.service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
+import javax.portlet.PortletRequest;
 
 import org.jasig.portlet.notice.response.NotificationResponse;
 import org.jasig.portlet.notice.service.exceptions.NotificationServiceException;
@@ -18,7 +12,6 @@ import org.jasig.portlet.notice.service.iface.INotificationService;
 
 import net.sf.json.JSON;
 import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
 /**
@@ -54,7 +47,7 @@ public class DemoNotificationService implements INotificationService{
      * @param username
      * @return List of service requests or an empty list
      */
-    public NotificationResponse getNotifications(Map<String, String> userInfo)
+    public NotificationResponse getNotifications(PortletRequest req)
     throws NotificationServiceException
     {
     	return readFromFile(demoFilename);

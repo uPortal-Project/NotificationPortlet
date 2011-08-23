@@ -29,7 +29,7 @@
         memoryStoreEvictionPolicy="LFU"/>
 
     <cache name="notificationCache"
-        maxElementsInMemory="100"
+        maxElementsInMemory="500"
         eternal="false"
         timeToLiveSeconds="900"
         overflowToDisk="false"

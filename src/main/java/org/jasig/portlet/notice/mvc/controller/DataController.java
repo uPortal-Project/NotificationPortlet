@@ -8,7 +8,6 @@ import java.util.Set;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
 import org.apache.commons.logging.Log;
@@ -42,19 +41,11 @@ public class DataController {
 	    // RequestParam("key") String key, HttpServletRequest request, ModelMap model
 		log.trace("In getNotifications");
 
-        @SuppressWarnings("rawtypes")
-        Map userInfo = (Map) req.getAttribute(PortletRequest.USER_INFO);
-        String login = (String) userInfo.get("user.login.id");
-
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("login", login);
-        params.put("username", req.getRemoteUser());
-
         Map<String, Object> model = new HashMap<String, Object>();
         try {
 
         	//get the notifications and any data retrieval errors
-            NotificationResponse notificationResponse = notificationService.getNotifications(params);
+            NotificationResponse notificationResponse = notificationService.getNotifications(req);
 
             //filter out any errors that have been hidden by the user
             PortletSession session = req.getPortletSession(true);

@@ -1,13 +1,13 @@
 package org.jasig.portlet.notice.service.iface;
 
-import java.util.Map;
+import javax.portlet.PortletRequest;
 
 import org.jasig.portlet.notice.response.NotificationResponse;
 import org.jasig.portlet.notice.service.exceptions.NotificationServiceException;
 
 /**
- * This is the interface used to retrieve notifications
- * from a notifications data source.
+ * This is the interface used to retrieve notifications from a notifications 
+ * data source.
  */
 public interface INotificationService {
 
@@ -18,13 +18,13 @@ public interface INotificationService {
 	public String getName();
 
     /**
-     * Retrieves a single ServiceRequest by uid for the requester from the configured DAO
+     * Gathers the collection of notifications for the user associated with the 
+     * srequest.
      * 
-     * @param userInfo client data.
+     * @param req The PortletRequest
      * @return NotificationResponse
      * @throws NotificationServiceException
      */
-    public NotificationResponse getNotifications(Map<String, String> userInfo)
-    	throws NotificationServiceException;    
+    public NotificationResponse getNotifications(PortletRequest req) throws NotificationServiceException;    
         
 }
