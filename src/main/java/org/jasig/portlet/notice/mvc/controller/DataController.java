@@ -77,9 +77,9 @@ public class DataController {
                 let implementers write specific instructions for
                 their service desks to follow for specific errors.
             ******************************************************** */
+            log.error( "Unanticipated Error", ex);
             model.put("errorMessage", ex.getMessage());
             ajaxPortletSupportService.redirectAjaxResponse("ajax/json", model, req, res);
-            log.error( "Unanticipated Error", ex);
         }
 	}
 
