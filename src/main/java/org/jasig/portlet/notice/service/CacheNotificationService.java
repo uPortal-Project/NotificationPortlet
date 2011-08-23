@@ -7,8 +7,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.response.NotificationResponse;
 import org.jasig.portlet.notice.service.exceptions.NotificationServiceException;
-import org.jasig.portlet.notice.service.iface.INotificationService;
 import com.googlecode.ehcache.annotations.Cacheable;
+import com.googlecode.ehcache.annotations.KeyGenerator;
+import com.googlecode.ehcache.annotations.PartialCacheKey;
+import com.googlecode.ehcache.annotations.Property;
+import com.googlecode.ehcache.annotations.TriggersRemove;
 
 /**
  * This class contains all the notification service providers. It implements
@@ -28,9 +31,33 @@ public class CacheNotificationService implements INotificationService {
 		return "CacheService";
 	}
 
-	@Cacheable(cacheName="notificationCache")
+    @Cacheable(cacheName="notificationCache",
+        keyGenerator = @KeyGenerator (
+            name = "HashCodeCacheKeyGenerator",
+            properties = @Property(name="includeMethod", value="false")
+        )
+    )
+    @Override
+    public NotificationResponse getNotifications(@PartialCacheKey String notificationsContextName, 
+            @PartialCacheKey String remoteUser, PortletRequest req) throws NotificationServiceException {
+        // The point of providing this implementation (instead of extending 
+        // AbstractNotificationService) is for the caching annotations
+        return this.fetchNotificationsFromSource(req);
+    }
+    
+    @TriggersRemove(cacheName="notificationCache",
+        keyGenerator = @KeyGenerator (
+            name = "HashCodeCacheKeyGenerator",
+            properties = @Property(name="includeMethod", value="false")
+        )
+    )
+    @Override
+    public void refreshNotifications(String notificationsContextName, String remoteUser) {
+        // This method exists for its annotations.
+    }
+
 	@Override
-	public NotificationResponse getNotifications(PortletRequest req)
+	public NotificationResponse fetchNotificationsFromSource(PortletRequest req)
 		throws NotificationServiceException
 	{
 	    log.debug("Invoking embedded notification services...");
@@ -39,7 +66,7 @@ public class CacheNotificationService implements INotificationService {
 
 		for(INotificationService notificationService: embeddedServices)
 		{
-		    NotificationResponse response = notificationService.getNotifications(req);
+		    NotificationResponse response = notificationService.fetchNotificationsFromSource(req);
 		    masterResponse.addResponseData(response);
 		}
 		
@@ -50,4 +77,5 @@ public class CacheNotificationService implements INotificationService {
     public void setEmbeddedServices(List<INotificationService> embeddedServices) {
         this.embeddedServices = embeddedServices;
     }
+
 }

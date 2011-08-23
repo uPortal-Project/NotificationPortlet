@@ -8,7 +8,6 @@ import javax.portlet.PortletRequest;
 
 import org.jasig.portlet.notice.response.NotificationResponse;
 import org.jasig.portlet.notice.service.exceptions.NotificationServiceException;
-import org.jasig.portlet.notice.service.iface.INotificationService;
 
 import net.sf.json.JSON;
 import net.sf.json.JSONException;
@@ -18,7 +17,7 @@ import net.sf.json.JSONSerializer;
  * This is a simple demo service provider. It reads data from
  * a file and returns it.
  */
-public class DemoNotificationService implements INotificationService{
+public class DemoNotificationService extends AbstractNotificationService {
 
 	private String demoFilename = "DemoNoticationResponse.dat";
 	
@@ -47,7 +46,7 @@ public class DemoNotificationService implements INotificationService{
      * @param username
      * @return List of service requests or an empty list
      */
-    public NotificationResponse getNotifications(PortletRequest req)
+    public NotificationResponse fetchNotificationsFromSource(PortletRequest req)
     throws NotificationServiceException
     {
     	return readFromFile(demoFilename);
