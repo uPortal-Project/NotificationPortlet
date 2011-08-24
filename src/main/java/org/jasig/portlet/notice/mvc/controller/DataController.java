@@ -40,7 +40,7 @@ public class DataController {
 	private INotificationService notificationService;
     
     @RequestMapping(params="action=getNotifications")
-	public void getNotifications(ActionRequest req, ActionResponse res, @RequestParam("refresh") String doRefresh) throws IOException {
+	public void getNotifications(ActionRequest req, ActionResponse res, @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
 
 	    // RequestParam("key") String key, HttpServletRequest request, ModelMap model
 		log.trace("In getNotifications");
