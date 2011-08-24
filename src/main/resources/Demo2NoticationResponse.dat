@@ -12,6 +12,17 @@
         {
      "body": "The room you requested is now available.",
      "dismissed": false,
+     "dueDate":      {
+      "date": 9,
+      "day": 2,
+      "hours": 11,
+      "minutes": 57,
+      "month": 7,
+      "seconds": 28,
+      "time": 1312916248695,
+      "timezoneOffset": 420,
+      "year": 111
+     },
      "endDate":      {
       "date": 9,
       "day": 2,
