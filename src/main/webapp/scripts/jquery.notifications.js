@@ -38,7 +38,7 @@
     // currently being displayed), defaults to today
     var filterState = {"days": 1};
     
-    function getNotifications(params, doRefresh) {
+    function getNotifications(params) {
             
       // Looading div is displayed by default
       // and is then hidden after the AJAX call
@@ -48,13 +48,11 @@
         filterOptions.fadeIn("fast");
       });
       
-      var data = $.extend({}, params, {refresh: doRefresh || 'false' });
-      
       $.ajax({
         url      : opts.url,
         type     : 'POST',
         dataType : 'json',
-        data     : data,
+        data     : params,
         
         beforeSend: function () {
           
@@ -137,9 +135,19 @@
                         &raquo; \
                       {% } %} \
                       <a href="{{ entry.link }}" \
-                      data-body="{{ entry.body }}" \
-                      data-title="{{ entry.title }}" \
-                      data-source="{{ entry.source }}"> {{ entry.title }}</a> \
+                         data-body="{{ entry.body }}" \
+                         data-title="{{ entry.title }}" \
+                         data-source="{{ entry.source }}"> {{ entry.title }}</a> \
+                      {% if ( entry.dueDate ) { \
+                           var date  = new Date(entry.dueDate.time), \
+                               month = date.getMonth() + 1, \
+                               day   = date.getDay(), \
+                               year  = date.getFullYear(), \
+                               overDue = (date < new Date() ? " overdue" : ""); %} \
+                        <span class="notification-due-date{{ overDue }}"> \
+                          Due {{ month }}/{{ day }}/{{ year }} \
+                        </span> \
+                      {% } %} \
                     </li> \
                   {% }); %} \
                 </ul> \
@@ -222,7 +230,7 @@
       
       refresh: function () {
         refreshButton.click(function () {
-          getNotifications(filterState, "true");
+          getNotifications(filterState);
           return false;
         });
       },

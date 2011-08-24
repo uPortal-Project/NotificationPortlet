@@ -63,6 +63,12 @@
   line-height: 18px;
   font-size: 11px;
 }
+.up .notification-portlet-wrapper .notification-content .notification-due-date {
+  color: #666;
+}
+.up .notification-portlet-wrapper .notification-content .notification-due-date.overdue {
+  color: red;
+}
 .up .notification-portlet-wrapper .notification-detail-wrapper .notification-back-button {
   cursor: pointer;
 }
