@@ -38,7 +38,7 @@
     // currently being displayed), defaults to today
     var filterState = {"days": 1};
     
-    function getNotifications(params) {
+    function getNotifications(params, doRefresh) {
             
       // Looading div is displayed by default
       // and is then hidden after the AJAX call
@@ -48,11 +48,13 @@
         filterOptions.fadeIn("fast");
       });
       
+      var data = $.extend({}, params, {refresh: doRefresh || 'false' });
+      
       $.ajax({
         url      : opts.url,
         type     : 'POST',
         dataType : 'json',
-        data     : params,
+        data     : data,
         
         beforeSend: function () {
           
@@ -230,7 +232,7 @@
       
       refresh: function () {
         refreshButton.click(function () {
-          getNotifications(filterState);
+          getNotifications(filterState, ''true');
           return false;
         });
       },
