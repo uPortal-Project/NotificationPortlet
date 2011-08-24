@@ -18,6 +18,7 @@ public class NotificationEntry implements Serializable {
 	private String    link;
 	private Date      startDate;
 	private Date      endDate;
+	private Date      dueDate;
 	private int       priority;
 	private boolean   dismissed;
 	private String    imageUrl;
@@ -146,6 +147,24 @@ public class NotificationEntry implements Serializable {
 	}
 	
 	/**
+	 * Returns the due date attribute.
+	 *
+	 * @return Date.
+	 */
+	public Date getDueDate() {
+		return dueDate;
+	}
+
+	/**
+	 * Sets the due date attribute.
+	 *
+	 * @param dueDate is the new due date value.
+	 */
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	/**
 	 * Returns the priority attribute.
 	 *
 	 * @return int.
@@ -205,6 +224,7 @@ public class NotificationEntry implements Serializable {
 				+ "\tLink       = " + link  + "\n"
 				+ "\tStartDate  = " + startDate  + "\n"
 				+ "\tEndDate    = " + endDate  + "\n"
+				+ "\tDueDate    = " + dueDate  + "\n"
 				+ "\tPriority   = " + priority  + "\n"
 				+ "\tDismissed  = " + dismissed  + "\n"
 				+ "\tImage URL  = " + imageUrl + "\n";
