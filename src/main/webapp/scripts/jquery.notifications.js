@@ -232,7 +232,7 @@
       
       refresh: function () {
         refreshButton.click(function () {
-          getNotifications(filterState, ''true');
+          getNotifications(filterState, 'true');
           return false;
         });
       },
