@@ -18,6 +18,7 @@
 
     // Cache existing DOM elements  
     var portlet         = this.find(".notification-portlet-wrapper"),
+        outerContainer  = this.selector,
         links           = this.find(".notification-portlet a"),
         errorContainer  = this.find(".notification-error-container"),
         loading         = this.find(".notification-loading"),
@@ -86,7 +87,7 @@
 
           // Once notifications have been injected into the DOM
           // we cache the notication element...
-          notification = $(".notifications a");
+          notification = $(outerContainer + " .notifications a");
 
           // ...and bind our events
           bindEvent.accordion(data);
