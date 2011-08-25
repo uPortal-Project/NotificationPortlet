@@ -1,11 +1,10 @@
 {
- "errors":  [
-    {
-   "error": "Service Not Available",
-   "source": "Demo Service",
-   "category": "Student Services",
-  }
- ],
+    "errors": [
+        {
+            "error": "Service Not Available",
+            "source": "Demo 2 Service"
+        }
+    ],
  "categories":  [
     {
    "entries":    [

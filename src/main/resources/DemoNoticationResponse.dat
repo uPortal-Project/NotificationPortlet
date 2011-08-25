@@ -1,14 +1,10 @@
 {
- "errors":  [
-    {
-   "error": "Connection Timeout",
-   "source": "Demo Service"
-  },
-    {
-   "error": "Invalid Data",
-   "source": "Demo Service"
-  }
- ],
+    "errors": [
+        {
+            "error": "Connection Timeout",
+            "source": "Demo Service"
+        }
+     ],
  "categories":  [
     {
    "entries":    [
