@@ -11,6 +11,8 @@ import java.util.Date;
 public class NotificationEntry implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	public enum Priority{ Low, Normal, High };	
+	
 	private String    source;
 	private String    title;
 	private String    summary;
@@ -19,7 +21,7 @@ public class NotificationEntry implements Serializable {
 	private Date      startDate;
 	private Date      endDate;
 	private Date      dueDate;
-	private int       priority;
+	private Priority  priority = Priority.Low;
 	private boolean   dismissed;
 	private String    imageUrl;
 
@@ -169,7 +171,7 @@ public class NotificationEntry implements Serializable {
 	 *
 	 * @return int.
 	 */
-	public int getPriority() {
+	public Priority getPriority() {
 		return priority;
 	}
 
@@ -178,7 +180,7 @@ public class NotificationEntry implements Serializable {
 	 *
 	 * @param priority is the new priority value.
 	 */
-	public void setPriority(int priority) {
+	public void setPriority(Priority priority) {
 		this.priority = priority;
 	}
 	
@@ -225,7 +227,7 @@ public class NotificationEntry implements Serializable {
 				+ "\tStartDate  = " + startDate  + "\n"
 				+ "\tEndDate    = " + endDate  + "\n"
 				+ "\tDueDate    = " + dueDate  + "\n"
-				+ "\tPriority   = " + priority  + "\n"
+				+ "\tPriority   = " + priority.toString()  + "\n"
 				+ "\tDismissed  = " + dismissed  + "\n"
 				+ "\tImage URL  = " + imageUrl + "\n";
 	}
