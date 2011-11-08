@@ -223,7 +223,8 @@
                             <groupId>org.jasig.resourceserver</groupId>
                             <artifactId>resource-server-content</artifactId>
                             <includes>
-                                <include>rs/jquery/1.4.2/jquery-1.4.2.min.js</include>
+                                <include>rs/jquery/1.6.1/jquery-1.6.1.min.js</include>
+                                <include>rs/jqueryui/1.8.13/jquery-ui-1.8.13.min.js</include>
                             </includes>
                         </overlay>
                     </overlays>
