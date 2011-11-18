@@ -3,8 +3,8 @@
         'http://java.sun.com/dtd/web-app_2_3.dtd'>
 <web-app>
 
-    <display-name>Notifications Portlet</display-name>
-    <description>Notifications Portlet</description>
+    <display-name>Thread Leak Portlet</display-name>
+    <description>Leaking threads Portlet</description>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
