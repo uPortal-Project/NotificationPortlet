@@ -10,7 +10,7 @@
     <groupId>org.jasig.portlet</groupId>
     <artifactId>NotificationPortlet</artifactId>
     <packaging>war</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>Notification Portlet</name>
     <description>Displays important notices from campus systems.</description>
@@ -273,4 +273,10 @@
             </plugin>
         </plugins>
     </build>
+
+  <scm>
+    <connection>scm:svn:https://source.jasig.org/jasig-parent/tags/NotificationPortlet-1.0.0</connection>
+    <developerConnection>scm:svn:https://source.jasig.org/jasig-parent/tags/NotificationPortlet-1.0.0</developerConnection>
+    <url>https://developer.jasig.org/source/browse/jasigsvn/jasig-parent/tags/NotificationPortlet-1.0.0</url>
+  </scm>
 </project>
