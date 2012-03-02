@@ -1,7 +1,3 @@
-Copyright 2010, JA-SIG, Inc.
-This project includes software developed by Jasig.
-http://www.jasig.org/
-
 Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License. You may obtain a copy of the License at:
@@ -16,42 +12,30 @@ specific language governing permissions and limitations
 under the License.
 
 This project includes:
-  Fluid Infusion and Skinning System under the New BSD license
-  jQuery, jQueryUI, and the jQuery Form Plugin under the MIT license
-  The famfamfam Silk Icons under the Creative Commons Attribution 3.0 License
-    http://www.famfamfam.com/lab/icons/silk/
-
   AJAX Portlet Support under The BSD License
   AOP alliance under Public Domain
-  Batik CSS engine under The Apache Software License, Version 2.0
-  Batik external code under The Apache Software License, Version 2.0
-  Batik utility library under The Apache Software License, Version 2.0
   Collections under The Apache Software License, Version 2.0
   Commons Codec under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   Commons Lang under The Apache Software License, Version 2.0
+  Commons Logging under The Apache Software License, Version 2.0
   Ehcache Core under The Apache Software License, Version 2.0
   Ehcache Spring Annotations under Apache 2
-  Ehcache Web Filters under The Apache Software License, Version 2.0
   ezmorph under The Apache Software License, Version 2.0
   HttpClient under Apache License
   json-lib under The Apache Software License, Version 2.0
   Json-lib4Spring under The Apache Software License, Version 2.0
   JUnit under Common Public License Version 1.0
   Log4j under The Apache Software License, Version 2.0
-  Logging under The Apache Software License, Version 2.0
-  Notification Portlet under Apache License Version 2.0
-  Pluto Portlet Tag Library under The Apache Software License, Version 2.0
+  Notification Portlet under JA-SIG Collaborative Licence
   Portlet API under Commons Development and Distribution License, Version 1.0
   Resource Server Content under Apache License Version 2.0
   Resource Server Utilities under Apache License Version 2.0
   SLF4J API Module under MIT License
-  Spring Framework: AOP under The Apache Software License, Version 2.0
   Spring Framework: Beans under The Apache Software License, Version 2.0
   Spring Framework: Context under The Apache Software License, Version 2.0
   Spring Framework: Context Support under The Apache Software License, Version 2.0
   Spring Framework: Core under The Apache Software License, Version 2.0
-  Spring Framework: Test under The Apache Software License, Version 2.0
   Spring Framework: Web under The Apache Software License, Version 2.0
   Spring Framework: Web MVC under The Apache Software License, Version 2.0
   Spring Framework: Web MVC Portlet under The Apache Software License, Version 2.0
@@ -59,5 +43,4 @@ This project includes:
   Unnamed - javax.servlet:jstl:jar:1.1.2 under Commons Development and Distribution License, Version 1.0
   Unnamed - javax.servlet:servlet-api:jar:2.4 under Commons Development and Distribution License, Version 1.0
   Unnamed - taglibs:standard:jar:1.1.2 under Apache License, Version 2.0
-  XML Commons External Components XML APIs Extensions under The Apache Software License, Version 2.0
 
