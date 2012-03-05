@@ -22,7 +22,6 @@ package org.jasig.portlet.notice.response;
 import java.io.Serializable;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
@@ -200,7 +199,7 @@ public class NotificationResponse implements Serializable {
 	}
 
 	public void filterErrors(Set<Integer> filterErrors) {
-	    List<NotificationError> iSetClone = new ArrayList(errors);
+	    List<NotificationError> iSetClone = new ArrayList<NotificationError>(errors);
         for(NotificationError error : iSetClone)
         {
             if(filterErrors.contains(error.getKey()))
