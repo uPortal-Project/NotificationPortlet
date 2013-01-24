@@ -29,6 +29,7 @@ import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
+import javax.portlet.ResourceRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,10 +37,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import org.jasig.portlet.notice.response.NotificationResponse;
 import org.jasig.portlet.notice.service.INotificationService;
-import org.jasig.web.service.AjaxPortletSupportService;
 
 @Controller
 @RequestMapping("VIEW")
@@ -52,14 +54,11 @@ public class DataController {
 	@Resource
 	private String notificationsContextName;
 
-	@Autowired(required=true)
-    private AjaxPortletSupportService ajaxPortletSupportService;
-
     @Autowired(required=true)
 	private INotificationService notificationService;
     
-    @RequestMapping(params="action=getNotifications")
-	public void getNotifications(ActionRequest req, ActionResponse res, @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
+    @ResourceMapping("GET-NOTIFICATIONS")
+	public ModelAndView getNotifications(ResourceRequest req, @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
 
 	    // RequestParam("key") String key, HttpServletRequest request, ModelMap model
 		log.trace("In getNotifications");
@@ -87,7 +86,7 @@ public class DataController {
             notificationResponse.filterErrors(hidden);
             
             model.put("notificationResponse", notificationResponse);
-            ajaxPortletSupportService.redirectAjaxResponse("ajax/json", model, req, res);
+            return new ModelAndView("json", model);
 
         } catch (Exception ex) {
             /* ********************************************************
@@ -98,8 +97,9 @@ public class DataController {
             ******************************************************** */
             log.error( "Unanticipated Error", ex);
             model.put("errorMessage", ex.getMessage());
-            ajaxPortletSupportService.redirectAjaxResponse("ajax/json", model, req, res);
+            return new ModelAndView("json", model);
         }
+
 	}
 
     @RequestMapping(params="action=hideError")

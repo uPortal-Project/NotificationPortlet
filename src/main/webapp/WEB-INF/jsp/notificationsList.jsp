@@ -19,35 +19,20 @@
 
 --%>
 
-<%@ page contentType="text/html" isELIgnored="false" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="portlet" uri="http://java.sun.com/portlet" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="rs" uri="http://www.jasig.org/resource-server" %>
-<portlet:defineObjects/>
+<jsp:directive.include file="/WEB-INF/jsp/include.jsp"/>
+
 <c:set var="n"><portlet:namespace/></c:set>
-<portlet:actionURL var="hideErrorUrl"><portlet:param name="action" value="hideError"/><portlet:param name="errorKey" value="ERRORKEY"/></portlet:actionURL>
-<link rel="stylesheet" href="<c:url value="/styles/styles.css"/>" type="text/css" media="screen" />
+
+<portlet:actionURL var="hideErrorUrl" escapeXml="false">
+    <portlet:param name="action" value="hideError"/>
+    <portlet:param name="errorKey" value="ERRORKEY"/>
+</portlet:actionURL>
+
 <script src="<rs:resourceURL value="/rs/jquery/1.6.1/jquery-1.6.1.min.js"/>" type="text/javascript"></script>
 <script src="<rs:resourceURL value="/rs/jqueryui/1.8.13/jquery-ui-1.8.13.min.js"/>" type="text/javascript"></script>
 <script src="<c:url value="/scripts/underscore.min.js"/>" type="text/javascript"></script>
 <script src="<c:url value="/scripts/jquery.accordion.js"/>" type="text/javascript"></script>
 <script src="<c:url value="/scripts/jquery.notifications.js"/>" type="text/javascript"></script>
-
-<!-- call ajax on dynamic portlet id -->
-<script type="text/javascript">
-    var ${n} = ${n} || {};
-    ${n}.jQuery = jQuery.noConflict(true);
-    ${n}.jQuery(document).ready(function () { 
-        ${n}.jQuery("#${n}container").notifications({ 
-            url: '<portlet:actionURL><portlet:param name="action" value="getNotifications"/></portlet:actionURL>',
-            hideErrorUrl: '${hideErrorUrl}'
-        });
-    });
-</script>
 
 <div id="${n}container" class="notification-portlet">
 
@@ -59,27 +44,38 @@
 		<p class="notification-refresh"><a href="#">Refresh</a></p>
 	</div>
 
-     <!-- loading -->
-   <div class="notification-loading"></div>
+    <!-- loading -->
+    <div class="notification-loading"></div>
   
-            <!-- notifications -->
-            <div class="notification-portlet-wrapper" style="display: none;">
+        <!-- notifications -->
+        <div class="notification-portlet-wrapper" style="display: none;">
             
-              <!-- accordion -->
-     <div class="notification-container accordion"></div>
+        <!-- accordion -->
+        <div class="notification-container accordion"></div>
 
-              <!-- detail view -->
-              <div class="notification-detail-wrapper" style="display: none;">
+            <!-- detail view -->
+            <div class="notification-detail-wrapper" style="display: none;">
                 <div class="notification-back-button">
-                  <span>Back</span>
+                    <span>Back</span>
                 </div>
                 <div class="notification-detail-container"></div>
-              </div>
+            </div>
 
-              <!-- errors -->
-              <div class="notification-error-container" style="display: none;"></div>
+            <!-- errors -->
+            <div class="notification-error-container" style="display: none;"></div>
   
      </div>
 
 </div>
 
+<!-- call ajax on dynamic portlet id -->
+<script type="text/javascript">
+    var ${n} = ${n} || {};
+    ${n}.jQuery = jQuery.noConflict(true);
+    ${n}.jQuery(document).ready(function () { 
+        ${n}.jQuery("#${n}container").notifications({ 
+            url: '<portlet:resourceURL id="GET-NOTIFICATIONS"/>',
+            hideErrorUrl: '${hideErrorUrl}'
+        });
+    });
+</script>
