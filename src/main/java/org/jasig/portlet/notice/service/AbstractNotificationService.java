@@ -19,6 +19,7 @@
 
 package org.jasig.portlet.notice.service;
 
+import org.jasig.portlet.notice.INotificationService;
 import org.springframework.beans.factory.annotation.Required;
 
 public abstract class AbstractNotificationService implements INotificationService {

@@ -29,7 +29,8 @@ import net.sf.ehcache.Element;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jasig.portlet.notice.response.NotificationResponse;
+import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.util.UsernameFinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;

@@ -25,7 +25,7 @@ import java.net.URL;
 import javax.portlet.PortletRequest;
 
 import org.apache.commons.io.FileUtils;
-import org.jasig.portlet.notice.response.NotificationResponse;
+import org.jasig.portlet.notice.NotificationResponse;
 import org.springframework.beans.factory.annotation.Required;
 
 /**

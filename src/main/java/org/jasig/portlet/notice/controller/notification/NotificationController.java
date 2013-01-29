@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.jasig.portlet.notice.mvc.controller;
+package org.jasig.portlet.notice.controller.notification;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
@@ -33,6 +32,8 @@ import javax.portlet.ResourceRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.NotificationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,33 +41,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
-import org.jasig.portlet.notice.response.NotificationResponse;
-import org.jasig.portlet.notice.service.INotificationService;
-
 @Controller
 @RequestMapping("VIEW")
-public class DataController {
-    
-    public static final String ATTRIBUTE_HIDDEN_ERRORS = DataController.class.getName() + ".ATTRIBUTE_HIDDEN_ERRORS";
+public class NotificationController {
 
-	private Log log = LogFactory.getLog(getClass());
-	
-	@Resource
-	private String notificationsContextName;
+    public static final String ATTRIBUTE_HIDDEN_ERRORS = NotificationController.class.getName() + ".ATTRIBUTE_HIDDEN_ERRORS";
+
+    private Log log = LogFactory.getLog(getClass());
 
     @Autowired(required=true)
-	private INotificationService notificationService;
-    
-    @ResourceMapping("GET-NOTIFICATIONS")
-	public ModelAndView getNotifications(ResourceRequest req, @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
+    private INotificationService notificationService;
 
-	    // RequestParam("key") String key, HttpServletRequest request, ModelMap model
-		log.trace("In getNotifications");
+    @RequestMapping
+	public String showNotificationsList() {
+	    log.trace("In showNotificationsList");
+		return "notificationsList";
+	}
+	
+    @ResourceMapping("GET-NOTIFICATIONS")
+    public ModelAndView getNotifications(ResourceRequest req, @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
+
+        // RequestParam("key") String key, HttpServletRequest request, ModelMap model
+        log.trace("In getNotifications");
 
         Map<String, Object> model = new HashMap<String, Object>();
         try {
 
-        	// Get the notifications and any data retrieval errors
+            // Get the notifications and any data retrieval errors
             NotificationResponse notificationResponse = notificationService.getNotifications(req, Boolean.valueOf(doRefresh));
 
             //filter out any errors that have been hidden by the user
@@ -95,7 +96,7 @@ public class DataController {
             return new ModelAndView("json", model);
         }
 
-	}
+    }
 
     @RequestMapping(params="action=hideError")
     public void hideError(ActionRequest req, ActionResponse res, @RequestParam("errorKey") String errorKey) throws IOException {

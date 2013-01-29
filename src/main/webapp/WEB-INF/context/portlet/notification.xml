@@ -30,7 +30,7 @@
 
     <!-- main portlet annotation -->
     <context:annotation-config/>
-    <context:component-scan base-package="org.jasig.portlet.notice.mvc.controller"/>
+    <context:component-scan base-package="org.jasig.portlet.notice.controller.notification"/>
     
     <bean class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
     
