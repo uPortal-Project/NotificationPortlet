@@ -103,11 +103,9 @@ public class NotificationResponse implements Serializable {
 	 * @param data the JSON data string.
 	 * @return NotificationRequest, null if the JSON data is invalid.
 	 */
-	public static NotificationResponse fromJson(String data)
-	{
-		NotificationResponse request = null;
-		try
-		{
+	public static NotificationResponse fromJson(String data) {
+		NotificationResponse rslt = null;
+		try {
 			//create a map that is used to convert the JSON data back into a class object
 			Map<String, Object> convertMap = new HashMap<String, Object>();
 			convertMap.put("errors", NotificationError.class);
@@ -115,14 +113,13 @@ public class NotificationResponse implements Serializable {
 			convertMap.put("entries", NotificationEntry.class);
 
 			JSONObject json = JSONObject.fromObject(data);
-			request = (NotificationResponse)JSONObject.toBean(json, NotificationResponse.class, convertMap);
+			rslt = (NotificationResponse)JSONObject.toBean(json, NotificationResponse.class, convertMap);
 		}
-		catch(JSONException je)
-		{
+		catch(JSONException je) {
 			je.printStackTrace();
 		}
 
-		return request;
+		return rslt;
 	}
 	
 	public Map<String, Object> toMap()

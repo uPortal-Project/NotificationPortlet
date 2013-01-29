@@ -65,14 +65,9 @@ public class DataController {
 
         Map<String, Object> model = new HashMap<String, Object>();
         try {
-            
-            // Figure out if we're here because of a refresh click and act accordingly
-            if (Boolean.valueOf(doRefresh)) {
-                notificationService.refreshNotifications(notificationsContextName, req.getRemoteUser());
-            }
 
-        	//get the notifications and any data retrieval errors
-            NotificationResponse notificationResponse = notificationService.getNotifications(notificationsContextName, req.getRemoteUser(), req);
+        	// Get the notifications and any data retrieval errors
+            NotificationResponse notificationResponse = notificationService.getNotifications(req, Boolean.valueOf(doRefresh));
 
             //filter out any errors that have been hidden by the user
             PortletSession session = req.getPortletSession(true);

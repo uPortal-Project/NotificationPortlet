@@ -19,18 +19,14 @@
 
 package org.jasig.portlet.notice.service;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.IOException;
+import java.io.File;
+import java.net.URL;
 
 import javax.portlet.PortletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.jasig.portlet.notice.response.NotificationResponse;
-import org.jasig.portlet.notice.service.exceptions.NotificationServiceException;
-
-import net.sf.json.JSON;
-import net.sf.json.JSONException;
-import net.sf.json.JSONSerializer;
+import org.springframework.beans.factory.annotation.Required;
 
 /**
  * This is a simple demo service provider. It reads data from
@@ -38,97 +34,50 @@ import net.sf.json.JSONSerializer;
  */
 public class DemoNotificationService extends AbstractNotificationService {
 
-	private String demoFilename = "DemoNoticationResponse.dat";
-	
-	/**
-	 * Returns the name of the service.
-	 * @return String.
-	 */
-	public String getName()
-	{
-		return "DemoService";
-	}
+    private String demoFilename;
 
 	/**
 	 * Set the filename of the demo data.
-	 * @param filename is the demo filename.
+	 * @param filename Location of the demo data file
 	 */
-	public void setFilename(String filename)
-	{
+    @Required
+	public void setFilename(String filename) {
 		demoFilename = filename;
 	}
+
+    @Override
+    public NotificationResponse getNotifications(PortletRequest req, boolean refresh) {
+        return readFromFile(demoFilename);
+    }
     
-    /**
-     * Retrieves all available service requests for requester
-     * 
-     * @param partyNumber
-     * @param username
-     * @return List of service requests or an empty list
+    /*
+     * Implementation
      */
-    public NotificationResponse fetchNotificationsFromSource(PortletRequest req)
-    throws NotificationServiceException
-    {
-    	return readFromFile(demoFilename);
+
+    /**
+     * Deserialize the given JSON formatted file back into a object.
+     *
+     * @param filename The path and name of the file to be read.
+     * @return NotificationRequest, null if the de-serialization fails.
+     */
+    private NotificationResponse readFromFile(String filename) {
+        
+        URL location = getClass().getClassLoader().getResource(filename);
+        
+        if (location == null) {
+            String msg = "Demo file not found:  " + filename;
+            throw new RuntimeException(msg);
+        }
+
+        try {
+            File f = new File(location.toURI());
+            String json = FileUtils.readFileToString(f, "UTF-8");
+            return NotificationResponse.fromJson(json);
+        } catch(Exception e) {
+            String msg = "Failed to read the demo data file:  " + location;
+            throw new RuntimeException(msg);
+        }
+
     }
 
-	/**
-	 * Serialize the given instance to JSON data and write it to a file.
-	 *
-	 * @param request is the NotificationRequest instance to be serialized to a file.
-	 * @param filename is the path and name of the file to be written.
-	 * @return boolean, false if the data write fails.
-	 */
-	public boolean writeToFile(NotificationResponse request, String filename)
-	{
-		try
-		{
-			JSON json = JSONSerializer.toJSON(request.toMap());
-			String data = json.toString(1);
-			
-			FileOutputStream fos = new FileOutputStream(filename);
-			fos.write(data.getBytes());
-			fos.close();
-			return true;
-		}
-		catch(JSONException je)
-		{
-			je.printStackTrace();
-			return false;
-		}
-		catch(IOException ioe)
-		{
-			ioe.printStackTrace();
-			return false;
-		}
-	}
-
-	/**
-	 * De-serialize the given JSON formatted file back into a object.
-	 *
-	 * @param filename is the path and name of the file to be read.
-	 * @return NotificationRequest, null if the de-serialization fails.
-	 */
-	public NotificationResponse readFromFile(String filename)
-	{
-		try
-		{
-			InputStream fis = getClass().getClassLoader().getResourceAsStream(filename);
-			int available = fis.available();
-			byte[] bytes = new byte[available];
-			fis.read(bytes);
-			fis.close();
-
-			return NotificationResponse.fromJson(new String(bytes));
-		}
-		catch(JSONException je)
-		{
-			je.printStackTrace();
-			return null;
-		}
-		catch(IOException ioe)
-		{
-			ioe.printStackTrace();
-			return null;
-		}
-	}
 }

@@ -19,22 +19,20 @@
 
 package org.jasig.portlet.notice.service;
 
-import javax.portlet.PortletRequest;
-
-import org.jasig.portlet.notice.response.NotificationResponse;
-import org.jasig.portlet.notice.service.exceptions.NotificationServiceException;
+import org.springframework.beans.factory.annotation.Required;
 
 public abstract class AbstractNotificationService implements INotificationService {
 
-    
-    public final NotificationResponse getNotifications(String notificationsContextName, 
-                String remoteUser, PortletRequest req) throws NotificationServiceException {
-        // Subclasses need nothing special from this method.
-        return this.fetchNotificationsFromSource(req);
-    }
+    private String name;
 
-    public void refreshNotifications(String notificationsContextName, String remoteUser) {
-        // This method is a no-op for basic service impls.
+    @Override
+    public String getName() {
+        return name;
+    }
+    
+    @Required
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

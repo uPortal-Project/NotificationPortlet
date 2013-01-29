@@ -57,12 +57,15 @@
      | multiple portlets with different configurations. 
      +-->
     <bean id="cacheNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
+        <property name="name" value="cacheNoticationService"/>
         <property name="embeddedServices">
             <util:list>
                 <bean id="demoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
+                   <property name="name" value="demoNoticationService1"/>
                    <property name="filename" value="DemoNoticationResponse.dat"/>
                 </bean>
                 <bean id="demoNotificationService2" class="org.jasig.portlet.notice.service.DemoNotificationService">
+                   <property name="name" value="demoNoticationService2"/>
                    <property name="filename" value="Demo2NoticationResponse.dat"/>
                 </bean>
             </util:list>

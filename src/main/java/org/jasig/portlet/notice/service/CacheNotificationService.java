@@ -20,81 +20,92 @@
 package org.jasig.portlet.notice.service;
 
 import java.util.List;
+
+import javax.annotation.Resource;
 import javax.portlet.PortletRequest;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.response.NotificationResponse;
-import org.jasig.portlet.notice.service.exceptions.NotificationServiceException;
-import com.googlecode.ehcache.annotations.Cacheable;
-import com.googlecode.ehcache.annotations.KeyGenerator;
-import com.googlecode.ehcache.annotations.PartialCacheKey;
-import com.googlecode.ehcache.annotations.Property;
-import com.googlecode.ehcache.annotations.TriggersRemove;
+import org.jasig.portlet.notice.util.UsernameFinder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
 /**
  * This class contains all the notification service providers. It implements
  * the EHCache implementation. An instance of this class is called from the
  * DataController in order to retrieve the notifications for a given user.
  */
-public class CacheNotificationService implements INotificationService {
+public class CacheNotificationService extends AbstractNotificationService {
 
+    @Autowired
+    private UsernameFinder usernameFinder;
+
+    private List<INotificationService> embeddedServices;
+    private Cache cache;
     private final Log log = LogFactory.getLog(getClass());
-
-    /**
-	 * Returns the name of the service.
-	 * @return String.
-	 */
-	public String getName()
-	{
-		return "CacheService";
-	}
-
-    @Cacheable(cacheName="notificationCache",
-        keyGenerator = @KeyGenerator (
-            name = "HashCodeCacheKeyGenerator",
-            properties = @Property(name="includeMethod", value="false")
-        )
-    )
-    @Override
-    public NotificationResponse getNotifications(@PartialCacheKey String notificationsContextName, 
-            @PartialCacheKey String remoteUser, PortletRequest req) throws NotificationServiceException {
-        // The point of providing this implementation (instead of extending 
-        // AbstractNotificationService) is for the caching annotations
-        return this.fetchNotificationsFromSource(req);
-    }
     
-    @TriggersRemove(cacheName="notificationCache",
-        keyGenerator = @KeyGenerator (
-            name = "HashCodeCacheKeyGenerator",
-            properties = @Property(name="includeMethod", value="false")
-        )
-    )
-    @Override
-    public void refreshNotifications(String notificationsContextName, String remoteUser) {
-        // This method exists for its annotations.
-    }
-
-	@Override
-	public NotificationResponse fetchNotificationsFromSource(PortletRequest req)
-		throws NotificationServiceException
-	{
-	    log.debug("Invoking embedded notification services...");
-	    
-		NotificationResponse masterResponse = new NotificationResponse();
-
-		for(INotificationService notificationService: embeddedServices)
-		{
-		    NotificationResponse response = notificationService.fetchNotificationsFromSource(req);
-		    masterResponse.addResponseData(response);
-		}
-		
-		return masterResponse;
-	}
-
-	private List<INotificationService> embeddedServices;
+    @Required
     public void setEmbeddedServices(List<INotificationService> embeddedServices) {
         this.embeddedServices = embeddedServices;
     }
+
+    @Resource(name="notificationCache")
+    public void setCache(Cache cache) {
+        this.cache = cache;
+    }
+
+    @Override
+    public NotificationResponse getNotifications(PortletRequest req, boolean refresh) {
+        
+        final String username = usernameFinder.findUsername(req);
+        if (log.isDebugEnabled()) {
+            log.debug("Notifications requested for user:  " + username + ";  refresh=" + refresh);
+        }
+
+        NotificationResponse rslt = new NotificationResponse();
+        String cacheKey = createCacheKey(req);
+        
+        if (!refresh) {
+            // It's okay to pull a response from cache, if we have one
+            Element m = cache.get(cacheKey);
+            if (m != null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Cache HIT for user:  " + username);
+                }
+                rslt = (NotificationResponse) m.getObjectValue();
+                return rslt;
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("Cache MISS for user:  " + username);
+                }
+            }
+        }
+        
+        // For whatever reason we can't pull from cache;  we need to hit 
+        // the underlying data sources, then cache what we receive
+        for(INotificationService notificationService: embeddedServices) {
+            NotificationResponse nr = notificationService.getNotifications(req, refresh);
+            rslt.addResponseData(nr);
+        }        
+        cache.put(new Element(cacheKey, rslt));
+
+        return rslt;
+
+    }
+    
+    /*
+     * Implementation
+     */
+
+    private String createCacheKey(PortletRequest req) {
+        // Use the username until we discover a reason that's not good enough
+        return usernameFinder.findUsername(req);
+    }
+
+
 
 }
