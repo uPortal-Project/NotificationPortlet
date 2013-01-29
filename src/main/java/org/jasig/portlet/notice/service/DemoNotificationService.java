@@ -21,10 +21,15 @@ package org.jasig.portlet.notice.service;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.portlet.PortletRequest;
 
 import org.apache.commons.io.FileUtils;
+import org.jasig.portlet.notice.NotificationCategory;
+import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -33,6 +38,10 @@ import org.springframework.beans.factory.annotation.Required;
  * a file and returns it.
  */
 public class DemoNotificationService extends AbstractNotificationService {
+    
+    private static final int MIN_DAY_DELTA = 1;
+    private static final int MAX_DAY_DELTA = 14;
+    private static final int BLUE_SHIFT = -7;
 
     private String demoFilename;
 
@@ -68,16 +77,45 @@ public class DemoNotificationService extends AbstractNotificationService {
             String msg = "Demo file not found:  " + filename;
             throw new RuntimeException(msg);
         }
+        
+        NotificationResponse rslt = null;
 
         try {
             File f = new File(location.toURI());
             String json = FileUtils.readFileToString(f, "UTF-8");
-            return NotificationResponse.fromJson(json);
+            rslt =  NotificationResponse.fromJson(json);
         } catch(Exception e) {
             String msg = "Failed to read the demo data file:  " + location;
             throw new RuntimeException(msg);
         }
+        
+        // A dash of post-processing:  let's make all the due dates at or near today
+        for (NotificationCategory nc : rslt.getCategories()) {
+            for (NotificationEntry y : nc.getEntries()) {
+                if (y.getDueDate() != null) {
+                    // Just manipulate the ones that actually have 
+                    // a due date;  leave the others blank
+                    y.setDueDate(generateRandomDueDate());
+                }
+            }
+        }
+        
+        return rslt;
 
+    }
+    
+    /*
+     * Implementation
+     */
+
+    private Date generateRandomDueDate() {
+        int randomDelta = MIN_DAY_DELTA 
+                + (int)(Math.random() * ((MAX_DAY_DELTA - MIN_DAY_DELTA) + 1))
+                + BLUE_SHIFT;  // Puts some dates in the past, some in the future
+        Calendar rslt = new GregorianCalendar();
+        rslt.setTimeInMillis(System.currentTimeMillis());
+        rslt.add(Calendar.DATE, randomDelta);
+        return rslt.getTime();
     }
 
 }
