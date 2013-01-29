@@ -68,13 +68,11 @@
         filterOptions.fadeIn("fast");
       });
       
-      var data = $.extend({}, params, {refresh: doRefresh || 'false' });
-      
       $.ajax({
         url      : opts.url,
         type     : 'POST',
         dataType : 'json',
-        data     : data,
+        data     : $.extend({}, params, {refresh: doRefresh || 'false' }),
         
         beforeSend: function () {
           
