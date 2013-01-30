@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
@@ -34,7 +35,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,7 +49,7 @@ public class NotificationController {
 
     private Log log = LogFactory.getLog(getClass());
 
-    @Autowired(required=true)
+    @Resource(name="rootNotificationService")
     private INotificationService notificationService;
 
     @RequestMapping

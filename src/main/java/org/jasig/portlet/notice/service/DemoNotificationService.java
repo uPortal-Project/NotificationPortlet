@@ -39,10 +39,13 @@ import org.springframework.beans.factory.annotation.Required;
  */
 public class DemoNotificationService extends AbstractNotificationService {
     
+    public static final String ENABLE_DEMO_PREFERENCE = "DemoNotificationService.enableDemo";
+
     private static final int MIN_DAY_DELTA = 1;
     private static final int MAX_DAY_DELTA = 14;
     private static final int BLUE_SHIFT = -7;
 
+    private final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
     private final ObjectMapper mapper = new ObjectMapper();
     private String demoFilename;
 
@@ -57,6 +60,13 @@ public class DemoNotificationService extends AbstractNotificationService {
 
     @Override
     public NotificationResponse getNotifications(PortletRequest req, boolean refresh) {
+        
+        // Are we enabled?
+        String enabled = req.getPreferences().getValue(ENABLE_DEMO_PREFERENCE, "false");
+        if (!Boolean.valueOf(enabled)) {
+            return EMPTY_RESPONSE;
+        }
+        
         return readFromFile(demoFilename);
     }
     

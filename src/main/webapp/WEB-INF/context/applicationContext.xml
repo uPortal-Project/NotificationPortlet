@@ -78,4 +78,21 @@
         </property>
     </bean>
     
+    <!-- 
+     | Notification Service Beans
+     |
+     | Reference these as needed within portlet contexts, or optionally define 
+     | additional service beans there.
+     +-->
+    
+    <!-- DEMO -->
+    <bean id="demoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
+       <property name="name" value="demoNoticationService1"/>
+       <property name="filename" value="DemoNoticationResponse.dat"/>
+    </bean>
+    <bean id="demoNotificationService2" class="org.jasig.portlet.notice.service.DemoNotificationService">
+       <property name="name" value="demoNoticationService2"/>
+       <property name="filename" value="Demo2NoticationResponse.dat"/>
+    </bean>
+
 </beans>

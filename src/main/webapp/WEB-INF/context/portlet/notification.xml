@@ -47,23 +47,18 @@
     </bean>
 
     <!-- 
-     | Notification Service bean (default is cache with 2 demo services), defined 
-     | here (instead of applicationContext.xml) to support the possibility of 
-     | multiple portlets with different configurations. 
+     | Root Notification Service bean
+     |
+     | It's customary to use a CacheNotificationService here to wrap beans 
+     | defined in the parent applicationContext. 
      +-->
-    <bean id="cacheNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
+    <bean id="rootNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
         <property name="name" value="cacheNoticationService"/>
         <property name="embeddedServices">
-            <util:list>
-                <bean id="demoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
-                   <property name="name" value="demoNoticationService1"/>
-                   <property name="filename" value="DemoNoticationResponse.dat"/>
-                </bean>
-                <bean id="demoNotificationService2" class="org.jasig.portlet.notice.service.DemoNotificationService">
-                   <property name="name" value="demoNoticationService2"/>
-                   <property name="filename" value="Demo2NoticationResponse.dat"/>
-                </bean>
-            </util:list>
+            <list>
+                <ref bean="demoNotificationService" />
+                <ref bean="demoNotificationService2" />
+            </list>
         </property>
     </bean>
 

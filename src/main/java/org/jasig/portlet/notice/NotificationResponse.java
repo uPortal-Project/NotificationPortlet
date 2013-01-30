@@ -111,12 +111,12 @@ public class NotificationResponse implements Serializable {
 	 * add it to this instance's data.
 	 * @param response the source of data
 	 */
-	public void addResponseData(NotificationResponse response)
-	{
+	public void addResponseData(NotificationResponse response) {
     	addCategories(response.getCategories());
     	addErrors(response.getErrors());
 
 	}
+
 	public List<NotificationCategory> getCategories() {
 		return categories;
 	}
