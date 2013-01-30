@@ -90,7 +90,7 @@ public class CacheNotificationService extends AbstractNotificationService {
         // the underlying data sources, then cache what we receive
         for(INotificationService notificationService: embeddedServices) {
             NotificationResponse nr = notificationService.getNotifications(req, refresh);
-            rslt.addResponseData(nr);
+            rslt = rslt.combine(nr);
         }        
         cache.put(new Element(cacheKey, rslt));
 

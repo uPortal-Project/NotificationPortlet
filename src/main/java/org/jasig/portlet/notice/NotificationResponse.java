@@ -21,8 +21,6 @@ package org.jasig.portlet.notice;
 
 import java.io.Serializable;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -39,14 +37,19 @@ public class NotificationResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<NotificationCategory> categories = new ArrayList<NotificationCategory>();
-	private List<NotificationError> errors = new ArrayList<NotificationError>();
+	private List<NotificationCategory> categories;
+	private List<NotificationError> errors;
 
-	public NotificationResponse(){}
+    public NotificationResponse() {
+        categories = new ArrayList<NotificationCategory>();
+        errors = new ArrayList<NotificationError>();
+    }
 
-	public NotificationResponse(
-			List<NotificationCategory> categories,
-			List<NotificationError> errors){
+    public NotificationResponse(NotificationResponse response) {
+        this(response.getCategories(), response.getErrors());
+    }
+
+	public NotificationResponse(List<NotificationCategory> categories, List<NotificationError> errors) {
 		this.categories = categories;
 		this.errors = errors;
 	}
@@ -56,65 +59,13 @@ public class NotificationResponse implements Serializable {
 	 * data and set the source value for the entries and error (if any).
 	 * @param source is the source of the data.
 	 */
-	public void setSource(String source)
-	{
-		for(NotificationCategory category : categories)
+	public void setSource(String source) {
+		for(NotificationCategory category : categories) {
 			category.setSource(source);
-		for(NotificationError error : errors)
+		}
+		for(NotificationError error : errors) {
 			error.setSource(source);
-	}
-
-//	/**
-//	 * Write the instance data to a JSON data String.
-//	 *
-//	 * @return String, null if the data is invalid.
-//	 */
-//	public String toJson()
-//	{
-//		return toJson(this);
-//	}
-
-//	/**
-//	 * Write the instance data to a JSON data String.
-//	 *
-//	 * @return String, null if the data is invalid.
-//	 */
-//	public static String toJson(NotificationResponse request)
-//	{
-//		try
-//		{
-//			JSON json = JSONSerializer.toJSON(request.toMap());
-//			return json.toString(1);
-//		}
-//		catch(JSONException je)
-//		{
-//			je.printStackTrace();
-//			return null;
-//		}
-//	}
-	
-	public Map<String, Object> toMap()
-	{
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		for(int i = 0; i < categories.size(); i++)
-			map.put("categories", categories);
-
-		for(int j = 0; j < errors.size(); j++)
-			map.put("errors", errors);
-
-		return map;
-	}
-
-	/**
-	 * Extract the category and error data from the given response and
-	 * add it to this instance's data.
-	 * @param response the source of data
-	 */
-	public void addResponseData(NotificationResponse response) {
-    	addCategories(response.getCategories());
-    	addErrors(response.getErrors());
-
+		}
 	}
 
 	public List<NotificationCategory> getCategories() {
@@ -125,34 +76,6 @@ public class NotificationResponse implements Serializable {
 		this.categories = categories;
 	}
 
-	/** Insert the given categories and their entries into the any existing
-	 * categories of the same title. If a category doesn't match an existing
-	 * one, add it to the list.
-	 * @param newCategories collection of new categories and their entries.
-	 */
-	public void addCategories(List<NotificationCategory> newCategories) {
-		
-		//check if an existing category (by the same title) already exists
-		//if so, add the new categories entries to the existing category
-		for(NotificationCategory newCategory : newCategories) {
-			boolean found = false;
-
-			for(NotificationCategory myCategory : categories) {
-				if(myCategory.getTitle().toLowerCase().equals(newCategory.getTitle().toLowerCase())){
-					found = true;
-					myCategory.addEntries(newCategory.getEntries());
-				}
-			}
-			
-			if(!found)
-				categories.add(newCategory);
-		}
-	}
-
-	public void clearCategories() {
-		categories.clear();
-	}
-
 	public List<NotificationError> getErrors() {
 		return errors;
 	}
@@ -161,36 +84,83 @@ public class NotificationResponse implements Serializable {
 		this.errors = errors;
 	}
 
-	public void addErrors(List<NotificationError> newErrors) {
-		for(NotificationError error : newErrors)
-			errors.add(error);
-	}
+    /**
+     * Combine the contents of this response with the provided response and 
+     * return a <b>new instance</b> of {@link NotificationResponse}.  The 
+     * original instances are unchanged.
+     * 
+     * @param A new {@link NotificationResponse} that contains data from both 
+     * originals
+     */
+    public NotificationResponse combine(NotificationResponse response) {
+        NotificationResponse rslt = new NotificationResponse(this);
+        rslt.addCategories(response.getCategories());
+        rslt.addErrors(response.getErrors());
+        return rslt;
+    }
 
-	public void filterErrors(Set<Integer> filterErrors) {
-	    List<NotificationError> iSetClone = new ArrayList<NotificationError>(errors);
-        for(NotificationError error : iSetClone)
-        {
-            if(filterErrors.contains(error.getKey()))
-            {
-                errors.remove(error);
-            }   
+    /**
+     * Return a <b>new instance</b> of {@link NotificationResponse} from which 
+     * the specified errors have been removed.  The original instances are 
+     * unchanged.
+     * 
+     * @param A new {@link NotificationResponse} that does not contain the 
+     * specified errors
+     */
+    public NotificationResponse filterErrors(Set<Integer> hiddenErrorKeys) {
+        NotificationResponse rslt = new NotificationResponse(this);
+        List<NotificationError> filteredErrors = new ArrayList<NotificationError>();
+        for (NotificationError r : errors) {
+            if (!hiddenErrorKeys.contains(r.getKey())) {
+                filteredErrors.add(r);
+            }
         }
+        rslt.setErrors(filteredErrors);
+        return rslt;
 	}
+	
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("NotificationResponse [categories=");
+        builder.append(categories);
+        builder.append(", errors=");
+        builder.append(errors);
+        builder.append("]");
+        return builder.toString();
+    }
 
-	public void clearErrors() {
-		errors.clear();
-	}
+    /*
+	 * Implementation
+	 */
 
-	public String toString() {
-		StringBuffer buffer = new StringBuffer(
-				"org.jasig.portlet.notice.serverresponse.NotificationRequest\n");
+    /** Insert the given categories and their entries into the any existing
+     * categories of the same title. If a category doesn't match an existing
+     * one, add it to the list.
+     * @param newCategories collection of new categories and their entries.
+     */
+    private void addCategories(List<NotificationCategory> newCategories) {
+        
+        //check if an existing category (by the same title) already exists
+        //if so, add the new categories entries to the existing category
+        for(NotificationCategory newCategory : newCategories) {
+            boolean found = false;
 
-		for(NotificationCategory category : categories)
-			buffer.append(category.toString());
+            for(NotificationCategory myCategory : categories) {
+                if(myCategory.getTitle().toLowerCase().equals(newCategory.getTitle().toLowerCase())){
+                    found = true;
+                    myCategory.addEntries(newCategory.getEntries());
+                }
+            }
+            
+            if(!found)
+                categories.add(newCategory);
+        }
+    }
 
-		for(NotificationError error : errors)
-			buffer.append(error.toString());
+    private void addErrors(List<NotificationError> newErrors) {
+        for(NotificationError error : newErrors)
+            errors.add(error);
+    }
 
-		return buffer.toString();
-	}
 }

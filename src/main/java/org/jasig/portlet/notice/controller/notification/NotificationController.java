@@ -68,7 +68,7 @@ public class NotificationController {
         try {
 
             // Get the notifications and any data retrieval errors
-            NotificationResponse notificationResponse = notificationService.getNotifications(req, Boolean.valueOf(doRefresh));
+            NotificationResponse notifications = notificationService.getNotifications(req, Boolean.valueOf(doRefresh));
 
             //filter out any errors that have been hidden by the user
             PortletSession session = req.getPortletSession(true);
@@ -79,9 +79,9 @@ public class NotificationController {
                 hidden = new HashSet<Integer>();
                 session.setAttribute(ATTRIBUTE_HIDDEN_ERRORS, hidden);
             }
-            notificationResponse.filterErrors(hidden);
+            notifications = notifications.filterErrors(hidden);
             
-            model.put("notificationResponse", notificationResponse);
+            model.put("notificationResponse", notifications);
             return new ModelAndView("json", model);
 
         } catch (Exception ex) {
