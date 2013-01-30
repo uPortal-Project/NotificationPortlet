@@ -27,11 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.json.JSON;
-import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
-
 /**
  * This class contains all the categories and errors
  * retrieved by an INotificationService. It is also
@@ -69,59 +64,34 @@ public class NotificationResponse implements Serializable {
 			error.setSource(source);
 	}
 
-	/**
-	 * Write the instance data to a JSON data String.
-	 *
-	 * @return String, null if the data is invalid.
-	 */
-	public String toJson()
-	{
-		return toJson(this);
-	}
+//	/**
+//	 * Write the instance data to a JSON data String.
+//	 *
+//	 * @return String, null if the data is invalid.
+//	 */
+//	public String toJson()
+//	{
+//		return toJson(this);
+//	}
 
-	/**
-	 * Write the instance data to a JSON data String.
-	 *
-	 * @return String, null if the data is invalid.
-	 */
-	public static String toJson(NotificationResponse request)
-	{
-		try
-		{
-			JSON json = JSONSerializer.toJSON(request.toMap());
-			return json.toString(1);
-		}
-		catch(JSONException je)
-		{
-			je.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Write the instance data to a JSON data file.
-	 *
-	 * @param data the JSON data string.
-	 * @return NotificationRequest, null if the JSON data is invalid.
-	 */
-	public static NotificationResponse fromJson(String data) {
-		NotificationResponse rslt = null;
-		try {
-			//create a map that is used to convert the JSON data back into a class object
-			Map<String, Object> convertMap = new HashMap<String, Object>();
-			convertMap.put("errors", NotificationError.class);
-			convertMap.put("categories", NotificationCategory.class);
-			convertMap.put("entries", NotificationEntry.class);
-
-			JSONObject json = JSONObject.fromObject(data);
-			rslt = (NotificationResponse)JSONObject.toBean(json, NotificationResponse.class, convertMap);
-		}
-		catch(JSONException je) {
-			je.printStackTrace();
-		}
-
-		return rslt;
-	}
+//	/**
+//	 * Write the instance data to a JSON data String.
+//	 *
+//	 * @return String, null if the data is invalid.
+//	 */
+//	public static String toJson(NotificationResponse request)
+//	{
+//		try
+//		{
+//			JSON json = JSONSerializer.toJSON(request.toMap());
+//			return json.toString(1);
+//		}
+//		catch(JSONException je)
+//		{
+//			je.printStackTrace();
+//			return null;
+//		}
+//	}
 	
 	public Map<String, Object> toMap()
 	{

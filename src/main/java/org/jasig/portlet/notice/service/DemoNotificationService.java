@@ -27,7 +27,7 @@ import java.util.GregorianCalendar;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.io.FileUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
@@ -43,6 +43,7 @@ public class DemoNotificationService extends AbstractNotificationService {
     private static final int MAX_DAY_DELTA = 14;
     private static final int BLUE_SHIFT = -7;
 
+    private final ObjectMapper mapper = new ObjectMapper();
     private String demoFilename;
 
 	/**
@@ -82,11 +83,10 @@ public class DemoNotificationService extends AbstractNotificationService {
 
         try {
             File f = new File(location.toURI());
-            String json = FileUtils.readFileToString(f, "UTF-8");
-            rslt =  NotificationResponse.fromJson(json);
-        } catch(Exception e) {
+            rslt =  mapper.readValue(f, NotificationResponse.class);
+        } catch (Exception e) {
             String msg = "Failed to read the demo data file:  " + location;
-            throw new RuntimeException(msg);
+            throw new RuntimeException(msg, e);
         }
         
         // A dash of post-processing:  let's make all the due dates at or near today

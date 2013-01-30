@@ -154,7 +154,7 @@
                       {% if (!accordion) { %} \
                         &raquo; \
                       {% } %} \
-                      <a href="{{ entry.link }}" \
+                      <a href="{{ entry.url }}" \
                          data-body="{{ entry.body }}" \
                          data-title="{{ entry.title }}" \
                          data-source="{{ entry.source }}"> {{ entry.title }}</a> \

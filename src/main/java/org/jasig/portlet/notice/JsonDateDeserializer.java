@@ -22,10 +22,11 @@ package org.jasig.portlet.notice;
 import java.io.IOException;
 import java.util.Date;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.SerializerProvider;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.JsonToken;
+import org.codehaus.jackson.map.DeserializationContext;
+import org.codehaus.jackson.map.JsonDeserializer;
 
 /**
  * Apparently there is no standard format for dates in JSON.  JsonLib (which 
@@ -38,24 +39,31 @@ import org.codehaus.jackson.map.SerializerProvider;
  * 
  * @author awills
  */
-public class JsonDateSerializer extends JsonSerializer<Date> {
+public class JsonDateDeserializer extends JsonDeserializer<Date> {
     
+    private static final String TIME_FILDNAME = "time";
 
-    @SuppressWarnings("deprecation")
     @Override
-    public void serialize(Date date, JsonGenerator gen, SerializerProvider provider) throws JsonGenerationException, IOException {
+    public Date deserialize(JsonParser parser, DeserializationContext ctx) throws JsonParseException, IOException {
+
+        String time = null;
         
-        gen.writeStartObject();
-        gen.writeNumberField("date", date.getDate());
-        gen.writeNumberField("day", date.getDay());
-        gen.writeNumberField("hours", date.getHours());
-        gen.writeNumberField("minutes", date.getMinutes());
-        gen.writeNumberField("month", date.getMonth());
-        gen.writeNumberField("seconds", date.getSeconds());
-        gen.writeNumberField("time", date.getTime());
-        gen.writeNumberField("timezoneOffset", date.getTimezoneOffset());
-        gen.writeNumberField("year", date.getYear());
-        gen.writeEndObject();
+        while (parser.nextToken() != JsonToken.END_OBJECT) {
+            final String fieldname = parser.getCurrentName();
+            if (TIME_FILDNAME.equals(fieldname)) {
+                parser.nextToken();  // Advance to the next token;  it will be the time
+                time = parser.getText();
+            }
+        }
+        
+        if (time == null) {
+            // This is a problem;  invalid input
+            String msg = "Invalid date input at location:  " + parser.getCurrentLocation();
+            throw new IllegalArgumentException(msg);
+        }
+        
+        final long rslt = Long.parseLong(time);
+        return new Date(rslt);
         
     }
 
