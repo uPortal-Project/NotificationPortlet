@@ -33,11 +33,6 @@
     <context:component-scan base-package="org.jasig.portlet.notice.controller.notification"/>
     
     <bean class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-    
-    <!-- If there are multiple portlets defined in portlet.xml, each must have its own portlet context and its own context name. -->
-    <bean id="notificationsContextName" class="java.lang.String">
-        <constructor-arg value="notifications"/>
-    </bean>
 
     <!-- 
      | Message source for this portlet, defined here (instead of applicationContext.xml) 
