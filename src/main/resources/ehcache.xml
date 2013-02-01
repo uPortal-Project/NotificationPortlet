@@ -35,5 +35,11 @@
         overflowToDisk="false"
         memoryStoreEvictionPolicy="LRU"/>
 
+    <cache name="RomeNotificationService.feedCache"
+        maxElementsInMemory="500"
+        eternal="false"
+        timeToLiveSeconds="900"
+        overflowToDisk="false"
+        memoryStoreEvictionPolicy="LRU"/>
     
 </ehcache>

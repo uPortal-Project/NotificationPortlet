@@ -21,6 +21,7 @@ package org.jasig.portlet.notice;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,32 +33,21 @@ public class NotificationCategory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String title;
-	private List<NotificationEntry> entries = new ArrayList<NotificationEntry>();
+	private List<NotificationEntry> entries;
 
 	/**
 	 * Constructor.
 	 */
-	public NotificationCategory()
-	{
+	public NotificationCategory() {
+	    entries = new ArrayList<NotificationEntry>();
 	}
 
 	/**
 	 * Constructor.
 	 */
-	public NotificationCategory(String title, List<NotificationEntry> entries)
-	{
+	public NotificationCategory(String title, List<NotificationEntry> entries) {
 		this.title = title;
-		this.entries = entries;
-	}
-
-	/**
-	 * Set the source of the data. This method will iterate through the
-	 * data and set the source value for the entries and error (if any).
-	 * @param source is the source of the data.
-	 */
-	public void setSource(String source) {
-		for(NotificationEntry entry : entries)
-			entry.setSource(source);
+		this.entries = new ArrayList<NotificationEntry>(entries);  // defensive copy
 	}
 
 	public String getTitle() {
@@ -69,36 +59,26 @@ public class NotificationCategory implements Serializable {
 	}
 
 	public List<NotificationEntry> getEntries() {
-		return entries;
+		return Collections.unmodifiableList(entries);
 	}
 
 	public void setEntries(List<NotificationEntry> entries) {
-		this.entries = entries;
+		this.entries = new ArrayList<NotificationEntry>(entries);
 	}	                            
 
 	public void addEntries(List<NotificationEntry> newEntries) {
-		for(NotificationEntry entry : newEntries)
-			entries.add(entry);
-	}	                            
-
-	public void clearEntries() {
-		entries.size();
-	}	                            
-
-	@Override
-	/**
-	 * Returns a string representation of this class' data.
-	 * 
-	 * @return String.
-	 */
-	public String toString() {
-		StringBuffer buffer = new StringBuffer(
-				"org.jasig.portlet.notice.serverresponse.NotificationCategory\n"
-				+ "\tCategory Title    = " + title + "\n");
-		
-		for(NotificationEntry entry : entries)
-			buffer.append(entry.toString());
-
-		return buffer.toString();
+	    this.entries.addAll(newEntries);
 	}
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("NotificationCategory [title=");
+        builder.append(title);
+        builder.append(", entries=");
+        builder.append(entries);
+        builder.append("]");
+        return builder.toString();
+    }
+
 }

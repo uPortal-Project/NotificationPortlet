@@ -94,5 +94,12 @@
        <property name="name" value="demoNoticationService2"/>
        <property name="filename" value="Demo2NoticationResponse.dat"/>
     </bean>
+    
+    <!-- Rome (RSS/Atom):  Use 'RomeNotificationService.urls' preference  to specify feeds -->
+    <bean id="romeNotificationService" class="org.jasig.portlet.notice.service.rome.RomeNotificationService">
+       <property name="name" value="romeNoticationService"/>
+    </bean>
+    <bean id="RomeNotificationService.feedCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+        p:cacheManager-ref="cacheManager" p:cacheName="RomeNotificationService.feedCache"/>
 
 </beans>

@@ -22,6 +22,7 @@ package org.jasig.portlet.notice;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -50,38 +51,24 @@ public class NotificationResponse implements Serializable {
     }
 
 	public NotificationResponse(List<NotificationCategory> categories, List<NotificationError> errors) {
-		this.categories = categories;
-		this.errors = errors;
-	}
-	
-	/**
-	 * Set the source of the data. This method will iterate through the
-	 * data and set the source value for the entries and error (if any).
-	 * @param source is the source of the data.
-	 */
-	public void setSource(String source) {
-		for(NotificationCategory category : categories) {
-			category.setSource(source);
-		}
-		for(NotificationError error : errors) {
-			error.setSource(source);
-		}
+		this.categories = new ArrayList<NotificationCategory>(categories);  // defensive copy
+		this.errors = new ArrayList<NotificationError>(errors);  // defensive copy
 	}
 
 	public List<NotificationCategory> getCategories() {
-		return categories;
+		return Collections.unmodifiableList(categories);
 	}
 
 	public void setCategories(List<NotificationCategory> categories) {
-		this.categories = categories;
+		this.categories = new ArrayList<NotificationCategory>(categories);  // defensive copy
 	}
 
 	public List<NotificationError> getErrors() {
-		return errors;
+		return Collections.unmodifiableList(errors);
 	}
 
 	public void setErrors(List<NotificationError> errors) {
-		this.errors = errors;
+		this.errors = new ArrayList<NotificationError>(errors); // defensive copy
 	}
 
     /**
@@ -134,7 +121,8 @@ public class NotificationResponse implements Serializable {
 	 * Implementation
 	 */
 
-    /** Insert the given categories and their entries into the any existing
+    /** 
+     * Insert the given categories and their entries into the any existing
      * categories of the same title. If a category doesn't match an existing
      * one, add it to the list.
      * @param newCategories collection of new categories and their entries.

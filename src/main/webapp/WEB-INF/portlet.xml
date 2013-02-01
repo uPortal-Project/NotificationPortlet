@@ -51,6 +51,12 @@
                 <value>false</value>
             </preference>
         
+            <!-- Zero or more URLs for feeds that should be read-in and 
+                 converted to Notifications by the RomeNotificationService. -->
+            <preference>
+                <name>RomeNotificationService.urls</name>
+            </preference>
+
         </portlet-preferences>
     </portlet>
 

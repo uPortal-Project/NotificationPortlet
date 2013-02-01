@@ -20,9 +20,10 @@
 package org.jasig.portlet.notice;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
@@ -56,7 +57,7 @@ public class NotificationEntry implements Serializable {
      * Weakly-typed, open-ended attributes
      */
 	
-	private Map<String,List<String>> attributes;
+	private List<NotificationAttribute> attributes = Collections.emptyList();
 
 	public String getSource() {
 		return source;
@@ -115,6 +116,14 @@ public class NotificationEntry implements Serializable {
 	public void setBody(String body) {
 		this.body = body;
 	}
+
+    public List<NotificationAttribute> getAttributes() {
+        return Collections.unmodifiableList(attributes);
+    }
+
+    public void setAttributes(List<NotificationAttribute> attributes) {
+        this.attributes = new ArrayList<NotificationAttribute>(attributes);  // defensive copy
+    }
 
     @Override
     public String toString() {

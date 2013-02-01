@@ -58,6 +58,7 @@
             <list>
                 <ref bean="demoNotificationService" />
                 <ref bean="demoNotificationService2" />
+                <ref bean="romeNotificationService" />
             </list>
         </property>
     </bean>

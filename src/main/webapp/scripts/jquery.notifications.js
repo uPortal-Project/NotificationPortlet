@@ -155,7 +155,7 @@
                         &raquo; \
                       {% } %} \
                       <a href="{{ entry.url }}" \
-                         data-body="{{ entry.body }}" \
+                         data-body="{{ escape(entry.body) }}" \
                          data-title="{{ entry.title }}" \
                          data-source="{{ entry.source }}"> {{ entry.title }}</a> \
                       {% if ( entry.dueDate ) { \
@@ -211,7 +211,7 @@
 
           var html = '\
             <h3><a href="{{ link }}">{{ title }}</a></h3> \
-            <p>{{ body }}</p> \
+            <p>{{ unescape(body) }}</p> \
             <p class="notification-source"> \
               Source: <a href="{{ link }}">{{ source }}</a> \
             </p> \
