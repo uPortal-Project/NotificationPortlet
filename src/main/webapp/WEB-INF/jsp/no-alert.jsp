@@ -1,4 +1,4 @@
-<!--
+<%--
 
     Licensed to Jasig under one or more contributor license
     agreements. See the NOTICE file distributed with this work
@@ -17,29 +17,6 @@
     specific language governing permissions and limitations
     under the License.
 
--->
+--%>
 
-<ehcache>
-
-    <!-- Default ehcache -->
-    <defaultCache
-        maxElementsInMemory="100"
-        eternal="true"
-        overflowToDisk="false"
-        memoryStoreEvictionPolicy="LFU"/>
-
-    <cache name="notificationResponseCache"
-        maxElementsInMemory="500"
-        eternal="false"
-        timeToLiveSeconds="900"
-        overflowToDisk="false"
-        memoryStoreEvictionPolicy="LRU"/>
-
-    <cache name="RomeNotificationService.feedCache"
-        maxElementsInMemory="500"
-        eternal="false"
-        timeToLiveSeconds="900"
-        overflowToDisk="false"
-        memoryStoreEvictionPolicy="LRU"/>
-    
-</ehcache>
+<!-- Alert Integration:  If there were an active alert, it would be here. -->

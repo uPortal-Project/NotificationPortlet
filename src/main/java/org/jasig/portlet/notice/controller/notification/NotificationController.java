@@ -39,6 +39,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
+import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 @Controller
@@ -52,7 +54,7 @@ public class NotificationController {
     @Resource(name="rootNotificationService")
     private INotificationService notificationService;
 
-    @RequestMapping
+    @RenderMapping
 	public String showNotificationsList() {
 	    log.trace("In showNotificationsList");
 		return "notificationsList";
@@ -98,7 +100,7 @@ public class NotificationController {
 
     }
 
-    @RequestMapping(params="action=hideError")
+    @ActionMapping(params="action=hideError")
     public void hideError(ActionRequest req, ActionResponse res, @RequestParam("errorKey") String errorKey) throws IOException {
         PortletSession session = req.getPortletSession(true);
         @SuppressWarnings("unchecked")

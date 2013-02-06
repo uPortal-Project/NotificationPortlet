@@ -27,17 +27,23 @@ import java.util.GregorianCalendar;
 
 import javax.portlet.PortletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.jasig.portlet.notice.IInvalidatingNotificationService;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
- * This is a simple demo service provider. It reads data from
- * a file and returns it.
+ * This is a simple demo service provider that reads notifications from a file.  
+ * It provides both an 'enableDemo' preference (default is false) for toggling 
+ * at deploy/publish time, and a <code>setActive()</code> method (default is 
+ * true) for toggling at runtime.  The service must be both <i>enabled</i> and 
+ * <i>active</i> to function.
  */
-public class DemoNotificationService extends AbstractNotificationService {
+public class DemoNotificationService extends AbstractNotificationService implements IInvalidatingNotificationService {
     
     public static final String ENABLE_DEMO_PREFERENCE = "DemoNotificationService.enableDemo";
 
@@ -46,8 +52,10 @@ public class DemoNotificationService extends AbstractNotificationService {
     private static final int BLUE_SHIFT = -7;
 
     private final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
+    private NotificationResponse nonemptyResponse = new NotificationResponse();
     private final ObjectMapper mapper = new ObjectMapper();
-    private String demoFilename;
+    private boolean active = true;
+    private final Log log = LogFactory.getLog(getClass());
 
 	/**
 	 * Set the filename of the demo data.
@@ -55,21 +63,53 @@ public class DemoNotificationService extends AbstractNotificationService {
 	 */
     @Required
 	public void setFilename(String filename) {
-		demoFilename = filename;
+        nonemptyResponse = readFromFile(filename);
 	}
+    
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
+    public boolean isActive() {
+        return active;
+    }
 
     @Override
     public NotificationResponse getNotifications(PortletRequest req, boolean refresh) {
         
-        // Are we enabled?
-        String enabled = req.getPreferences().getValue(ENABLE_DEMO_PREFERENCE, "false");
-        if (!Boolean.valueOf(enabled)) {
+        // Are we active?
+        if (!active) {
+            log.debug("Sending an empty response because we are INACTIVE");
             return EMPTY_RESPONSE;
         }
         
-        return readFromFile(demoFilename);
+        // Are we enabled?
+        String enabled = req.getPreferences().getValue(ENABLE_DEMO_PREFERENCE, "false");
+        if (!Boolean.valueOf(enabled)) {
+            log.debug("Sending an empty response because we are DISABLED");
+            return EMPTY_RESPONSE;
+        }
+        
+        // We are both active & enabled;  go ahead and send the notifications.
+        log.debug("Sending a non-empty response because we are both ACTIVE and ENABLED");
+        return nonemptyResponse;
+
     }
     
+    @Override
+    public boolean isValid(PortletRequest req, NotificationResponse previousResponse) {
+        
+        // Assertions.
+        if (previousResponse == null) {
+            String msg = "Argument 'previousResponse' cannot be null";
+            throw new IllegalArgumentException(msg);
+        }
+        
+        final NotificationResponse currentResponse = getNotifications(req, false); 
+        return previousResponse.equals(currentResponse);
+        
+    }
+
     /*
      * Implementation
      */

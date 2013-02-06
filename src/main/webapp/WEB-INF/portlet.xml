@@ -60,6 +60,62 @@
         </portlet-preferences>
     </portlet>
 
+    <portlet>
+        <portlet-name>EmergencyAlert</portlet-name>
+        <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+        <init-param>
+            <name>contextConfigLocation</name>
+            <value>/WEB-INF/context/portlet/emergency-alert.xml</value>
+        </init-param>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>Emergency Alert</title>
+        </portlet-info>
+        <portlet-preferences>
+
+            <!-- If true, enables the emergencyAlertDemoNotificationService bean
+                 in the Spring context;  EmergencyAlert also provides an 
+                 EmergencyAlertAdmin portlet to toggle the demo active/inactive. -->
+            <preference>
+                <name>DemoNotificationService.enableDemo</name>
+                <value>true</value>
+            </preference>
+
+            <!-- Zero or more URLs for feeds that should be read-in and 
+                 converted to Notifications by the RomeNotificationService. -->
+            <preference>
+                <name>RomeNotificationService.urls</name>
+            </preference>
+
+            <!-- If true, emergency alerts will advance on their own (via 
+                 JavaScript) when there are more than one to display. -->
+            <preference>
+                <name>EmergencyAlertController.autoAdvance</name>
+                <value>false</value>
+            </preference>
+
+        </portlet-preferences>
+    </portlet>
+
+    <portlet>
+        <portlet-name>EmergencyAlertAdmin</portlet-name>
+        <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+        <init-param>
+            <name>contextConfigLocation</name>
+            <value>/WEB-INF/context/portlet/emergency-alert-admin.xml</value>
+        </init-param>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>Emergency Alert Admin</title>
+        </portlet-info>
+    </portlet>
+
     <user-attribute>
         <description>Username attribute name for uPortal user</description>
         <name>user.login.id</name>

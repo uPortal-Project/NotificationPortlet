@@ -1,0 +1,23 @@
+{
+    "categories": [
+        {
+            "title": "Emergency Alters",
+            "entries": [
+                {
+                    "title": "Hamburgler Spotted on Campus",
+                    "source": "Demo Service",
+                    "priority": 1,
+                    "url": "http://www.jasig.org",
+                    "body": "BE ADVISED:  a suspicious character dressed in old-timey prison stripes and repeating <em>&quot;gobble gobble&quot;</em> was reported in the vicinity of Angel Hall.  This individual has a record of crimes against fast food and should be considered dangerous."
+                },
+                {
+                    "title": "Raining Cats &amp; Dogs",
+                    "source": "Demo Service",
+                    "priority": 1,
+                    "url": "http://www.jasig.org",
+                    "body": "WARNING:  Central Campus is currently under a <strong>Dangerous Weather Advisory</strong>.  Students and non-emergency staff are encouraged to stay indoors.  Individuals who must travel should use caution and carry Milkbone <sup>TM</sup> biscuits and catnip at all times."
+                }
+            ]
+        }
+    ]
+}

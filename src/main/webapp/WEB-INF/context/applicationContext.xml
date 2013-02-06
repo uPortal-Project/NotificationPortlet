@@ -46,10 +46,21 @@
         </property>
     </bean>
 
+    <!-- 
+     | Message source for this application. 
+     +-->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>messages</value>
+            </list>
+        </property>
+    </bean>
+
     <!-- EHCache Configuration -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
-    <bean id="notificationCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
-        p:cacheManager-ref="cacheManager" p:cacheName="notificationCache"/>
+    <bean id="notificationResponseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+        p:cacheManager-ref="cacheManager" p:cacheName="notificationResponseCache"/>
 
     <!-- 
      | view resolvers
@@ -88,11 +99,16 @@
     <!-- DEMO -->
     <bean id="demoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
        <property name="name" value="demoNoticationService1"/>
-       <property name="filename" value="DemoNoticationResponse.dat"/>
+       <property name="filename" value="demo/demoNoticationResponse.json"/>
     </bean>
     <bean id="demoNotificationService2" class="org.jasig.portlet.notice.service.DemoNotificationService">
        <property name="name" value="demoNoticationService2"/>
-       <property name="filename" value="Demo2NoticationResponse.dat"/>
+       <property name="filename" value="demo/demoNoticationResponse2.json"/>
+    </bean>
+    <bean id="emergencyAlertDemoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
+       <property name="name" value="emergencyAlertDemoNotificationService"/>
+       <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
+       <property name="filename" value="demo/emergencyAlertDemoNoticationResponse.json"/>
     </bean>
     
     <!-- Rome (RSS/Atom):  Use 'RomeNotificationService.urls' preference  to specify feeds -->

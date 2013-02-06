@@ -35,25 +35,13 @@
     <bean class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 
     <!-- 
-     | Message source for this portlet, defined here (instead of applicationContext.xml) 
-     | to support the possibility of multiple portlets with different configurations. 
-     +-->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basenames">
-            <list>
-                <value>messages</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- 
      | Root Notification Service bean
      |
      | It's customary to use a CacheNotificationService here to wrap beans 
      | defined in the parent applicationContext. 
      +-->
     <bean id="rootNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
-        <property name="name" value="cacheNoticationService"/>
+        <property name="name" value="notificationCacheNoticationService"/>
         <property name="embeddedServices">
             <list>
                 <ref bean="demoNotificationService" />
