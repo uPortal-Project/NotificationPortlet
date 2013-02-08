@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.jasig.parent</groupId>
@@ -7,13 +7,11 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.jasig.portlet</groupId>
-    <artifactId>NotificationPortlet</artifactId>
-    <packaging>war</packaging>
+    <groupId>org.jasig.portlet.notification</groupId>
+    <artifactId>notification-portlet-parent</artifactId>
     <version>2.0.0-SNAPSHOT</version>
-
-    <name>Notification Portlet</name>
-    <description>JSR-286 (Portlet 2.0) portlet to display important notices from campus systems.</description>
+    <packaging>pom</packaging>
+    <name>NotificationPortlet</name>
 
     <scm>
         <connection>scm:git:git://github.com/Jasig/NotificationPortlet.git</connection>
@@ -35,15 +33,12 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
-    <repositories>
-        <repository>
-            <id>jasig-m2</id>
-            <name>JASIG Maven2 Repository</name>
-            <url>http://developer.jasig.org/repo/content/repositories/m2</url>
-        </repository>
-    </repositories>
-    
+
+    <modules>
+        <module>notification-portlet-api</module>
+        <module>notification-portlet-webapp</module>
+    </modules>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -88,135 +83,22 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
-    <dependencies>
-
-        <!-- ===== Compile Time Dependencies ============================== -->
-
-        <!-- Seems to be required by resourceserver (should be transitive?) -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>13.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>2.6.3</version>
-            <type>pom</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.3.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jasig.resourceserver</groupId>
-            <artifactId>resource-server-content</artifactId>
-            <version>${resource-server.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.jasig.resourceserver</groupId>
-            <artifactId>resource-server-utils</artifactId>
-            <version>${resource-server.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc-portlet</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>rome</groupId>
-            <artifactId>rome</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>1.1.2</version>
-        </dependency>
-
-        <!-- ===== Runtime Dependencies ================================== -->
-
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
-            <scope>runtime</scope>
-        </dependency>    
-
-        <!-- ===== Provided Dependencies ================================== -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.portlet</groupId>
-            <artifactId>portlet-api</artifactId>
-            <version>2.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- ===== Test Dependencies ====================================== -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.2</version>
-            <scope>test</scope>
-        </dependency>
-       
-    </dependencies>
 
     <build>
-        <filters>
-            <filter>${filters.file}</filter>
-        </filters>
-        <resources>
-            <resource>
-                <filtering>true</filtering>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <!-- List files or patterns to be filtered here...  -->
-                </includes>
-            </resource>
-            <resource>
-                <filtering>false</filtering>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <!-- List the same files or patterns as above here...  -->
-                </excludes>
-            </resource>
-        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.2.1</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <localCheckout>true</localCheckout>
+                        <tagNameFormat>NotificationPortlet-@{project.version}</tagNameFormat>
+                        <pushChanges>false</pushChanges>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
@@ -226,7 +108,6 @@
                     <excludes>
                         <exclude>LICENSE</exclude>
                         <exclude>NOTICE</exclude>
-                        <exclude>docs/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -236,36 +117,6 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warName>${pom.artifactId}</warName>
-                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-                    <attachClasses>true</attachClasses>
-                    <overlays>
-                        <overlay>
-                            <groupId>org.jasig.resourceserver</groupId>
-                            <artifactId>resource-server-content</artifactId>
-                            <includes>
-                                <include>rs/jquery/1.6.1/jquery-1.6.1.min.js</include>
-                                <include>rs/jqueryui/1.8.13/jquery-ui-1.8.13.min.js</include>
-                            </includes>
-                        </overlay>
-                    </overlays>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jasig.maven</groupId>
-                <artifactId>maven-notice-plugin</artifactId>
-                <configuration>
-                    <noticeTemplate>NOTICE.template</noticeTemplate>
-                    <generateChildNotices>false</generateChildNotices>
-                    <licenseMapping>
-                        <url>https://source.jasig.org/licenses/license-mappings.xml</url>
-                    </licenseMapping>
                 </configuration>
             </plugin>
         </plugins>
