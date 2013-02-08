@@ -21,11 +21,15 @@ package org.jasig.portlet.notice;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 /**
  * This class is used report errors when a INotificationService
  * tries to retrieve notifications but is unable to due to
  * some error.
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationError implements Serializable {
 	private static final long serialVersionUID = 1L;
 

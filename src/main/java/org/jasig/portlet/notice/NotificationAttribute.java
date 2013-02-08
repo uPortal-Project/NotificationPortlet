@@ -25,11 +25,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 /**
  * Represents an extra, weakly-typed piece of meta data attached to a 
  * {@link NotificationEntry}.  These attributes are normally displayed, 
  * as-provided, on the details screen. 
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationAttribute implements Serializable {
 
 	private static final long serialVersionUID = 1L;

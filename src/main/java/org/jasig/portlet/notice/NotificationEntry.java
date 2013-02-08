@@ -25,6 +25,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
@@ -37,6 +40,7 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
  * <p>The {@link NotificationCategory} 
  * class contains all the entries for the same category title.
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationEntry implements Serializable {
 
     private static final long serialVersionUID = 1L;
