@@ -23,6 +23,10 @@
 
 <c:set var="n"><portlet:namespace/></c:set>
 
+<portlet:actionURL var="invokeNotificationServiceUrl" escapeXml="false">
+    <portlet:param name="uuid" value="${uuid}"/>
+    <portlet:param name="action" value="invokeNotificationService"/>
+</portlet:actionURL>
 <portlet:actionURL var="hideErrorUrl" escapeXml="false">
     <portlet:param name="action" value="hideError"/>
     <portlet:param name="errorKey" value="ERRORKEY"/>
@@ -74,7 +78,8 @@
     ${n}.jQuery = jQuery.noConflict(true);
     ${n}.jQuery(document).ready(function () { 
         ${n}.jQuery("#${n}container").notifications({ 
-            url: '<portlet:resourceURL id="GET-NOTIFICATIONS"/>',
+            invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
+            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS"/>',
             hideErrorUrl: '${hideErrorUrl}'
         });
     });

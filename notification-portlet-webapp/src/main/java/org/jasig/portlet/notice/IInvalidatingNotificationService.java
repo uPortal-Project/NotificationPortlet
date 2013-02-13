@@ -19,7 +19,7 @@
 
 package org.jasig.portlet.notice;
 
-import javax.portlet.PortletRequest;
+import javax.portlet.ActionRequest;
 
 /**
  * Extension interface for notification service implementations that are smart 
@@ -27,6 +27,6 @@ import javax.portlet.PortletRequest;
  */
 public interface IInvalidatingNotificationService extends INotificationService{
 
-    boolean isValid(PortletRequest req, NotificationResponse previousResponse);
+    boolean isValid(ActionRequest req, NotificationResponse previousResponse);
 
 }

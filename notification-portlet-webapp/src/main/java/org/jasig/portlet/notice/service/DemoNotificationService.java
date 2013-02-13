@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import javax.portlet.PortletRequest;
+import javax.portlet.ActionRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -75,7 +75,7 @@ public class DemoNotificationService extends AbstractNotificationService impleme
     }
 
     @Override
-    public NotificationResponse getNotifications(PortletRequest req, boolean refresh) {
+    public NotificationResponse getNotifications(ActionRequest req, boolean refresh) {
         
         // Are we active?
         if (!active) {
@@ -97,7 +97,7 @@ public class DemoNotificationService extends AbstractNotificationService impleme
     }
     
     @Override
-    public boolean isValid(PortletRequest req, NotificationResponse previousResponse) {
+    public boolean isValid(ActionRequest req, NotificationResponse previousResponse) {
         
         // Assertions.
         if (previousResponse == null) {
@@ -154,10 +154,6 @@ public class DemoNotificationService extends AbstractNotificationService impleme
 
     }
     
-    /*
-     * Implementation
-     */
-
     private Date generateRandomDueDate() {
         int randomDelta = MIN_DAY_DELTA 
                 + (int)(Math.random() * ((MAX_DAY_DELTA - MIN_DAY_DELTA) + 1))

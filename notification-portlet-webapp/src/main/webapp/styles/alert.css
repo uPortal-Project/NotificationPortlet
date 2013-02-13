@@ -22,6 +22,9 @@
 	position: relative;
 	height: 190px;
 }
+.emergency-alert .hidden {
+    display: none;
+}
 .emergency-alert .view-alert {
     position: absolute;
     top: 0;

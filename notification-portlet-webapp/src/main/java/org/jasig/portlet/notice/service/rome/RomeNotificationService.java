@@ -27,8 +27,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletPreferences;
-import javax.portlet.PortletRequest;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
@@ -70,7 +70,7 @@ public class RomeNotificationService extends AbstractNotificationService {
     private final Log log = LogFactory.getLog(getClass());
 
     @Override
-    public NotificationResponse getNotifications(PortletRequest req, boolean refresh) {
+    public NotificationResponse getNotifications(ActionRequest req, boolean refresh) {
         
         final List<NotificationCategory> categories = new ArrayList<NotificationCategory>();
 

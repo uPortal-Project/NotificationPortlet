@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
 
 import net.sf.ehcache.Cache;
@@ -71,7 +72,7 @@ public class CacheNotificationService extends AbstractNotificationService {
     }
 
     @Override
-    public NotificationResponse getNotifications(PortletRequest req, boolean refresh) {
+    public NotificationResponse getNotifications(ActionRequest req, boolean refresh) {
 
         final String username = usernameFinder.findUsername(req);
         if (log.isDebugEnabled()) {

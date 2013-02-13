@@ -57,6 +57,12 @@
             </preference>
 
         </portlet-preferences>
+        <supported-processing-event>
+            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResponse</qname>
+        </supported-processing-event>
+        <supported-publishing-event>
+            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationRequest</qname>
+        </supported-publishing-event>
     </portlet>
 
     <portlet>
@@ -89,6 +95,23 @@
                 <name>RomeNotificationService.urls</name>
             </preference>
 
+            <!-- If true, emergency alerts will piggyback on the portal's 
+                 JavaScript library (jQuery).  The needs of this portlet are 
+                 very lightweight and the portlet runs infrequently, so we'll 
+                 default to 'true' in this case. -->
+            <preference>
+                <name>EmergencyAlertController.usePortalJsLibs</name>
+                <value>true</value>
+            </preference>
+            
+            <!-- If 'EmergencyAlertController.usePortalJsLibs' is true, this 
+                 value will help find the portal's JavaScript library (jQuery).  
+                 If not, it has no impact. -->
+            <preference>
+                <name>portalJsNamespace</name>
+                <value>up</value>
+            </preference>
+
             <!-- If true, emergency alerts will advance on their own (via 
                  JavaScript) when there are more than one to display. -->
             <preference>
@@ -97,6 +120,12 @@
             </preference>
 
         </portlet-preferences>
+        <supported-processing-event>
+            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResponse</qname>
+        </supported-processing-event>
+        <supported-publishing-event>
+            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationRequest</qname>
+        </supported-publishing-event>
     </portlet>
 
     <portlet>
@@ -119,5 +148,14 @@
         <description>Username attribute name for uPortal user</description>
         <name>user.login.id</name>
     </user-attribute>
+
+    <event-definition>
+        <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationRequest</qname>
+        <!-- value-type>org.jasig.portal.search.SearchRequest</value-type-->
+    </event-definition>
+    <event-definition>
+        <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResponse</qname>
+        <value-type>org.jasig.portlet.notice.NotificationResponse</value-type>
+    </event-definition>
 
 </portlet-app>

@@ -35,6 +35,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.util.NotificationResponseBroker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,6 +56,9 @@ public class NotificationController {
     @Resource(name="rootNotificationService")
     private INotificationService notificationService;
 
+    @Autowired
+    private NotificationResponseBroker responseBroker;
+
     @RenderMapping
 	public String showNotificationsList() {
 	    log.trace("In showNotificationsList");
@@ -61,7 +66,7 @@ public class NotificationController {
 	}
 	
     @ResourceMapping("GET-NOTIFICATIONS")
-    public ModelAndView getNotifications(ResourceRequest req, @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
+    public ModelAndView getNotifications(ResourceRequest req) throws IOException {
 
         // RequestParam("key") String key, HttpServletRequest request, ModelMap model
         log.trace("In getNotifications");
@@ -69,11 +74,12 @@ public class NotificationController {
         Map<String, Object> model = new HashMap<String, Object>();
         try {
 
+            PortletSession session = req.getPortletSession(true);
+
             // Get the notifications and any data retrieval errors
-            NotificationResponse notifications = notificationService.getNotifications(req, Boolean.valueOf(doRefresh));
+            NotificationResponse notifications = responseBroker.retrieveNotificationResponse(req);
 
             //filter out any errors that have been hidden by the user
-            PortletSession session = req.getPortletSession(true);
             @SuppressWarnings("unchecked")
             Set<Integer> hidden = (Set<Integer>) session.getAttribute(ATTRIBUTE_HIDDEN_ERRORS);
             if (hidden == null) {

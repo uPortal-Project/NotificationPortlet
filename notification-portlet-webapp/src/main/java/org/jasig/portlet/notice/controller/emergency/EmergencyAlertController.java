@@ -19,61 +19,99 @@
 
 package org.jasig.portlet.notice.controller.emergency;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.portlet.ResourceRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.util.NotificationResponseBroker;
+import org.jasig.portlet.notice.util.UsernameFinder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 @Controller
 @RequestMapping("VIEW")
 public final class EmergencyAlertController {
 
-    @Resource(name="rootNotificationService")
-    private INotificationService notificationService;
-    
-    /*
-     * Public API.
-     */
+    public static final String VIEW_SHOW_ALERTS = "show-alerts";
 
-    public static final String VIEW_NO_CURRENT_ALERT = "no-alert";
-    public static final String VIEW_SHOW_CURRENT_ALERT = "show-alert";
-
+    private static final String USE_PPORTAL_JS_LIBS_PREFERENCE = "EmergencyAlertController.usePortalJsLibs";
+    private static final String PPORTAL_JS_NAMESPACE_PREFERENCE = "EmergencyAlertController.portalJsNamespace";
     private static final String AUTO_ADVANCE_PREFERENCE = "EmergencyAlertController.autoAdvance";
     
+    private final Log log = LogFactory.getLog(getClass());
+
+    @Resource(name="rootNotificationService")
+    private INotificationService notificationService;
+
+    @Autowired
+    private NotificationResponseBroker responseBroker;
+
+    @Autowired
+    private UsernameFinder usernameFinder;
+
     @RenderMapping()
     public ModelAndView showAlert(PortletRequest req) {
+                
+        final Map<String,Object> model = new HashMap<String,Object>(); 
+        final PortletPreferences prefs = req.getPreferences();   
+
+        final boolean usePortalJsLibs = Boolean.valueOf(prefs.getValue(USE_PPORTAL_JS_LIBS_PREFERENCE, "true"));  // default is true
+        model.put("usePortalJsLibs", usePortalJsLibs);
         
-        final NotificationResponse notifications = notificationService.getNotifications(req, false);
+        final String portalJsNamespace = prefs.getValue(PPORTAL_JS_NAMESPACE_PREFERENCE, "up");  // Matches the current convention in uPortal
+        model.put("portalJsNamespace", portalJsNamespace);
         
-        // Combine all categories into 1 list
+        final boolean autoAdvance = Boolean.valueOf(prefs.getValue(AUTO_ADVANCE_PREFERENCE, null));  // default is false
+        model.put("autoAdvance", autoAdvance);
+
+        final UUID uuid = UUID.randomUUID();
+        model.put("uuid", uuid);
+
+        return new ModelAndView(VIEW_SHOW_ALERTS, model);
+
+    }
+
+    @ResourceMapping("GET-FEED")
+    public ModelAndView getNotifications(final ResourceRequest req, final @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
+
+        // RequestParam("key") String key, HttpServletRequest request, ModelMap model
+        log.debug("Invoking getNotifications for user:  " + usernameFinder.findUsername(req));
+
+        // Get the notifications and any data retrieval errors
+        final NotificationResponse notifications = responseBroker.retrieveNotificationResponse(req);
+        if (notifications == null) {
+            String msg = "Notifications have not been loaded for user:  " + usernameFinder.findUsername(req);
+            throw new IllegalStateException(msg);
+        }
+        
+        // Combine all categories into one list
         final List<NotificationEntry> allEntries = new ArrayList<NotificationEntry>();
         for (final NotificationCategory y : notifications.getCategories()) {
             allEntries.addAll(y.getEntries());
         }
 
-        if (!allEntries.isEmpty()) {
-            final Map<String,Object> model = new HashMap<String,Object>(); 
-            model.put("feed", allEntries);
-            final PortletPreferences prefs = req.getPreferences();            
-            final boolean autoAdvance = Boolean.valueOf(prefs.getValue(AUTO_ADVANCE_PREFERENCE, null));  // default is false
-            model.put("autoAdvance", autoAdvance);
-            return new ModelAndView(VIEW_SHOW_CURRENT_ALERT, model);
-        }
-        
-        return new ModelAndView(VIEW_NO_CURRENT_ALERT);  // default
+        final Map<String,Object> model = new HashMap<String,Object>(); 
+        model.put("feed", allEntries);
+        return new ModelAndView("json", model);
 
     }
 

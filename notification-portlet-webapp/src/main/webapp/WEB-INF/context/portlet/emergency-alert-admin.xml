@@ -30,9 +30,9 @@
 
     <!-- main portlet annotation -->
     <context:annotation-config/>
-    <context:component-scan base-package="org.jasig.portlet.notice.controller.emergency" use-default-filters="false">
-        <context:include-filter type="regex" expression=".*EmergencyAlertAdminController"/>
-    </context:component-scan>
+
+    <!-- Controller beans -->
+    <bean class="org.jasig.portlet.notice.controller.emergency.EmergencyAlertAdminController" />
     
     <bean class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 

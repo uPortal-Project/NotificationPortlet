@@ -68,11 +68,21 @@
         filterOptions.fadeIn("fast");
       });
       
+      // First 'prime-the-pump' with an ActionURL
       $.ajax({
-        url      : opts.url,
+        type: 'POST',
+        dataType: 'json',
+        data: { refresh: doRefresh },
+        url: opts.invokeNotificationServiceUrl,
+        async: false
+      });
+
+      // Now fetch the notifications with a ResourceURL
+      $.ajax({
+        url      : opts.getNotificationsUrl,
         type     : 'POST',
         dataType : 'json',
-        data     : $.extend({}, params, {refresh: doRefresh || 'false' }),
+        data     : params,
         
         beforeSend: function () {
           

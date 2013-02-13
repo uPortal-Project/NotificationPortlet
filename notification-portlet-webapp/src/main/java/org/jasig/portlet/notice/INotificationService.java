@@ -19,7 +19,7 @@
 
 package org.jasig.portlet.notice;
 
-import javax.portlet.PortletRequest;
+import javax.portlet.ActionRequest;
 
 
 /**
@@ -44,6 +44,6 @@ public interface INotificationService {
      * should be invalidated
      * @return A collection of notifications and/or errors
      */
-    public NotificationResponse getNotifications(PortletRequest req, boolean refresh);
+    public NotificationResponse getNotifications(ActionRequest req, boolean refresh);
 
 }
