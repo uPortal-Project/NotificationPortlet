@@ -98,24 +98,65 @@
     
     <!-- DEMO -->
     <bean id="demoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
-       <property name="name" value="demoNoticationService1"/>
-       <property name="filename" value="demo/demoNoticationResponse.json"/>
+        <property name="name" value="demoNoticationService1"/>
+        <property name="filename" value="demo/demoNoticationResponse.json"/>
     </bean>
     <bean id="demoNotificationService2" class="org.jasig.portlet.notice.service.DemoNotificationService">
-       <property name="name" value="demoNoticationService2"/>
-       <property name="filename" value="demo/demoNoticationResponse2.json"/>
+        <property name="name" value="demoNoticationService2"/>
+        <property name="filename" value="demo/demoNoticationResponse2.json"/>
     </bean>
     <bean id="emergencyAlertDemoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
-       <property name="name" value="emergencyAlertDemoNotificationService"/>
-       <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
-       <property name="filename" value="demo/emergencyAlertDemoNoticationResponse.json"/>
+        <property name="name" value="emergencyAlertDemoNotificationService"/>
+        <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
+        <property name="filename" value="demo/emergencyAlertDemoNoticationResponse.json"/>
     </bean>
     
-    <!-- Rome (RSS/Atom):  Use 'RomeNotificationService.urls' preference  to specify feeds -->
+    <!-- Rome (RSS/Atom):  Use 'RomeNotificationService.urls' preference to specify feeds -->
     <bean id="romeNotificationService" class="org.jasig.portlet.notice.service.rome.RomeNotificationService">
-       <property name="name" value="romeNoticationService"/>
+        <property name="name" value="romeNoticationService"/>
     </bean>
     <bean id="RomeNotificationService.feedCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
         p:cacheManager-ref="cacheManager" p:cacheName="RomeNotificationService.feedCache"/>
+        
+    <!-- RESTful JSON:  Use 'RestfulJsonNotificationService.serviceUrls' preference  to specify services -->
+    <bean id="restfulJsonNotificationService" class="org.jasig.portlet.notice.service.rest.RestfulJsonNotificationService">
+        <property name="name" value="restfulJsonNotificationService"/>
+        <!-- For HTTP Basic AuthN -->
+        <!-- property name="usernameEvaluator">
+            <bean class="org.jasig.portlet.notice.service.rest.StringLiteralParameterEvaluator" p:value="${restfulJsonNotificationService.basicauth.username}"/>
+        </property>
+        <property name="passwordEvaluator">
+            <bean class="org.jasig.portlet.notice.service.rest.StringLiteralParameterEvaluator" p:value="${restfulJsonNotificationService.basicauth.password}"/>
+        </property-->
+        <property name="urlParameters">
+            <util:map>
+                <entry key="username">
+                    <bean class="org.jasig.portlet.notice.service.rest.UserAttributeParameterEvaluator">
+                        <property name="userAttributeKey" value="user.login.id"/>
+                    </bean>
+                </entry>
+            </util:map>
+        </property>
+        <property name="restTemplate">
+            <bean class="org.springframework.web.client.RestTemplate">
+                <property name="requestFactory">
+                    <bean class="org.springframework.http.client.CommonsClientHttpRequestFactory">
+                        <property name="httpClient" ref="httpClient" />
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="httpConnectionManager" class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager" destroy-method="shutdown">
+        <property name="params">
+            <bean class="org.apache.commons.httpclient.params.HttpConnectionManagerParams">
+                <property name="defaultMaxConnectionsPerHost" value="200" />
+                <property name="maxTotalConnections" value="1000"/>
+            </bean>
+        </property>
+    </bean>
+    <bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
+        <constructor-arg ref="httpConnectionManager" />
+    </bean>
 
 </beans>

@@ -49,6 +49,7 @@
             <list>
                 <ref bean="emergencyAlertDemoNotificationService" />
                 <ref bean="romeNotificationService" />
+                <ref bean="restfulJsonNotificationService"/>
             </list>
         </property>
     </bean>

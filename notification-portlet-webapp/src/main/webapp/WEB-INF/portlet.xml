@@ -56,6 +56,12 @@
                 <name>RomeNotificationService.urls</name>
             </preference>
 
+            <!-- Zero or more URLs for web service endpoints for the 
+                 RomeNotificationService. -->
+            <preference>
+                <name>RestfulJsonNotificationService.serviceUrls</name>
+            </preference>
+
         </portlet-preferences>
         <supported-processing-event>
             <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResponse</qname>
