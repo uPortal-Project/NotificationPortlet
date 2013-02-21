@@ -122,12 +122,12 @@
     <bean id="restfulJsonNotificationService" class="org.jasig.portlet.notice.service.rest.RestfulJsonNotificationService">
         <property name="name" value="restfulJsonNotificationService"/>
         <!-- For HTTP Basic AuthN -->
-        <!-- property name="usernameEvaluator">
+        <property name="usernameEvaluator">
             <bean class="org.jasig.portlet.notice.service.rest.StringLiteralParameterEvaluator" p:value="${restfulJsonNotificationService.basicauth.username}"/>
         </property>
         <property name="passwordEvaluator">
             <bean class="org.jasig.portlet.notice.service.rest.StringLiteralParameterEvaluator" p:value="${restfulJsonNotificationService.basicauth.password}"/>
-        </property-->
+        </property>
         <property name="urlParameters">
             <util:map>
                 <entry key="username">

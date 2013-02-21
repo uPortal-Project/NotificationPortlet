@@ -30,6 +30,7 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -58,10 +59,12 @@ public class RestfulJsonNotificationService extends AbstractNotificationService 
     private RestTemplate restTemplate;
     private final Log log = LogFactory.getLog(getClass());
 
+    @Required
     public void setUsernameEvaluator(IParameterEvaluator usernameEvaluator) {
         this.usernameEvaluator = usernameEvaluator;
     }
 
+    @Required
     public void setPasswordEvaluator(IParameterEvaluator passwordEvaluator) {
         this.passwordEvaluator = passwordEvaluator;
     }
@@ -128,10 +131,11 @@ public class RestfulJsonNotificationService extends AbstractNotificationService 
         @Override
         public void doWithRequest(ClientHttpRequest httpReq) {
 
+            final String username = usernameEvaluator.evaluate(portletReq);
+            final String password = passwordEvaluator.evaluate(portletReq);
+
             // Perform BASIC AuthN if credentials are provided
-            if (usernameEvaluator != null && passwordEvaluator != null) {
-                final String username = usernameEvaluator.evaluate(portletReq);
-                final String password = passwordEvaluator.evaluate(portletReq);
+            if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
 
                 if (log.isDebugEnabled()) {
                     final boolean hasPassword = password != null;
