@@ -37,6 +37,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.jasig.portlet.notice.NotificationError;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.service.AbstractNotificationService;
+import org.jasig.portlet.notice.util.UsernameFinder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
@@ -48,16 +50,20 @@ import org.springframework.web.client.RestTemplate;
 public class RestfulJsonNotificationService extends AbstractNotificationService {
     
     public static final String SERVICE_URLS_PREFERENCE = "RestfulJsonNotificationService.serviceUrls";
+
     private final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
+    private final ResponseExtractor<NotificationResponse> responseExtractor = new ResponseExtractorImpl();
 
     // For HTTP Basic AuthN
     private IParameterEvaluator usernameEvaluator = null;
     private IParameterEvaluator passwordEvaluator = null;
 
     private Map<String,IParameterEvaluator> urlParameters;
-    private ResponseExtractor<NotificationResponse> responseExtractor = new ResponseExtractorImpl();
     private RestTemplate restTemplate;
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    private UsernameFinder usernameFinder;
 
     @Required
     public void setUsernameEvaluator(IParameterEvaluator usernameEvaluator) {
@@ -88,14 +94,26 @@ public class RestfulJsonNotificationService extends AbstractNotificationService 
         final RequestCallback requestCallback = new RequestCallbackImpl(req);
 
         final String[] serviceUrls = prefs.getValues(SERVICE_URLS_PREFERENCE, new String[0]);
-        for (String url : serviceUrls) {
+        for (final String url : serviceUrls) {
             if (log.isDebugEnabled()) {
                 log.debug("Invoking uri '" + url + "' with the following parameters:  " + params.toString());
             }
-            final NotificationResponse response =  restTemplate.execute(
-                    url, HttpMethod.GET, 
-                    requestCallback, responseExtractor, params);
-            rslt = rslt.combine(response);
+            try {
+                final NotificationResponse response = restTemplate.execute(
+                        url, HttpMethod.GET, 
+                        requestCallback, responseExtractor, params);
+                rslt = rslt.combine(response);
+            } catch (Exception e) {
+                final String msg = "Failed to invoke the following service at '" 
+                        + url + "' for user " + usernameFinder.findUsername(req);
+                log.error(msg, e);
+                final NotificationError error = new NotificationError();
+                error.setError("Service Unavailable");
+                error.setSource(getClass().getSimpleName());
+                final NotificationResponse response =  new NotificationResponse();
+                response.setErrors(Arrays.asList(new NotificationError[] { error }));
+                rslt = rslt.combine(response);
+            }
         }
         
         return rslt;
@@ -108,7 +126,7 @@ public class RestfulJsonNotificationService extends AbstractNotificationService 
     
     private Map<String,String> createParameters(PortletRequest req) {
         final Map<String,String> rslt = new HashMap<String,String>();
-        for(Map.Entry<String,IParameterEvaluator> y : urlParameters.entrySet()) {
+        for(final Map.Entry<String,IParameterEvaluator> y : urlParameters.entrySet()) {
             final String key = y.getKey();
             final String value = urlParameters.get(key).evaluate(req);
             rslt.put(key, value);
@@ -166,7 +184,7 @@ public class RestfulJsonNotificationService extends AbstractNotificationService 
                 rslt = mapper.readValue(inpt, NotificationResponse.class);
             } catch (Throwable t) {
                 log.error("Failed to invoke the remote service at " + res.getHeaders().getLocation(), t);
-                NotificationError error = new NotificationError();
+                final NotificationError error = new NotificationError();
                 try {
                     error.setError(res.getRawStatusCode() + ":  " + res.getStatusText());
                 } catch (IOException e) {
