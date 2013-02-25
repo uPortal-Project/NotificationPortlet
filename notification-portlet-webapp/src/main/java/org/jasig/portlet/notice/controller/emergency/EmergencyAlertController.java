@@ -37,7 +37,6 @@ import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
-import org.jasig.portlet.notice.util.NotificationResponseBroker;
 import org.jasig.portlet.notice.util.UsernameFinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,9 +60,6 @@ public final class EmergencyAlertController {
 
     @Resource(name="rootNotificationService")
     private INotificationService notificationService;
-
-    @Autowired
-    private NotificationResponseBroker responseBroker;
 
     @Autowired
     private UsernameFinder usernameFinder;
@@ -97,7 +93,7 @@ public final class EmergencyAlertController {
         log.debug("Invoking getNotifications for user:  " + usernameFinder.findUsername(req));
 
         // Get the notifications and any data retrieval errors
-        final NotificationResponse notifications = responseBroker.retrieveNotificationResponse(req);
+        final NotificationResponse notifications = notificationService.fetch(req);
         if (notifications == null) {
             String msg = "Notifications have not been loaded for user:  " + usernameFinder.findUsername(req);
             throw new IllegalStateException(msg);

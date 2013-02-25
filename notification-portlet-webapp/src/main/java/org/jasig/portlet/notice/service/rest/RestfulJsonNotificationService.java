@@ -25,9 +25,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.portlet.ActionRequest;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.portlet.ResourceRequest;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
@@ -85,7 +85,7 @@ public class RestfulJsonNotificationService extends AbstractNotificationService 
     }
 
     @Override
-    public NotificationResponse getNotifications(ActionRequest req, boolean refresh) {
+    public NotificationResponse fetch(ResourceRequest req) {
         
         NotificationResponse rslt = EMPTY_RESPONSE;  // default is empty
         

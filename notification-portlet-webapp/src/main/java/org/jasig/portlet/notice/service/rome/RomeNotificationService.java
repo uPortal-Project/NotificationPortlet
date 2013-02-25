@@ -19,6 +19,7 @@
 
 package org.jasig.portlet.notice.service.rome;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletPreferences;
+import javax.portlet.ResourceRequest;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
@@ -39,6 +41,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.NotificationAttribute;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
+import org.jasig.portlet.notice.NotificationError;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.service.AbstractNotificationService;
 import org.jasig.portlet.notice.util.UsernameFinder;
@@ -70,126 +73,171 @@ public class RomeNotificationService extends AbstractNotificationService {
     private final Log log = LogFactory.getLog(getClass());
 
     @Override
-    public NotificationResponse getNotifications(ActionRequest req, boolean refresh) {
+    public void invoke(final ActionRequest req, final Boolean refresh) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Performing RomeNotificationService.invoke() for user:  " + usernameFinder.findUsername(req));
+        }
+
+        if (refresh) {
+            final PortletPreferences prefs = req.getPreferences();
+            final String[] urls = prefs.getValues(URLS_PREFERENCE, new String[0]);
+            for (String item : urls) {
+                cache.remove(item);
+            }
+        }
+
+    }
+
+    @Override
+    public NotificationResponse fetch(final ResourceRequest req) {
         
         final List<NotificationCategory> categories = new ArrayList<NotificationCategory>();
+        final List<NotificationError> errors = new ArrayList<NotificationError>();
 
         final PortletPreferences prefs = req.getPreferences();
         final String[] urls = prefs.getValues(URLS_PREFERENCE, new String[0]);
         for (String item : urls) {
             
-            if (!refresh) {
-                // It's okay to pull a response from cache, if we have one
-                Element m = cache.get(item);
-                if (m != null) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Feed cache HIT for url:  " + item);
-                    }
-                    NotificationCategory category = (NotificationCategory) m.getObjectValue();
-                    categories.add(category);
-                    continue; // move on to the next feed url
-                } else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Feed cache MISS for url:  " + item);
-                    }
+            // It's okay to pull a response from cache, if we have one, since refresh happens in invoke()
+            final Element m = cache.get(item);
+            if (m != null) {
+                // ## CACHE HIT ##
+                if (log.isDebugEnabled()) {
+                    log.debug("Feed cache HIT for url:  " + item);
                 }
-            }
-            
-            if (log.isDebugEnabled()) {
-                log.debug("Checking the following feed URL for notifications for user '" 
-                                + usernameFinder.findUsername(req) + "' -- " + item);
-            }
-            
-            try {
-
-                final URL url = new URL(item);
-                
-                final XmlReader reader = new XmlReader(url);
-                final SyndFeedInput input = new SyndFeedInput();
-                final SyndFeed feed = input.build(reader);
-                
-                final NotificationCategory category = new NotificationCategory();
-                category.setTitle(feed.getTitle());
-                
-                final List<TimestampNotificationEntry> entries = new ArrayList<TimestampNotificationEntry>();
-                
-                @SuppressWarnings("unchecked")
-                final List<SyndEntry> list = feed.getEntries(); 
-                for (final SyndEntry y : list) {
-                    
-                    if (log.isTraceEnabled()) {
-                        log.trace("Processing SyndEntry:  \n" + y.toString());
-                    }
-                    
-                    final long timestamp = y.getPublishedDate().getTime();
-                    final TimestampNotificationEntry entry = new TimestampNotificationEntry(timestamp);
-
-                    // Strongly-typed members
-                    entry.setSource(feed.getAuthor());
-                    entry.setTitle(y.getTitle());
-                    entry.setUrl(y.getLink());
-                    // No priority
-                    // No due date
-                    // No image
-
-                    // Body
-                    StringBuilder body = new StringBuilder();
-                    final SyndContent desc = y.getDescription();
-                    if (desc != null) {
-                        // Prefer description
-                        body.append(desc.getValue());
-                    }
-                    if (body.length() == 0) {
-                        // Fall back to contents
-                        @SuppressWarnings("unchecked")
-                        final List<SyndContent> contents = y.getContents();
-                        for (final SyndContent c : contents) {
-                            body.append(c.getValue());
-                        }
-                    }
-                    if (body.length() == 0) {
-                        // Last resort... 
-                        body.append(NO_FURTHER_INFORMATION);
-                    }
-                    entry.setBody(body.toString());
-
-                    // Attributes -- TODO:  These labels should be internationalized in messages.properties
-                    List<NotificationAttribute> attributes = new ArrayList<NotificationAttribute>();
-                    String author = y.getAuthor();
-                    if (StringUtils.isNotBlank(author)) {
-                        attributes.add(new NotificationAttribute("Author", author));
-                    }
-                    Date publishedDate = y.getPublishedDate();
-                    if (publishedDate != null) {
-                        attributes.add(new NotificationAttribute("Published date", DATE_FORMAT.format(publishedDate)));
-                    }
-                    Date updatededDate = y.getUpdatedDate();
-                    if (updatededDate != null) {
-                        attributes.add(new NotificationAttribute("Updated date", DATE_FORMAT.format(updatededDate)));
-                    }
-                    entry.setAttributes(attributes);
-                    
-                    entries.add(entry);
-
-                }
-                
-                // Items should be in reverse chronological order
-                Collections.sort(entries);
-                Collections.reverse(entries);
-                
-                category.setEntries(new ArrayList<NotificationEntry>(entries));
-                cache.put(new Element(item, category));
+                final NotificationCategory category = (NotificationCategory) m.getObjectValue();
                 categories.add(category);
-
-            } catch (Exception e) {
-                String msg = "Unable to read the specified feed:  " + item;
-                log.error(msg, e);
+            } else {
+                // ## CACHE MISS ##
+                if (log.isDebugEnabled()) {
+                    log.debug("Feed cache MISS for url:  " + item);
+                    log.debug("Checking the following feed URL for notifications for user '" 
+                            + usernameFinder.findUsername(req) + "' -- " + item);
+                }
+                final NotificationCategory category = fetchFromSource(item);
+                if (category != null) {
+                    cache.put(new Element(item, category));
+                    categories.add(category);
+                } else {
+                    final NotificationError error = new NotificationError();
+                    error.setError("Service Unavailable");
+                    error.setSource(getClass().getSimpleName());
+                    errors.add(error);
+                }
             }
 
         }
-        
-        NotificationResponse rslt = new NotificationResponse();
+
+        final NotificationResponse rslt = new NotificationResponse();
         rslt.setCategories(categories);
+        rslt.setErrors(errors);
+        return rslt;
+
+    }
+    
+    /*
+     * Implementation
+     */
+    
+    private NotificationCategory fetchFromSource(final String url) {
+        
+        NotificationCategory rslt = null;  // default
+        
+        XmlReader reader = null;
+        try {
+
+            final URL u = new URL(url);
+            
+            reader = new XmlReader(u);
+            final SyndFeedInput input = new SyndFeedInput();
+            final SyndFeed feed = input.build(reader);
+            
+            rslt = new NotificationCategory();
+            rslt.setTitle(feed.getTitle());
+            
+            final List<TimestampNotificationEntry> entries = new ArrayList<TimestampNotificationEntry>();
+            
+            @SuppressWarnings("unchecked")
+            final List<SyndEntry> list = feed.getEntries(); 
+            for (SyndEntry y : list) {
+                
+                if (log.isTraceEnabled()) {
+                    log.trace("Processing SyndEntry:  \n" + y.toString());
+                }
+                
+                final long timestamp = y.getPublishedDate().getTime();
+                final TimestampNotificationEntry entry = new TimestampNotificationEntry(timestamp);
+
+                // Strongly-typed members
+                entry.setSource(feed.getAuthor());
+                entry.setTitle(y.getTitle());
+                entry.setUrl(y.getLink());
+                // No priority
+                // No due date
+                // No image
+
+                // Body
+                final StringBuilder body = new StringBuilder();
+                final SyndContent desc = y.getDescription();
+                if (desc != null) {
+                    // Prefer description
+                    body.append(desc.getValue());
+                }
+                if (body.length() == 0) {
+                    // Fall back to contents
+                    @SuppressWarnings("unchecked")
+                    final List<SyndContent> contents = y.getContents();
+                    for (SyndContent c : contents) {
+                        body.append(c.getValue());
+                    }
+                }
+                if (body.length() == 0) {
+                    // Last resort... 
+                    body.append(NO_FURTHER_INFORMATION);
+                }
+                entry.setBody(body.toString());
+
+                // Attributes -- TODO:  These labels should be internationalized in messages.properties
+                final List<NotificationAttribute> attributes = new ArrayList<NotificationAttribute>();
+                final String author = y.getAuthor();
+                if (StringUtils.isNotBlank(author)) {
+                    attributes.add(new NotificationAttribute("Author", author));
+                }
+                final Date publishedDate = y.getPublishedDate();
+                if (publishedDate != null) {
+                    attributes.add(new NotificationAttribute("Published date", DATE_FORMAT.format(publishedDate)));
+                }
+                final Date updatededDate = y.getUpdatedDate();
+                if (updatededDate != null) {
+                    attributes.add(new NotificationAttribute("Updated date", DATE_FORMAT.format(updatededDate)));
+                }
+                entry.setAttributes(attributes);
+                
+                entries.add(entry);
+
+            }
+            
+            // Items should be in reverse chronological order
+            Collections.sort(entries);
+            Collections.reverse(entries);
+            
+            rslt.setEntries(new ArrayList<NotificationEntry>(entries));
+
+        } catch (Exception e) {
+            final String msg = "Unable to read the specified feed:  " + url;
+            log.error(msg, e);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ioe) {
+                    final String msg = "Unable to close the XmlReader";
+                    log.error(msg, ioe);
+                }
+            }
+        }
+        
         return rslt;
 
     }

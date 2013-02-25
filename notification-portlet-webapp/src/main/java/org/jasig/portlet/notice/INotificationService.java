@@ -20,6 +20,7 @@
 package org.jasig.portlet.notice;
 
 import javax.portlet.ActionRequest;
+import javax.portlet.ResourceRequest;
 
 
 /**
@@ -33,17 +34,28 @@ public interface INotificationService {
 	 *
 	 * @return A unique name for this service
 	 */
-	public String getName();
+	String getName();
+
+	/**
+	 * This method 'primes the pump' for {@link INotificationService} 
+	 * implementations.  Not all concrete services will need this method, and 
+	 * those that don't can safely make it a no-op.  But those that do need it 
+	 * can rely on receiving a call to <code>invoke()</code> before receiving a 
+	 * call to <code>fetch()</code>.
+	 * 
+	 * @param req The current ActionRequest
+	 * @param refresh If true, the service should expire any cached data
+	 */
+    void invoke(ActionRequest req, Boolean refresh);
 
     /**
      * Provide the current collection of Notifications information for the user 
      * represented by the <code>PortletRequest</code>.
      *
      * @param req The <code>PortletRequest</code>
-     * @param refresh If <code>true</code>, indicated that cached information 
-     * should be invalidated
      * @return A collection of notifications and/or errors
      */
-    public NotificationResponse getNotifications(ActionRequest req, boolean refresh);
+    NotificationResponse fetch(ResourceRequest req);
+
 
 }

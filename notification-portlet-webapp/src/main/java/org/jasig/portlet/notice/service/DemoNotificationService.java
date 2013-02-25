@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import javax.portlet.ActionRequest;
+import javax.portlet.ResourceRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -75,7 +75,7 @@ public class DemoNotificationService extends AbstractNotificationService impleme
     }
 
     @Override
-    public NotificationResponse getNotifications(ActionRequest req, boolean refresh) {
+    public NotificationResponse fetch(ResourceRequest req) {
         
         // Are we active?
         if (!active) {
@@ -97,7 +97,7 @@ public class DemoNotificationService extends AbstractNotificationService impleme
     }
     
     @Override
-    public boolean isValid(ActionRequest req, NotificationResponse previousResponse) {
+    public boolean isValid(ResourceRequest req, NotificationResponse previousResponse) {
         
         // Assertions.
         if (previousResponse == null) {
@@ -105,7 +105,7 @@ public class DemoNotificationService extends AbstractNotificationService impleme
             throw new IllegalArgumentException(msg);
         }
         
-        final NotificationResponse currentResponse = getNotifications(req, false); 
+        final NotificationResponse currentResponse = fetch(req); 
         return previousResponse.equals(currentResponse);
         
     }

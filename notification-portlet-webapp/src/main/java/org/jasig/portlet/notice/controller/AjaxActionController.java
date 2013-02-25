@@ -25,15 +25,12 @@ import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 
 import org.jasig.portlet.notice.INotificationService;
-import org.jasig.portlet.notice.NotificationResponse;
-import org.jasig.portlet.notice.util.NotificationResponseBroker;
 
 /**
  * Gathering of notifications requires an action phase.  This controller serves 
@@ -48,16 +45,12 @@ public class AjaxActionController {
     @Resource(name="rootNotificationService")
     private INotificationService notificationService;
 
-    @Autowired
-    private NotificationResponseBroker responseBroker;
-
     @ActionMapping(params="action=invokeNotificationService")
     public void invokeNotificationService(final ActionRequest req, final ActionResponse res, 
             @RequestParam(value="refresh", required=false) final String doRefresh) 
             throws IOException {
         
-        final NotificationResponse notificationResponse = notificationService.getNotifications(req, Boolean.valueOf(doRefresh));
-        responseBroker.storeNotificationResponse(req, notificationResponse);
+        notificationService.invoke(req, Boolean.valueOf(doRefresh));
 
         // The real payload awaits a Render phase;  send a token response to 
         // avoid a full portlet request cycle.

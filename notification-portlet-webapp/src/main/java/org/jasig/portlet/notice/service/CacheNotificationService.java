@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
+import javax.portlet.ResourceRequest;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
@@ -70,70 +71,79 @@ public class CacheNotificationService extends AbstractNotificationService {
     public void setCache(Cache cache) {
         this.cache = cache;
     }
-
+    
     @Override
-    public NotificationResponse getNotifications(ActionRequest req, boolean refresh) {
+    public void invoke(final ActionRequest req, final Boolean refresh) {
 
-        final String username = usernameFinder.findUsername(req);
-        if (log.isDebugEnabled()) {
-            log.debug("Notifications requested for user:  " + username + ";  refresh=" + refresh);
-        }
-
-        NotificationResponse rslt = new NotificationResponse();
-        String cacheKey = createCacheKey(req);
-
-        if (!refresh) {
-            // It's okay to pull a response from cache, if we have one...
-            Element m = cache.get(cacheKey);
-            if (m != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Cache HIT for user:  " + username);
-                }
-                // We have a cached element, but it could be 
-                // PARTIALLY invalid; make sure it's fresh
-                CacheTuple tuple = (CacheTuple) m.getObjectValue();
-                Map<String,NotificationResponse> iterable = 
-                        new HashMap<String,NotificationResponse>(tuple.getResponses());  // Can't iterate & modify the same collection
-                for (Map.Entry<String,NotificationResponse> entry : iterable.entrySet()) {
-                    INotificationService service = servicesMap.get(entry.getKey());
-                    if (service == null) {
-                        // This is perplexing -- should not happen
-                        log.warn("Unmatched NotificationResponse in CacheTuple;  service.name() == " + entry.getKey());
-                        tuple.getResponses().remove(entry.getKey());
-                    }
-                    if (service instanceof IInvalidatingNotificationService) {
-                        // Refresh if needed
-                        if (!((IInvalidatingNotificationService) service).isValid(req, entry.getValue())) {
-                            NotificationResponse freshResponse = service.getNotifications(req, true);  // appropriate to pass true here??
-                            tuple.getResponses().put(entry.getKey(), freshResponse);
-                        }
-                    }
-                }
-                // Construct a new NotificationResponse from constituent parts...
-                for (Map.Entry<String,NotificationResponse> entry : tuple.getResponses().entrySet()) {
-                    rslt = rslt.combine(entry.getValue());
-                }
-                return rslt;
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("Cache MISS for user:  " + username);
-                }
+        if (refresh) {
+            final String cacheKey = createCacheKey(req);
+            cache.remove(cacheKey);
+            
+            for (INotificationService service : servicesMap.values()) {
+                service.invoke(req, refresh);
             }
         }
 
-        // For whatever reason we can't pull from cache;  we need to hit
-        // the underlying data sources, then cache what we receive
-        CacheTuple tuple = new CacheTuple();
-        for(INotificationService service : servicesMap.values()) {
-            NotificationResponse nr = service.getNotifications(req, refresh);
-            tuple.getResponses().put(service.getName(), nr);
-        }
-        cache.put(new Element(cacheKey, tuple));
+    }
 
-        // Construct a new NotificationResponse from constituent parts...
-        for (Map.Entry<String,NotificationResponse> entry : tuple.getResponses().entrySet()) {
-            rslt = rslt.combine(entry.getValue());
+    @Override
+    public NotificationResponse fetch(ResourceRequest req) {
+
+        final String username = usernameFinder.findUsername(req);
+        if (log.isDebugEnabled()) {
+            log.debug("Notifications requested for user:  " + username);
         }
+
+        NotificationResponse rslt = new NotificationResponse();
+        final String cacheKey = createCacheKey(req);
+        final Element m = cache.get(cacheKey);
+        if (m != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Cache HIT for user:  " + username);
+            }
+            // We have a cached element, but it could be 
+            // PARTIALLY invalid; make sure it's fresh
+            CacheTuple tuple = (CacheTuple) m.getObjectValue();
+            Map<String,NotificationResponse> iterable = 
+                    new HashMap<String,NotificationResponse>(tuple.getResponses());  // Can't iterate & modify the same collection
+            for (Map.Entry<String,NotificationResponse> entry : iterable.entrySet()) {
+                INotificationService service = servicesMap.get(entry.getKey());
+                if (service == null) {
+                    // This is perplexing -- should not happen
+                    log.warn("Unmatched NotificationResponse in CacheTuple;  service.name() == " + entry.getKey());
+                    tuple.getResponses().remove(entry.getKey());
+                }
+                if (service instanceof IInvalidatingNotificationService) {
+                    // Refresh if needed
+                    if (!((IInvalidatingNotificationService) service).isValid(req, entry.getValue())) {
+                        NotificationResponse freshResponse = service.fetch(req);  // appropriate to pass true here??
+                        tuple.getResponses().put(entry.getKey(), freshResponse);
+                    }
+                }
+            }
+            // Construct a new NotificationResponse from constituent parts...
+            for (Map.Entry<String,NotificationResponse> entry : tuple.getResponses().entrySet()) {
+                rslt = rslt.combine(entry.getValue());
+            }
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("Cache MISS for user:  " + username);
+            }
+            // For whatever reason we can't pull from cache;  we need to hit
+            // the underlying data sources, then cache what we receive
+            CacheTuple tuple = new CacheTuple();
+            for(INotificationService service : servicesMap.values()) {
+                NotificationResponse nr = service.fetch(req);
+                tuple.getResponses().put(service.getName(), nr);
+            }
+            cache.put(new Element(cacheKey, tuple));
+
+            // Construct a new NotificationResponse from constituent parts...
+            for (Map.Entry<String,NotificationResponse> entry : tuple.getResponses().entrySet()) {
+                rslt = rslt.combine(entry.getValue());
+            }
+        }
+
         return rslt;
 
     }
@@ -145,7 +155,10 @@ public class CacheNotificationService extends AbstractNotificationService {
     private String createCacheKey(PortletRequest req) {
         // Use the username combined with the name given to this Notification 
         // service (until we discover a reason that's not good enough).
-        return getName() + "|" + usernameFinder.findUsername(req);
+        final StringBuilder rslt = new StringBuilder();
+        rslt.append(getName()).append("|").append(usernameFinder.findUsername(req))
+                                        .append("|").append(req.getWindowID());
+        return rslt.toString();
     }
 
     /*

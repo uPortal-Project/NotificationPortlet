@@ -35,8 +35,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationResponse;
-import org.jasig.portlet.notice.util.NotificationResponseBroker;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,9 +54,6 @@ public class NotificationController {
     @Resource(name="rootNotificationService")
     private INotificationService notificationService;
 
-    @Autowired
-    private NotificationResponseBroker responseBroker;
-
     @RenderMapping
 	public String showNotificationsList() {
 	    log.trace("In showNotificationsList");
@@ -66,18 +61,18 @@ public class NotificationController {
 	}
 	
     @ResourceMapping("GET-NOTIFICATIONS")
-    public ModelAndView getNotifications(ResourceRequest req) throws IOException {
+    public ModelAndView getNotifications(final ResourceRequest req) throws IOException {
 
         // RequestParam("key") String key, HttpServletRequest request, ModelMap model
         log.trace("In getNotifications");
 
-        Map<String, Object> model = new HashMap<String, Object>();
+        final Map<String, Object> model = new HashMap<String, Object>();
         try {
 
-            PortletSession session = req.getPortletSession(true);
+            final PortletSession session = req.getPortletSession(true);
 
             // Get the notifications and any data retrieval errors
-            NotificationResponse notifications = responseBroker.retrieveNotificationResponse(req);
+            NotificationResponse notifications = notificationService.fetch(req);
 
             //filter out any errors that have been hidden by the user
             @SuppressWarnings("unchecked")
@@ -107,20 +102,19 @@ public class NotificationController {
     }
 
     @ActionMapping(params="action=hideError")
-    public void hideError(ActionRequest req, ActionResponse res, @RequestParam("errorKey") String errorKey) throws IOException {
-        PortletSession session = req.getPortletSession(true);
+    public void hideError(final ActionRequest req, final ActionResponse res, @RequestParam("errorKey") final String errorKey) throws IOException {
+        final PortletSession session = req.getPortletSession(true);
         @SuppressWarnings("unchecked")
         Set<Integer> hidden = (Set<Integer>) session.getAttribute(ATTRIBUTE_HIDDEN_ERRORS);
         if (hidden == null) {
             hidden = new HashSet<Integer>();
             session.setAttribute(ATTRIBUTE_HIDDEN_ERRORS, hidden);
         }
-        int errorKeyInt =0;
+        int errorKeyInt = 0;
         try {
             errorKeyInt = Integer.parseInt(errorKey);
-        } catch (Exception e)
-        {
-            log.error(e);
+        } catch (NumberFormatException nfe) {
+            log.error("Value of errorKey must be an integer, was:  " + errorKey, nfe);
         }
         hidden.add(errorKeyInt);
     }

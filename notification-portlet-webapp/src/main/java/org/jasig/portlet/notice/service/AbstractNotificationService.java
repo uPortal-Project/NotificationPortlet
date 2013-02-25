@@ -19,6 +19,8 @@
 
 package org.jasig.portlet.notice.service;
 
+import javax.portlet.ActionRequest;
+
 import org.jasig.portlet.notice.INotificationService;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -35,5 +37,12 @@ public abstract class AbstractNotificationService implements INotificationServic
     public void setName(String name) {
         this.name = name;
     }
+    
+    /**
+     * Subclasses of {@link AbstractNotificationService} that need to perform 
+     * some logic within this method should override it.
+     */
+    @Override
+    public void invoke(ActionRequest req, Boolean refresh) { /* no-op */ }
 
 }
