@@ -97,15 +97,15 @@
      +-->
     
     <!-- DEMO -->
-    <bean id="demoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
+    <bean id="demoNotificationService" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
         <property name="name" value="demoNoticationService1"/>
         <property name="filename" value="demo/demoNoticationResponse.json"/>
     </bean>
-    <bean id="demoNotificationService2" class="org.jasig.portlet.notice.service.DemoNotificationService">
+    <bean id="demoNotificationService2" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
         <property name="name" value="demoNoticationService2"/>
         <property name="filename" value="demo/demoNoticationResponse2.json"/>
     </bean>
-    <bean id="emergencyAlertDemoNotificationService" class="org.jasig.portlet.notice.service.DemoNotificationService">
+    <bean id="emergencyAlertDemoNotificationService" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
         <property name="name" value="emergencyAlertDemoNotificationService"/>
         <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
         <property name="filename" value="demo/emergencyAlertDemoNoticationResponse.json"/>

@@ -53,7 +53,7 @@ import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 
-public class RomeNotificationService extends AbstractNotificationService {
+public final class RomeNotificationService extends AbstractNotificationService {
 
     public static final String URLS_PREFERENCE = "RomeNotificationService.urls";
 

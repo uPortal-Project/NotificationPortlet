@@ -45,7 +45,7 @@ import org.springframework.beans.factory.annotation.Required;
  * the EHCache implementation. An instance of this class is called from the
  * DataController in order to retrieve the notifications for a given user.
  */
-public class CacheNotificationService extends AbstractNotificationService {
+public final class CacheNotificationService extends AbstractNotificationService {
 
     @Autowired
     private UsernameFinder usernameFinder;

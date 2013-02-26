@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.jasig.portlet.notice.service;
+package org.jasig.portlet.notice.service.classloader;
 
 import java.io.File;
 import java.net.URL;
@@ -34,6 +34,7 @@ import org.jasig.portlet.notice.IInvalidatingNotificationService;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.service.AbstractNotificationService;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
@@ -43,7 +44,7 @@ import org.springframework.beans.factory.annotation.Required;
  * true) for toggling at runtime.  The service must be both <i>enabled</i> and 
  * <i>active</i> to function.
  */
-public class DemoNotificationService extends AbstractNotificationService implements IInvalidatingNotificationService {
+public final class DemoNotificationService extends AbstractNotificationService implements IInvalidatingNotificationService {
     
     public static final String ENABLE_DEMO_PREFERENCE = "DemoNotificationService.enableDemo";
 

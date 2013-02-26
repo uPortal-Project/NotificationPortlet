@@ -47,7 +47,7 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
-public class RestfulJsonNotificationService extends AbstractNotificationService {
+public final class RestfulJsonNotificationService extends AbstractNotificationService {
     
     public static final String SERVICE_URLS_PREFERENCE = "RestfulJsonNotificationService.serviceUrls";
 
