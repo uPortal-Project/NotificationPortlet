@@ -47,9 +47,10 @@
         <property name="name" value="emergencyAlertCacheNoticationService"/>
         <property name="embeddedServices">
             <list>
-                <ref bean="emergencyAlertDemoNotificationService" />
+                <ref bean="classLoaderResourceNotificationService" />
                 <ref bean="romeNotificationService" />
                 <ref bean="restfulJsonNotificationService"/>
+                <ref bean="demoEmergencyAlerts" />
             </list>
         </property>
     </bean>

@@ -47,10 +47,10 @@
         <property name="name" value="notificationCacheNoticationService"/>
         <property name="embeddedServices">
             <list>
-                <ref bean="demoNotificationService"/>
-                <ref bean="demoNotificationService2"/>
-                <ref bean="romeNotificationService"/>
+                <ref bean="classLoaderResourceNotificationService" />
+                <ref bean="romeNotificationService" />
                 <ref bean="restfulJsonNotificationService"/>
+                <ref bean="demoNotifications" />
             </list>
         </property>
     </bean>

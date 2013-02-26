@@ -91,7 +91,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
 
         final String username = usernameFinder.findUsername(req);
         if (log.isDebugEnabled()) {
-            log.debug("Notifications requested for user:  " + username);
+            log.debug("Notifications requested for user='" + username + "' and windowId=" + req.getWindowID());
         }
 
         NotificationResponse rslt = new NotificationResponse();
@@ -99,7 +99,8 @@ public final class CacheNotificationService extends AbstractNotificationService 
         final Element m = cache.get(cacheKey);
         if (m != null) {
             if (log.isDebugEnabled()) {
-                log.debug("Cache HIT for user:  " + username);
+                log.debug("Cache HIT for user='" + username 
+                        + "' and windowId=" + req.getWindowID());
             }
             // We have a cached element, but it could be 
             // PARTIALLY invalid; make sure it's fresh
@@ -110,7 +111,8 @@ public final class CacheNotificationService extends AbstractNotificationService 
                 INotificationService service = servicesMap.get(entry.getKey());
                 if (service == null) {
                     // This is perplexing -- should not happen
-                    log.warn("Unmatched NotificationResponse in CacheTuple;  service.name() == " + entry.getKey());
+                    log.warn("Unmatched NotificationResponse in CacheTuple;  service.name()='" 
+                                    + entry.getKey() + "' and user='" + username + "'");
                     tuple.getResponses().remove(entry.getKey());
                 }
                 if (service instanceof IInvalidatingNotificationService) {
@@ -127,7 +129,8 @@ public final class CacheNotificationService extends AbstractNotificationService 
             }
         } else {
             if (log.isDebugEnabled()) {
-                log.debug("Cache MISS for user:  " + username);
+                log.debug("Cache MISS for user='" + username 
+                        + "' and windowId=" + req.getWindowID());
             }
             // For whatever reason we can't pull from cache;  we need to hit
             // the underlying data sources, then cache what we receive

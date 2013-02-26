@@ -95,22 +95,14 @@
      | Reference these as needed within portlet contexts, or optionally define 
      | additional service beans there.
      +-->
-    
-    <!-- DEMO -->
-    <bean id="demoNotificationService" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
-        <property name="name" value="demoNoticationService1"/>
-        <property name="filename" value="demo/demoNoticationResponse.json"/>
+
+    <!-- ClassLoader:  Use 'ClassLoaderResourceNotificationService.locations' preference to specify location of data files -->
+    <bean id="classLoaderResourceNotificationService" class="org.jasig.portlet.notice.service.classloader.ClassLoaderResourceNotificationService">
+        <property name="name" value="classLoaderResourceNotificationService"/>
     </bean>
-    <bean id="demoNotificationService2" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
-        <property name="name" value="demoNoticationService2"/>
-        <property name="filename" value="demo/demoNoticationResponse2.json"/>
-    </bean>
-    <bean id="emergencyAlertDemoNotificationService" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
-        <property name="name" value="emergencyAlertDemoNotificationService"/>
-        <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
-        <property name="filename" value="demo/emergencyAlertDemoNoticationResponse.json"/>
-    </bean>
-    
+    <bean id="ClassLoaderResourceNotificationService.responseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+        p:cacheManager-ref="cacheManager" p:cacheName="ClassLoaderResourceNotificationService.responseCache"/>
+
     <!-- Rome (RSS/Atom):  Use 'RomeNotificationService.urls' preference to specify feeds -->
     <bean id="romeNotificationService" class="org.jasig.portlet.notice.service.rome.RomeNotificationService">
         <property name="name" value="romeNoticationService"/>
@@ -157,6 +149,16 @@
     </bean>
     <bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
         <constructor-arg ref="httpConnectionManager" />
+    </bean>
+
+    <!-- DEMO -->
+    <bean id="demoNotifications" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
+        <property name="name" value="demoNotifications"/>
+        <property name="active" value="true"/>
+    </bean>
+    <bean id="demoEmergencyAlerts" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
+        <property name="name" value="demoEmergencyAlerts"/>
+        <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
     </bean>
 
 </beans>

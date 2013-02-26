@@ -42,12 +42,11 @@
         </portlet-info>
         <portlet-preferences>
         
-            <!-- If true, enables the DemoNotificationService beans defined in 
-                 the Spring context;  these provide example content for evaluators 
-                 of the portlet. -->
+            <!-- Locations of static files, in native NotificationPortlet JSON, 
+                 that should be read from the classpath and included in the 
+                 response. -->
             <preference>
-                <name>DemoNotificationService.enableDemo</name>
-                <value>false</value>
+                <name>ClassLoaderResourceNotificationService.locations</name>
             </preference>
         
             <!-- Zero or more URLs for feeds that should be read-in and 
@@ -57,9 +56,16 @@
             </preference>
 
             <!-- Zero or more URLs for web service endpoints for the 
-                 RomeNotificationService. -->
+                 RestfulJsonNotificationService. -->
             <preference>
                 <name>RestfulJsonNotificationService.serviceUrls</name>
+            </preference>
+
+            <!-- Locations of static files, in native NotificationPortlet JSON, 
+                 that should be read from the classpath and included in the 
+                 response FOR THE DEMO EXPERIENCE. -->
+            <preference>
+                <name>DemoNotificationService.locations</name>
             </preference>
 
         </portlet-preferences>
@@ -87,18 +93,30 @@
         </portlet-info>
         <portlet-preferences>
 
-            <!-- If true, enables the emergencyAlertDemoNotificationService bean
-                 in the Spring context;  EmergencyAlert also provides an 
-                 EmergencyAlertAdmin portlet to toggle the demo active/inactive. -->
+            <!-- Locations of static files, in native NotificationPortlet JSON, 
+                 that should be read from the classpath and included in the 
+                 response. -->
             <preference>
-                <name>DemoNotificationService.enableDemo</name>
-                <value>true</value>
+                <name>ClassLoaderResourceNotificationService.locations</name>
             </preference>
 
             <!-- Zero or more URLs for feeds that should be read-in and 
                  converted to Notifications by the RomeNotificationService. -->
             <preference>
                 <name>RomeNotificationService.urls</name>
+            </preference>
+
+            <!-- Zero or more URLs for web service endpoints for the 
+                 RestfulJsonNotificationService. -->
+            <preference>
+                <name>RestfulJsonNotificationService.serviceUrls</name>
+            </preference>
+
+            <!-- Locations of static files, in native NotificationPortlet JSON, 
+                 that should be read from the classpath and included in the 
+                 response FOR THE DEMO EXPERIENCE. -->
+            <preference>
+                <name>DemoNotificationService.locations</name>
             </preference>
 
             <!-- If true, emergency alerts will piggyback on the portal's 

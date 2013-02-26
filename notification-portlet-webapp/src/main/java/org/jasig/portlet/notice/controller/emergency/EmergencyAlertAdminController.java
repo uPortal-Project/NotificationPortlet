@@ -37,7 +37,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 @RequestMapping("VIEW")
 public final class EmergencyAlertAdminController {
 
-    @Resource(name="emergencyAlertDemoNotificationService")
+    @Resource(name="demoEmergencyAlerts")
     private DemoNotificationService notificationService;  // Reference the concrete class b/c we need the extra methods
     
     /*

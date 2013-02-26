@@ -35,6 +35,13 @@
         overflowToDisk="false"
         memoryStoreEvictionPolicy="LRU"/>
 
+    <cache name="ClassLoaderResourceNotificationService.responseCache"
+        maxElementsInMemory="50"
+        eternal="false"
+        timeToLiveSeconds="2700"
+        overflowToDisk="false"
+        memoryStoreEvictionPolicy="LRU"/>
+
     <cache name="RomeNotificationService.feedCache"
         maxElementsInMemory="500"
         eternal="false"

@@ -19,53 +19,39 @@
 
 package org.jasig.portlet.notice.service.classloader;
 
-import java.io.File;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.portlet.PortletPreferences;
+import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.jasig.portlet.notice.IInvalidatingNotificationService;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
-import org.jasig.portlet.notice.service.AbstractNotificationService;
-import org.springframework.beans.factory.annotation.Required;
 
 /**
  * This is a simple demo service provider that reads notifications from a file.  
- * It provides both an 'enableDemo' preference (default is false) for toggling 
- * at deploy/publish time, and a <code>setActive()</code> method (default is 
- * true) for toggling at runtime.  The service must be both <i>enabled</i> and 
- * <i>active</i> to function.
+ * It provides a <code>setActive(boolean)</code> method (default is true) for 
+ * toggling it on and off at runtime.
  */
-public final class DemoNotificationService extends AbstractNotificationService implements IInvalidatingNotificationService {
+public final class DemoNotificationService extends ClassLoaderResourceNotificationService implements IInvalidatingNotificationService {
     
-    public static final String ENABLE_DEMO_PREFERENCE = "DemoNotificationService.enableDemo";
+    public static final String LOCATIONS_PREFERENCE = "DemoNotificationService.locations";
 
     private static final int MIN_DAY_DELTA = 1;
     private static final int MAX_DAY_DELTA = 14;
     private static final int BLUE_SHIFT = -7;
 
     private final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
-    private NotificationResponse nonemptyResponse = new NotificationResponse();
-    private final ObjectMapper mapper = new ObjectMapper();
-    private boolean active = true;
+    private boolean active = true;  // Default
     private final Log log = LogFactory.getLog(getClass());
-
-	/**
-	 * Set the filename of the demo data.
-	 * @param filename Location of the demo data file
-	 */
-    @Required
-	public void setFilename(String filename) {
-        nonemptyResponse = readFromFile(filename);
-	}
     
     public void setActive(boolean active) {
         this.active = active;
@@ -78,83 +64,56 @@ public final class DemoNotificationService extends AbstractNotificationService i
     @Override
     public NotificationResponse fetch(ResourceRequest req) {
         
+        NotificationResponse rslt = EMPTY_RESPONSE;  // default
+        
         // Are we active?
-        if (!active) {
+        if (active) {
+
+            log.debug("Sending a non-empty response because we are ACTIVE");
+
+            rslt = super.fetch(req);
+            
+            // A dash of post-processing:  let's make all the due dates at or near today
+            for (NotificationCategory nc : rslt.getCategories()) {
+                for (NotificationEntry y : nc.getEntries()) {
+                    if (y.getDueDate() != null) {
+                        // Just manipulate the ones that actually have 
+                        // a due date;  leave the others blank
+                        y.setDueDate(generateRandomDueDate());
+                    }
+                }
+            }
+
+        } else {
             log.debug("Sending an empty response because we are INACTIVE");
-            return EMPTY_RESPONSE;
         }
-        
-        // Are we enabled?
-        String enabled = req.getPreferences().getValue(ENABLE_DEMO_PREFERENCE, "false");
-        if (!Boolean.valueOf(enabled)) {
-            log.debug("Sending an empty response because we are DISABLED");
-            return EMPTY_RESPONSE;
-        }
-        
-        // We are both active & enabled;  go ahead and send the notifications.
-        log.debug("Sending a non-empty response because we are both ACTIVE and ENABLED");
-        return nonemptyResponse;
+
+        return rslt;
 
     }
     
     @Override
     public boolean isValid(ResourceRequest req, NotificationResponse previousResponse) {
-        
-        // Assertions.
-        if (previousResponse == null) {
-            String msg = "Argument 'previousResponse' cannot be null";
-            throw new IllegalArgumentException(msg);
-        }
-        
-        final NotificationResponse currentResponse = fetch(req); 
-        return previousResponse.equals(currentResponse);
-        
+        /*
+         * There's no incremental cost associated with passing back the 
+         * (already built) NotificationResponse each time, so just return 
+         * false.
+         */
+        return false;
     }
 
     /*
      * Implementation
      */
-
-    /**
-     * Deserialize the given JSON formatted file back into a object.
-     *
-     * @param filename The path and name of the file to be read.
-     * @return NotificationRequest, null if the de-serialization fails.
-     */
-    private NotificationResponse readFromFile(String filename) {
-        
-        URL location = getClass().getClassLoader().getResource(filename);
-        
-        if (location == null) {
-            String msg = "Demo file not found:  " + filename;
-            throw new RuntimeException(msg);
-        }
-        
-        NotificationResponse rslt = null;
-
-        try {
-            File f = new File(location.toURI());
-            rslt =  mapper.readValue(f, NotificationResponse.class);
-        } catch (Exception e) {
-            String msg = "Failed to read the demo data file:  " + location;
-            throw new RuntimeException(msg, e);
-        }
-        
-        // A dash of post-processing:  let's make all the due dates at or near today
-        for (NotificationCategory nc : rslt.getCategories()) {
-            for (NotificationEntry y : nc.getEntries()) {
-                if (y.getDueDate() != null) {
-                    // Just manipulate the ones that actually have 
-                    // a due date;  leave the others blank
-                    y.setDueDate(generateRandomDueDate());
-                }
-            }
-        }
-        
-        return rslt;
-
-    }
     
+    @Override
+    protected ArrayList<String> getLocations(PortletRequest req) {
+        final PortletPreferences prefs = req.getPreferences();
+        final String[] locations = prefs.getValues(LOCATIONS_PREFERENCE, new String[0]);
+        final ArrayList<String> rslt = new ArrayList<String>(Arrays.asList(locations));
+        return rslt;
+    }
+
     private Date generateRandomDueDate() {
         int randomDelta = MIN_DAY_DELTA 
                 + (int)(Math.random() * ((MAX_DAY_DELTA - MIN_DAY_DELTA) + 1))
