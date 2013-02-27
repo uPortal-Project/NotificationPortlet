@@ -19,14 +19,26 @@
 
 package org.jasig.portlet.notice;
 
-import javax.portlet.ResourceRequest;
+import java.io.Serializable;
 
-/**
- * Extension interface for notification service implementations that are smart 
- * enough to know whether their previous responses are still valid.
- */
-public interface IInvalidatingNotificationService extends INotificationService{
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-    boolean isValid(ResourceRequest req, NotificationResponse previousResponse);
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class NotificationQuery implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private String queryWindowId;
+
+    public String getQueryWindowId() {
+        return queryWindowId;
+    }
+
+    public void setQueryWindowId(final String queryWindowId) {
+        this.queryWindowId = queryWindowId;
+    }
 
 }

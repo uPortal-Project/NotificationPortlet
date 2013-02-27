@@ -151,6 +151,13 @@
         <constructor-arg ref="httpConnectionManager" />
     </bean>
 
+    <!-- PortletEvent:  Use 'NotificationLifecycleController.doEvents' preference to turn on event processing for a portlet definition -->
+    <bean id="portletEventNotificationService" class="org.jasig.portlet.notice.service.event.PortletEventNotificationService">
+        <property name="name" value="portletEventNotificationService"/>
+    </bean>
+    <bean id="PortletEventNotificationService.responseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+        p:cacheManager-ref="cacheManager" p:cacheName="PortletEventNotificationService.responseCache"/>
+
     <!-- DEMO -->
     <bean id="demoNotifications" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
         <property name="name" value="demoNotifications"/>

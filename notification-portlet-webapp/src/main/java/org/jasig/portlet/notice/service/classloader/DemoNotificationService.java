@@ -31,7 +31,6 @@ import javax.portlet.ResourceRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jasig.portlet.notice.IInvalidatingNotificationService;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
@@ -41,7 +40,7 @@ import org.jasig.portlet.notice.NotificationResponse;
  * It provides a <code>setActive(boolean)</code> method (default is true) for 
  * toggling it on and off at runtime.
  */
-public final class DemoNotificationService extends ClassLoaderResourceNotificationService implements IInvalidatingNotificationService {
+public final class DemoNotificationService extends ClassLoaderResourceNotificationService {
     
     public static final String LOCATIONS_PREFERENCE = "DemoNotificationService.locations";
 
@@ -90,16 +89,6 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
 
         return rslt;
 
-    }
-    
-    @Override
-    public boolean isValid(ResourceRequest req, NotificationResponse previousResponse) {
-        /*
-         * There's no incremental cost associated with passing back the 
-         * (already built) NotificationResponse each time, so just return 
-         * false.
-         */
-        return false;
     }
 
     /*

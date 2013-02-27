@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.ResourceRequest;
 
@@ -73,10 +74,12 @@ public final class RomeNotificationService extends AbstractNotificationService {
     private final Log log = LogFactory.getLog(getClass());
 
     @Override
-    public void invoke(final ActionRequest req, final Boolean refresh) {
+    public void invoke(final ActionRequest req, final ActionResponse res, final boolean refresh) {
 
         if (log.isDebugEnabled()) {
-            log.debug("Performing RomeNotificationService.invoke() for user:  " + usernameFinder.findUsername(req));
+            log.debug("Performing RomeNotificationService.invoke() for user='" 
+                                    + usernameFinder.findUsername(req) 
+                                    + "' refresh=" + refresh);
         }
 
         if (refresh) {

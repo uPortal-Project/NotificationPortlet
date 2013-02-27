@@ -20,6 +20,9 @@
 package org.jasig.portlet.notice;
 
 import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.EventRequest;
+import javax.portlet.EventResponse;
 import javax.portlet.ResourceRequest;
 
 
@@ -44,9 +47,21 @@ public interface INotificationService {
 	 * call to <code>fetch()</code>.
 	 * 
 	 * @param req The current ActionRequest
+	 * @param res The current ActionResponse
 	 * @param refresh If true, the service should expire any cached data
 	 */
-    void invoke(ActionRequest req, Boolean refresh);
+    void invoke(ActionRequest req, ActionResponse res, boolean refresh);
+    
+    /**
+     * This method allows {@link INotificationService} implementations that 
+     * receive portlet events to collect notifications from other portlets in 
+     * the portal.  Not all concrete services will need this method, and those 
+     * that don't can safely make it a no-op.
+     * 
+     * @param req The current EventRequest
+     * @param res The current EventResponse
+     */
+    void collect(EventRequest req, EventResponse res);
 
     /**
      * Provide the current collection of Notifications information for the user 
@@ -56,6 +71,22 @@ public interface INotificationService {
      * @return A collection of notifications and/or errors
      */
     NotificationResponse fetch(ResourceRequest req);
+    
+    /**
+     * Indicates whether a previous (presumably cached) {@link NotificationResponse} 
+     * is still valid.  A few service implementations will be able to make this 
+     * determination without contacting a remote service or doing anything 
+     * computationally expensive.  Those that can't should just return 
+     * <code>true</code>;  they will have the chance to update their responses 
+     * when the cached version expires or when the user clicks refresh.
+     * 
+     * @param req The current request
+     * @param previousResponse A response provided by this service at an earlier 
+     * point
+     * @return <code>true</code> if the earlier response is still acceptable for 
+     * the present
+     */
+    boolean isValid(ResourceRequest req, NotificationResponse previousResponse);
 
 
 }

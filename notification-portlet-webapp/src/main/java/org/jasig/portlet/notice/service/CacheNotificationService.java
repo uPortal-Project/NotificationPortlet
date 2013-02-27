@@ -25,7 +25,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
-import javax.portlet.PortletRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.EventRequest;
+import javax.portlet.EventResponse;
 import javax.portlet.ResourceRequest;
 
 import net.sf.ehcache.Cache;
@@ -33,11 +35,8 @@ import net.sf.ehcache.Element;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jasig.portlet.notice.IInvalidatingNotificationService;
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationResponse;
-import org.jasig.portlet.notice.util.UsernameFinder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
@@ -46,9 +45,6 @@ import org.springframework.beans.factory.annotation.Required;
  * DataController in order to retrieve the notifications for a given user.
  */
 public final class CacheNotificationService extends AbstractNotificationService {
-
-    @Autowired
-    private UsernameFinder usernameFinder;
 
     private final Map<String,INotificationService> servicesMap = new HashMap<String,INotificationService>();
     private Cache cache;
@@ -73,17 +69,27 @@ public final class CacheNotificationService extends AbstractNotificationService 
     }
     
     @Override
-    public void invoke(final ActionRequest req, final Boolean refresh) {
+    public void invoke(final ActionRequest req, final ActionResponse res, final boolean refresh) {
 
         if (refresh) {
-            final String cacheKey = createCacheKey(req);
+            // Make certain we have a cache MISS on fetch()
+            final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
             cache.remove(cacheKey);
-            
-            for (INotificationService service : servicesMap.values()) {
-                service.invoke(req, refresh);
-            }
         }
 
+        for (INotificationService service : servicesMap.values()) {
+            service.invoke(req, res, refresh);
+        }
+
+    }
+
+    @Override
+    public void collect(final EventRequest req, final EventResponse res) {
+        
+        for (INotificationService service : servicesMap.values()) {
+            service.collect(req, res);
+        }
+        
     }
 
     @Override
@@ -95,7 +101,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
         }
 
         NotificationResponse rslt = new NotificationResponse();
-        final String cacheKey = createCacheKey(req);
+        final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
         final Element m = cache.get(cacheKey);
         if (m != null) {
             if (log.isDebugEnabled()) {
@@ -115,12 +121,10 @@ public final class CacheNotificationService extends AbstractNotificationService 
                                     + entry.getKey() + "' and user='" + username + "'");
                     tuple.getResponses().remove(entry.getKey());
                 }
-                if (service instanceof IInvalidatingNotificationService) {
-                    // Refresh if needed
-                    if (!((IInvalidatingNotificationService) service).isValid(req, entry.getValue())) {
-                        NotificationResponse freshResponse = service.fetch(req);  // appropriate to pass true here??
-                        tuple.getResponses().put(entry.getKey(), freshResponse);
-                    }
+                // Refresh if needed
+                if (!service.isValid(req, entry.getValue())) {
+                    NotificationResponse freshResponse = service.fetch(req);
+                    tuple.getResponses().put(entry.getKey(), freshResponse);
                 }
             }
             // Construct a new NotificationResponse from constituent parts...
@@ -149,19 +153,6 @@ public final class CacheNotificationService extends AbstractNotificationService 
 
         return rslt;
 
-    }
-
-    /*
-     * Implementation
-     */
-
-    private String createCacheKey(PortletRequest req) {
-        // Use the username combined with the name given to this Notification 
-        // service (until we discover a reason that's not good enough).
-        final StringBuilder rslt = new StringBuilder();
-        rslt.append(getName()).append("|").append(usernameFinder.findUsername(req))
-                                        .append("|").append(req.getWindowID());
-        return rslt.toString();
     }
 
     /*

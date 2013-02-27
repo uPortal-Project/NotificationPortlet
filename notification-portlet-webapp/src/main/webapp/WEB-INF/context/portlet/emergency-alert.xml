@@ -32,7 +32,7 @@
     <context:annotation-config/>
 
     <!-- Controller beans -->
-    <bean class="org.jasig.portlet.notice.controller.AjaxActionController" />
+    <bean class="org.jasig.portlet.notice.controller.NotificationLifecycleController" />
     <bean class="org.jasig.portlet.notice.controller.emergency.EmergencyAlertController" />
     
     <bean class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
@@ -50,6 +50,7 @@
                 <ref bean="classLoaderResourceNotificationService" />
                 <ref bean="romeNotificationService" />
                 <ref bean="restfulJsonNotificationService"/>
+                <ref bean="portletEventNotificationService" />
                 <ref bean="demoEmergencyAlerts" />
             </list>
         </property>

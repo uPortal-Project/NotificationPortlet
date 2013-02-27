@@ -68,12 +68,18 @@
                 <name>DemoNotificationService.locations</name>
             </preference>
 
+            <!-- Required for the PortletEventNotificationService. -->
+            <preference>
+                <name>NotificationLifecycleController.doEvents</name>
+                <value>false</value>
+            </preference>
+
         </portlet-preferences>
         <supported-processing-event>
-            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResponse</qname>
+            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>
         </supported-processing-event>
         <supported-publishing-event>
-            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationRequest</qname>
+            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationQuery</qname>
         </supported-publishing-event>
     </portlet>
 
@@ -119,6 +125,12 @@
                 <name>DemoNotificationService.locations</name>
             </preference>
 
+            <!-- Required for the PortletEventNotificationService. -->
+            <preference>
+                <name>NotificationLifecycleController.doEvents</name>
+                <value>false</value>
+            </preference>
+
             <!-- If true, emergency alerts will piggyback on the portal's 
                  JavaScript library (jQuery).  The needs of this portlet are 
                  very lightweight and the portlet runs infrequently, so we'll 
@@ -145,10 +157,10 @@
 
         </portlet-preferences>
         <supported-processing-event>
-            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResponse</qname>
+            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>
         </supported-processing-event>
         <supported-publishing-event>
-            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationRequest</qname>
+            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationQuery</qname>
         </supported-publishing-event>
     </portlet>
 
@@ -174,12 +186,12 @@
     </user-attribute>
 
     <event-definition>
-        <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationRequest</qname>
-        <!-- value-type>org.jasig.portal.search.SearchRequest</value-type-->
+        <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationQuery</qname>
+        <value-type>org.jasig.portlet.notice.NotificationQuery</value-type>
     </event-definition>
     <event-definition>
-        <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResponse</qname>
-        <value-type>org.jasig.portlet.notice.NotificationResponse</value-type>
+        <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>
+        <value-type>org.jasig.portlet.notice.NotificationResult</value-type>
     </event-definition>
 
 </portlet-app>

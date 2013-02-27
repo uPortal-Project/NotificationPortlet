@@ -94,6 +94,16 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
 
     }
 
+    @Override
+    public final boolean isValid(ResourceRequest req, NotificationResponse previousResponse) {
+        /*
+         * This service impl privately caches responses across users and for 
+         * longer periods, so there's no harm in calling fetch() whenever a 
+         * response is needed.
+         */
+        return false;
+    }
+
     /*
      * Implementation
      */

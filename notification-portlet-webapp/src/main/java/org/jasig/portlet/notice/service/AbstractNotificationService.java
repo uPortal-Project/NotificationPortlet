@@ -20,8 +20,16 @@
 package org.jasig.portlet.notice.service;
 
 import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.EventRequest;
+import javax.portlet.EventResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.ResourceRequest;
 
 import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.util.UsernameFinder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 public abstract class AbstractNotificationService implements INotificationService {
@@ -37,12 +45,44 @@ public abstract class AbstractNotificationService implements INotificationServic
     public void setName(String name) {
         this.name = name;
     }
-    
+
     /**
      * Subclasses of {@link AbstractNotificationService} that need to perform 
      * some logic within this method should override it.
      */
     @Override
-    public void invoke(ActionRequest req, Boolean refresh) { /* no-op */ }
+    public void invoke(final ActionRequest req, final ActionResponse res, final boolean refresh) { /* no-op */ }
+
+    /**
+     * Subclasses of {@link AbstractNotificationService} that need to perform 
+     * some logic within this method should override it.
+     */
+    @Override
+    public void collect(final EventRequest req, final EventResponse res) { /* no-op */ }
+    
+    /**
+     * Returns <code>true</code>.  Subclasses of {@link AbstractNotificationService} 
+     * that can better answer this question should override this method.
+     */
+    @Override
+    public boolean isValid(final ResourceRequest req, final NotificationResponse previousResponse) {
+        return true;
+    }
+    
+    /*
+     * Implementation
+     */
+
+    @Autowired
+    protected UsernameFinder usernameFinder;
+
+    protected final String createServiceUserWindowSpecificCacheKey(PortletRequest req) {
+        // Use the username combined with the name given to this Notification 
+        // service (until we discover a reason that's not good enough).
+        final StringBuilder rslt = new StringBuilder();
+        rslt.append(getName()).append("|").append(usernameFinder.findUsername(req))
+                                        .append("|").append(req.getWindowID());
+        return rslt.toString();
+    }
 
 }
