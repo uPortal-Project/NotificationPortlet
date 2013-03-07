@@ -11,15 +11,15 @@
             {
          "body": "Yes, even your bike must be registered and a fee is associated with the registration. To avoid jail time, please register your bike before the end of the week.",
          "dueDate":      {
-          "date": 9,
+          "date": 3,
           "day": 2,
           "hours": 11,
           "minutes": 57,
-          "month": 7,
+          "month": 3,
           "seconds": 28,
           "time": 1312916248695,
           "timezoneOffset": 420,
-          "year": 111
+          "year": 113
          },
          "image": "http://library.university/parking.png",
          "url": "http://library.university/parking",

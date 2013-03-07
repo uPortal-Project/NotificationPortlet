@@ -59,6 +59,7 @@
                  RestfulJsonNotificationService. -->
             <preference>
                 <name>RestfulJsonNotificationService.serviceUrls</name>
+                <value>http://siteamnotebook1:8080/notificationservice/controller/{username}</value>
             </preference>
 
             <!-- Locations of static files, in native NotificationPortlet JSON, 

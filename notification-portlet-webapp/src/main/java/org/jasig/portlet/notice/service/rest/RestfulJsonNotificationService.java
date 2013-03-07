@@ -24,11 +24,9 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -86,6 +84,7 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
 
     @Override
     public NotificationResponse fetch(ResourceRequest req) {
+
         
         NotificationResponse rslt = EMPTY_RESPONSE;  // default is empty
         
@@ -180,7 +179,18 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
             
             InputStream inpt = null;
             try {
+            	log.debug("About to get body of the response.  Status code was " + res.getStatusText() );
                 inpt = res.getBody();
+                
+               /* int i;
+                StringBuilder b = new StringBuilder();
+                while( (i=inpt.read()) != -1 ) {
+                    b.append((char)i);
+                }
+
+                
+                
+                log.debug("Response is " + b.toString() ); */
                 rslt = mapper.readValue(inpt, NotificationResponse.class);
             } catch (Throwable t) {
                 log.error("Failed to invoke the remote service at " + res.getHeaders().getLocation(), t);

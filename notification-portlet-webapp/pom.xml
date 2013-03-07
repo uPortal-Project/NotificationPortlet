@@ -13,6 +13,11 @@
     <name>Notification Portlet</name>
     <description>JSR-286 (Portlet 2.0) portlet to display important notices from campus systems.</description>
     
+    <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <pluto.version>2.1.0-M3</pluto.version>
+  </properties>
+    
     <dependencies>
 
         <dependency>
@@ -96,6 +101,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc-portlet</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>rome</groupId>
@@ -165,11 +174,16 @@
             </resource>
         </resources>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <attachClasses>true</attachClasses>
+ 
+        
+<!-- configure maven-war-plugin to use updated web.xml -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.2</version>
+					<configuration>
+						<webXml>${project.build.directory}/pluto-resources/web.xml</webXml>
+						<attachClasses>true</attachClasses>
                     <overlays>
                         <overlay>
                             <groupId>org.jasig.resourceserver</groupId>
@@ -180,8 +194,23 @@
                             </includes>
                         </overlay>
                     </overlays>
-                </configuration>
-            </plugin>
+					</configuration>
+				</plugin>
+				<!-- bind 'pluto:assemble' goal to 'generate-resources' lifecycle -->
+				<plugin>
+					<groupId>org.apache.portals.pluto</groupId><!-- use org.apache.pluto for uPortal 3 -->
+					<artifactId>maven-pluto-plugin</artifactId>
+					<version>${pluto.version}</version><!-- use 1.1.4 if deploying to uPortal 3 -->
+					<executions>
+						<execution>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>assemble</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
         </plugins>
     </build>
 
