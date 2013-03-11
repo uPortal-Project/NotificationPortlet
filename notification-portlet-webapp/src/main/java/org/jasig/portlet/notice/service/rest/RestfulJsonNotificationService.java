@@ -162,6 +162,13 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
                 final String authString = username.concat(":").concat(password);
                 final String encodedAuthString = new Base64().encodeToString(authString.getBytes());
                 httpReq.getHeaders().add("Authorization", "Basic ".concat(encodedAuthString));
+            } else {
+            	
+            	if (log.isDebugEnabled()) {
+                    
+                    log.debug("Either username (" + username + ") or password (" + password + ") is null so basic authentication is not being used.");
+                }
+            	
             }
 
         }
