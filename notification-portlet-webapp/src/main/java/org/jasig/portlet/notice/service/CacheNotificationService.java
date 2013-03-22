@@ -93,7 +93,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
     }
 
     @Override
-    public NotificationResponse fetch(ResourceRequest req) {
+    public NotificationResponse fetch(final ResourceRequest req) {
 
         final String username = usernameFinder.findUsername(req);
         if (log.isDebugEnabled()) {
@@ -123,7 +123,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
                 }
                 // Refresh if needed
                 if (!service.isValid(req, entry.getValue())) {
-                    NotificationResponse freshResponse = service.fetch(req);
+                    final NotificationResponse freshResponse = getResponseFromService(req, service);
                     tuple.getResponses().put(entry.getKey(), freshResponse);
                 }
             }
@@ -140,7 +140,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
             // the underlying data sources, then cache what we receive
             CacheTuple tuple = new CacheTuple();
             for(INotificationService service : servicesMap.values()) {
-                NotificationResponse nr = service.fetch(req);
+                final NotificationResponse nr = getResponseFromService(req, service);
                 tuple.getResponses().put(service.getName(), nr);
             }
             cache.put(new Element(cacheKey, tuple));
@@ -153,6 +153,22 @@ public final class CacheNotificationService extends AbstractNotificationService 
 
         return rslt;
 
+    }
+    
+    /*
+     * Implementation
+     */
+    
+    private final NotificationResponse getResponseFromService(final ResourceRequest req, final INotificationService service) {
+        NotificationResponse rslt = null;
+        try {
+            rslt = service.fetch(req);
+        } catch (Exception e) {
+            String msg = "Failed to invoke the specified service:  " + service.getName();
+            log.error(msg, e);
+            rslt = prepareErrorResponse(getName(), msg);
+        }
+        return rslt;
     }
 
     /*

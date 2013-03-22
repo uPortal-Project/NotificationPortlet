@@ -126,21 +126,21 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
      */
     private NotificationResponse readFromFile(String filename) {
         
-        URL location = getClass().getClassLoader().getResource(filename);
-        
-        if (location == null) {
-            String msg = "Data file not found:  " + filename;
-            throw new RuntimeException(msg);
-        }
-        
         NotificationResponse rslt = null;
 
-        try {
-            File f = new File(location.toURI());
-            rslt =  mapper.readValue(f, NotificationResponse.class);
-        } catch (Exception e) {
-            String msg = "Failed to read the data file:  " + location;
-            throw new RuntimeException(msg, e);
+        URL location = getClass().getClassLoader().getResource(filename);
+        if (location != null) {
+            try {
+                File f = new File(location.toURI());
+                rslt =  mapper.readValue(f, NotificationResponse.class);
+            } catch (Exception e) {
+                String msg = "Failed to read the data file:  " + location;
+                log.error(msg, e);
+                rslt = prepareErrorResponse(getName(), msg);
+            }
+        } else {
+            String msg = "Data file not found:  " + filename;
+            rslt = prepareErrorResponse(getName(), msg);
         }
 
         return rslt;
