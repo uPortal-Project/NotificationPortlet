@@ -16,5 +16,7 @@ specific language governing permissions and limitations
 under the License.
 
 This project includes:
-  NotificationPortlet - API under Apache License Version 2.0
+  Data Mapper for Jackson under The Apache Software License, Version 2.0
+  Jackson under The Apache Software License, Version 2.0
+  NotificationPortlet - API under JA-SIG Collaborative Licence
 
