@@ -51,6 +51,7 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
+
 public final class RestfulJsonNotificationService extends
 		AbstractNotificationService {
 
@@ -281,5 +282,6 @@ public final class RestfulJsonNotificationService extends
 		}
 
 	}
+
 
 }

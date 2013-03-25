@@ -125,7 +125,7 @@ public final class RomeNotificationService extends AbstractNotificationService {
                 } else {
                     final NotificationError error = new NotificationError();
                     error.setError("Service Unavailable");
-                    error.setSource(getClass().getSimpleName());
+                    error.setSource(getName());
                     errors.add(error);
                 }
             }

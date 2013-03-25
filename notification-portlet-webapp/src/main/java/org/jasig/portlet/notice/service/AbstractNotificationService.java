@@ -19,6 +19,8 @@
 
 package org.jasig.portlet.notice.service;
 
+import java.util.Arrays;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
@@ -27,6 +29,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
 
 import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.NotificationError;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.util.UsernameFinder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +86,15 @@ public abstract class AbstractNotificationService implements INotificationServic
         rslt.append(getName()).append("|").append(usernameFinder.findUsername(req))
                                         .append("|").append(req.getWindowID());
         return rslt.toString();
+    }
+    
+    protected final NotificationResponse prepareErrorResponse(final String source, final String message) {
+        final NotificationError error = new NotificationError();
+        error.setSource(source);
+        error.setError(message);
+        final NotificationResponse rslt =  new NotificationResponse();
+        rslt.setErrors(Arrays.asList(new NotificationError[] { error }));
+        return rslt;
     }
 
 }
