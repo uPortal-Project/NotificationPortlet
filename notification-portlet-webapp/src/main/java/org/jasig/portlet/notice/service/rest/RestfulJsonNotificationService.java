@@ -158,13 +158,7 @@ public final class RestfulJsonNotificationService extends
 						+ "' for user "
 						+ usernameFinder.findUsername(req);
 				log.error(msg, e);
-				final NotificationError error = new NotificationError();
-				error.setError("Service Unavailable");
-				error.setSource(getClass().getSimpleName());
-				final NotificationResponse response = new NotificationResponse();
-				response.setErrors(Arrays
-						.asList(new NotificationError[] { error }));
-				rslt = rslt.combine(response);
+				rslt = prepareErrorResponse(getName(), "Service Unavailable");
 			}
 		}
 
