@@ -132,7 +132,7 @@ public final class RestfulJsonNotificationService extends
 
 		NotificationResponse rslt = EMPTY_RESPONSE; // default is empty
 
-		//trustSelfSignedSSL();
+		trustSelfSignedSSL();
 
 		final PortletPreferences prefs = req.getPreferences();
 		final Map<String, String> params = createParameters(req);
