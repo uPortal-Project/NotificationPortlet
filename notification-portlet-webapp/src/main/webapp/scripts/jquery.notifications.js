@@ -171,7 +171,7 @@
                       {% if ( entry.dueDate ) { \
                            var date  = new Date(entry.dueDate.time), \
                                month = date.getMonth() + 1, \
-                               day   = date.getDay(), \
+                               day   = date.getDate(), \
                                year  = date.getFullYear(), \
                                overDue = (date < new Date() ? " overdue" : ""); %} \
                         <span class="notification-due-date{{ overDue }}"> \
