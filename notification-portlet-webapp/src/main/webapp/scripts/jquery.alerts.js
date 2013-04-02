@@ -142,13 +142,10 @@ if (!upalert.init) {
         // First 'prime-the-pump' with an ActionURL
         $.ajax({
           type: 'POST',
-          dataType: 'json',
           url: settings.invokeNotificationServiceUrl,
-          success: fetchAlerts,
-          error: function (jqXHR, textStatus, errorThrown) {
-            container.html(" ").text("AJAX failed. ~ THE END ~");
-          }
-    	});
+          async: false,
+          success: fetchAlerts
+        });
       }
 
       // Invoke notifications

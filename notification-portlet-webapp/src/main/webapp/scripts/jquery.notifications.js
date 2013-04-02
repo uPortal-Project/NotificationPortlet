@@ -71,7 +71,6 @@
       // First 'prime-the-pump' with an ActionURL
       $.ajax({
         type: 'POST',
-        dataType: 'json',
         data: { refresh: doRefresh },
         url: opts.invokeNotificationServiceUrl,
         async: false
