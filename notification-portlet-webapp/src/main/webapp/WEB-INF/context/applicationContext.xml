@@ -136,6 +136,7 @@
                         <property name="httpClient" ref="httpClient" />
                     </bean>
                 </property>
+                 
             </bean>
         </property>
     </bean>
@@ -161,7 +162,7 @@
     <!-- DEMO -->
     <bean id="demoNotifications" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
         <property name="name" value="demoNotifications"/>
-        <property name="active" value="true"/>
+        <property name="active" value="false"/>
     </bean>
     <bean id="demoEmergencyAlerts" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
         <property name="name" value="demoEmergencyAlerts"/>

@@ -21,14 +21,18 @@ package org.jasig.portlet.notice.service.rest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -47,151 +51,231 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
-public final class RestfulJsonNotificationService extends AbstractNotificationService {
-    
-    public static final String SERVICE_URLS_PREFERENCE = "RestfulJsonNotificationService.serviceUrls";
 
-    private final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
-    private final ResponseExtractor<NotificationResponse> responseExtractor = new ResponseExtractorImpl();
+public final class RestfulJsonNotificationService extends
+		AbstractNotificationService {
 
-    // For HTTP Basic AuthN
-    private IParameterEvaluator usernameEvaluator = null;
-    private IParameterEvaluator passwordEvaluator = null;
+	public static final String SERVICE_URLS_PREFERENCE = "RestfulJsonNotificationService.serviceUrls";
 
-    private Map<String,IParameterEvaluator> urlParameters;
-    private RestTemplate restTemplate;
-    private final Log log = LogFactory.getLog(getClass());
+	private final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
+	private final ResponseExtractor<NotificationResponse> responseExtractor = new ResponseExtractorImpl();
 
-    @Autowired
-    private UsernameFinder usernameFinder;
+	// For HTTP Basic AuthN
+	private IParameterEvaluator usernameEvaluator = null;
+	private IParameterEvaluator passwordEvaluator = null;
 
-    @Required
-    public void setUsernameEvaluator(IParameterEvaluator usernameEvaluator) {
-        this.usernameEvaluator = usernameEvaluator;
-    }
+	private Map<String, IParameterEvaluator> urlParameters;
+	private RestTemplate restTemplate;
+	private final static Log log = LogFactory
+			.getLog(RestfulJsonNotificationService.class.getName());
 
-    @Required
-    public void setPasswordEvaluator(IParameterEvaluator passwordEvaluator) {
-        this.passwordEvaluator = passwordEvaluator;
-    }
+	@Autowired
+	private UsernameFinder usernameFinder;
 
-    public void setUrlParameters(Map<String,IParameterEvaluator> urlParameters) {
-        this.urlParameters = new HashMap<String,IParameterEvaluator>(urlParameters);
-    }
+	@Required
+	public void setUsernameEvaluator(IParameterEvaluator usernameEvaluator) {
+		this.usernameEvaluator = usernameEvaluator;
+	}
 
-    @Required
-    public void setRestTemplate(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+	@Required
+	public void setPasswordEvaluator(IParameterEvaluator passwordEvaluator) {
+		this.passwordEvaluator = passwordEvaluator;
+	}
 
-    @Override
-    public NotificationResponse fetch(ResourceRequest req) {
-        
-        NotificationResponse rslt = EMPTY_RESPONSE;  // default is empty
-        
-        final PortletPreferences prefs = req.getPreferences();
-        final Map<String,String> params = createParameters(req);
-        final RequestCallback requestCallback = new RequestCallbackImpl(req);
+	public void setUrlParameters(Map<String, IParameterEvaluator> urlParameters) {
+		this.urlParameters = new HashMap<String, IParameterEvaluator>(
+				urlParameters);
+	}
 
-        final String[] serviceUrls = prefs.getValues(SERVICE_URLS_PREFERENCE, new String[0]);
-        for (final String url : serviceUrls) {
-            if (log.isDebugEnabled()) {
-                log.debug("Invoking uri '" + url + "' with the following parameters:  " + params.toString());
-            }
-            try {
-                final NotificationResponse response = restTemplate.execute(
-                        url, HttpMethod.GET, 
-                        requestCallback, responseExtractor, params);
-                rslt = rslt.combine(response);
-            } catch (Exception e) {
-                final String msg = "Failed to invoke the following service at '" 
-                        + url + "' for user " + usernameFinder.findUsername(req);
-                log.error(msg, e);
-                rslt = prepareErrorResponse(getName(), "Service Unavailable");
-            }
-        }
-        
-        return rslt;
+	@Required
+	public void setRestTemplate(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
 
-    }
-    
-    /*
-     * Implementation
-     */
-    
-    private Map<String,String> createParameters(PortletRequest req) {
-        final Map<String,String> rslt = new HashMap<String,String>();
-        for(final Map.Entry<String,IParameterEvaluator> y : urlParameters.entrySet()) {
-            final String key = y.getKey();
-            final String value = urlParameters.get(key).evaluate(req);
-            rslt.put(key, value);
-        }
-        return rslt;
-    }
-    
-    /*
-     * Nested Types
-     */
-    
-    private /* non-static */ final class RequestCallbackImpl implements RequestCallback {
-        
-        private final PortletRequest portletReq;
-        
-        public RequestCallbackImpl(PortletRequest portletReq) {
-            this.portletReq = portletReq;
-        }
+	/**
+	 * Tell the JRE to trust our self-signed SSL certificate used when running
+	 * locally.
+	 */
+	private static void trustSelfSignedSSL() {
+		
+		try {
+			SSLContext ctx = SSLContext.getInstance("TLS");
+			
+			X509TrustManager tm = new X509TrustManager() {
 
-        @Override
-        public void doWithRequest(ClientHttpRequest httpReq) {
+				public void checkClientTrusted(X509Certificate[] xcs,
+						String string) throws CertificateException {
+				}
 
-            final String username = usernameEvaluator.evaluate(portletReq);
-            final String password = passwordEvaluator.evaluate(portletReq);
+				public void checkServerTrusted(X509Certificate[] xcs,
+						String string) throws CertificateException {
+				}
 
-            // Perform BASIC AuthN if credentials are provided
-            if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
+				public X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
+			};
+			
+			ctx.init(null, new TrustManager[] { tm }, null);
+			
+			SSLContext.setDefault(ctx);
+			
+		} catch (Exception ex) {
+			
+			log.error(ex.getMessage());
+			
+		}
+		
+	}
 
-                if (log.isDebugEnabled()) {
-                    final boolean hasPassword = password != null;
-                    log.debug("Preparing ClientHttpRequest for user '" + username + "' (password provided = " +  hasPassword + ")");
-                }
+	@Override
+	public NotificationResponse fetch(ResourceRequest req) {
 
-                final String authString = username.concat(":").concat(password);
-                final String encodedAuthString = new Base64().encodeToString(authString.getBytes());
-                httpReq.getHeaders().add("Authorization", "Basic ".concat(encodedAuthString));
-            }
+		NotificationResponse rslt = EMPTY_RESPONSE; // default is empty
 
-        }
-        
-    }
+		trustSelfSignedSSL();
 
-    private /* non-static */ final class ResponseExtractorImpl implements ResponseExtractor<NotificationResponse> {
-        
-        private final ObjectMapper mapper = new ObjectMapper();
+		final PortletPreferences prefs = req.getPreferences();
+		final Map<String, String> params = createParameters(req);
+		final RequestCallback requestCallback = new RequestCallbackImpl(req);
 
-        @Override
-        public NotificationResponse extractData(ClientHttpResponse res) {
-            
-            NotificationResponse rslt = null;
-            
-            InputStream inpt = null;
-            try {
-                inpt = res.getBody();
-                rslt = mapper.readValue(inpt, NotificationResponse.class);
-            } catch (Throwable t) {
-                log.error("Failed to invoke the remote service at " + res.getHeaders().getLocation(), t);
-                final NotificationError error = new NotificationError();
-                try {
-                    error.setError(res.getRawStatusCode() + ":  " + res.getStatusText());
-                } catch (IOException e) {
-                    log.error("Failed to read the ClientHttpResponse", e);
-                }
-                error.setSource(getClass().getSimpleName());
-                rslt = new NotificationResponse();
-                rslt.setErrors(Arrays.asList(new NotificationError[] { error }));
-            }
-            return rslt;
-        }
-        
-    }
+		final String[] serviceUrls = prefs.getValues(SERVICE_URLS_PREFERENCE,
+				new String[0]);
+		for (final String url : serviceUrls) {
+			if (log.isDebugEnabled()) {
+				log.debug("Invoking uri '" + url
+						+ "' with the following parameters:  "
+						+ params.toString());
+			}
+			try {
+				final NotificationResponse response = restTemplate.execute(url,
+						HttpMethod.GET, requestCallback, responseExtractor,
+						params);
+				rslt = rslt.combine(response);
+			} catch (Exception e) {
+				final String msg = "Failed to invoke the following service at '"
+						+ url
+						+ "' for user "
+						+ usernameFinder.findUsername(req);
+				log.error(msg, e);
+				rslt = prepareErrorResponse(getName(), "Service Unavailable");
+			}
+		}
+
+		return rslt;
+
+	}
+
+	/*
+	 * Implementation
+	 */
+
+	private Map<String, String> createParameters(PortletRequest req) {
+		final Map<String, String> rslt = new HashMap<String, String>();
+		for (final Map.Entry<String, IParameterEvaluator> y : urlParameters
+				.entrySet()) {
+			final String key = y.getKey();
+			final String value = urlParameters.get(key).evaluate(req);
+			rslt.put(key, value);
+		}
+		return rslt;
+	}
+
+	/*
+	 * Nested Types
+	 */
+
+	private/* non-static */final class RequestCallbackImpl implements
+			RequestCallback {
+
+		private final PortletRequest portletReq;
+
+		public RequestCallbackImpl(PortletRequest portletReq) {
+			this.portletReq = portletReq;
+		}
+
+		@Override
+		public void doWithRequest(ClientHttpRequest httpReq) {
+
+			final String username = usernameEvaluator.evaluate(portletReq);
+			final String password = passwordEvaluator.evaluate(portletReq);
+
+			// Perform BASIC AuthN if credentials are provided
+			if (!StringUtils.isBlank(username)
+					&& !StringUtils.isBlank(password)) {
+
+				if (log.isDebugEnabled()) {
+					final boolean hasPassword = password != null;
+					log.debug("Preparing ClientHttpRequest for user '"
+							+ username + "' (password provided = "
+							+ hasPassword + ")");
+				}
+
+				final String authString = username.concat(":").concat(password);
+				final String encodedAuthString = new Base64()
+						.encodeToString(authString.getBytes());
+				httpReq.getHeaders().add("Authorization",
+						"Basic ".concat(encodedAuthString));
+			} else {
+
+				if (log.isDebugEnabled()) {
+
+					log.debug("Either username ("
+							+ username
+							+ ") or password ("
+							+ password
+							+ ") is null so basic authentication is not being used.");
+				}
+
+			}
+
+		}
+
+	}
+
+	private/* non-static */final class ResponseExtractorImpl implements
+			ResponseExtractor<NotificationResponse> {
+
+		private final ObjectMapper mapper = new ObjectMapper();
+
+		@Override
+		public NotificationResponse extractData(ClientHttpResponse res) {
+
+			NotificationResponse rslt = null;
+
+			InputStream inpt = null;
+			try {
+				log.debug("About to get body of the response.  Status code was "
+						+ res.getStatusText());
+				inpt = res.getBody();
+
+				/*
+				 * int i; StringBuilder b = new StringBuilder(); while(
+				 * (i=inpt.read()) != -1 ) { b.append((char)i); }
+				 * 
+				 * 
+				 * 
+				 * log.debug("Response is " + b.toString() );
+				 */
+				rslt = mapper.readValue(inpt, NotificationResponse.class);
+			} catch (Throwable t) {
+				log.error("Failed to invoke the remote service at "
+						+ res.getHeaders().getLocation(), t);
+				final NotificationError error = new NotificationError();
+				try {
+					error.setError(res.getRawStatusCode() + ":  "
+							+ res.getStatusText());
+				} catch (IOException e) {
+					log.error("Failed to read the ClientHttpResponse", e);
+				}
+				error.setSource(getClass().getSimpleName());
+				rslt = new NotificationResponse();
+				rslt.setErrors(Arrays.asList(new NotificationError[] { error }));
+			}
+			return rslt;
+		}
+
+	}
+
 
 }

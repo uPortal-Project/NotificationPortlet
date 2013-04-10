@@ -64,7 +64,9 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
     public NotificationResponse fetch(ResourceRequest req) {
         
         final ArrayList<String> locations = getLocations(req);
+        
         if (locations.isEmpty()) {
+        	log.debug("Locations is empty.");
             return EMPTY_RESPONSE;
         }
 
@@ -125,6 +127,8 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
      * @return NotificationRequest, null if the de-serialization fails.
      */
     private NotificationResponse readFromFile(String filename) {
+    	
+    	log.debug("Reading notifications in file named: " + filename);
         
         NotificationResponse rslt = null;
 

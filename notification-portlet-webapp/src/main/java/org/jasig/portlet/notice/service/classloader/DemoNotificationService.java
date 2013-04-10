@@ -72,14 +72,19 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
 
             rslt = super.fetch(req);
             
+            log.debug("Number of notification categories are: " + rslt.getCategories().size() );
+            
             // A dash of post-processing:  let's make all the due dates at or near today
             for (NotificationCategory nc : rslt.getCategories()) {
+            	log.debug("Notification category is " + nc.getTitle() );
+            	log.debug("Number of notifications for this category are " + nc.getEntries().size() );
                 for (NotificationEntry y : nc.getEntries()) {
                     if (y.getDueDate() != null) {
                         // Just manipulate the ones that actually have 
                         // a due date;  leave the others blank
                         y.setDueDate(generateRandomDueDate());
                     }
+                    log.debug("Notification: " + y.getTitle() );
                 }
             }
 
