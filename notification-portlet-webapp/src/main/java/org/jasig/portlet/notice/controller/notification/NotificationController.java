@@ -59,15 +59,15 @@ public class NotificationController {
     private INotificationService notificationService;
 
     @RenderMapping
-	public String showNotificationsList(final RenderRequest req) {
-	    final PortletPreferences prefs = req.getPreferences();
-	    final String viewName = prefs.getValue(VIEW_NAME_PREFERENCE, VIEW_NAME_DEFAULT);
-	    if (log.isTraceEnabled()) {
-	        log.trace("Selecting viewName=" + viewName);
-	    }
-	    return viewName;
-	}
-	
+    public String showNotificationsList(final RenderRequest req) {
+        final PortletPreferences prefs = req.getPreferences();
+        final String viewName = prefs.getValue(VIEW_NAME_PREFERENCE, VIEW_NAME_DEFAULT);
+        if (log.isTraceEnabled()) {
+            log.trace("Selecting viewName=" + viewName);
+        }
+        return viewName;
+    }
+
     @ResourceMapping("GET-NOTIFICATIONS")
     public ModelAndView getNotifications(final ResourceRequest req) throws IOException {
 
@@ -91,7 +91,7 @@ public class NotificationController {
                 session.setAttribute(ATTRIBUTE_HIDDEN_ERRORS, hidden);
             }
             notifications = notifications.filterErrors(hidden);
-            
+
             model.put("notificationResponse", notifications);
             return new ModelAndView("json", model);
 
