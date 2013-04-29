@@ -44,40 +44,40 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 public class NotificationEntry implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     /*
      * Strongly-typed members
      */
 
-	private String    source;
-	private String    title;
+    private String    source;
+    private String    title;
     private String    url;
     private int       priority;
     private Date      dueDate;
     private String    image;
-	private String    body;
+    private String    body;
 
     /*
      * Weakly-typed, open-ended attributes
      */
-	
-	private List<NotificationAttribute> attributes = Collections.emptyList();
 
-	public String getSource() {
-		return source;
-	}
+    private List<NotificationAttribute> attributes = Collections.emptyList();
 
-	public void setSource(String source) {
-		this.source = source;
-	}
+    public String getSource() {
+        return source;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getTitle() {
+        return title;
+    }
 
     public void setTitle(String title) {
-		this.title = title;
-	}
+        this.title = title;
+    }
 
     public String getUrl() {
         return url;
@@ -94,7 +94,7 @@ public class NotificationEntry implements Serializable {
     public void setPriority(int priority) {
         this.priority = priority;
     }
-    
+
     @JsonSerialize(using=JsonDateSerializer.class)
     @JsonDeserialize(using=JsonDateDeserializer.class)
     public Date getDueDate() {
@@ -112,14 +112,14 @@ public class NotificationEntry implements Serializable {
     public void setImage(String imageUrl) {
         this.image = imageUrl;
     }
-    
-	public String getBody() {
-		return body;
-	}
 
-	public void setBody(String body) {
-		this.body = body;
-	}
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 
     public List<NotificationAttribute> getAttributes() {
         return Collections.unmodifiableList(attributes);
