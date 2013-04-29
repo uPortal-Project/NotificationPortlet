@@ -31,7 +31,7 @@
 <c:if test="{!usePortalJsLibs}">
     <script src="<rs:resourceURL value="/rs/jquery/1.6.1/jquery-1.6.1.min.js"/>" type="text/javascript"></script>
 </c:if>
-<script src="<c:url value="/scripts/jquery.alerts.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.notice.js"/>" type="text/javascript"></script>
 <link type="text/css" rel="stylesheet" href="<c:url value="/styles/alert.css"/>"/>
 
 <div id="${n}emergencyAlert" class="emergency-alert" style="display: none;">
@@ -71,13 +71,66 @@
 
     ${n}.jQuery(function(){
         var $ = ${n}.jQuery;
-        
-        upalert.emergencyAlerts($, $("#${n}emergencyAlert"), { 
+
+        var container = $("#${n}emergencyAlert");
+
+        var autoAdvance = ${autoAdvance};
+        var intervalId = -1;
+
+        upnotice.show($, container, { 
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
             getNotificationsUrl: '<portlet:resourceURL id="GET-FEED"/>',
-            autoAdvance: ${autoAdvance}
+            readyCallback: function() {
+
+                // Grab the alerts we just created
+                var alerts = container.find('.view-alert').not('.template');
+
+                // Hide all but the first one
+                alerts.not(':first').toggleClass('hidden');
+
+                var advance = function() {
+                    var outgoingAlert = alerts.filter(':visible');
+                    var incomingAlert = outgoingAlert.next();
+                    if (incomingAlert.size() == 0) {
+                      // Cycle to the beginning...
+                      incomingAlert = alerts.filter(':first');
+                    }
+                    outgoingAlert.toggle('slide', { direction: 'left' });
+                    incomingAlert.toggle('slide', { direction: 'right' });
+                };
+
+                var recede = function() {
+                    var outgoingAlert = alerts.filter(':visible');
+                    var incomingAlert = outgoingAlert.prev();
+                    outgoingAlert.toggle('slide', { direction: 'right' });
+                    incomingAlert.toggle('slide', { direction: 'left' });
+                };
+
+                // Show paging controls?
+                if (alerts.size() > 1) {
+                    alerts.find('.alerts-pager').toggleClass('hidden');
+                    // All but the first should enable the previous link
+                    alerts.filter(':not(:first)').find('.alerts-previous').toggleClass('disabled');
+                    // All but the last should enable the next link
+                    alerts.filter(':not(:last)').find('.alerts-next').toggleClass('disabled');
+                    // Register click handlers
+                    alerts.find('.alerts-next:not(.disabled)').click(function() {
+                        advance();
+                        window.clearInterval(intervalId);
+                    });
+                    alerts.find('.alerts-previous:not(.disabled)').click(function() {
+                        recede();
+                        window.clearInterval(intervalId);
+                    });
+                    // autoAdvance?
+                    if (autoAdvance && alerts.size() > 1) {
+                        intervalId = window.setInterval(advance, 10000);
+                    }
+                }
+
+            }
         });
-        
+
     });
 
 </script>
