@@ -41,14 +41,14 @@
             <title>Notifications list</title>
         </portlet-info>
         <portlet-preferences>
-        
+
             <!-- Locations of static files, in native NotificationPortlet JSON, 
                  that should be read from the classpath and included in the 
                  response. -->
             <preference>
                 <name>ClassLoaderResourceNotificationService.locations</name>
             </preference>
-        
+
             <!-- Zero or more URLs for feeds that should be read-in and 
                  converted to Notifications by the RomeNotificationService. -->
             <preference>
@@ -145,7 +145,7 @@
                 <name>EmergencyAlertController.usePortalJsLibs</name>
                 <value>true</value>
             </preference>
-            
+
             <!-- If 'EmergencyAlertController.usePortalJsLibs' is true, this 
                  value will help find the portal's JavaScript library (jQuery).  
                  If not, it has no impact. -->
