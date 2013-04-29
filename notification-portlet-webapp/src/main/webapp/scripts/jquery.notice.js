@@ -35,7 +35,7 @@ if (!upnotice.init) {
         template:  '.template',
         title:     '.title',
         body:      '.body',
-        url:       '.url'
+        link:      '.link'
       },
       readyCallback: function() {}
     };
@@ -65,7 +65,7 @@ if (!upnotice.init) {
               element.find(settings.selectors.body).html(alert.body);
             }
             if (alert.url) {
-              element.find(settings.selectors.url).attr('href', alert.url).html(alert.url);
+              element.find(settings.selectors.link).attr('href', alert.url).html(alert.url);
             }
 
             element.appendTo(container);

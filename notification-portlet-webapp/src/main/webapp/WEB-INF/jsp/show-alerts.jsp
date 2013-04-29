@@ -50,7 +50,7 @@
         <!-- Portlet Body -->
         <div class="content portlet-content" role="main">
             <p class="body"></p>
-            <a class="url" href=""></a>                                     
+            <a class="link" href=""></a>
         </div>
     </div>
 
