@@ -52,6 +52,7 @@ public class NotificationEntry implements Serializable {
     private String    source;
     private String    title;
     private String    url;
+    private String    linkText;
     private int       priority;
     private Date      dueDate;
     private String    image;
@@ -83,8 +84,16 @@ public class NotificationEntry implements Serializable {
         return url;
     }
 
-    public void setUrl(String link) {
-        this.url = link;
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getLinkText() {
+        return linkText;
+    }
+
+    public void setLinkText(String linkText) {
+        this.linkText = linkText;
     }
 
     public int getPriority() {
@@ -138,6 +147,8 @@ public class NotificationEntry implements Serializable {
         builder.append(title);
         builder.append(", url=");
         builder.append(url);
+        builder.append(", linkText=");
+        builder.append(linkText);
         builder.append(", priority=");
         builder.append(priority);
         builder.append(", dueDate=");
