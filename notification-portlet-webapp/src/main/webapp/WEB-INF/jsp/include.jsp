@@ -32,5 +32,3 @@
 <%@ taglib prefix="rs" uri="http://www.jasig.org/resource-server" %>
 
 <portlet:defineObjects/>
-
-<link rel="stylesheet" href="<c:url value="/styles/styles.css"/>" type="text/css" media="screen" />

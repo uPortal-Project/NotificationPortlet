@@ -38,15 +38,17 @@
 <script src="<c:url value="/scripts/jquery.accordion.js"/>" type="text/javascript"></script>
 <script src="<c:url value="/scripts/jquery.notifications.js"/>" type="text/javascript"></script>
 
+<link rel="stylesheet" href="<c:url value="/styles/accordion.css"/>" type="text/css" media="screen" />
+
 <div id="${n}container" class="notification-portlet">
 
-	<!-- options menu -->
-	<div class="notification-options" style="display: none;">
-		<p class="notification-date-filter">
-			View: <a class="all" href="#">All</a> | <a class="today active" href="#">Today</a>
-		</p>
-		<p class="notification-refresh"><a href="#">Refresh</a></p>
-	</div>
+    <!-- options menu -->
+    <div class="notification-options" style="display: none;">
+        <p class="notification-date-filter">
+            View: <a class="all" href="#">All</a> | <a class="today active" href="#">Today</a>
+        </p>
+        <p class="notification-refresh"><a href="#">Refresh</a></p>
+    </div>
 
     <!-- loading -->
     <div class="notification-loading"></div>
