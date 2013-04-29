@@ -68,6 +68,12 @@
                 <name>DemoNotificationService.locations</name>
             </preference>
 
+            <!-- Name of the jsp view file for displaying notifications. -->
+            <preference>
+                <name>NotificationController.viewName</name>
+                <value>accordion</value>
+            </preference>
+
             <!-- Required for the PortletEventNotificationService. -->
             <preference>
                 <name>NotificationLifecycleController.doEvents</name>

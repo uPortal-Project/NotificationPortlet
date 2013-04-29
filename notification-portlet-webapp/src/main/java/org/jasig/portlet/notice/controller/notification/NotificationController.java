@@ -28,7 +28,9 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletPreferences;
 import javax.portlet.PortletSession;
+import javax.portlet.RenderRequest;
 import javax.portlet.ResourceRequest;
 
 import org.apache.commons.logging.Log;
@@ -47,6 +49,8 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 @RequestMapping("VIEW")
 public class NotificationController {
 
+    public static final String VIEW_NAME_PREFERENCE = "NotificationController.viewName";
+    public static final String VIEW_NAME_DEFAULT = "accordion";
     public static final String ATTRIBUTE_HIDDEN_ERRORS = NotificationController.class.getName() + ".ATTRIBUTE_HIDDEN_ERRORS";
 
     private Log log = LogFactory.getLog(getClass());
@@ -55,9 +59,13 @@ public class NotificationController {
     private INotificationService notificationService;
 
     @RenderMapping
-	public String showNotificationsList() {
-	    log.trace("In showNotificationsList");
-		return "notificationsList";
+	public String showNotificationsList(final RenderRequest req) {
+	    final PortletPreferences prefs = req.getPreferences();
+	    final String viewName = prefs.getValue(VIEW_NAME_PREFERENCE, VIEW_NAME_DEFAULT);
+	    if (log.isTraceEnabled()) {
+	        log.trace("Selecting viewName=" + viewName);
+	    }
+	    return viewName;
 	}
 	
     @ResourceMapping("GET-NOTIFICATIONS")
