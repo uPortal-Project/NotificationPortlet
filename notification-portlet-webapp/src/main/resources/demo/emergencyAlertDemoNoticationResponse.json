@@ -8,7 +8,8 @@
                     "source": "Demo Service",
                     "priority": 1,
                     "url": "http://www.jasig.org",
-                    "body": "BE ADVISED:  a suspicious character dressed in old-timey prison stripes and repeating <em>&quot;gobble gobble&quot;</em> was reported in the vicinity of Angel Hall.  This individual has a record of crimes against fast food and should be considered dangerous."
+                    "linkText": "Follow story",
+                    "body": "BE ADVISED:  a suspicious character dressed in old-timey prison stripes and repeating <em>&quot;rabble rabble&quot;</em> was reported in the vicinity of Angel Hall.  This individual has a record of crimes against fast food and should be considered dangerous."
                 },
                 {
                     "title": "Raining Cats &amp; Dogs",

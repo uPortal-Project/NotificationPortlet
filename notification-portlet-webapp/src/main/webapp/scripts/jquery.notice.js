@@ -65,7 +65,8 @@ if (!upnotice.init) {
               element.find(settings.selectors.body).html(alert.body);
             }
             if (alert.url) {
-              element.find(settings.selectors.link).attr('href', alert.url).html(alert.url);
+              var linkText = alert.linkText || alert.url;
+              element.find(settings.selectors.link).attr('href', alert.url).html(linkText);
             }
 
             element.appendTo(container);
