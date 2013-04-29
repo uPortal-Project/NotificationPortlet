@@ -79,7 +79,7 @@
 
         upnotice.show($, container, { 
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
-            getNotificationsUrl: '<portlet:resourceURL id="GET-FEED"/>',
+            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>',
             readyCallback: function() {
 
                 // Grab the alerts we just created

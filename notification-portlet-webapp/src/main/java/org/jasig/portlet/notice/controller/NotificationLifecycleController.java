@@ -20,6 +20,10 @@
 package org.jasig.portlet.notice.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
@@ -27,18 +31,24 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletPreferences;
+import javax.portlet.ResourceRequest;
 import javax.xml.namespace.QName;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.EventMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.NotificationCategory;
+import org.jasig.portlet.notice.NotificationEntry;
+import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.NotificationResult;
 import org.jasig.portlet.notice.util.UsernameFinder;
 
@@ -72,15 +82,40 @@ public class NotificationLifecycleController {
     @Resource(name="rootNotificationService")
     private INotificationService notificationService;
 
+    @ResourceMapping("GET-NOTIFICATIONS-UNCATEGORIZED")
+    public ModelAndView getNotifications(final ResourceRequest req, final @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
+
+        // RequestParam("key") String key, HttpServletRequest request, ModelMap model
+        log.debug("Invoking getNotifications for user:  " + usernameFinder.findUsername(req));
+
+        // Get the notifications and any data retrieval errors
+        final NotificationResponse notifications = notificationService.fetch(req);
+        if (notifications == null) {
+            String msg = "Notifications have not been loaded for user:  " + usernameFinder.findUsername(req);
+            throw new IllegalStateException(msg);
+        }
+
+        // Combine all categories into one list
+        final List<NotificationEntry> allEntries = new ArrayList<NotificationEntry>();
+        for (final NotificationCategory y : notifications.getCategories()) {
+            allEntries.addAll(y.getEntries());
+        }
+
+        final Map<String,Object> model = new HashMap<String,Object>(); 
+        model.put("feed", allEntries);
+        return new ModelAndView("json", model);
+
+    }
+
     @ActionMapping(params="action=invokeNotificationService")
     public void invokeNotificationService(final ActionRequest req, final ActionResponse res, 
             @RequestParam(value="refresh", required=false) final String doRefresh) 
             throws IOException {
-        
+
         final PortletPreferences prefs = req.getPreferences();
         final boolean doEvents = Boolean.parseBoolean(prefs.getValue(DO_EVENTS_PREFERENCE, "false"));
         if (doEvents) {
-            
+
             notificationService.invoke(req, res, Boolean.parseBoolean(doRefresh));
 
             /*
@@ -108,7 +143,7 @@ public class NotificationLifecycleController {
         }
 
     }
-    
+
     @EventMapping(NOTIFICATION_RESULT_QNAME_STRING)
     public void collectNotifications(final EventRequest req, final EventResponse res) {
 
@@ -124,7 +159,7 @@ public class NotificationLifecycleController {
                                 + usernameFinder.findUsername(req) 
                                 + "' and windowId=" + req.getWindowID());
         }
-        
+
         // Ignore results from other notification portlets
         final NotificationResult notificationResult = (NotificationResult) req.getEvent().getValue();
         if (notificationResult != null && req.getWindowID().equals(notificationResult.getQueryWindowId())) {
@@ -132,5 +167,5 @@ public class NotificationLifecycleController {
         }
 
     }
-    
+
 }
