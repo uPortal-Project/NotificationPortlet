@@ -30,6 +30,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 /**
  * This class contains all the categories and errors
  * retrieved by an INotificationService. It is also
@@ -38,6 +40,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * The data from the overall NotificationResponse instance
  * is returned to the portlet to be rendered.
  */
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationResponse implements Serializable {

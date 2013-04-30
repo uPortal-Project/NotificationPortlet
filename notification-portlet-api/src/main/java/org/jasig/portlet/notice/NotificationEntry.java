@@ -40,6 +40,7 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
  * <p>The {@link NotificationCategory} 
  * class contains all the entries for the same category title.
  */
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationEntry implements Serializable {
 
@@ -59,10 +60,16 @@ public class NotificationEntry implements Serializable {
     private String    body;
 
     /*
-     * Weakly-typed, open-ended attributes
+     * Weakly-typed, open-ended attributes collection
      */
 
     private List<NotificationAttribute> attributes = Collections.emptyList();
+
+    /*
+     * Operations that a user may perform on this notification
+     */
+
+    private List<NotificationAction> availableActions = Collections.emptyList();
 
     public String getSource() {
         return source;
@@ -105,11 +112,11 @@ public class NotificationEntry implements Serializable {
     }
 
     @JsonSerialize(using=JsonDateSerializer.class)
-    @JsonDeserialize(using=JsonDateDeserializer.class)
     public Date getDueDate() {
         return dueDate;
     }
 
+    @JsonDeserialize(using=JsonDateDeserializer.class)
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
@@ -136,6 +143,14 @@ public class NotificationEntry implements Serializable {
 
     public void setAttributes(List<NotificationAttribute> attributes) {
         this.attributes = new ArrayList<NotificationAttribute>(attributes);  // defensive copy
+    }
+
+    public List<NotificationAction> getAvailableActions() {
+        return Collections.unmodifiableList(availableActions);
+    }
+
+    public void setAvailableActions(List<NotificationAction> availableActions) {
+        this.availableActions = new ArrayList<NotificationAction>(availableActions);  // defensive copy
     }
 
     @Override

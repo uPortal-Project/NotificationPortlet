@@ -27,11 +27,14 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 /**
  * Container class that holds the entries for a given category.
  * The category title is used to determine if entries from other
  * sources should be grouped together in the same category.
  */
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationCategory implements Serializable {
 	private static final long serialVersionUID = 1L;
