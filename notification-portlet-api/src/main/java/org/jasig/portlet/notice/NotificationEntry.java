@@ -51,6 +51,7 @@ public class NotificationEntry implements Serializable {
      */
 
     private String    source;
+    private String    id;
     private String    title;
     private String    url;
     private String    linkText;
@@ -77,6 +78,21 @@ public class NotificationEntry implements Serializable {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Sets the unique identifier for this notification.  Ids are not required 
+     * <strong>except for notifications that support actions</strong>.  The 
+     * value of the id field can be any javascript-safe String, but must be 
+     * unique within a user's collection of notifications.
+     * <code>UUID.randomUUID()</code> could be a good way to generate them.
+     */
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
