@@ -150,7 +150,13 @@ public class NotificationEntry implements Serializable {
     }
 
     public void setAvailableActions(List<NotificationAction> availableActions) {
-        this.availableActions = new ArrayList<NotificationAction>(availableActions);  // defensive copy
+        this.availableActions = new ArrayList<NotificationAction>();  // defensive copy
+        for (NotificationAction action : availableActions) {
+            // We must make ourself the target of any 
+            // action at the time it becomes attached
+            action.setTarget(this);
+            this.availableActions.add(action);
+        }
     }
 
     @Override
