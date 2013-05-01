@@ -81,6 +81,37 @@ public class NotificationResponse implements Serializable {
     }
 
     /**
+     * Returns the {@link NotificationEntry} with the specified id, or null if 
+     * not present.
+     */
+    public NotificationEntry findNotificationEntryById(final String notificationId) {
+
+        // Assertions
+        if (notificationId == null) {
+            String msg = "Argument 'notificationId' cannot be null";
+            throw new IllegalArgumentException(msg);
+        }
+
+        // Providing a brute-force implementation for 
+        // now;  we can improve it if it becomes important.
+        NotificationEntry rslt = null;  // default -- means not present
+        for (NotificationCategory category : categories) {
+            for (NotificationEntry entry : category.getEntries()) {
+                if (notificationId.equals(entry.getId())) {
+                    rslt = entry;
+                    break;
+                }
+            }
+            if (rslt != null) {
+                break;
+            }
+        }
+
+        return rslt;
+
+    }
+
+    /**
      * Combine the contents of this response with the provided response and 
      * return a <b>new instance</b> of {@link NotificationResponse}.  The 
      * original instances are unchanged.
@@ -150,8 +181,9 @@ public class NotificationResponse implements Serializable {
                 }
             }
 
-            if(!found)
+            if(!found) {
                 categories.add(newCategory);
+            }
         }
     }
 
