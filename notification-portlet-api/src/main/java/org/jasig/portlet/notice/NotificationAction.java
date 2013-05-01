@@ -43,10 +43,25 @@ public abstract class NotificationAction implements Serializable {
 
     // Instance Members
     private NotificationEntry target;
+    private String id = getClass().getSimpleName();
     private String label;
 
     public final String getClazz() {
         return getClass().getName();
+    }
+
+    public final String getId() {
+        return id;
+    }
+
+    /**
+     * Identifies the action, from among the available set of actions, when the
+     * user invokes it.  Must be unique within the notification.  The default is
+     * the simpleName of the implementing class, so subclasses that can appear
+     *  more than once within a notification should override it.
+     */
+    public final void setId(String id) {
+        this.id = id;
     }
 
     public final String getLabel() {
