@@ -32,10 +32,12 @@ if (!upnotice.init) {
 
     var defaults = {
       selectors: {
-        template:  '.template',
-        title:     '.title',
-        body:      '.body',
-        link:      '.link'
+        template:        '.template',
+        title:           '.title',
+        body:            '.body',
+        link:            '.link',
+        actions:         '.notification-actions',
+        actionTemplate:  '.action-template'
       },
       readyCallback: function() {}
     };
@@ -44,6 +46,29 @@ if (!upnotice.init) {
 
       var settings = $.extend({}, defaults, options);
       var template = container.find(settings.selectors.template);
+
+      var drawActions = function(actionsContainer, alert) {
+
+          var availableActions = alert.availableActions;
+          var actionTemplate = actionsContainer.find(settings.selectors.actionTemplate);
+
+          for (var i=0; i < availableActions.length; i++) {
+              var action = availableActions[i];
+
+              var actionUrl = settings.invokeActionUrlTemplate
+                      .replace('NOTIFICATIONID', alert.id)
+                      .replace('ACTIONID', action.id);
+
+              var actionElement = actionTemplate.clone();
+              actionElement.removeClass('action-template');
+              actionElement.toggleClass('hidden');
+              actionElement.find('a').attr('href', actionUrl).html(action.label);
+              actionElement.appendTo(actionsContainer);
+          }
+
+          actionsContainer.toggleClass('hidden');
+
+      }
 
       var drawNotices = function(feed) {
 
@@ -69,7 +94,15 @@ if (!upnotice.init) {
               element.find(settings.selectors.link).attr('href', alert.url).html(linkText);
             }
 
-            element.appendTo(container);
+            // Are actions available?
+            if (alert.availableActions && alert.availableActions.length != 0) {
+                var actionsContainer = element.find(settings.selectors.actions);
+                if (actionsContainer) {
+                    drawActions(actionsContainer, alert);
+                }
+            }
+
+            element.appendTo(template.parent());
           }
 
           // Invoke the specified callback function, if any
