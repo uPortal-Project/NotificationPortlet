@@ -37,7 +37,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  */
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
 @XmlAccessorType(XmlAccessType.FIELD)
-public class NotificationAttribute implements Serializable {
+public class NotificationAttribute implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -73,6 +73,25 @@ public class NotificationAttribute implements Serializable {
 	public void setValues(List<String> values) {
 		this.values = new ArrayList<String>(values);  // defensive copy
 	}
+
+    /**
+     * Implements deep-copy clone.
+     * 
+     * @throws CloneNotSupportedException Not really, but it's on the method 
+     * signature we're overriding.
+     */
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+
+        // Start with superclass impl (handles immutables and primitives)
+        final NotificationAttribute rslt = (NotificationAttribute) super.clone();
+
+        // Adjust to satisfy deep-copy strategy
+        rslt.setValues(new ArrayList<String>(values));
+
+        return rslt;
+
+    }
 
     @Override
     public String toString() {

@@ -37,7 +37,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
 @JsonDeserialize(using = JsonNotificationActionDeserializer.class)
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class NotificationAction implements Serializable {
+public abstract class NotificationAction implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
@@ -76,6 +76,30 @@ public abstract class NotificationAction implements Serializable {
      * Perform this action on the notification to which it is attached.
      */
     public abstract void invoke();
+
+    /**
+     * Implements deep-copy clone.
+     * 
+     * @throws CloneNotSupportedException Not really, but it's on the method 
+     * signature we're overriding.
+     */
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+
+        // Start with superclass impl (handles immutables and primitives)
+        final NotificationAction rslt = (NotificationAction) super.clone();
+
+        // Adjust to satisfy deep-copy strategy
+
+        /*
+         * NB:  We don't need to deep-copy the target because the target of an 
+         * action is always set as an action becomes attached to an entry -- 
+         * which happens in this case as the owning entry gets cloned.
+         */
+
+        return rslt;
+
+    }
 
     /*
      * Non-public API
