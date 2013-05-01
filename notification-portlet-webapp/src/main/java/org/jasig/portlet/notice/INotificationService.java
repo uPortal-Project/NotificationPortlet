@@ -23,7 +23,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
-import javax.portlet.ResourceRequest;
+import javax.portlet.PortletRequest;
 
 
 /**
@@ -70,7 +70,7 @@ public interface INotificationService {
      * @param req The <code>PortletRequest</code>
      * @return A collection of notifications and/or errors
      */
-    NotificationResponse fetch(ResourceRequest req);
+    NotificationResponse fetch(PortletRequest req);
     
     /**
      * Indicates whether a previous (presumably cached) {@link NotificationResponse} 
@@ -86,7 +86,7 @@ public interface INotificationService {
      * @return <code>true</code> if the earlier response is still acceptable for 
      * the present
      */
-    boolean isValid(ResourceRequest req, NotificationResponse previousResponse);
+    boolean isValid(PortletRequest req, NotificationResponse previousResponse);
 
 
 }

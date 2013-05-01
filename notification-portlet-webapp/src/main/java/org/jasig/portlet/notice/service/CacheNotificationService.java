@@ -28,7 +28,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
-import javax.portlet.ResourceRequest;
+import javax.portlet.PortletRequest;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
@@ -93,7 +93,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
     }
 
     @Override
-    public NotificationResponse fetch(final ResourceRequest req) {
+    public NotificationResponse fetch(final PortletRequest req) {
 
         final String username = usernameFinder.findUsername(req);
         if (log.isDebugEnabled()) {
@@ -159,7 +159,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
      * Implementation
      */
     
-    private final NotificationResponse getResponseFromService(final ResourceRequest req, final INotificationService service) {
+    private final NotificationResponse getResponseFromService(final PortletRequest req, final INotificationService service) {
         NotificationResponse rslt = null;
         try {
             rslt = service.fetch(req);

@@ -26,7 +26,6 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletRequest;
-import javax.portlet.ResourceRequest;
 
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationError;
@@ -68,7 +67,7 @@ public abstract class AbstractNotificationService implements INotificationServic
      * that can better answer this question should override this method.
      */
     @Override
-    public boolean isValid(final ResourceRequest req, final NotificationResponse previousResponse) {
+    public boolean isValid(final PortletRequest req, final NotificationResponse previousResponse) {
         return true;
     }
     

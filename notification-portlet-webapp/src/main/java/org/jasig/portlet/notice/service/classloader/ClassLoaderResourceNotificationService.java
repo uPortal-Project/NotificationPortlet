@@ -27,7 +27,6 @@ import java.util.Arrays;
 import javax.annotation.Resource;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
-import javax.portlet.ResourceRequest;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
@@ -61,7 +60,7 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
     }
 
     @Override
-    public NotificationResponse fetch(ResourceRequest req) {
+    public NotificationResponse fetch(PortletRequest req) {
         
         final ArrayList<String> locations = getLocations(req);
         if (locations.isEmpty()) {
@@ -95,7 +94,7 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
     }
 
     @Override
-    public final boolean isValid(ResourceRequest req, NotificationResponse previousResponse) {
+    public final boolean isValid(PortletRequest req, NotificationResponse previousResponse) {
         /*
          * This service impl privately caches responses across users and for 
          * longer periods, so there's no harm in calling fetch() whenever a 

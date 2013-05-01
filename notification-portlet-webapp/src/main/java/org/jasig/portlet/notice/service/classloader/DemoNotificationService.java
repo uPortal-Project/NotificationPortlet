@@ -27,7 +27,6 @@ import java.util.GregorianCalendar;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
-import javax.portlet.ResourceRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +60,7 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
     }
 
     @Override
-    public NotificationResponse fetch(ResourceRequest req) {
+    public NotificationResponse fetch(PortletRequest req) {
         
         NotificationResponse rslt = EMPTY_RESPONSE;  // default
         

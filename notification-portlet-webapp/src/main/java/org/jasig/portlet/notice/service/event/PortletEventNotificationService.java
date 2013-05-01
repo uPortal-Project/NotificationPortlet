@@ -27,7 +27,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
-import javax.portlet.ResourceRequest;
+import javax.portlet.PortletRequest;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
@@ -116,7 +116,7 @@ public final class PortletEventNotificationService extends AbstractNotificationS
     }
 
     @Override
-    public NotificationResponse fetch(final ResourceRequest req) {
+    public NotificationResponse fetch(final PortletRequest req) {
 
         NotificationResponse rslt = EMPTY_RESPONSE;  // default is empty
     

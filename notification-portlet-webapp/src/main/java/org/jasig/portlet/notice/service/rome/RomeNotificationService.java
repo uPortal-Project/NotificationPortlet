@@ -31,7 +31,7 @@ import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
-import javax.portlet.ResourceRequest;
+import javax.portlet.PortletRequest;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
@@ -93,7 +93,7 @@ public final class RomeNotificationService extends AbstractNotificationService {
     }
 
     @Override
-    public NotificationResponse fetch(final ResourceRequest req) {
+    public NotificationResponse fetch(final PortletRequest req) {
         
         final List<NotificationCategory> categories = new ArrayList<NotificationCategory>();
         final List<NotificationError> errors = new ArrayList<NotificationError>();
