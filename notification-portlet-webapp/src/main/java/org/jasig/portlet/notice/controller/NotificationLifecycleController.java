@@ -46,6 +46,7 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
@@ -141,6 +142,40 @@ public class NotificationLifecycleController {
             final String contextPath = req.getContextPath();
             res.sendRedirect(contextPath + SUCCESS_PATH);
         }
+
+    }
+
+    @ActionMapping
+    public void invokeUserAction(final ActionRequest req, final ActionResponse res,
+            @RequestParam("notificationId") final String notificationId, 
+            @RequestParam("actionId") final String actionId) {
+
+        // Prime the pump
+        notificationService.invoke(req, res, false);
+
+        // Obtain the collection
+        final NotificationResponse notifications = notificationService.fetch(req);
+
+        // Find the relevant action
+        NotificationAction target = null;
+        final NotificationEntry entry = notifications.findNotificationEntryById(notificationId);
+        if (entry != null) {
+            for (NotificationAction action : entry.getAvailableActions()) {
+                if (actionId.equals(action.getId())) {
+                    target = action;
+                    break;
+                }
+            }
+        }
+
+        // If we don't have a target, we cannot proceed
+        if (target == null) {
+            String msg = "Target action not found for notificationId='" 
+                    + notificationId + "' and actionId='" + actionId + "'";
+            throw new IllegalArgumentException(msg);
+        }
+
+        target.invoke();
 
     }
 
