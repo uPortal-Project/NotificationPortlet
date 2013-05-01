@@ -45,10 +45,10 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationResponse implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private List<NotificationCategory> categories;
-	private List<NotificationError> errors;
+    private List<NotificationCategory> categories;
+    private List<NotificationError> errors;
 
     public NotificationResponse() {
         categories = new ArrayList<NotificationCategory>();
@@ -59,26 +59,26 @@ public class NotificationResponse implements Serializable {
         this(response.getCategories(), response.getErrors());
     }
 
-	public NotificationResponse(List<NotificationCategory> categories, List<NotificationError> errors) {
-		this.categories = new ArrayList<NotificationCategory>(categories);  // defensive copy
-		this.errors = new ArrayList<NotificationError>(errors);  // defensive copy
-	}
+    public NotificationResponse(List<NotificationCategory> categories, List<NotificationError> errors) {
+        this.categories = new ArrayList<NotificationCategory>(categories);  // defensive copy
+        this.errors = new ArrayList<NotificationError>(errors);  // defensive copy
+    }
 
-	public List<NotificationCategory> getCategories() {
-		return Collections.unmodifiableList(categories);
-	}
+    public List<NotificationCategory> getCategories() {
+        return Collections.unmodifiableList(categories);
+    }
 
-	public void setCategories(List<NotificationCategory> categories) {
-		this.categories = new ArrayList<NotificationCategory>(categories);  // defensive copy
-	}
+    public void setCategories(List<NotificationCategory> categories) {
+        this.categories = new ArrayList<NotificationCategory>(categories);  // defensive copy
+    }
 
-	public List<NotificationError> getErrors() {
-		return Collections.unmodifiableList(errors);
-	}
+    public List<NotificationError> getErrors() {
+        return Collections.unmodifiableList(errors);
+    }
 
-	public void setErrors(List<NotificationError> errors) {
-		this.errors = new ArrayList<NotificationError>(errors); // defensive copy
-	}
+    public void setErrors(List<NotificationError> errors) {
+        this.errors = new ArrayList<NotificationError>(errors); // defensive copy
+    }
 
     /**
      * Combine the contents of this response with the provided response and 
@@ -113,8 +113,8 @@ public class NotificationResponse implements Serializable {
         }
         rslt.setErrors(filteredErrors);
         return rslt;
-	}
-	
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -127,8 +127,8 @@ public class NotificationResponse implements Serializable {
     }
 
     /*
-	 * Implementation
-	 */
+     * Implementation
+     */
 
     /** 
      * Insert the given categories and their entries into the any existing
@@ -137,7 +137,7 @@ public class NotificationResponse implements Serializable {
      * @param newCategories collection of new categories and their entries.
      */
     private void addCategories(List<NotificationCategory> newCategories) {
-        
+
         //check if an existing category (by the same title) already exists
         //if so, add the new categories entries to the existing category
         for(NotificationCategory newCategory : newCategories) {
@@ -149,7 +149,7 @@ public class NotificationResponse implements Serializable {
                     myCategory.addEntries(newCategory.getEntries());
                 }
             }
-            
+
             if(!found)
                 categories.add(newCategory);
         }
