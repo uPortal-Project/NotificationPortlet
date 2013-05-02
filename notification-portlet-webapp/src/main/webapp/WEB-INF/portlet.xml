@@ -80,6 +80,14 @@
                 <value>false</value>
             </preference>
 
+            <!-- Specifies how long a user-hidden notification should remain 
+                 hidden, in hours.  A value of zero means notifications will be 
+                 hidden forever, and any negative value disables the hide feature. -->
+            <preference>
+                <name>HideNotificationServiceDecorator.hideDurationHours</name>
+                <value>-1</value>
+            </preference>
+
         </portlet-preferences>
         <supported-processing-event>
             <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>

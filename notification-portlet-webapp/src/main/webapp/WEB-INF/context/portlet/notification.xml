@@ -43,7 +43,10 @@
      | It's customary to use a CacheNotificationService here to wrap beans 
      | defined in the parent applicationContext. 
      +-->
-    <bean id="rootNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
+    <bean id="rootNotificationService" class="org.jasig.portlet.notice.action.hide.HideNotificationServiceDecorator">
+        <property name="enclosedNotificationService" ref="cacheNotificationService"/>
+    </bean>
+    <bean id="cacheNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
         <property name="name" value="notificationCacheNoticationService"/>
         <property name="embeddedServices">
             <list>
