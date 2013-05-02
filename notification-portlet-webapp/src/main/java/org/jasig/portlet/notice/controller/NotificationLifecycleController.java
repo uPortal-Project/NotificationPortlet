@@ -175,7 +175,7 @@ public class NotificationLifecycleController {
             throw new IllegalArgumentException(msg);
         }
 
-        target.invoke();
+        target.invoke(req);
 
     }
 
