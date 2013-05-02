@@ -168,14 +168,14 @@ public class NotificationLifecycleController {
             }
         }
 
-        // If we don't have a target, we cannot proceed
-        if (target == null) {
+        // We must have a target to proceed
+        if (target != null) {
+            target.invoke(req);
+        } else {
             String msg = "Target action not found for notificationId='" 
                     + notificationId + "' and actionId='" + actionId + "'";
-            throw new IllegalArgumentException(msg);
+            log.warn(msg);
         }
-
-        target.invoke(req);
 
     }
 
