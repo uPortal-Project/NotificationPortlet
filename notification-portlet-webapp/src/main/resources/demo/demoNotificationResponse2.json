@@ -5,30 +5,31 @@
             "source": "Demo 2 Service"
         }
     ],
- "categories":  [
-    {
-   "entries":    [
+    "categories": [
         {
-     "body": "The room you requested is now available.",
-     "dueDate":      {
-      "date": 9,
-      "day": 2,
-      "hours": 11,
-      "minutes": 57,
-      "month": 7,
-      "seconds": 28,
-      "time": 1312916248695,
-      "timezoneOffset": 420,
-      "year": 111
-     },
-     "image": "http://library.university/studentlife.png",
-     "url": "http://library.university/studentlife",
-     "priority": 3,
-     "title": "Room Available",
-     "source": "Demo Service"
-    }
-   ],
-   "title": "Student Life"
-  }
- ]
+            "entries": [
+                {
+                    "body": "The room you requested is now available.",
+                    "dueDate": {
+                        "date": 9,
+                        "day": 2,
+                        "hours": 11,
+                        "minutes": 57,
+                        "month": 7,
+                        "seconds": 28,
+                        "time": 1312916248695,
+                        "timezoneOffset": 420,
+                        "year": 111
+                    },
+                    "image": "http://library.university/studentlife.png",
+                    "url": "http://library.university/studentlife",
+                    "priority": 3,
+                    "id": "foobar",
+                    "title": "Room Available",
+                    "source": "Demo Service"
+                }
+            ],
+            "title": "Student Life"
+        }
+    ]
 }
