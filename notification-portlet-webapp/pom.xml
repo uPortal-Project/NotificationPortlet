@@ -210,6 +210,7 @@
                             <includes>
                                 <include>rs/jquery/1.6.1/jquery-1.6.1.min.js</include>
                                 <include>rs/jqueryui/1.8.13/jquery-ui-1.8.13.min.js</include>
+                                <include>rs/underscore/1.3.3/underscore-1.3.3.js</include>
                             </includes>
                         </overlay>
                     </overlays>

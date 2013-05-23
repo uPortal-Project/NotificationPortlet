@@ -106,24 +106,24 @@
         },
         
         success: function (data) {
-          var data = data.notificationResponse;
+          var notificationResponse = data.notificationResponse;
           
           // Build notifications
-          buildNotifications(data);
+          buildNotifications(notificationResponse);
 
           // Once notifications have been injected into the DOM
           // we cache the notication element...
           notification = $(outerContainer + " .notifications a");
 
           // ...and bind our events
-          bindEvent.accordion(data);
+          bindEvent.accordion(notificationResponse);
           bindEvent.viewDetail();
           bindEvent.goBack();
           bindEvent.refresh();
-          bindEvent.filterOptions(data);
+          bindEvent.filterOptions(notificationResponse);
 
           // Errors
-          errorHandling(data);
+          errorHandling(notificationResponse);
         },
         
         error: function () {
@@ -134,17 +134,17 @@
 
     // Build notifications using underscore.js
     // template method
-    function buildNotifications(data) {
+    function buildNotifications(notificationResponse) {
 
       // HTML string compiled with underscore.js
       var html = '\
-        {% if (categories.length < 1 ) { %} \
+        {% if (_.isUndefined(data.categories) || _.isEmpty(data.categories)) { %} \
           <div class="no-notifications-container"> \
             <h3>You have 0 notifications.</h3> \
           </div> \
         {% } else { %} \
-          {% var accordion = categories.length > 1; %} \
-          {% _.each(categories, function(category) { %} \
+          {% var accordion = data.categories.length > 1; %} \
+          {% _.each(data.categories, function(category) { %} \
             <div class="notification-trigger"> \
               <h3 class="portlet-section-header trigger-symbol" role="header"> \
                 {{ category.title }} \
@@ -185,7 +185,7 @@
           {% }); %} \
         {% } %} \
       ';
-      var compiled = _.template(html, data);
+      var compiled = _.template(html, notificationResponse, {variable: 'data'});
 
       // Inject compiled markup into notifications container div
       notifications.html(" ").prepend(compiled);
@@ -196,7 +196,7 @@
 
       // Accordion via plugin
       accordion: function (data) {
-        if ( data.categories.length === 1 ) {
+        if (!data.categories || data.categories.length === 1 ) {
           portlet.removeClass("accordion");
           notifications.children().show();
         } else {
