@@ -32,7 +32,58 @@
     <script src="<rs:resourceURL value="/rs/jquery/1.6.1/jquery-1.6.1.min.js"/>" type="text/javascript"></script>
 </c:if>
 <script src="<c:url value="/scripts/jquery.notice.js"/>" type="text/javascript"></script>
-<link type="text/css" rel="stylesheet" href="<c:url value="/styles/alert.css"/>"/>
+
+<style>
+#${n}emergencyAlert {
+    position: relative;
+    height: 190px;
+}
+#${n}emergencyAlert .hidden {
+    display: none;
+}
+#${n}emergencyAlert .view-alert {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 36px 36px 36px 190px;
+    background: url(<c:url value="/images/icon-alert.png"/>) 36px center no-repeat;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    color: #fff;
+}
+#${n}emergencyAlert .view-alert .titlebar {
+    display: block;
+}
+#${n}emergencyAlert .view-alert .title {
+    border: none;
+    font-size: 200%;
+    font-weight: bold;
+    color: #fff;
+}
+#${n}emergencyAlert .view-alert a {
+    color: #B2CCE1;
+}
+#${n}emergencyAlert .view-alert a:hover {
+    color: #fff;
+}
+#${n}emergencyAlert .view-alert .alerts-pager {
+    float: right;
+}
+#${n}emergencyAlert .view-alert .alerts-pager li {
+    display: inline;
+    list-style-type: none;
+}
+#${n}emergencyAlert .view-alert .alerts-pager li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: larger;
+    cursor: pointer;
+}
+#${n}emergencyAlert .view-alert .alerts-pager li a.disabled {
+    color: #ccc;
+}
+</style>
 
 <div id="${n}emergencyAlert" class="emergency-alert" style="display: none;">
 
