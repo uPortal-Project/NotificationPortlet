@@ -28,8 +28,9 @@
     <portlet:param name="action" value="invokeNotificationService"/>
 </portlet:actionURL>
 
-<c:if test="{!usePortalJsLibs}">
+<c:if test="${!usePortalJsLibs}">
     <script src="<rs:resourceURL value="/rs/jquery/1.6.1/jquery-1.6.1.min.js"/>" type="text/javascript"></script>
+    <script src="<rs:resourceURL value="/rs/jqueryui/1.8.13/jquery-ui-1.8.13.min.js"/>" type="text/javascript"></script>
 </c:if>
 <script src="<c:url value="/scripts/jquery.notice.js"/>" type="text/javascript"></script>
 
@@ -85,7 +86,7 @@
 }
 </style>
 
-<div id="${n}emergencyAlert" class="emergency-alert" style="display: none;">
+<div id="${n}emergencyAlert" style="display: none;">
 
     <div class="portlet view-alert template hidden" role="section">
 
@@ -99,7 +100,7 @@
         </div>
 
         <!-- Portlet Body -->
-        <div class="content portlet-content" role="main">
+        <div role="main">
             <p class="body"></p>
             <a class="link" href=""></a>
         </div>
@@ -128,7 +129,7 @@
         var autoAdvance = ${autoAdvance};
         var intervalId = -1;
 
-        upnotice.show($, container, { 
+        upnotice.show($, container, {
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
             getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>',
             readyCallback: function() {
@@ -136,8 +137,8 @@
                 // Grab the alerts we just created
                 var alerts = container.find('.view-alert').not('.template');
 
-                // Hide all but the first one
-                alerts.not(':first').toggleClass('hidden');
+                // Hide all but the first one -- (NOTE:  Need both to toggle class and to manage 'display' property')
+                alerts.not(':first').toggleClass('hidden').css('display', 'none');
 
                 var advance = function() {
                     var outgoingAlert = alerts.filter(':visible');
@@ -146,15 +147,15 @@
                       // Cycle to the beginning...
                       incomingAlert = alerts.filter(':first');
                     }
-                    outgoingAlert.toggle('slide', { direction: 'left' });
-                    incomingAlert.toggle('slide', { direction: 'right' });
+                    outgoingAlert.toggle('slide', { direction: 'left' }).toggleClass('hidden');
+                    incomingAlert.toggleClass('hidden').toggle('slide', { direction: 'right' });
                 };
 
                 var recede = function() {
                     var outgoingAlert = alerts.filter(':visible');
                     var incomingAlert = outgoingAlert.prev();
-                    outgoingAlert.toggle('slide', { direction: 'right' });
-                    incomingAlert.toggle('slide', { direction: 'left' });
+                    outgoingAlert.toggle('slide', { direction: 'right' }).toggleClass('hidden');
+                    incomingAlert.toggleClass('hidden').toggle('slide', { direction: 'left' });
                 };
 
                 // Show paging controls?
