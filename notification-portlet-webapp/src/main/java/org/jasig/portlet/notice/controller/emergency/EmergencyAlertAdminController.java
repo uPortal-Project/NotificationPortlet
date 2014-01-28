@@ -27,13 +27,11 @@ import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
 
 import org.jasig.portlet.notice.service.classloader.DemoNotificationService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-@Controller
 @RequestMapping("VIEW")
 public final class EmergencyAlertAdminController {
 

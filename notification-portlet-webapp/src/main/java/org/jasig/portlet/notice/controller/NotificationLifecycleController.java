@@ -35,7 +35,6 @@ import javax.portlet.ResourceRequest;
 import javax.xml.namespace.QName;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
@@ -57,7 +56,6 @@ import org.jasig.portlet.notice.util.UsernameFinder;
  * Gathering of notifications requires action and sometimes event phases.  This 
  * controller serves that purpose. 
  */
-@Controller
 @RequestMapping("VIEW")
 public class NotificationLifecycleController {
     
