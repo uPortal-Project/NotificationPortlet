@@ -262,7 +262,7 @@
             <!-- Used for both width and height of the icon. -->
             <preference>
                 <name>NotificationIconController.size</name>
-                <value>24</value>
+                <value>18</value>
             </preference>
 
             <!-- Used for both width and height of the icon. -->

@@ -43,7 +43,7 @@ public final class NotificationIconController {
     private static final String USE_PPORTAL_JS_LIBS_PREFERENCE = "EmergencyAlertController.usePortalJsLibs";
     private static final String PPORTAL_JS_NAMESPACE_PREFERENCE = "EmergencyAlertController.portalJsNamespace";
     private static final String SIZE_PREFERENCE = "NotificationIconController.size";
-    private static final String SIZE_DEFAULT = "24";
+    private static final String SIZE_DEFAULT = "18";
     private static final String URL_PREFERENCE = "NotificationIconController.url";
     private static final String URL_DEFAULT = "/uPortal/p/notification";
     private static final String VIEW_NAME = "icon";
