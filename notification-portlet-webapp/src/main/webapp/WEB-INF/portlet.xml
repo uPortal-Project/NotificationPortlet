@@ -194,6 +194,92 @@
         </portlet-info>
     </portlet>
 
+    <portlet>
+        <portlet-name>NotificationIcon</portlet-name>
+        <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+        <init-param>
+            <name>contextConfigLocation</name>
+            <value>/WEB-INF/context/portlet/notification-icon.xml</value>
+        </init-param>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>Notification Icon</title>
+        </portlet-info>
+        <portlet-preferences>
+
+            <!-- Locations of static files, in native NotificationPortlet JSON, 
+                 that should be read from the classpath and included in the 
+                 response. -->
+            <preference>
+                <name>ClassLoaderResourceNotificationService.locations</name>
+            </preference>
+
+            <!-- Zero or more URLs for feeds that should be read-in and 
+                 converted to Notifications by the RomeNotificationService. -->
+            <preference>
+                <name>RomeNotificationService.urls</name>
+            </preference>
+
+            <!-- Zero or more URLs for web service endpoints for the 
+                 RestfulJsonNotificationService. -->
+            <preference>
+                <name>RestfulJsonNotificationService.serviceUrls</name>
+            </preference>
+
+            <!-- Locations of static files, in native NotificationPortlet JSON, 
+                 that should be read from the classpath and included in the 
+                 response FOR THE DEMO EXPERIENCE. -->
+            <preference>
+                <name>DemoNotificationService.locations</name>
+            </preference>
+
+            <!-- Required for the PortletEventNotificationService. -->
+            <preference>
+                <name>NotificationLifecycleController.doEvents</name>
+                <value>false</value>
+            </preference>
+
+            <!-- If true, emergency alerts will piggyback on the portal's 
+                 JavaScript library (jQuery).  The needs of this portlet are 
+                 very lightweight and the portlet runs infrequently, so we'll 
+                 default to 'true' in this case. -->
+            <preference>
+                <name>EmergencyAlertController.usePortalJsLibs</name>
+                <value>true</value>
+            </preference>
+
+            <!-- If 'EmergencyAlertController.usePortalJsLibs' is true, this 
+                 value will help find the portal's JavaScript library (jQuery).  
+                 If not, it has no impact. -->
+            <preference>
+                <name>portalJsNamespace</name>
+                <value>up</value>
+            </preference>
+
+            <!-- Used for both width and height of the icon. -->
+            <preference>
+                <name>NotificationIconController.size</name>
+                <value>24</value>
+            </preference>
+
+            <!-- Used for both width and height of the icon. -->
+            <preference>
+                <name>NotificationIconController.url</name>
+                <value>/uPortal/p/notification</value>
+            </preference>
+
+        </portlet-preferences>
+        <supported-processing-event>
+            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>
+        </supported-processing-event>
+        <supported-publishing-event>
+            <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationQuery</qname>
+        </supported-publishing-event>
+    </portlet>
+
     <user-attribute>
         <description>Username attribute name for uPortal user</description>
         <name>user.login.id</name>

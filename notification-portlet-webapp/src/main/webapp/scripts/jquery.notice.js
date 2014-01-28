@@ -42,6 +42,35 @@ if (!upnotice.init) {
       readyCallback: function() {}
     };
 
+    // First 'prime-the-pump' with an ActionURL
+    function initNotices($, settings, callback) {
+      $.ajax({
+        type: 'POST',
+        url: settings.invokeNotificationServiceUrl,
+        async: false,
+        success: function() {
+          fetchNotices($, settings, callback);
+        }
+      });
+    }
+
+    // Then fetch the notifications with a ResourceURL
+    function fetchNotices($, settings, callback) {
+      $.ajax({
+        url      : settings.getNotificationsUrl,
+        type     : 'POST',
+        dataType : 'json',
+        success: function (data) {
+          feed = data.feed;
+          callback(feed);
+        },
+        error: function () {
+          container.html(" ").text("AJAX failed. ~ THE END ~");
+        }
+      });
+
+    }
+
     upnotice.show = function ($, container, options) {
 
       var settings = $.extend({}, defaults, options);
@@ -73,7 +102,7 @@ if (!upnotice.init) {
       var drawNotices = function(feed) {
 
         // Do we have any notices to show?
-        if (feed.length != 0) {
+        if (feed && feed.length != 0) {
 
           // Iterate the notices
           for (var i=0; i < feed.length; i++) {
@@ -114,35 +143,14 @@ if (!upnotice.init) {
 
       }
 
-      // First 'prime-the-pump' with an ActionURL
-      function initNotices() {
-        $.ajax({
-          type: 'POST',
-          url: settings.invokeNotificationServiceUrl,
-          async: false,
-          success: fetchNotices
-        });
-      }
-
-      // Then fetch the notifications with a ResourceURL
-      function fetchNotices() {
-        var feed = [];
-        $.ajax({
-          url      : settings.getNotificationsUrl,
-          type     : 'POST',
-          dataType : 'json',
-          success: function (data) {
-            drawNotices(data.feed);
-          },
-          error: function () {
-            container.html(" ").text("AJAX failed. ~ THE END ~");
-          }
-        });
-
-      }
-
       // Invoke notifications
-      initNotices();
+      initNotices($, settings, drawNotices);
+
+    }
+
+    upnotice.pullFeed = function ($, options, callback) {
+        var settings = $.extend({}, defaults, options);
+        initNotices($, settings, callback);
     }
 
   })();

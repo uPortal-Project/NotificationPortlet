@@ -33,8 +33,8 @@
 
     <!-- Controller beans -->
     <bean class="org.jasig.portlet.notice.controller.NotificationLifecycleController" />
-    <bean class="org.jasig.portlet.notice.controller.notification.NotificationController" />
-
+    <bean class="org.jasig.portlet.notice.controller.notification.NotificationIconController" />
+    
     <bean class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 
     <!-- 
