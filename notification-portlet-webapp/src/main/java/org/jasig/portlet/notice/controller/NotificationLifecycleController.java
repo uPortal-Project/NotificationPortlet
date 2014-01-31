@@ -111,11 +111,14 @@ public class NotificationLifecycleController {
             @RequestParam(value="refresh", required=false) final String doRefresh) 
             throws IOException {
 
+        // Notification data services must have the invoke() method called,
+        // whether we're using portlet events or not;  additional features --
+        // including the refresh button -- rely on invoke().
+        notificationService.invoke(req, res, Boolean.parseBoolean(doRefresh));
+
         final PortletPreferences prefs = req.getPreferences();
         final boolean doEvents = Boolean.parseBoolean(prefs.getValue(DO_EVENTS_PREFERENCE, "false"));
         if (doEvents) {
-
-            notificationService.invoke(req, res, Boolean.parseBoolean(doRefresh));
 
             /*
              * TODO:  I wish we didn't have to go through a whole render phase just 

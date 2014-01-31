@@ -25,33 +25,32 @@ import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletRequest;
 
-
 /**
  * This is the central interface of the Notifications API.  It is used to
  * retrieve notifications from data sources.
  */
 public interface INotificationService {
 
-	/**
-	 * Returns the name of the service, which should be unique in the portlet app.
-	 *
-	 * @return A unique name for this service
-	 */
-	String getName();
+    /**
+     * Returns the name of the service, which should be unique in the portlet app.
+     *
+     * @return A unique name for this service
+     */
+    String getName();
 
-	/**
-	 * This method 'primes the pump' for {@link INotificationService} 
-	 * implementations.  Not all concrete services will need this method, and 
-	 * those that don't can safely make it a no-op.  But those that do need it 
-	 * can rely on receiving a call to <code>invoke()</code> before receiving a 
-	 * call to <code>fetch()</code>.
-	 * 
-	 * @param req The current ActionRequest
-	 * @param res The current ActionResponse
-	 * @param refresh If true, the service should expire any cached data
-	 */
+    /**
+     * This method 'primes the pump' for {@link INotificationService} 
+     * implementations.  Not all concrete services will need this method, and 
+     * those that don't can safely make it a no-op.  But those that do need it 
+     * can rely on receiving a call to <code>invoke()</code> before receiving a 
+     * call to <code>fetch()</code>.
+     * 
+     * @param req The current ActionRequest
+     * @param res The current ActionResponse
+     * @param refresh If true, the service should expire any cached data
+     */
     void invoke(ActionRequest req, ActionResponse res, boolean refresh);
-    
+
     /**
      * This method allows {@link INotificationService} implementations that 
      * receive portlet events to collect notifications from other portlets in 
@@ -71,7 +70,7 @@ public interface INotificationService {
      * @return A collection of notifications and/or errors
      */
     NotificationResponse fetch(PortletRequest req);
-    
+
     /**
      * Indicates whether a previous (presumably cached) {@link NotificationResponse} 
      * is still valid.  A few service implementations will be able to make this 
@@ -87,6 +86,5 @@ public interface INotificationService {
      * the present
      */
     boolean isValid(PortletRequest req, NotificationResponse previousResponse);
-
 
 }

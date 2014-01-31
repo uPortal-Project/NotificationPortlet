@@ -27,6 +27,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
+import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
 import net.sf.ehcache.Cache;
@@ -54,42 +55,51 @@ public final class PortletEventNotificationService extends AbstractNotificationS
 
     @Override
     public void invoke(final ActionRequest req, final ActionResponse res, final boolean refresh) {
-        
-        // Find the cached notifications, if any
-        final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
-        
-        // Send a request event?
-        boolean sendRequestEvent = false;  // default
-        if (refresh) {
-            // Yes!
-            cache.remove(cacheKey);
-            sendRequestEvent = true;
-        } else {
-            // Not unless...
-            final Element m = cache.get(cacheKey);
-            if (m == null) {
+
+        // Since this behavior is potentially a great deal of work for the 
+        // portal, there is a portlet preference required to turn it on -- even
+        // if the bean is configured in the context.
+        final PortletPreferences prefs = req.getPreferences();
+        final boolean doEvents = Boolean.parseBoolean(prefs.getValue(NotificationLifecycleController.DO_EVENTS_PREFERENCE, "false"));
+        if (doEvents) {
+
+            // Find the cached notifications, if any
+            final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
+
+            // Send a request event?
+            boolean sendRequestEvent = false;  // default
+            if (refresh) {
                 // Yes!
+                cache.remove(cacheKey);
                 sendRequestEvent = true;
+            } else {
+                // Not unless...
+                final Element m = cache.get(cacheKey);
+                if (m == null) {
+                    // Yes!
+                    sendRequestEvent = true;
+                }
             }
-        }
-        
-        if (sendRequestEvent) {
-            if (log.isDebugEnabled()) {
-                log.debug("REQUESTING Notifications events for user='" 
-                                    + usernameFinder.findUsername(req) 
-                                    + "' and windowId=" + req.getWindowID());
+
+            if (sendRequestEvent) {
+                if (log.isDebugEnabled()) {
+                    log.debug("REQUESTING Notifications events for user='" 
+                                        + usernameFinder.findUsername(req) 
+                                        + "' and windowId=" + req.getWindowID());
+                }
+                NotificationQuery query = new NotificationQuery();
+                query.setQueryWindowId(req.getWindowID());
+                res.setEvent(NotificationLifecycleController.NOTIFICATION_QUERY_QNAME, query);
             }
-            NotificationQuery query = new NotificationQuery();
-            query.setQueryWindowId(req.getWindowID());
-            res.setEvent(NotificationLifecycleController.NOTIFICATION_QUERY_QNAME, query);
+
         }
-        
+
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void collect(final EventRequest req, final EventResponse res) {
-        
+
         if (log.isDebugEnabled()) {
             log.debug("RECEIVING Notifications events for user='" 
                                 + usernameFinder.findUsername(req) 
@@ -100,7 +110,7 @@ public final class PortletEventNotificationService extends AbstractNotificationS
         HashMap<String,NotificationResponse> responses;
 
         final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
-        
+
         final Element m = cache.get(cacheKey);
         if (m == null) {
             // Start fresh...
@@ -108,19 +118,19 @@ public final class PortletEventNotificationService extends AbstractNotificationS
         } else {
             responses = (HashMap<String,NotificationResponse>) m.getObjectValue();
         }
-        
+
         final NotificationResult notificationResult = (NotificationResult) req.getEvent().getValue();
         responses.put(notificationResult.getResultWindowId(), notificationResult.getNotificationResponse());
         cache.put(new Element(cacheKey, responses));
-        
+
     }
 
     @Override
     public NotificationResponse fetch(final PortletRequest req) {
 
         NotificationResponse rslt = EMPTY_RESPONSE;  // default is empty
-    
-        final String cacheKey = createServiceUserWindowSpecificCacheKey(req);        
+
+        final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
         final Element m = cache.get(cacheKey);
         if (m != null) {
             @SuppressWarnings("unchecked")
@@ -129,9 +139,9 @@ public final class PortletEventNotificationService extends AbstractNotificationS
                 rslt = rslt.combine(response);
             }
         }
-        
+
         return rslt;
-        
+
     }
 
 }

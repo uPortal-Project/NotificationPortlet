@@ -67,9 +67,14 @@ public final class CacheNotificationService extends AbstractNotificationService 
     public void setCache(Cache cache) {
         this.cache = cache;
     }
-    
+
     @Override
     public void invoke(final ActionRequest req, final ActionResponse res, final boolean refresh) {
+
+        if (log.isTraceEnabled()) {
+            final String username = usernameFinder.findUsername(req);
+            log.trace("Processing invoke() for user ''" + username + "' refresh=" + refresh);
+        }
 
         if (refresh) {
             // Make certain we have a cache MISS on fetch()
@@ -85,11 +90,11 @@ public final class CacheNotificationService extends AbstractNotificationService 
 
     @Override
     public void collect(final EventRequest req, final EventResponse res) {
-        
+
         for (INotificationService service : servicesMap.values()) {
             service.collect(req, res);
         }
-        
+
     }
 
     @Override
@@ -154,11 +159,11 @@ public final class CacheNotificationService extends AbstractNotificationService 
         return rslt;
 
     }
-    
+
     /*
      * Implementation
      */
-    
+
     private final NotificationResponse getResponseFromService(final PortletRequest req, final INotificationService service) {
         NotificationResponse rslt = null;
         try {
@@ -176,14 +181,14 @@ public final class CacheNotificationService extends AbstractNotificationService 
      */
 
     private static final class CacheTuple {
-        
+
         // Instance members
         private final Map<String,NotificationResponse> responses = new HashMap<String,NotificationResponse>();
-        
+
         public Map<String,NotificationResponse> getResponses() {
             return this.responses;
         }
-        
+
     }
-    
+
 }
