@@ -34,11 +34,11 @@
 
 <script src="<rs:resourceURL value="/rs/jquery/1.6.1/jquery-1.6.1.min.js"/>" type="text/javascript"></script>
 <script src="<rs:resourceURL value="/rs/jqueryui/1.8.13/jquery-ui-1.8.13.min.js"/>" type="text/javascript"></script>
-<script src="<rs:resourceURL value="/rs/underscore/1.3.3/underscore-1.3.3.js"/>" type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.accordion.js"/>" type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.notifications.js"/>" type="text/javascript"></script>
+<script src="<rs:resourceURL value="/rs/underscore/1.3.3/underscore-1.3.3.min.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.accordion.min.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.notifications.min.js"/>" type="text/javascript"></script>
 
-<link rel="stylesheet" href="<c:url value="/styles/accordion.css"/>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<c:url value="/styles/accordion.min.css"/>" type="text/css" media="screen" />
 
 <div id="${n}container" class="notification-portlet">
 

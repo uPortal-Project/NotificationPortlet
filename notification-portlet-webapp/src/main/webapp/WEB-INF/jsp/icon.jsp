@@ -30,9 +30,8 @@
 
 <c:if test="${!usePortalJsLibs}">
     <script src="<rs:resourceURL value="/rs/jquery/1.6.1/jquery-1.6.1.min.js"/>" type="text/javascript"></script>
-    <script src="<rs:resourceURL value="/rs/jqueryui/1.8.13/jquery-ui-1.8.13.min.js"/>" type="text/javascript"></script>
 </c:if>
-<script src="<c:url value="/scripts/jquery.notice.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.notice.min.js"/>" type="text/javascript"></script>
 
 <link rel="stylesheet" href="<rs:resourceURL value="/rs/fontawesome/4.0.3/css/font-awesome.min.css"/>" type="text/css" media="screen" />
 
