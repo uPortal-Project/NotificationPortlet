@@ -52,6 +52,7 @@
     min-width: 15px;
     position: relative;
     right: 12px;
+    margin-right: -12px;
     text-align: center;
     text-shadow: 0 1px 0 rgba(0,0,0,0.1);
     top: -${size / 2}px;
