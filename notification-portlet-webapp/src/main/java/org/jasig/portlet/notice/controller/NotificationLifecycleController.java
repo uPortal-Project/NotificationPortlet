@@ -34,14 +34,6 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.ResourceRequest;
 import javax.xml.namespace.QName;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.portlet.ModelAndView;
-import org.springframework.web.portlet.bind.annotation.ActionMapping;
-import org.springframework.web.portlet.bind.annotation.EventMapping;
-import org.springframework.web.portlet.bind.annotation.ResourceMapping;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
@@ -51,6 +43,13 @@ import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.NotificationResult;
 import org.jasig.portlet.notice.util.UsernameFinder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.ModelAndView;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
+import org.springframework.web.portlet.bind.annotation.EventMapping;
+import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 /**
  * Gathering of notifications requires action and sometimes event phases.  This 
@@ -100,8 +99,9 @@ public class NotificationLifecycleController {
             allEntries.addAll(y.getEntries());
         }
 
-        final Map<String,Object> model = new HashMap<String,Object>(); 
+        final Map<String,Object> model = new HashMap<String,Object>();
         model.put("feed", allEntries);
+        model.put("errors", notifications.getErrors());
         return new ModelAndView("json", model);
 
     }

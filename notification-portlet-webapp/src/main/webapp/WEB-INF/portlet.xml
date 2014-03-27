@@ -88,6 +88,12 @@
                 <value>-1</value>
             </preference>
 
+            <!-- Indicates whether the portlet allows marking an item as favorite. -->
+            <preference>
+                <name>FavoriteNotificationServiceDecorator.enabled</name>
+                <value>false</value>
+            </preference>
+
         </portlet-preferences>
         <supported-processing-event>
             <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>
