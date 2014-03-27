@@ -161,7 +161,7 @@ public final class HideAction extends NotificationAction {
         int index = 0;
         for (Map.Entry<String,Long> y : hiddenNoticesMap.entrySet()) {
             ids[index] = y.getKey();
-            timestamps[index] = y.getValue().toString();
+            timestamps[index++] = y.getValue().toString();
         }
         final PortletPreferences prefs = req.getPreferences();
         try {

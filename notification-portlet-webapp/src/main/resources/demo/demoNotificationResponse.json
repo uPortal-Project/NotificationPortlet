@@ -23,6 +23,7 @@
          },
          "image": "http://library.university/parking.png",
          "url": "http://library.university/parking",
+         "id": "parking01",
          "priority": 3,
          "title": "Bike License Ticket Was Issued",
          "source": "Demo Service"

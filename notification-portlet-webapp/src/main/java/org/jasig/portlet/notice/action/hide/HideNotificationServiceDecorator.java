@@ -116,8 +116,8 @@ public class HideNotificationServiceDecorator implements INotificationService {
                  */
                 if (StringUtils.isNotBlank(entry.getId()) && !currentList.contains(HideAction.INSTANCE)) {
                     final List<NotificationAction> replacementList = new ArrayList<NotificationAction>(currentList);
-                    replacementList.add(HideAction.INSTANCE);
-                    entry.setAvailableActions(replacementList);
+                    replacementList.add(new HideAction());
+                    entry.setAvailableActions(replacementList); // Also sets HideAction.targetEntity
                 }
 
                 /*
