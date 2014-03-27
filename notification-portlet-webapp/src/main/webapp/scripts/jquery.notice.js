@@ -91,7 +91,7 @@ if (!upnotice.init) {
               var actionElement = actionTemplate.clone();
               actionElement.removeClass('action-template');
               actionElement.toggleClass('hidden');
-              actionElement.find('a').attr('href', actionUrl).html(action.label);
+              actionElement.find('a').attr('href', actionUrl).html(action.label + " ");
               actionElement.appendTo(actionsContainer);
           }
 

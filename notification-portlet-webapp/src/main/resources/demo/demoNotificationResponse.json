@@ -1,7 +1,7 @@
 {
     "errors": [
         {
-            "error": "Connection Timeout",
+            "error": "Error example - Connection Timeout",
             "source": "Demo Service"
         }
      ],

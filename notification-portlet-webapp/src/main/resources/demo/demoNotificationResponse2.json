@@ -1,7 +1,7 @@
 {
     "errors": [
         {
-            "error": "Service Not Available",
+            "error": "Error example - Service Not Available",
             "source": "Demo 2 Service"
         }
     ],
