@@ -155,10 +155,12 @@ public class NotificationEntry implements Serializable, Cloneable {
         this.body = body;
     }
 
+    @JsonSerialize(using=JsonAttributesSerializer.class)
     public List<NotificationAttribute> getAttributes() {
         return Collections.unmodifiableList(attributes);
     }
 
+    @JsonDeserialize(using=JsonAttributesDeserializer.class)
     public void setAttributes(List<NotificationAttribute> attributes) {
         this.attributes = new ArrayList<NotificationAttribute>(attributes);  // defensive copy
     }

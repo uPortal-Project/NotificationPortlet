@@ -31,7 +31,7 @@ import org.codehaus.jackson.map.JsonDeserializer;
 /**
  * Apparently there is no standard format for dates in JSON.  JsonLib (which 
  * this portlet previously used) essentially serialized an instance of 
- * <code>java.util.Date</code> like any other objeict.  Jackson, howerever, (the 
+ * <code>java.util.Date</code> like any other object.  Jackson, however, (the
  * current method) converts the date to "epoch time" (a long representing 
  * milliseconds since January 1, 1970, 00:00:00 GMT).  The Jackson approach 
  * isn't that useful, since it becomes hard to detect what is a date.  This 
