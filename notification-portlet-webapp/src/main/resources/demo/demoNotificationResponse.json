@@ -26,6 +26,11 @@
          "id": "parking01",
          "priority": 3,
          "title": "Bike License Ticket Was Issued",
+         "attributes" : {
+             "example": ["Example of how to add arbitrary custom attributes to your data for display in the UI"],
+             "more": ["You can have single values", "You can have multi-valued items as well"],
+             "note": ["These custom attributes aren't displayed in the demo UI"]
+         },
          "source": "Demo Service"
         },
             {

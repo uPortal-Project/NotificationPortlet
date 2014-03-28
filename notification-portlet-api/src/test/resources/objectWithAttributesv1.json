@@ -1,0 +1,43 @@
+{
+    "errors": [
+    ],
+    "categories": [
+        {
+            "entries": [
+                {
+                    "dueDate": {
+                        "date": 9,
+                        "day": 2,
+                        "hours": 11,
+                        "minutes": 57,
+                        "month": 7,
+                        "seconds": 28,
+                        "time": 1312916248695,
+                        "timezoneOffset": 420,
+                        "year": 111
+                    },
+                    "url": "http://peoplesoft.univ/jobApplication/33951",
+                    "linkText": "Click to view job",
+                    "id": "33951",
+                    "title": "MTC On-call Bus Driver MOD",
+                    "source": "Demo Jobs Service",
+                    "attributes": [
+                        {
+                            "name": "noValue",
+                            "values": [  ]
+                        },
+                        {
+                            "name": "oneValue",
+                            "values": [ "MTC Operations" ]
+                        },
+                        {
+                            "name": "multipleValues",
+                            "values": [ "MTC Operations","foo" ]
+                        }
+                    ]
+                }
+            ],
+            "title": "Student Jobs"
+        }
+    ]
+}
