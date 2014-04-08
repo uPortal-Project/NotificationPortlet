@@ -82,19 +82,12 @@ public class HideNotificationServiceDecorator implements INotificationService {
         }
 
         /*
-         * We will build a fresh NotificationResponse
-         * based on a deep-copy of the one we enclose
+         * We will build a fresh NotificationResponse based on a deep-copy of the one we enclose
          * 
-         * NB:  TBH I'm not certain this deep-clone thing is a good
-         * idea at all;  need to see how it plays out.  ~drew
+         * NB:  TBH I'm not certain this deep-clone thing is a good idea at all;  need to see how it plays out.  ~drew
          */
-        NotificationResponse rslt = null;
         final NotificationResponse sourceResponse = enclosedNotificationService.fetch(req);
-        try {
-            rslt = (NotificationResponse) sourceResponse.clone();
-        } catch (CloneNotSupportedException e) {
-            log.error("Failed to clone() the sourceResponse", e);
-        }
+        NotificationResponse rslt = sourceResponse.cloneIfNotCloned();
 
         final Set<String> currentlyHiddenNotificationIds = HideAction.INSTANCE.getHiddenNoticesMap(req).keySet();
 
