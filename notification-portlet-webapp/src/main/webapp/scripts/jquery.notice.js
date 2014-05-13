@@ -37,7 +37,8 @@ if (!upnotice.init) {
         body:            '.body',
         link:            '.link',
         actions:         '.notification-actions',
-        actionTemplate:  '.action-template'
+        actionTemplate:  '.action-template',
+        summaryTemplate: '.summary-template'
       },
       readyCallback: function() {}
     };
@@ -75,6 +76,7 @@ if (!upnotice.init) {
 
       var settings = $.extend({}, defaults, options);
       var template = container.find(settings.selectors.template);
+      var summaryTemplate = container.find(settings.selectors.summaryTemplate);
 
       var drawActions = function(actionsContainer, alert) {
 
@@ -105,7 +107,11 @@ if (!upnotice.init) {
         if (feed && feed.length != 0) {
 
           // Iterate the notices
-          for (var i=0; i < feed.length; i++) {
+          var len = feed.length;
+          if (settings.numberToDisplay != undefined) {
+              len = settings.numberToDisplay;
+          }
+          for (var i=0; i < len; i++) {
             var alert = feed[i];
 
             // Prepare an element
@@ -132,6 +138,15 @@ if (!upnotice.init) {
             }
 
             element.appendTo(template.parent());
+          }
+          
+          // is there a summary section?
+          if(summaryTemplate) {
+              var showing = summaryTemplate.find('.showing');
+              showing.text(len);
+              
+              var total = summaryTemplate.find('.total');
+              total.text(feed.length);
           }
 
           // Invoke the specified callback function, if any
