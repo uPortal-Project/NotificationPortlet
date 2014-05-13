@@ -32,6 +32,7 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.ResourceRequest;
+import javax.portlet.WindowState;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +49,9 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 public class NotificationController {
 
     public static final String VIEW_NAME_PREFERENCE = "NotificationController.viewName";
+    public static final String NORMAL_VIEW_NAME_PREFERENCE = "NotificationController.normalWindowStateViewName";
     public static final String VIEW_NAME_DEFAULT = "accordion";
+    public static final String NORMAL_VIEW_NAME_DEFAULT = "defaultNorm";
     public static final String ATTRIBUTE_HIDDEN_ERRORS = NotificationController.class.getName() + ".ATTRIBUTE_HIDDEN_ERRORS";
 
     private Log log = LogFactory.getLog(getClass());
@@ -59,7 +62,18 @@ public class NotificationController {
     @RenderMapping
     public String showNotificationsList(final RenderRequest req) {
         final PortletPreferences prefs = req.getPreferences();
-        final String viewName = prefs.getValue(VIEW_NAME_PREFERENCE, VIEW_NAME_DEFAULT);
+        
+        String viewName;
+        
+        if(WindowState.NORMAL.equals(req.getWindowState())) {
+            viewName = prefs.getValue(NORMAL_VIEW_NAME_PREFERENCE, NORMAL_VIEW_NAME_DEFAULT);
+            if(NORMAL_VIEW_NAME_DEFAULT.equals(viewName)) {
+                viewName = prefs.getValue(VIEW_NAME_PREFERENCE, VIEW_NAME_DEFAULT);
+            }
+        } else {
+            viewName = prefs.getValue(VIEW_NAME_PREFERENCE, VIEW_NAME_DEFAULT);
+        }
+
         if (log.isTraceEnabled()) {
             log.trace("Selecting viewName=" + viewName);
         }
