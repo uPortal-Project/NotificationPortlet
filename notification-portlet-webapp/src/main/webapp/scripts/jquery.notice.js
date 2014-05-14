@@ -108,7 +108,7 @@ if (!upnotice.init) {
 
           // Iterate the notices
           var len = feed.length;
-          if (settings.numberToDisplay != undefined) {
+          if (settings.numberToDisplay != undefined && settings.numberToDisplay < feed.length) {
               len = settings.numberToDisplay;
           }
           for (var i=0; i < len; i++) {
