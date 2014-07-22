@@ -32,13 +32,13 @@ import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.ResourceRequest;
-import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationCategory;
+import org.jasig.portlet.notice.NotificationConstants;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.NotificationResult;
@@ -52,26 +52,16 @@ import org.springframework.web.portlet.bind.annotation.EventMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 /**
- * Gathering of notifications requires action and sometimes event phases.  This 
- * controller serves that purpose. 
+ * Gathering of notifications requires action and sometimes event phases.  This
+ * controller serves that purpose.
  */
 @RequestMapping("VIEW")
 public class NotificationLifecycleController {
-    
+
     public static final String DO_EVENTS_PREFERENCE = "NotificationLifecycleController.doEvents";
-    
-    public static final String NOTIFICATION_NAMESPACE = "https://source.jasig.org/schemas/portlet/notification";
-    
-    public static final String NOTIFICATION_QUERY_LOCAL_NAME = "NotificationQuery";
-    public static final QName NOTIFICATION_QUERY_QNAME = new QName(NOTIFICATION_NAMESPACE, NOTIFICATION_QUERY_LOCAL_NAME);
-    public static final String NOTIFICATION_QUERY_QNAME_STRING = "{" + NOTIFICATION_NAMESPACE + "}" + NOTIFICATION_QUERY_LOCAL_NAME;
-    
-    public static final String NOTIFICATION_RESULT_LOCAL_NAME = "NotificationResult";
-    public static final QName NOTIFICATION_RESULT_QNAME = new QName(NOTIFICATION_NAMESPACE, NOTIFICATION_RESULT_LOCAL_NAME);
-    public static final String NOTIFICATION_RESULT_QNAME_STRING = "{" + NOTIFICATION_NAMESPACE + "}" + NOTIFICATION_RESULT_LOCAL_NAME;
-    
+
     private static final String SUCCESS_PATH = "/scripts/success.json";
-    
+
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
@@ -107,8 +97,8 @@ public class NotificationLifecycleController {
     }
 
     @ActionMapping(params="action=invokeNotificationService")
-    public void invokeNotificationService(final ActionRequest req, final ActionResponse res, 
-            @RequestParam(value="refresh", required=false) final String doRefresh) 
+    public void invokeNotificationService(final ActionRequest req, final ActionResponse res,
+            @RequestParam(value="refresh", required=false) final String doRefresh)
             throws IOException {
 
         // Notification data services must have the invoke() method called,
@@ -121,24 +111,24 @@ public class NotificationLifecycleController {
         if (doEvents) {
 
             /*
-             * TODO:  I wish we didn't have to go through a whole render phase just 
-             * to trigger the events-based features of the portlet, but atm I don't 
+             * TODO:  I wish we didn't have to go through a whole render phase just
+             * to trigger the events-based features of the portlet, but atm I don't
              * see a way around it, since..
-             * 
+             *
              *   - (1) You can only start an event chain in the Action phase;  and
              *   - (2) You can only return JSON in a Resource phase;  and
-             *   - (3) An un-redirected Action phase leads to a Render phase, not a 
+             *   - (3) An un-redirected Action phase leads to a Render phase, not a
              *     Resource phase :(
-             * 
-             * It would be awesome either (first choice) to do Action > Event > Resource, 
-             * or Action > sendRedirect() followed by a Resource request.  
-             * 
-             * As it stands, this implementation will trigger a complete render on 
+             *
+             * It would be awesome either (first choice) to do Action > Event > Resource,
+             * or Action > sendRedirect() followed by a Resource request.
+             *
+             * As it stands, this implementation will trigger a complete render on
              * the portal needlessly.
              */
 
         } else {
-            // The real payload awaits a Render phase;  send a token response to 
+            // The real payload awaits a Render phase;  send a token response to
             // avoid a full portlet request cycle (since we can).
             final String contextPath = req.getContextPath();
             res.sendRedirect(contextPath + SUCCESS_PATH);
@@ -148,7 +138,7 @@ public class NotificationLifecycleController {
 
     @ActionMapping
     public void invokeUserAction(final ActionRequest req, final ActionResponse res,
-            @RequestParam("notificationId") final String notificationId, 
+            @RequestParam("notificationId") final String notificationId,
             @RequestParam("actionId") final String actionId) {
 
         // Prime the pump
@@ -173,14 +163,14 @@ public class NotificationLifecycleController {
         if (target != null) {
             target.invoke(req);
         } else {
-            String msg = "Target action not found for notificationId='" 
+            String msg = "Target action not found for notificationId='"
                     + notificationId + "' and actionId='" + actionId + "'";
             log.warn(msg);
         }
 
     }
 
-    @EventMapping(NOTIFICATION_RESULT_QNAME_STRING)
+    @EventMapping(NotificationConstants.NOTIFICATION_RESULT_QNAME_STRING)
     public void collectNotifications(final EventRequest req, final EventResponse res) {
 
         final PortletPreferences prefs = req.getPreferences();
@@ -191,8 +181,8 @@ public class NotificationLifecycleController {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Processing event=" + NOTIFICATION_RESULT_QNAME_STRING +" for user='" 
-                                + usernameFinder.findUsername(req) 
+            log.debug("Processing event=" + NotificationConstants.NOTIFICATION_RESULT_QNAME_STRING +" for user='"
+                                + usernameFinder.findUsername(req)
                                 + "' and windowId=" + req.getWindowID());
         }
 

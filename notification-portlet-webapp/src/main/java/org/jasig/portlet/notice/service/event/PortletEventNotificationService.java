@@ -35,6 +35,7 @@ import net.sf.ehcache.Element;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jasig.portlet.notice.NotificationConstants;
 import org.jasig.portlet.notice.NotificationQuery;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.NotificationResult;
@@ -42,7 +43,7 @@ import org.jasig.portlet.notice.controller.NotificationLifecycleController;
 import org.jasig.portlet.notice.service.AbstractNotificationService;
 
 public final class PortletEventNotificationService extends AbstractNotificationService {
-    
+
     private final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
 
     private final Log log = LogFactory.getLog(getClass());
@@ -56,7 +57,7 @@ public final class PortletEventNotificationService extends AbstractNotificationS
     @Override
     public void invoke(final ActionRequest req, final ActionResponse res, final boolean refresh) {
 
-        // Since this behavior is potentially a great deal of work for the 
+        // Since this behavior is potentially a great deal of work for the
         // portal, there is a portlet preference required to turn it on -- even
         // if the bean is configured in the context.
         final PortletPreferences prefs = req.getPreferences();
@@ -83,13 +84,13 @@ public final class PortletEventNotificationService extends AbstractNotificationS
 
             if (sendRequestEvent) {
                 if (log.isDebugEnabled()) {
-                    log.debug("REQUESTING Notifications events for user='" 
-                                        + usernameFinder.findUsername(req) 
+                    log.debug("REQUESTING Notifications events for user='"
+                                        + usernameFinder.findUsername(req)
                                         + "' and windowId=" + req.getWindowID());
                 }
                 NotificationQuery query = new NotificationQuery();
                 query.setQueryWindowId(req.getWindowID());
-                res.setEvent(NotificationLifecycleController.NOTIFICATION_QUERY_QNAME, query);
+                res.setEvent(NotificationConstants.NOTIFICATION_QUERY_QNAME, query);
             }
 
         }
@@ -101,8 +102,8 @@ public final class PortletEventNotificationService extends AbstractNotificationS
     public void collect(final EventRequest req, final EventResponse res) {
 
         if (log.isDebugEnabled()) {
-            log.debug("RECEIVING Notifications events for user='" 
-                                + usernameFinder.findUsername(req) 
+            log.debug("RECEIVING Notifications events for user='"
+                                + usernameFinder.findUsername(req)
                                 + "' and windowId=" + req.getWindowID());
         }
 
