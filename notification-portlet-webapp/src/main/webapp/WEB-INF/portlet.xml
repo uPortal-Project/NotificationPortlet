@@ -94,6 +94,11 @@
                 <value>false</value>
             </preference>
 
+            <preference>
+                <name>ReadNotificationServiceDecorator.enabled</name>
+                <value>false</value>
+            </preference>
+
         </portlet-preferences>
         <supported-processing-event>
             <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>

@@ -44,6 +44,9 @@
      | defined in the parent applicationContext. 
      +-->
     <bean id="rootNotificationService" class="org.jasig.portlet.notice.action.hide.HideNotificationServiceDecorator">
+        <property name="enclosedNotificationService" ref="readNotificationService"/>
+    </bean>
+    <bean id="readNotificationService" class="org.jasig.portlet.notice.action.read.ReadNotificationServiceDecorator">
         <property name="enclosedNotificationService" ref="favoriteNotificationService"/>
     </bean>
     <!-- Favorites must process prior to hide (e.g. be wrapped by hide not the other way around) because it discards
