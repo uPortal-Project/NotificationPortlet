@@ -45,7 +45,7 @@ import org.jasig.portlet.notice.NotificationResponse;
 public class ReadNotificationServiceDecorator implements INotificationService {
 
     public static final String READ_ENABLED_PREFERENCE = "ReadNotificationServiceDecorator.enabled";
-    public static final String DEFAULT_READ_BEHAVIOR = "true";  // The feature is disabled by default
+    public static final String DEFAULT_READ_BEHAVIOR = "false";  // The feature is disabled by default
     public static final String READ_ATTRIBUTE_NAME="READ";
 
     // Instance members
