@@ -46,6 +46,7 @@ public class ReadNotificationServiceDecorator implements INotificationService {
 
     public static final String READ_ENABLED_PREFERENCE = "ReadNotificationServiceDecorator.enabled";
     public static final String DEFAULT_READ_BEHAVIOR = "true";  // The feature is disabled by default
+    public static final String READ_ATTRIBUTE_NAME="READ";
 
     // Instance members
     private INotificationService enclosedNotificationService;
@@ -91,7 +92,7 @@ public class ReadNotificationServiceDecorator implements INotificationService {
         Set<String> potentiallyMissingIds = new HashSet<String>(readNotificationIds);
 
         NotificationAttribute readAttribute = new NotificationAttribute();
-        readAttribute.setName("read");
+        readAttribute.setName(READ_ATTRIBUTE_NAME);
         readAttribute.setValues(new ArrayList<String>(Arrays.asList((new Boolean(true)).toString())));
         
         // Add and implement the read behavior with our copy
