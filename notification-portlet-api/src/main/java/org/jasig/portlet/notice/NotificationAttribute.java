@@ -92,6 +92,32 @@ public class NotificationAttribute implements Serializable, Cloneable {
         return rslt;
 
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+        if (obj == null){
+            return false;
+        }
+        if (getClass() != obj.getClass()){
+            return false;
+        }
+        if(!this.getName().equalsIgnoreCase(((NotificationAttribute) obj).getName())){
+            return false;
+        }
+        if(this.getValues().size()!=((NotificationAttribute)obj).getValues().size()){
+            return false;
+        }
+        for(int i=0; i<this.getValues().size(); i++){
+            if(!this.getValues().get(i).equals(((NotificationAttribute)obj).getValues().get(i))){
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     @Override
     public String toString() {
