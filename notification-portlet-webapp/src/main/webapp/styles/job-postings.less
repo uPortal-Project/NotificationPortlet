@@ -1,0 +1,230 @@
+@borderColor: rgb(239, 239, 239);
+@lightGray: rgb(249, 249, 249);
+
+/* Mixin */
+.columns (@count: 2, @gutter: 10px) {
+    -moz-column-count: @count;
+    -moz-column-gap: @gutter;
+    -webkit-column-count: @count;
+    -webkit-column-gap: @gutter;
+    column-count: @count;
+    column-gap: @gutter;
+}
+
+/**
+ * Override since the portlet.css is overriding the table class with its !important statement
+ */
+.bootstrap-styles .table-bordered, .bootstrap-styles .table-bordered > thead > tr > th, .bootstrap-styles .table-bordered > tbody > tr > th, .bootstrap-styles .table-bordered > tfoot > tr > th, .bootstrap-styles .table-bordered > thead > tr > td, .bootstrap-styles .table-bordered > tbody > tr > td, .bootstrap-styles .table-bordered > tfoot > tr > td {
+    border: 1px solid #ddd !important;
+}
+
+.bootstrap-styles .checkbox label {
+    word-wrap: break-word;
+}
+.fl-theme-mist {
+    .job-postings {
+        th {
+            border: none;
+            background-color: transparent;
+        }
+    }
+}
+.fl-fix {
+    overflow: hidden;
+}
+.fl-widget .fl-widget-content {
+    overflow: hidden;
+}
+/** End over-rides **/
+
+
+.job-postings {
+    position: relative;
+    // Loading Overlay
+    #loading {
+        background-color: #fff;
+        z-index: 999;
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        padding: 5em;
+    }
+    .source {
+        border: 1px solid #ccc;
+    }
+    .table-responsive {
+        margin-top: 20px;
+    }
+    .toggleCheckbox {
+        padding-left: 0;
+        
+        label {
+            font-weight: normal;
+
+            input {
+                margin-right: 5px;
+            }
+        }
+    }
+
+
+
+    div.dataTables_length label {
+        font-weight: normal;
+    }
+
+    div.dataTables_length select {
+        width: 75px;
+    }
+
+    div.dataTables_info {
+        padding-top: 8px;
+    }
+
+    div.dataTables_paginate {
+        float: right;
+        margin: 0;
+    }
+
+    table.table thead .sorting,
+    table.table thead .sorting_asc,
+    table.table thead .sorting_desc,
+    table.table thead .sorting_asc_disabled,
+    table.table thead .sorting_desc_disabled {
+        cursor: pointer;
+        *cursor: hand;
+    }
+
+    table.table thead .sorting { background: url('../images/sort_both.png') no-repeat center right; }
+    table.table thead .sorting_asc { background: url('../images/sort_asc.png') no-repeat center right; }
+    table.table thead .sorting_desc { background: url('../images/sort_desc.png') no-repeat center right; }
+
+    table.table thead .sorting_asc_disabled { background: url('../images/sort_asc_disabled.png') no-repeat center right; }
+    table.table thead .sorting_desc_disabled { background: url('../images/sort_desc_disabled.png') no-repeat center right; }
+
+    table.dataTable th:active {
+        outline: none;
+    }
+
+    .small-text {
+        font-size: 80%;
+    }
+
+        .jobs-table tbody tr td:nth-child(1) {
+            text-align: center;
+        }
+        .jobs-table tbody tr td:nth-child(2) {
+            font-size: 130%;
+            padding-top: 13px;
+            text-align: center;
+        }
+        .jobs-table tbody tr td:nth-child(2) a i.fa-star {
+            color: #fc3;
+        }
+        .jobs-table tbody tr td:nth-child(2) a:hover i.fa-star {
+            color: #ccc;
+        }
+        .jobs-table tbody tr td:nth-child(2) a i.fa-star-o {
+            color: #ccc;
+        }
+        .jobs-table tbody tr td:nth-child(2) a:hover i.fa-star-o {
+            color: #999;
+        }
+        .sorting {
+            color: #428bca;
+        }
+        .search-filter {
+            ul {
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        .search-separator {
+            font-size: 15px;
+            color: #999;
+            text-align: center;
+            padding-top: 50px;
+            white-space: nowrap;
+        }
+        .searchControls {
+            margin-bottom: 2em;
+            border: 1px solid @borderColor;
+            background-color: @lightGray;
+            padding-bottom: 10px;
+            height: 200px;
+            border-radius: 4px;
+
+            ul {
+                .columns();
+            }
+            ul li:first-child {
+                margin-top: 0;
+            }
+        }
+
+        button, button:hover {
+            background: none;
+            background-image: none;
+            text-shadow: none;
+        }
+
+        .pagination {
+            margin-top: 0;
+        }
+}
+
+.job-details {
+    #modal-overlay {
+        background-color: rgba(255, 255, 255,0.9);
+        border-radius: 5px;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+        padding: 5em;
+        padding-top: 10em;
+        display: none;
+    }
+
+    .description {
+
+    }
+
+    .sidebar {
+        background-color: @lightGray;
+        border: 1px solid @borderColor;
+        padding: 5px;
+
+        div {
+            white-space: nowrap;
+        }
+
+        h5 {
+            
+        }
+
+        hr {
+            border-color: @borderColor;
+            margin: 10px -5px;
+            // margin-left: -5px;
+            // margin-right: -5px;
+        }
+        .closingDate {
+            color: #999;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    }
+
+    button, button:hover {
+        background: none;
+        background-image: none;
+        text-shadow: none;
+    }
+}
+
+@import "loading.less";

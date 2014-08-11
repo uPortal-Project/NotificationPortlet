@@ -80,13 +80,8 @@ public class ReadNotificationServiceDecorator implements INotificationService {
         }
 
         // Build a fresh NotificationResponse based on a deep-copy of the one we enclose
-        NotificationResponse rslt = null;
         final NotificationResponse sourceResponse = enclosedNotificationService.fetch(req);
-        try {
-            rslt = (NotificationResponse) sourceResponse.clone();
-        } catch (CloneNotSupportedException e) {
-            log.error("Failed to clone() the sourceResponse", e);
-        }
+        NotificationResponse rslt = sourceResponse.cloneIfNotCloned();
 
         final Set<String> readNotificationIds = ReadAction.READ.getReadNotices(req);
         Set<String> potentiallyMissingIds = new HashSet<String>(readNotificationIds);

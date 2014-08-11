@@ -1,0 +1,286 @@
+{
+    "errors": [
+    ],
+    "categories": [
+        {
+            "title": "Academic",
+            "entries": [
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/33645",
+                    "linkText": "View job details",
+                    "id": "33645",
+                    "title": "Electronics Technician",
+                    "source": "Hiring site 1",
+                    "attributes": {
+                        "postDate": [ "2/26/2014" ],
+                        "department": [ "Physics and Astronomy" ],
+                        "dateClosed": [ "12/31/2014" ],
+                        "location": [ "Physics Hall" ],
+                        "startDate": [ "03/15/2015" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "<p>Diagnostic:</p><ul><li>Basic, card level fault isolation.</li></ul><p>Interpretation of test results.</p><ul><li>Determination of passing & failing results, and ability to comprehend tolerances.</li></ul><p>Testing:</p><ul><li>Intermediate test skills, automated with some manual.</li><li>Ability to set up and use oscilloscopes, digital & analog voltmeters, frequency counters and automated test equipment.</li></ul><p>Schematic Comprehension:</p><ul><li>Intermediate understanding of blueprints and schematic diagrams.</li><li>Ability to identify common component failures.</li><li>Basic signal tracing ability.</li><li>TTL logic signal comprehension.</li></ul><p>Troubleshooting:</p><ul><li>Basic, card level fault isolation.</li><li>Ability to correctly identify correction of a fault.</li><li>Ability to qualify to IPC-610-D solder certification</li><li>Ability to communicate findings in written or oral format.</li></ul>" ],
+                        "qualifications": [ "2 year Technical Degree or Certification or 2 years of experience in related field. Training will be OJT (on the job) during first shift hours" ],
+                        "instructions": [ "If you qualify, believe you are able to do the job, contact Sally Johnson (sj@madeup.net) and an interview will be scheduled. " ],
+                        "status": [ "In person" ],
+                        "openings": [ "1" ]
+                    }
+                },
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/33647",
+                    "linkText": "View job details",
+                    "id": "33645",
+                    "title": "Electronics Technician II",
+                    "source": "Hiring site 1",
+                    "attributes": {
+                        "postDate": [ "2/28/2014" ],
+                        "department": [ "Physics and Astronomy" ],
+                        "dateClosed": [ "12/31/2014" ],
+                        "location": [ "Physics Hall" ],
+                        "startDate": [ "03/15/2015" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "<p>Diagnostic:</p><ul><li>Intermediate, card level fault isolation.</li></ul><p>Interpretation of test results.</p><ul><li>Determination of passing & failing results, and ability to comprehend tolerances.</li></ul><p>Testing:</p><ul><li>Advanced test skills, automated with some manual.</li><li>Ability to create automation scripts</li><li>Ability to set up and use oscilloscopes, digital & analog voltmeters, frequency counters and automated test equipment.</li></ul><p>Schematic Comprehension:</p><ul><li>Intermediate understanding of blueprints and schematic diagrams.</li><li>Ability to identify common component failures.</li><li>Intermediate signal tracing ability.</li><li>TTL logic signal comprehension.</li></ul><p>Troubleshooting:</p><ul><li>Basic, card level fault isolation.</li><li>Ability to correctly identify correction of a fault.</li><li>Ability to qualify to IPC-610-D solder certification</li><li>Ability to communicate findings in written or oral format.</li></ul>" ],
+                        "qualifications": [ "2 year Technical Degree or Certification or 2 years of experience in related field. Training will be OJT (on the job) during first shift hours" ],
+                        "instructions": [ "If you qualify, believe you are able to do the job, contact Sally Johnson (sj@madeup.net) and an interview will be scheduled. " ],
+                        "status": [ "In person" ],
+                        "openings": [ "1" ]
+                    }
+                },
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/33648",
+                    "linkText": "View job details",
+                    "id": "33648",
+                    "title": "Special Needs Teaching Assistant",
+                    "source": "Hiring site 1",
+                    "attributes": {
+                        "postDate": [ "5/1/2014" ],
+                        "department": [ "Mathmatics Department" ],
+                        "dateClosed": [ "12/31/2014" ],
+                        "location": [ "Matthew Hall" ],
+                        "startDate": [ "03/15/2015" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "Duties include, under the directions of a faculty and/or behavioral specialist, assisting in a classroom environment or a one-on-one with a special needs student, ages ranging from bachelor to master classes. The special needs students include disabilities such as autism, emotional disability, developmental delay, hearing impairment, multiple disabilities, speech/language impairment, learning disability, or visual impairment." ],
+                        "qualifications": [ "<p>Having all current credentials and certifications within the past year is a plus.  These include:</p><ul><li>State Fingerprint Clearance Card</li><li>CPR and First Aid</li><li>CPI (Crisis Prevention Intervention)</li><li>60 College Credits or Parapro Testing</li><li>10 panel Drug Screen</li><li>High school Diploma</li>Current Resume (please submit in a Word document format)</li></ul>" ],
+                        "instructions": [ "If you qualify, believe you are able to do the job, contact Sally Johnson (sj@madeup.net) and an interview will be scheduled. " ],
+                        "status": [ "In person" ],
+                        "openings": [ "1" ]
+                    }
+                },
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/33649",
+                    "linkText": "View job details",
+                    "id": "33649",
+                    "title": "Teaching Assistant",
+                    "source": "Hiring site 1",
+                    "attributes": {
+                        "postDate": [ "5/1/2014" ],
+                        "department": [ "Liberal Arts" ],
+                        "dateClosed": [ "12/31/2014" ],
+                        "location": [ "Tomas Hall" ],
+                        "startDate": [ "03/15/2015" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "Duties include, under the directions of a faculty, assisting in a classroom environment assisting instructor with classroom education." ],
+                        "qualifications": [ "<p>Having all current credentials and certifications within the past year is a plus.  These include:</p><ul><li>State Fingerprint Clearance Card</li><li>CPR and First Aid</li><li>60 College Credits or Parapro Testing</li><li>10 panel Drug Screen</li><li>High school Diploma</li>Current Resume (please submit in a Word document format)</li></ul>" ],
+                        "instructions": [ "If you qualify, click the Apply button to fill out an application" ],
+                        "status": [ "Open" ],
+                        "openings": [ "1" ]
+                    }
+                },
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/33650",
+                    "linkText": "View job details",
+                    "id": "33650",
+                    "title": "Teaching Assistant",
+                    "source": "Hiring site 1",
+                    "attributes": {
+                        "postDate": [ "5/10/2014" ],
+                        "department": [ "Chemistry Department" ],
+                        "dateClosed": [ "12/31/2014" ],
+                        "location": [ "Fidley Hall" ],
+                        "startDate": [ "03/15/2015" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "Duties include, under the directions of a faculty, assisting in a classroom environment assisting instructor with classroom education." ],
+                        "qualifications": [ "<p>Having all current credentials and certifications within the past year is a plus.  These include:</p><ul><li>State Fingerprint Clearance Card</li><li>CPR and First Aid</li><li>60 College Credits or Parapro Testing</li><li>10 panel Drug Screen</li><li>High school Diploma</li>Current Resume (please submit in a Word document format)</li></ul>" ],
+                        "instructions": [ "If you qualify, click the Apply button to fill out an application" ],
+                        "status": [ "Open" ],
+                        "openings": [ "1" ]
+                    }
+                },
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/33651",
+                    "linkText": "View job details",
+                    "id": "33651",
+                    "title": "Teaching Assistant",
+                    "source": "Hiring site 2",
+                    "attributes": {
+                        "postDate": [ "5/12/2014" ],
+                        "department": [ "Humanities Department" ],
+                        "dateClosed": [ "12/31/2014" ],
+                        "location": [ "Fidley Hall" ],
+                        "startDate": [ "03/15/2015" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "Duties include, under the directions of a faculty, assisting in a classroom environment assisting instructor with classroom education." ],
+                        "qualifications": [ "<p>Having all current credentials and certifications within the past year is a plus.  These include:</p><ul><li>State Fingerprint Clearance Card</li><li>CPR and First Aid</li><li>60 College Credits or Parapro Testing</li><li>10 panel Drug Screen</li><li>High school Diploma</li>Current Resume (please submit in a Word document format)</li></ul>" ],
+                        "instructions": [ "If you qualify, click the Apply button to fill out an application" ],
+                        "status": [ "Open" ],
+                        "openings": [ "1" ]
+                    }
+                }
+            ]
+        },
+        {
+            "title": "Event/Program/Project",
+            "entries": [ ]
+        },
+        {
+            "title": "Clerical",
+            "entries": [
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/35058",
+                    "linkText": "View job details",
+                    "id": "35058",
+                    "title": "Receptionist/Secretary",
+                    "source": "Hiring site 2",
+                    "attributes": {
+                        "postDate": [ "2/26/2014" ],
+                        "department": [ "Computer Science" ],
+                        "dateClosed": [ "12/31/2014" ],
+                        "location": [ "CompHall Room 1" ],
+                        "startDate": [ "03/15/2015" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "<p>The Receptionist job Duties and Responsibilities include:</p><ol><li>Answer and screen all incoming calls and handle caller’s inquiries whenever possible.  Re-direct calls as appropriate and take adequate messages when required.</li><li>Greet, assist and/or direct visitors, vendors and the general public employing a professional, courteous, and respectful demeanor at all times.</li><li>Accountable for appointments and scheduling them properly on the days and times specified, as well as reminding and following-up with staff. Maintain accurate visitor logs, as needed, and record of messages.</li><li>Provide administrative relief and support, as needed, for personnel in administration, clerical, mail room, copy/publication, help desk, tenant services, and event planning</li></ol>" ],
+                        "qualifications": [ "<ul><li>Minimum of 1 year of reception experience</li><li>2 years’ experience in face-to-face interaction with customers preferred</li><li>A pleasant phone voice and excellent verbal and written communication skills a must</li><li>Organization and attention to detail required</li><li>Must be able to work in a fast paced, high volume environment</li><li>Proven computer experience essential including proficiency in Outlook, Word and Excel required</li><li>Ideal candidate must have a positive attitude and be comfortable in providing customer service to a diverse population</li></ul>" ],
+                        "instructions": [ "If you qualify, click the Apply button to fill out an application" ],
+                        "status": [ "Open" ],
+                        "openings": [ "1" ]
+                    }
+                },
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/35059",
+                    "linkText": "View job details",
+                    "id": "35059",
+                    "title": "Receptionist/Secretary",
+                    "source": "Hiring site 2",
+                    "attributes": {
+                        "postDate": [ "3/5/2014" ],
+                        "department": [ "Academic Services" ],
+                        "dateClosed": [ "12/31/2014" ],
+                        "location": [ "Dubley Hall" ],
+                        "startDate": [ "03/15/2015" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "<p>The Receptionist job Duties and Responsibilities include:</p><ol><li>Answer and screen all incoming calls and handle caller’s inquiries whenever possible.  Re-direct calls as appropriate and take adequate messages when required.</li><li>Greet, assist and/or direct visitors, vendors and the general public employing a professional, courteous, and respectful demeanor at all times.</li><li>Accountable for appointments and scheduling them properly on the days and times specified, as well as reminding and following-up with staff. Maintain accurate visitor logs, as needed, and record of messages.</li><li>Provide administrative relief and support, as needed, for personnel in administration, clerical, mail room, copy/publication, help desk, tenant services, and event planning</li></ol>" ],
+                        "qualifications": [ "<ul><li>Minimum of 1 year of reception experience</li><li>2 years’ experience in face-to-face interaction with customers preferred</li><li>A pleasant phone voice and excellent verbal and written communication skills a must</li><li>Organization and attention to detail required</li><li>Must be able to work in a fast paced, high volume environment</li><li>Proven computer experience essential including proficiency in Outlook, Word and Excel required</li><li>Ideal candidate must have a positive attitude and be comfortable in providing customer service to a diverse population</li></ul>" ],
+                        "instructions": [ "If you qualify, click the Apply button to fill out an application" ],
+                        "status": [ "Open" ],
+                        "openings": [ "1" ]
+                    }
+                },
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/35060",
+                    "linkText": "View job details",
+                    "id": "35060",
+                    "title": "Administrative Assistant",
+                    "source": "Hiring site 4",
+                    "attributes": {
+                        "postDate": [ "2/26/2014" ],
+                        "department": [ "Academic Services" ],
+                        "dateClosed": [ "12/31/2014" ],
+                        "location": [ "Dubley Hall" ],
+                        "startDate": [ "03/15/2015" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "<p>The job Duties and Responsibilities include:</p><ol><li>Answer and screen all incoming calls and handle caller’s inquiries whenever possible.  Re-direct calls as appropriate and take adequate messages when required.</li><li>Interact with the general public employing a professional, courteous, and respectful demeanor at all times.</li><li>Accountable for appointments and scheduling them properly on the days and times specified, as well as reminding and following-up with staff. Maintain accurate visitor logs, as needed, and record of messages.</li><li>Provide administrative relief and support, as needed, for personnel in administration, clerical, mail room, copy/publication, help desk, tenant services, and event planning</li></ol>" ],
+                        "qualifications": [ "<ul><li>Minimum of 1 year of reception experience</li><li>2 years’ experience in face-to-face interaction with customers preferred</li><li>A pleasant phone voice and excellent verbal and written communication skills a must</li><li>Organization and attention to detail required</li><li>Must be able to work in a fast paced, high volume environment</li><li>Proven computer experience essential including proficiency in Outlook, Word and Excel required</li><li>Ideal candidate must have a positive attitude and be comfortable in providing customer service to a diverse population</li></ul>" ],
+                        "instructions": [ "If you qualify, click the Apply button to fill out an application" ],
+                        "status": [ "Open" ],
+                        "openings": [ "1" ]
+                    }
+                }
+            ]
+        },
+        {
+            "title": "MTC",
+            "entries": [
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/33951",
+                    "linkText": "View job details",
+                    "id": "33951",
+                    "title": "MTC On-call Bus Driver",
+                    "source": "Hiring site 3",
+                    "attributes": {
+                        "postDate": [ "4/16/2014" ],
+                        "department": [ "MTC Operations" ],
+                        "dateClosed": [ "10/31/2014" ],
+                        "location": [ "SE - MTC" ],
+                        "startDate": [ "12/15/2014" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "This job requires you are exceptionally responsible, a good driver, and have had no accidents within the past 2 years.  In addition individuals who are able and desire early mornings can apply." ],
+                        "qualifications": [ "We appreciate your interest in inquiring about this position. The position is very safety-oriented and requires a lot of training, maintaining a license, and adhering to all federal and state traffic and commercial-driver safety regulations at all times." ],
+                        "instructions": [ "If you qualify, click the Apply button to fill out an application" ],
+                        "status": [ "Open" ],
+                        "openings": [ "6" ]
+                    }
+                },
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/33952",
+                    "linkText": "View job details",
+                    "id": "33952",
+                    "title": "MTC On-call Bus Driver",
+                    "source": "Hiring site 3",
+                    "attributes": {
+                        "postDate": [ "10/16/2013" ],
+                        "department": [ "MTC Operations" ],
+                        "dateClosed": [ "10/31/2014" ],
+                        "location": [ "SE - MTC" ],
+                        "startDate": [ "12/15/2014" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "This job requires you are exceptionally responsible, a good driver, and have had no accidents within the past 2 years.  In addition individuals who are able and desire early mornings can apply." ],
+                        "qualifications": [ "We appreciate your interest in inquiring about this position. The position is very safety-oriented and requires a lot of training, maintaining a license, and adhering to all federal and state traffic and commercial-driver safety regulations at all times." ],
+                        "instructions": [ "If you qualify, click the Apply button to fill out an application" ],
+                        "status": [ "Open" ],
+                        "openings": [ "1" ]
+                    }
+                }
+            ]
+        },
+        {
+            "title": "Computer",
+            "entries": [
+                {
+                    "url": "http://peoplesoft.univ/jobApplication/33646",
+                    "linkText": "View job details",
+                    "id": "33645",
+                    "title": "Electronics Technician",
+                    "source": "Hiring site 2",
+                    "attributes": {
+                        "postDate": [ "2/27/2014" ],
+                        "department": [ "Computer Science" ],
+                        "dateClosed": [ "12/31/2014" ],
+                        "location": [ "Computer Lab" ],
+                        "startDate": [ "03/15/2015" ],
+                        "shift": [ "9AM, up to 20 hrs/wk" ],
+                        "hourlyWage": [ "TBD" ],
+                        "description": [ "<p>Diagnostic:</p><ul><li>Basic, card level fault isolation.</li></ul><p>Interpretation of test results.</p><ul><li>Determination of passing & failing results, and ability to comprehend tolerances.</li></ul><p>Testing:</p><ul><li>Intermediate test skills, automated with some manual.</li><li>Ability to set up and use oscilloscopes, digital & analog voltmeters, frequency counters and automated test equipment.</li></ul><p>Schematic Comprehension:</p><ul><li>Intermediate understanding of blueprints and schematic diagrams.</li><li>Ability to identify common component failures.</li><li>Basic signal tracing ability.</li><li>TTL logic signal comprehension.</li></ul><p>Troubleshooting:</p><ul><li>Basic, card level fault isolation.</li><li>Ability to correctly identify correction of a fault.</li><li>Ability to qualify to IPC-610-D solder certification</li><li>Ability to communicate findings in written or oral format.</li></ul>" ],
+                        "qualifications": [ "2 year Technical Degree or Certification or 2 years of experience in related field. Training will be OJT (on the job) during first shift hours" ],
+                        "instructions": [ "If you qualify, believe you are able to do the job, contact Sally Johnson (sj@madeup.net) and an interview will be scheduled. " ],
+                        "status": [ "In person" ],
+                        "openings": [ "2" ]
+                    }
+                }
+            ]
+        },
+        {
+            "title": "Miscellaneous",
+            "entries": [ ]
+        }
+    ]
+}

@@ -20,7 +20,6 @@
 package org.jasig.portlet.notice;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +28,11 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class contains all the categories and errors
@@ -47,8 +49,13 @@ public class NotificationResponse implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     private List<NotificationCategory> categories;
     private List<NotificationError> errors;
+    // Field indicating the response is a cloned defensive copy and can be modified (specifically,you can replace the collections with new collections)
+    @XmlTransient
+    private boolean cloned = false;
 
     public NotificationResponse() {
         categories = new ArrayList<NotificationCategory>();
@@ -116,8 +123,7 @@ public class NotificationResponse implements Serializable, Cloneable {
      * return a <b>new instance</b> of {@link NotificationResponse}.  The 
      * original instances are unchanged.
      * 
-     * @param A new {@link NotificationResponse} that contains data from both 
-     * originals
+     * @param response A new {@link NotificationResponse} that contains data from both originals
      */
     public NotificationResponse combine(NotificationResponse response) {
         NotificationResponse rslt = new NotificationResponse(this);
@@ -131,8 +137,7 @@ public class NotificationResponse implements Serializable, Cloneable {
      * the specified errors have been removed.  The original instances are 
      * unchanged.
      * 
-     * @param A new {@link NotificationResponse} that does not contain the 
-     * specified errors
+     * @param hiddenErrorKeys set of error keys to exclude from result
      */
     public NotificationResponse filterErrors(Set<Integer> hiddenErrorKeys) {
         NotificationResponse rslt = new NotificationResponse(this);
@@ -159,12 +164,12 @@ public class NotificationResponse implements Serializable, Cloneable {
 
     /**
      * Implements deep-copy clone.
-     * 
+     *
      * @throws CloneNotSupportedException Not really, but it's on the method 
      * signature we're overriding.
      */
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    protected Object clone() throws CloneNotSupportedException {
 
         // Start with superclass impl (handles immutables and primitives)
         final NotificationResponse rslt = (NotificationResponse) super.clone();
@@ -180,6 +185,7 @@ public class NotificationResponse implements Serializable, Cloneable {
             eList.add((NotificationError) error.clone());
         }
         rslt.setErrors(eList);
+        rslt.setCloned(true);
 
         return rslt;
 
@@ -220,4 +226,20 @@ public class NotificationResponse implements Serializable, Cloneable {
             errors.add(error);
     }
 
+    public NotificationResponse cloneIfNotCloned() {
+        try {
+            return isCloned() ? this : (NotificationResponse) this.clone();
+        } catch (CloneNotSupportedException e) {
+            log.error("Failed to clone() the sourceResponse", e);
+        }
+        return this;
+    }
+
+    public boolean isCloned() {
+        return cloned;
+    }
+
+    private void setCloned(boolean cloned) {
+        this.cloned = cloned;
+    }
 }

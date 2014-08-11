@@ -47,7 +47,16 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time-jsptags</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
@@ -197,10 +206,33 @@
                                 <include>rs/jquery/1.6.1/</include>
                                 <include>rs/jqueryui/1.8.13/</include>
                                 <include>rs/underscore/1.3.3/</include>
+                                <include>rs/bootstrap-namespaced/3.1.1/</include>
                             </includes>
                         </overlay>
                     </overlays>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.lesscss</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+                <version>1.3.3</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/webapp/styles/</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/${project.build.finalName}/styles/</outputDirectory>
+                    <compress>true</compress>
+                    <includes>
+                        <include>job-postings.less</include>
+                        <include>loading.less</include>
+                    </includes>
+                    <!--<lessJs>${project.basedir}/src/build/less/less-1.6.2.js</lessJs>-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
