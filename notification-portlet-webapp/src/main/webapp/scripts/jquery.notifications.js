@@ -18,56 +18,45 @@
  */
 
 //
-//  Notifications portlet jQuery plugin
-//  developed on behalf of the University 
-//  of Manchester
+//  Notifications portlet jQuery-based function developed on behalf of the University of Manchester
 //
 //  Author: Jacob Lichner
 //  Email: jlichner@unicon.net
 //
-(function ($) {
 
-  // Set underscore's templating syntax
-  _.templateSettings = {
+var notificationsPortletView = notificationsPortletView || function ($, rootSelector, _, opts) {
+
+  // Underscore's templating syntax
+  var templateSettings = {
     interpolate : /\{\{(.+?)\}\}/g, // {{ variable }}
     evaluate    : /\{%(.+?)%\}/g    // {% expression %}
   };
-  
-  $.fn.notifications = function (opts) {
 
-    // Cache existing DOM elements  
-    var portlet         = this.find(".notification-portlet-wrapper"),
-        outerContainer  = this.selector,
-        links           = this.find(".notification-portlet a"),
-        errorContainer  = this.find(".notification-error-container"),
-        loading         = this.find(".notification-loading"),
-        notifications   = this.find(".notification-container"),
-        detailView      = this.find(".notification-detail-wrapper"),
-        detailContainer = this.find(".notification-detail-container"),
-        backButton      = this.find(".notification-back-button"),
-        refreshButton   = this.find(".notification-refresh a"),
-        filterOptions   = this.find(".notification-options"),
+    var rootjQueryObj = $(rootSelector);
+  
+    // Cache existing DOM elements
+    var portlet         = rootjQueryObj.find(".notification-portlet-wrapper"),
+        outerContainer  = rootjQueryObj,
+        links           = rootjQueryObj.find(".notification-portlet a"),
+        errorContainer  = rootjQueryObj.find(".notification-error-container"),
+        loading         = rootjQueryObj.find(".notification-loading"),
+        notifications   = rootjQueryObj.find(".notification-container"),
+        detailView      = rootjQueryObj.find(".notification-detail-wrapper"),
+        detailContainer = rootjQueryObj.find(".notification-detail-container"),
+        backButton      = rootjQueryObj.find(".notification-back-button"),
+        refreshButton   = rootjQueryObj.find(".notification-refresh a"),
+        filterOptions   = rootjQueryObj.find(".notification-options"),
         todayFilter     = filterOptions.find(".today"),
         allFilter       = filterOptions.find(".all");
         
-    // Notification gets cached in the AJAX callback
-    // but is created here for scope
+    // Notification gets cached in the AJAX callback but is created here for scope
     var notification;
     
-    // Store the filter state (notifications that are 
-    // currently being displayed), defaults to today
+    // Store the filter state (notifications that are currently being displayed), defaults to today
     var filterState = {"days": 1};
     
-    function getNotifications(params, doRefresh) {
+    var getNotifications = function(params, doRefresh) {
             
-      // Looading div is displayed by default
-      // and is then hidden after the AJAX call
-      loading.ajaxStop(function () {
-        $(this).hide();
-        portlet.fadeIn("fast");
-        filterOptions.fadeIn("fast");
-      });
-      
       // First 'prime-the-pump' with an ActionURL
       $.ajax({
         type: 'POST',
@@ -111,9 +100,8 @@
           // Build notifications
           buildNotifications(notificationResponse);
 
-          // Once notifications have been injected into the DOM
-          // we cache the notication element...
-          notification = $(outerContainer + " .notifications a");
+          // Once notifications have been injected into the DOM we cache the notification element...
+          notification = outerContainer.find(" .notifications a");
 
           // ...and bind our events
           bindEvent.accordion(notificationResponse);
@@ -124,17 +112,20 @@
 
           // Errors
           errorHandling(notificationResponse);
+
+          // Loading div is displayed by default.  Hide it after the AJAX call completes and display notifications..
+          loading.hide();
+          portlet.fadeIn("fast");
+          filterOptions.fadeIn("fast");
         },
         
         error: function () {
-          $(this).html(" ").text("AJAX failed. ~ THE END ~");
+            rootjQueryObj.html(" ").text("Request for data failed.");
         }
       });
-    }
 
-    // Build notifications using underscore.js
-    // template method
-    function buildNotifications(notificationResponse) {
+    // Build notifications using underscore.js template method
+    var buildNotifications = function(notificationResponse) {
 
       // HTML string compiled with underscore.js
       var html = '\
@@ -185,11 +176,15 @@
           {% }); %} \
         {% } %} \
       ';
-      var compiled = _.template(html, notificationResponse, {variable: 'data'});
+      var compiled = _.template(html, notificationResponse, {
+          variable: 'data',
+          interpolate : templateSettings.interpolate,
+          evaluate : templateSettings.evaluate
+      });
 
       // Inject compiled markup into notifications container div
       notifications.html(" ").prepend(compiled);
-    }
+    };
 
     // Bind events object helps keep events together 
     var bindEvent = {
@@ -200,7 +195,7 @@
           portlet.removeClass("accordion");
           notifications.children().show();
         } else {
-          notifications.accordion();
+            notificationsAccordion($, notifications);
           portlet.addClass("accordion");
         }
       },
@@ -225,7 +220,10 @@
               Source: <a href="{{ link }}">{{ source }}</a> \
             </p> \
           ';
-          var compiled = _.template(html, notification);
+          var compiled = _.template(html, notification, {
+              interpolate : templateSettings.interpolate,
+              evaluate : templateSettings.evaluate
+          });
           
           $.each([notifications, errorContainer], function () {
             $(this).hide(
@@ -275,12 +273,10 @@
           return false;
         });
       }
-    }
+    };
     
-    // Filter notifications by passing params
-    // via ajax ie {"days":1} is today, also
-    // stores and returns filterState
-    function filter(link, params) {
+    // Filter notifications by passing params via ajax ie {"days":1} is today, also stores and returns filterState
+    var filter = function(link, params) {
       filterState = params || {};
       if ( link.hasClass("active") ) {
         return false;
@@ -290,10 +286,10 @@
         link.addClass("active");
       }
       return filterState;
-    }
+    };
     
     // Errors (broken feeds)
-    function errorHandling(data) {      
+    var errorHandling = function(data) {
       if ( data.errors ) {
         var html = '\
           {% _.each(errors, function(error) { %} \
@@ -303,7 +299,10 @@
             </div> \
           {% }); %} \
         ';  
-        var compile = _.template(html, data);
+        var compile = _.template(html, data, {
+            interpolate : templateSettings.interpolate,
+            evaluate : templateSettings.evaluate
+        });
         
         errorContainer.show().append(compile);
         errorContainer.find(".remove").click(function () {
@@ -319,10 +318,10 @@
           return false;
         }); 
       }
-    }
-    
-    // Load notifications
-    getNotifications(filterState);
-  }
-  
-})(jQuery);
+    };
+  };
+
+  // Load notifications
+  getNotifications(filterState);
+
+};

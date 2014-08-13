@@ -18,13 +18,13 @@
  */
 
 //
-//  Lightweight accordion jQuery plugin
+//  Lightweight accordion function
 //
 //  Author: Jacob Lichner
 //  Email: jacob.d.lichner@gmail.com
 //
-(function ($) {
-  $.fn.accordion = function (options) {
+
+var notificationsAccordion = notificationsAccordion || function ($, container, options) {
     
     var defaults = {
       trigger   : '.notification-trigger',
@@ -37,8 +37,8 @@
     var opts = $.extend(defaults, options);
     
     // Cache DOM elements
-    var allTriggers = this.children(opts.trigger),
-        allContent  = this.children(opts.content);
+    var allTriggers = container.children(opts.trigger),
+        allContent  = container.children(opts.content);
     
       // Begin accordion
     allTriggers
@@ -97,6 +97,4 @@
       el.stop(true,true)['slide' + direction](opts.speed);          
     }
     
-    return this;
-  }
-})(jQuery);
+};

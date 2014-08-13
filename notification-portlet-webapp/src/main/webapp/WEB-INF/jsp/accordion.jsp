@@ -32,13 +32,10 @@
     <portlet:param name="errorKey" value="ERRORKEY"/>
 </portlet:actionURL>
 
-<script src="<rs:resourceURL value="/rs/jquery/1.6.1/jquery-1.6.1.min.js"/>" type="text/javascript"></script>
-<script src="<rs:resourceURL value="/rs/jqueryui/1.8.13/jquery-ui-1.8.13.min.js"/>" type="text/javascript"></script>
-<script src="<rs:resourceURL value="/rs/underscore/1.3.3/underscore-1.3.3.min.js"/>" type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.accordion.min.js"/>" type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.notifications.min.js"/>" type="text/javascript"></script>
-
-<link rel="stylesheet" href="<c:url value="/styles/accordion.min.css"/>" type="text/css" media="screen" />
+<c:if test="${portletPreferencesValues['usePortalJsLibs'][0] != 'true'}">
+    <rs:aggregatedResources path="/accordianResources.xml"/>
+</c:if>
+<rs:aggregatedResources path="/accordianLocalResources.xml"/>
 
 <div id="${n}container" class="notification-portlet">
 
@@ -77,12 +74,21 @@
 <!-- call ajax on dynamic portlet id -->
 <script type="text/javascript">
     var ${n} = ${n} || {};
-    ${n}.jQuery = jQuery.noConflict(true);
-    ${n}.jQuery(document).ready(function () { 
-        ${n}.jQuery("#${n}container").notifications({ 
+<c:choose>
+    <c:when test="${portletPreferencesValues['usePortalJsLibs'][0] != 'true'}">
+        ${n}.jQuery = jQuery.noConflict(true);
+        ${n}.underscore = _.noConflict();
+    </c:when>
+    <c:otherwise>
+        ${n}.jQuery = up.jQuery;
+        ${n}.underscore = up._;
+    </c:otherwise>
+</c:choose>
+    ${n}.jQuery(document).ready(
+        notificationsPortletView(${n}.jQuery, "#${n}container", ${n}.underscore, {
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
             getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS"/>',
             hideErrorUrl: '${hideErrorUrl}'
-        });
-    });
+        })
+    );
 </script>

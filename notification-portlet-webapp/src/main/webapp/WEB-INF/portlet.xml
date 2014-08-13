@@ -99,6 +99,13 @@
                 <value>false</value>
             </preference>
 
+            <!-- If true, notifications will piggyback on the portal's JavaScript library (jQuery).  The needs
+                 of this portlet are very lightweight so we'll default to 'true' in this case. -->
+            <preference>
+                <name>usePortalJsLibs</name>
+                <value>true</value>
+            </preference>
+
         </portlet-preferences>
         <supported-processing-event>
             <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>
@@ -156,18 +163,15 @@
                 <value>false</value>
             </preference>
 
-            <!-- If true, emergency alerts will piggyback on the portal's 
-                 JavaScript library (jQuery).  The needs of this portlet are 
-                 very lightweight and the portlet runs infrequently, so we'll 
-                 default to 'true' in this case. -->
+            <!-- If true, emergency alerts will piggyback on the portal's JavaScript library (jQuery).  The needs
+                 of this portlet are very lightweight so we'll default to 'true' in this case. -->
             <preference>
                 <name>EmergencyAlertController.usePortalJsLibs</name>
                 <value>true</value>
             </preference>
 
-            <!-- If 'EmergencyAlertController.usePortalJsLibs' is true, this 
-                 value will help find the portal's JavaScript library (jQuery).  
-                 If not, it has no impact. -->
+            <!-- If 'EmergencyAlertController.usePortalJsLibs' is true, this value will help find the portal's
+                 JavaScript library (jQuery).  If not, it has no impact. -->
             <preference>
                 <name>portalJsNamespace</name>
                 <value>up</value>
@@ -253,17 +257,14 @@
                 <value>false</value>
             </preference>
 
-            <!-- If true, emergency alerts will piggyback on the portal's 
-                 JavaScript library (jQuery).  The needs of this portlet are 
-                 very lightweight and the portlet runs infrequently, so we'll 
-                 default to 'true' in this case. -->
+            <!-- If true, notification icon will piggyback on the portal's JavaScript library (jQuery).  The needs
+                 of this portlet are very lightweight so we'll default to 'true' in this case. -->
             <preference>
-                <name>EmergencyAlertController.usePortalJsLibs</name>
+                <name>usePortalJsLibs</name>
                 <value>true</value>
             </preference>
 
-            <!-- If 'EmergencyAlertController.usePortalJsLibs' is true, this 
-                 value will help find the portal's JavaScript library (jQuery).  
+            <!-- If 'usePortalJsLibs' is true, this value will help find the portal's JavaScript library (jQuery).
                  If not, it has no impact. -->
             <preference>
                 <name>portalJsNamespace</name>

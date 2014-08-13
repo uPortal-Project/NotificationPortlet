@@ -29,8 +29,7 @@
 </portlet:actionURL>
 
 <c:if test="${!usePortalJsLibs}">
-    <script src="<rs:resourceURL value="/rs/jquery/1.6.1/jquery-1.6.1.min.js"/>" type="text/javascript"></script>
-    <script src="<rs:resourceURL value="/rs/jqueryui/1.8.13/jquery-ui-1.8.13.min.js"/>" type="text/javascript"></script>
+    <rs:aggregatedResources path="/jQueryUIResources.xml"/>
 </c:if>
 <script src="<c:url value="/scripts/jquery.notice.min.js"/>" type="text/javascript"></script>
 

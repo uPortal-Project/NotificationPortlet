@@ -42,7 +42,7 @@ public final class EmergencyAlertController {
     public static final String VIEW_SHOW_ALERTS = "show-alerts";
 
     private static final String USE_PPORTAL_JS_LIBS_PREFERENCE = "EmergencyAlertController.usePortalJsLibs";
-    private static final String PPORTAL_JS_NAMESPACE_PREFERENCE = "EmergencyAlertController.portalJsNamespace";
+    private static final String PPORTAL_JS_NAMESPACE_PREFERENCE = "portalJsNamespace";
     private static final String AUTO_ADVANCE_PREFERENCE = "EmergencyAlertController.autoAdvance";
 
     private final Log log = LogFactory.getLog(getClass());
