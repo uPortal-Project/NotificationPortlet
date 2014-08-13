@@ -100,10 +100,11 @@
             </preference>
 
             <!-- If true, notifications will piggyback on the portal's JavaScript library (jQuery).  The needs
-                 of this portlet are very lightweight so we'll default to 'true' in this case. -->
+                 of this portlet are very lightweight so we should default to 'true' in this case but that's
+                 pending broader consensus. -->
             <preference>
                 <name>usePortalJsLibs</name>
-                <value>true</value>
+                <value>false</value>
             </preference>
 
         </portlet-preferences>
