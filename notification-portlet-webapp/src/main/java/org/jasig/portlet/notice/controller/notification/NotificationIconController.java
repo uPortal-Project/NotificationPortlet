@@ -40,8 +40,8 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 @RequestMapping("VIEW")
 public final class NotificationIconController {
 
-    private static final String USE_PPORTAL_JS_LIBS_PREFERENCE = "EmergencyAlertController.usePortalJsLibs";
-    private static final String PPORTAL_JS_NAMESPACE_PREFERENCE = "EmergencyAlertController.portalJsNamespace";
+    private static final String USE_PPORTAL_JS_LIBS_PREFERENCE = "usePortalJsLibs";
+    private static final String PPORTAL_JS_NAMESPACE_PREFERENCE = "portalJsNamespace";
     private static final String SIZE_PREFERENCE = "NotificationIconController.size";
     private static final String SIZE_DEFAULT = "18";
     private static final String URL_PREFERENCE = "NotificationIconController.url";

@@ -17,12 +17,12 @@
  * under the License.
  */
 
-var upnotice = upnotice || {};
-
 /*
- * This file offers a simple, flexible widget for displaying notifications.  It 
- * is possible to use this script with multiple, different markup approaches. 
+ * This file offers a simple, flexible widget for displaying notifications.  It
+ * is possible to use this script with multiple, different markup approaches.
  */
+
+var upnotice = upnotice || {};
 
 if (!upnotice.init) {
 
