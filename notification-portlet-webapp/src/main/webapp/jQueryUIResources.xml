@@ -24,7 +24,7 @@
 
     <js import="true">jQueryResources.xml</js>
 
-    <js included="plain">//code.jquery.com/ui/1.10.3/jquery-ui.js</js>
-    <js included="aggregated">//code.jquery.com/ui/1.10.3/jquery-ui.min.js</js>
+    <js included="plain" resource="true">/rs/jqueryui/1.10.3/jquery-ui-1.10.3.js</js>
+    <js included="aggregated" resource="true">/rs/jqueryui/1.10.3/jquery-ui-1.10.3.min.js</js>
 
 </resources>

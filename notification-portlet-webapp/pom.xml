@@ -202,6 +202,9 @@
                             <groupId>org.jasig.resourceserver</groupId>
                             <artifactId>resource-server-content</artifactId>
                             <includes>
+                                <include>rs/fontawesome/4.0.3/</include>
+                                <include>rs/jquery/1.10.2/</include>
+                                <include>rs/jqueryui/1.10.3/</include>
                                 <include>rs/underscore/1.5.2/</include>
                                 <include>rs/bootstrap-namespaced/3.1.1/</include>
                             </includes>

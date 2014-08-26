@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jasig.parent</groupId>
         <artifactId>jasig-parent</artifactId>
-        <version>34</version>
+        <version>35</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -174,8 +174,16 @@
                     <aggregate>true</aggregate>
                     <excludes>
                         <exclude>LICENSE</exclude>
-                        <exclude>NOTICE</exclude>
+                        <exclude>**/NOTICE</exclude>
+                        <exclude>**/*.json</exclude>
+                        <exclude>**/*.css.map</exclude>
+                        <exclude>.idea/**</exclude>  <!-- Exclude intelliJ Idea working folders -->
+                        <exclude>overlays/**</exclude>  <!-- Exclude intelliJ Idea working folders -->
+                        <exclude>*/overlays/**</exclude>  <!-- Exclude intelliJ Idea working folders -->
                     </excludes>
+                    <mapping>
+                        <less>JAVADOC_STYLE</less>
+                    </mapping>
                 </configuration>
             </plugin>
             <plugin>
