@@ -75,37 +75,37 @@
 
                 h3 {
                     margin: 0;
-                    padding: 0;
                     font-weight: normal !important;
                     border: none;
                     color: @gray8;
                 }
 
-                .notification-content {
-                    padding-bottom: 10px;
-
-                    ul {
-                        margin: 0;
+                &.disabled {
+                    h3 {
+                        color: @gray5 !important;
                     }
+                }
+            }
+
+            .notification-content {
+                padding-bottom: 10px;
+
+                ul {
+                    margin: 0;
 
                     li {
                         list-style: none !important;
                         line-height: 18px;
                         font-size: 16px;
-                    }
-
-                    .notification-due-date {
-                        color: @gray6;
-
-                        &.overdue {
-                            color: @red;
-                        }
+                        margin: 10px 0;
                     }
                 }
 
-                &.disabled {
-                    h3 {
-                        color: @gray5 !important;
+                .notification-due-date {
+                    color: @gray6;
+
+                    &.overdue {
+                        color: @red;
                     }
                 }
             }
@@ -195,41 +195,34 @@
                 cursor: pointer;
             }
         }
+    }
 
-        &.accordion {
-            .notification-trigger {
-                cursor: pointer;
-                padding: 10px;
-                margin-bottom: 10px;
-                border: 1px solid @gray2 !important;
-                .rounded (6px);
-                .gradient(@primary-light, rgba(228, 238, 242, 0.50), @white);
+    .accordion {
+        .notification-trigger {
+            cursor: pointer;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid @gray2 !important;
+            .rounded (6px);
+            .gradient(@primary-light, rgba(228, 238, 242, 0.50), @white);
+
+            h3 {
+                color: darken(@primary, 45%) !important;
+                font-weight: normal !important;
+                border: none;
+            }
+
+            .trigger-symbol {
+                padding-left: 15px;
+                background: url("../images/bullet-right.png") no-repeat left 50%;
+            }
+
+            &.active, &.hover {
+                .gradient(@primary, rgba(193, 216, 225, 0.50), @white);
 
                 h3 {
+                    background-image: url("../images/bullet-down.png");
                     color: darken(@primary, 45%) !important;
-                    font-weight: normal !important;
-                    border: none;
-                }
-
-                .notification-content {
-                    ul {
-                        margin: 0;
-                        padding-left: 11px;
-                    }
-                }
-
-                .trigger-symbol {
-                    padding-left: 15px;
-                    background: url("../images/bullet-right.png") no-repeat left 50%;
-                }
-
-                &.active, &.hover {
-                    .gradient(@primary, rgba(193, 216, 225, 0.50), @white);
-
-                    h3 {
-                        background-image: url("../images/bullet-down.png");
-                        color: darken(@primary, 45%) !important;
-                    }
                 }
             }
         }

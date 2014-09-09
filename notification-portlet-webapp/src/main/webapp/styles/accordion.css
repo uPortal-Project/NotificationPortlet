@@ -49,30 +49,30 @@
 }
 .up .notification-portlet-wrapper .notification-container .notification-trigger h3 {
   margin: 0;
-  padding: 0;
   font-weight: normal !important;
   border: none;
   color: #333333;
 }
-.up .notification-portlet-wrapper .notification-container .notification-trigger .notification-content {
+.up .notification-portlet-wrapper .notification-container .notification-trigger.disabled h3 {
+  color: #808080 !important;
+}
+.up .notification-portlet-wrapper .notification-container .notification-content {
   padding-bottom: 10px;
 }
-.up .notification-portlet-wrapper .notification-container .notification-trigger .notification-content ul {
+.up .notification-portlet-wrapper .notification-container .notification-content ul {
   margin: 0;
 }
-.up .notification-portlet-wrapper .notification-container .notification-trigger .notification-content li {
+.up .notification-portlet-wrapper .notification-container .notification-content ul li {
   list-style: none !important;
   line-height: 18px;
   font-size: 16px;
+  margin: 10px 0;
 }
-.up .notification-portlet-wrapper .notification-container .notification-trigger .notification-content .notification-due-date {
+.up .notification-portlet-wrapper .notification-container .notification-content .notification-due-date {
   color: #666666;
 }
-.up .notification-portlet-wrapper .notification-container .notification-trigger .notification-content .notification-due-date.overdue {
+.up .notification-portlet-wrapper .notification-container .notification-content .notification-due-date.overdue {
   color: #990000;
-}
-.up .notification-portlet-wrapper .notification-container .notification-trigger.disabled h3 {
-  color: #808080 !important;
 }
 .up .notification-portlet-wrapper .notification-detail-wrapper {
   padding: 20px 20px;
@@ -161,7 +161,7 @@
   width: 16px;
   cursor: pointer;
 }
-.up .notification-portlet-wrapper.accordion .notification-trigger {
+.up .accordion .notification-trigger {
   cursor: pointer;
   padding: 10px;
   margin-bottom: 10px;
@@ -176,21 +176,17 @@
   background: -o-linear-gradient(#ffffff, rgba(228, 238, 242, 0.5));
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='rgba(228, 238, 242, 0.5)', GradientType=0);
 }
-.up .notification-portlet-wrapper.accordion .notification-trigger h3 {
+.up .accordion .notification-trigger h3 {
   color: #3d6d7f !important;
   font-weight: normal !important;
   border: none;
 }
-.up .notification-portlet-wrapper.accordion .notification-trigger .notification-content ul {
-  margin: 0;
-  padding-left: 11px;
-}
-.up .notification-portlet-wrapper.accordion .notification-trigger .trigger-symbol {
+.up .accordion .notification-trigger .trigger-symbol {
   padding-left: 15px;
   background: url("../images/bullet-right.png") no-repeat left 50%;
 }
-.up .notification-portlet-wrapper.accordion .notification-trigger.active,
-.up .notification-portlet-wrapper.accordion .notification-trigger.hover {
+.up .accordion .notification-trigger.active,
+.up .accordion .notification-trigger.hover {
   background: #c1d8e1;
   background: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgba(193, 216, 225, 0.5)), color-stop(1, #ffffff));
   background: -ms-linear-gradient(bottom, rgba(193, 216, 225, 0.5), #ffffff);
@@ -198,8 +194,8 @@
   background: -o-linear-gradient(#ffffff, rgba(193, 216, 225, 0.5));
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='rgba(193, 216, 225, 0.5)', GradientType=0);
 }
-.up .notification-portlet-wrapper.accordion .notification-trigger.active h3,
-.up .notification-portlet-wrapper.accordion .notification-trigger.hover h3 {
+.up .accordion .notification-trigger.active h3,
+.up .accordion .notification-trigger.hover h3 {
   background-image: url("../images/bullet-down.png");
   color: #3d6d7f !important;
 }
