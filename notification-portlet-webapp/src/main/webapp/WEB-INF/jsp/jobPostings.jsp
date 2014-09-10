@@ -43,7 +43,7 @@
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
 <link rel="stylesheet" href="<rs:resourceURL value='/rs/bootstrap-namespaced/3.1.1/css/bootstrap.min.css'/>" type="text/css" />
-<link rel="stylesheet" href="<c:url value="/styles/job-postings.css"/>" type="text/css"></link>
+<link rel="stylesheet" href="<c:url value="/css/job-postings.css"/>" type="text/css"></link>
 <!--[if lt IE 10]>
 <style>
     .job-postings .searchControls ul li {
