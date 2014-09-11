@@ -1,6 +1,9 @@
-/.settings
-/.project
-/.classpath
+.settings
+.project
+.classpath
+*.iml
+.DS_Store
+overlays/
 target/
 .DS_Store
 *.CSS
