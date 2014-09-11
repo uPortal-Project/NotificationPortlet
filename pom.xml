@@ -177,6 +177,7 @@
                         <exclude>**/NOTICE</exclude>
                         <exclude>**/*.json</exclude>
                         <exclude>**/*.css.map</exclude>
+                        <exclude>**/mixins.less</exclude>
                         <exclude>.idea/**</exclude>  <!-- Exclude intelliJ Idea working folders -->
                         <exclude>overlays/**</exclude>  <!-- Exclude intelliJ Idea working folders -->
                         <exclude>*/overlays/**</exclude>  <!-- Exclude intelliJ Idea working folders -->
