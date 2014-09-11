@@ -27,4 +27,4 @@
     <js included="plain" resource="true">/rs/underscore/1.5.2/underscore-1.5.2.js</js>
     <js included="aggregated" resource="true">/rs/underscore/1.5.2/underscore-1.5.2.min.js</js>
 
-    </resources>
+</resources>

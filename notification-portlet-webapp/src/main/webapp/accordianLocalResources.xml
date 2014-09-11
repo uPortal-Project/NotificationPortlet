@@ -28,7 +28,6 @@
     <js included="plain">scripts/jquery.notifications.js</js>
     <js included="aggregated">scripts/jquery.notifications.min.js</js>
 
-    <css included="plain">css/accordion.css</css>
-    <css included="aggregated">css/accordion.min.css</css>
+    <css>css/accordion.css</css>
 
     </resources>
