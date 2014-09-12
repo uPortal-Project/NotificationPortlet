@@ -127,7 +127,7 @@
                 color: @gray9 !important;
                 text-decoration: none;
                 .rounded (5px);
-                .gradient(@primary-light, rgba(228, 238, 242, 0.50), @white);
+                .gradient(@primary-light, fade(@primary-light, 50%), @white);
 
                 span {
                     font-weight: normal !important;
@@ -138,7 +138,7 @@
                 }
 
                 &.hover, &.active {
-                    .gradient(@primary, rgba(193, 216, 225, 0.50), @white);
+                    .gradient(@primary, fade(@primary-light, 50%), @white);
                 }
             }
 
@@ -204,7 +204,7 @@
             margin-bottom: 10px;
             border: 1px solid @gray2 !important;
             .rounded (6px);
-            .gradient(@primary-light, rgba(228, 238, 242, 0.50), @white);
+            .gradient(@primary-light, fade(@primary-light, 50%), @white);
 
             h3 {
                 color: darken(@primary, 45%) !important;
@@ -218,7 +218,7 @@
             }
 
             &.active, &.hover {
-                .gradient(@primary, rgba(193, 216, 225, 0.50), @white);
+                .gradient(@primary, fade(@primary-light, 50%), @white);
 
                 h3 {
                     background-image: url("../images/bullet-down.png");
