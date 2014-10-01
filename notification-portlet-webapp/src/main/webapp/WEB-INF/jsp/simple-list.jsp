@@ -32,7 +32,7 @@
     <portlet:param name="actionId" value="ACTIONID"/>
 </portlet:actionURL>
 
-<script src="<rs:resourceURL value="/rs/jquery/1.6.1/jquery-1.6.1.min.js"/>" type="text/javascript"></script>
+<script src="<rs:resourceURL value="/rs/jquery/1.10.2/jquery-1.10.2.min.js"/>" type="text/javascript"></script>
 <script src="<c:url value="/scripts/jquery.notice.min.js"/>" type="text/javascript"></script>
 
 <link type="text/css" rel="stylesheet" href="<c:url value="/styles/simple-list.min.css"/>"/>
