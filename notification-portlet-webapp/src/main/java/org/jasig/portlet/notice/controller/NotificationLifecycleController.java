@@ -63,6 +63,21 @@ public class NotificationLifecycleController {
 
     public static final String DO_EVENTS_PREFERENCE = "NotificationLifecycleController.doEvents";
 
+    /**
+     * Some deployments are experiencing issues whe the 'invokeNotificationService' handler sends a redirect because
+     * they're using SSL implemented by a load balancer and the portal/portlet container doesn't realize the traffic is
+     * over HTTPS.  In these cases, the ActionURL results in an HTTP 302 redirect with a Location header that starts
+     * with 'http://...' and (consequently) the JS in the browser fails, warning of an XSS violation.
+     */
+    public static final String INVOKE_REDIRECT_PROTOCOL_PREFERENCE = "NotificationLifecycleController.invokeRedirectProtocol";
+
+    /**
+     * See INVOKE_REDIRECT_PROTOCOL_PREFERENCE.  If you need to specify an absolute protocol, you may need to specify
+     * an absolute port as well.  A blank value for this preference means use the default port for the specified
+     * protocol.
+     */
+    public static final String INVOKE_REDIRECT_PORT_PREFERENCE = "NotificationLifecycleController.invokeRedirectPort";
+
     private static final String SUCCESS_PATH = "/scripts/success.json";
 
     private final Log log = LogFactory.getLog(getClass());
@@ -158,8 +173,8 @@ public class NotificationLifecycleController {
         } else {
             // The real payload awaits a Render phase;  send a token response to
             // avoid a full portlet request cycle (since we can).
-            final String contextPath = req.getContextPath();
-            res.sendRedirect(contextPath + SUCCESS_PATH);
+            final String redirectUri = evaluateRedirectUri(req);
+            res.sendRedirect(redirectUri);
         }
 
     }
@@ -219,6 +234,34 @@ public class NotificationLifecycleController {
         if (notificationResult != null && req.getWindowID().equals(notificationResult.getQueryWindowId())) {
             notificationService.collect(req, res);
         }
+
+    }
+
+    /*
+     * Implementation
+     */
+
+    private String evaluateRedirectUri(ActionRequest req) {
+
+        // Default response -- specify a relative URI, allowing the protocol to be inferred
+        String rslt = req.getContextPath() + SUCCESS_PATH;
+
+        final PortletPreferences prefs = req.getPreferences();
+        final String protocol = prefs.getValue(INVOKE_REDIRECT_PROTOCOL_PREFERENCE, null);
+        if (protocol != null) {
+            // Specify an absolute URI.  Apparently we need to insist on a protoco (usually HTTPS)
+            String portPart = "";  // default
+            final String port = prefs.getValue(INVOKE_REDIRECT_PORT_PREFERENCE, null);
+            if (port != null) {
+                portPart = ":" + port;
+            }
+            rslt = protocol.toLowerCase() + "://"
+                    + req.getServerName()   // Server hostname
+                    + portPart              // Server port (blank, with any luck)
+                    + rslt;                 // Remainder of the URI (as above)
+        }
+
+        return rslt;
 
     }
 
