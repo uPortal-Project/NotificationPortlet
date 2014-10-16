@@ -79,6 +79,20 @@
                 <name>NotificationLifecycleController.doEvents</name>
                 <value>false</value>
             </preference>
+            <!-- Allows the admin to override the protocol of the HTTP 302 redirect issued
+                 by NotificationLifecycleController for ActionURLs (e.g. force HTTPS).  If
+                 left empty, the controller will follow the protocol of the request.  Has
+                 no effect if NotificationLifecycleController.doEvents=true -->
+            <preference>
+                <name>NotificationLifecycleController.invokeRedirectProtocol</name>
+            </preference>
+            <!-- For use with NotificationLifecycleController.invokeRedirectProtocol.  If
+                 left empty, the controller will follow the default port for the specified
+                 protocol.  Has no effect if NotificationLifecycleController.invokeRedirectProtocol
+                 is empty -->
+            <preference>
+                <name>NotificationLifecycleController.invokeRedirectPort</name>
+            </preference>
 
             <!-- Specifies how long a user-hidden notification should remain 
                  hidden, in hours.  A value of zero means notifications will be 
@@ -162,6 +176,20 @@
             <preference>
                 <name>NotificationLifecycleController.doEvents</name>
                 <value>false</value>
+            </preference>
+            <!-- Allows the admin to override the protocol of the HTTP 302 redirect issued
+                 by NotificationLifecycleController for ActionURLs (e.g. force HTTPS).  If
+                 left empty, the controller will follow the protocol of the request.  Has
+                 no effect if NotificationLifecycleController.doEvents=true -->
+            <preference>
+                <name>NotificationLifecycleController.invokeRedirectProtocol</name>
+            </preference>
+            <!-- For use with NotificationLifecycleController.invokeRedirectProtocol.  If
+                 left empty, the controller will follow the default port for the specified
+                 protocol.  Has no effect if NotificationLifecycleController.invokeRedirectProtocol
+                 is empty -->
+            <preference>
+                <name>NotificationLifecycleController.invokeRedirectPort</name>
             </preference>
 
             <!-- If true, emergency alerts will piggyback on the portal's JavaScript library (jQuery).  The needs
@@ -256,6 +284,20 @@
             <preference>
                 <name>NotificationLifecycleController.doEvents</name>
                 <value>false</value>
+            </preference>
+            <!-- Allows the admin to override the protocol of the HTTP 302 redirect issued
+                 by NotificationLifecycleController for ActionURLs (e.g. force HTTPS).  If
+                 left empty, the controller will follow the protocol of the request.  Has
+                 no effect if NotificationLifecycleController.doEvents=true -->
+            <preference>
+                <name>NotificationLifecycleController.invokeRedirectProtocol</name>
+            </preference>
+            <!-- For use with NotificationLifecycleController.invokeRedirectProtocol.  If
+                 left empty, the controller will follow the default port for the specified
+                 protocol.  Has no effect if NotificationLifecycleController.invokeRedirectProtocol
+                 is empty -->
+            <preference>
+                <name>NotificationLifecycleController.invokeRedirectPort</name>
             </preference>
 
             <!-- If true, notification icon will piggyback on the portal's JavaScript library (jQuery).  The needs
