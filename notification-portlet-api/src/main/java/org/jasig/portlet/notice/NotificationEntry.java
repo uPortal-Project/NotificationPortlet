@@ -23,7 +23,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -33,10 +35,11 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 /**
- * This class represents a single notification within the portlet.  It defines a 
- * handful of strongly-typed members, plus an open-ended collection of 
- * attributes.  Strongly-typed items are chosen primarily because they support 
- * special handling in the UI (i.e. clickable URL).
+ * This class represents a single notification.  It defines a handful of 
+ * strongly-typed members, plus a few open-ended collections.  These are for 
+ * <em>attributes</em>, <em>actions</em>, and <em>state</em>.  Strongly-typed
+ * items are chosen primarily because they require special handling in the UI
+ * (e.g. URLs should be clickable).
  * 
  * <p>The {@link NotificationCategory} 
  * class contains all the entries for the same category title.
@@ -60,7 +63,6 @@ public class NotificationEntry implements Serializable, Cloneable {
     private Date      dueDate;
     private String    image;
     private String    body;
-    private boolean   favorite;
 
     /*
      * Weakly-typed, open-ended attributes collection
@@ -73,6 +75,8 @@ public class NotificationEntry implements Serializable, Cloneable {
      */
 
     private List<NotificationAction> availableActions = Collections.emptyList();
+
+    private Set<NotificationState> states = Collections.emptySet();
 
     public String getSource() {
         return source;
@@ -179,12 +183,12 @@ public class NotificationEntry implements Serializable, Cloneable {
         }
     }
 
-    public boolean isFavorite() {
-        return favorite;
+    public Set<NotificationState> getStates() {
+        return Collections.unmodifiableSet(states);
     }
 
-    public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
+    public void setStates(Set<NotificationState> states) {
+        this.states = new HashSet<NotificationState>(states);  // defensive copy
     }
 
     /**

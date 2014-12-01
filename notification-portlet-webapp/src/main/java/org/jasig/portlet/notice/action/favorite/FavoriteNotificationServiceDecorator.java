@@ -39,6 +39,7 @@ import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.NotificationState;
 
 /**
  * This class can be used to add a "favorite" or "snooze" feature to notifications 
@@ -48,6 +49,13 @@ import org.jasig.portlet.notice.NotificationResponse;
  * @author James Wennmacher jwennmacher@unicon.net
  */
 public class FavoriteNotificationServiceDecorator implements INotificationService {
+
+    /**
+     * This INSTANCE is only for convenience -- FAVORITE and UNFAVORITE not singletons.
+     * There may be situations where de-serialization will create additional
+     * instances, and that's okay.
+     */
+    public static final FavoriteState FAVORITE = new FavoriteState();
 
     public static final String FAVORITE_ENABLED_PREFERENCE = "FavoriteNotificationServiceDecorator.enabled";
     public static final String DEFAULT_FAVORITE_BEHAVIOR = "false";  // The feature is disabled by default
@@ -107,12 +115,14 @@ public class FavoriteNotificationServiceDecorator implements INotificationServic
                     // If the id is in the favorites list, set favorite=true and remove the ID from the potentially
                     // missing set.
                     if (favoriteNotificationIds.contains(entry.getId())) {
-                        entry.setFavorite(true);
+                        Set<NotificationState> states = new HashSet<NotificationState>(entry.getStates());
+                        states.add(FAVORITE);
+                        entry.setStates(states);
                         potentiallyMissingIds.remove(entry.getId());
                     }
                     if (!currentList.contains(FavoriteAction.FAVORITE)) {
                         final List<NotificationAction> replacementList = new ArrayList<NotificationAction>(currentList);
-                        replacementList.add(!entry.isFavorite() ?
+                        replacementList.add(!entry.getStates().contains(FAVORITE) ?
                                 FavoriteAction.createFavoriteInstance() : FavoriteAction.createUnfavoriteInstance());
                         entry.setAvailableActions(replacementList);
                     }
