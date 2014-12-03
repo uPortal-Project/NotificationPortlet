@@ -55,7 +55,6 @@ public class JsonSerializationTest {
 
         List<NotificationEntry> entries = new ArrayList<NotificationEntry>();
         entry = new NotificationEntry();
-        entry.setFavorite(true);
         entry.setBody("body");
 
         attributes = new ArrayList<NotificationAttribute>();

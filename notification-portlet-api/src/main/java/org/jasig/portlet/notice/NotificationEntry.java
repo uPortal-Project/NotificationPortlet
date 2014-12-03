@@ -23,7 +23,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -33,10 +35,13 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 /**
- * This class represents a single notification within the portlet.  It defines a 
- * handful of strongly-typed members, plus an open-ended collection of 
- * attributes.  Strongly-typed items are chosen primarily because they support 
- * special handling in the UI (i.e. clickable URL).
+ * This class represents a single notification.  It defines a handful of 
+ * strongly-typed members, plus a few open-ended collections.  These collections
+ * are for <em>attributes</em>, <em>actions</em>, and <em>states</em>.
+ * Strongly-typed items are chosen primarily because they require
+ * framework-level special handling.  The open-ended collections make the
+ * platform <em>extensible</em>.  Please add additional members only as a last
+ * resort.
  * 
  * <p>The {@link NotificationCategory} 
  * class contains all the entries for the same category title.
@@ -60,20 +65,26 @@ public class NotificationEntry implements Serializable, Cloneable {
     private Date      dueDate;
     private String    image;
     private String    body;
-    private boolean   favorite;
 
     /*
      * Weakly-typed, open-ended attributes collection
      */
-
     private List<NotificationAttribute> attributes = Collections.emptyList();
 
     /*
      * Operations that a user may perform on this notification
      */
-
     private List<NotificationAction> availableActions = Collections.emptyList();
 
+    /*
+     * Representation of where this notification is in applicable workflow(s).
+     */
+    private Set<NotificationState> states = Collections.emptySet();
+
+    /**
+     * Provides the human-readable name for the source of this notification.
+     * E.g. 'Office of the Registrar'
+     */
     public String getSource() {
         return source;
     }
@@ -97,6 +108,10 @@ public class NotificationEntry implements Serializable, Cloneable {
         this.id = id;
     }
 
+    /**
+     * Required one-liner version of this notification.  E.g. 'You have 3
+     * overdue library books.'
+     */
     public String getTitle() {
         return title;
     }
@@ -105,6 +120,10 @@ public class NotificationEntry implements Serializable, Cloneable {
         this.title = title;
     }
 
+    /**
+     * Optional web address where the user can deal with or learn more about the
+     * details of this notification.
+     */
     public String getUrl() {
         return url;
     }
@@ -113,6 +132,9 @@ public class NotificationEntry implements Serializable, Cloneable {
         this.url = url;
     }
 
+    /**
+     * Optional text of the anchor tag linking to <code>url</code>.
+     */
     public String getLinkText() {
         return linkText;
     }
@@ -121,6 +143,10 @@ public class NotificationEntry implements Serializable, Cloneable {
         this.linkText = linkText;
     }
 
+    /**
+     * Optional numeric representation of the relative importance of the
+     * notification.  Vales range from 1 (most important) to 5 (least important).
+     */
     public int getPriority() {
         return priority;
     }
@@ -129,6 +155,10 @@ public class NotificationEntry implements Serializable, Cloneable {
         this.priority = priority;
     }
 
+    /**
+     * Optional date/time indicating by when the action described in this
+     * notification must be completed.
+     */
     @JsonSerialize(using=JsonDateSerializer.class)
     public Date getDueDate() {
         return dueDate;
@@ -139,6 +169,10 @@ public class NotificationEntry implements Serializable, Cloneable {
         this.dueDate = dueDate;
     }
 
+    /**
+     * Optional URL of an image file associated with this notification.  Might
+     * be the logo of the source system or something more specific.
+     */
     public String getImage() {
         return image;
     }
@@ -147,6 +181,9 @@ public class NotificationEntry implements Serializable, Cloneable {
         this.image = imageUrl;
     }
 
+    /**
+     * Optional body text for this notification.  Supports HTML tags.
+     */
     public String getBody() {
         return body;
     }
@@ -155,6 +192,10 @@ public class NotificationEntry implements Serializable, Cloneable {
         this.body = body;
     }
 
+    /**
+     * Open-ended collection of notification metadata.  The presumption is that
+     * attributes will be visible to users.
+     */
     @JsonSerialize(using=JsonAttributesSerializer.class)
     public List<NotificationAttribute> getAttributes() {
         return Collections.unmodifiableList(attributes);
@@ -165,6 +206,12 @@ public class NotificationEntry implements Serializable, Cloneable {
         this.attributes = new ArrayList<NotificationAttribute>(attributes);  // defensive copy
     }
 
+    /**
+     * Open-ended collection of behaviors the user (recipient) can invoke upon
+     * the notification.  E.g. 'hide' or 'mark as done'.  Different Notification
+     * UIs may support different behaviors (viz. not all behaviors will be
+     * supported by all view JSPs).
+     */
     public List<NotificationAction> getAvailableActions() {
         return Collections.unmodifiableList(availableActions);
     }
@@ -179,12 +226,15 @@ public class NotificationEntry implements Serializable, Cloneable {
         }
     }
 
-    public boolean isFavorite() {
-        return favorite;
+    /**
+     * Open-ended collection of states that apply currently to this notification.
+     */
+    public Set<NotificationState> getStates() {
+        return Collections.unmodifiableSet(states);
     }
 
-    public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
+    public void setStates(Set<NotificationState> states) {
+        this.states = new HashSet<NotificationState>(states);  // defensive copy
     }
 
     /**

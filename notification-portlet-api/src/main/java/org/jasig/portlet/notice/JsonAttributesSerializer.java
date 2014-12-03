@@ -55,19 +55,17 @@ import org.codehaus.jackson.map.SerializerProvider;
  * @author James Wennmacher (jwennmacher@unicon.net)
  */
 public class JsonAttributesSerializer extends JsonSerializer<List<NotificationAttribute>> {
-    
 
-    @SuppressWarnings("deprecation")
     @Override
     public void serialize(List<NotificationAttribute> attributes, JsonGenerator gen, SerializerProvider provider)
             throws JsonGenerationException, IOException {
-        
+
         gen.writeStartObject();
         for (NotificationAttribute attr : attributes) {
             gen.writeObjectField(attr.getName(), attr.getValues());
         }
         gen.writeEndObject();
-        
+
     }
 
 }
