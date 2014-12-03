@@ -26,8 +26,6 @@ import javax.portlet.ActionRequest;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
 
@@ -47,8 +45,6 @@ public final class FavoriteAction extends NotificationAction {
             FavoriteAction.class.getName() + ".FAVORITE_NOTIFICATION_IDS_PREFERENCE";
 
     private static final long serialVersionUID = 1L;
-
-    private final Log log = LogFactory.getLog(getClass());
 
     /**
      * Must remain public, no-arg for de-serialization.
