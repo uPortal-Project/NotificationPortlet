@@ -25,12 +25,14 @@ public final class FavoriteState extends NotificationState {
 
     private static final long serialVersionUID = 1L;
 
+    public static final String LABEL = "FAVORITE";
+
     /**
      * Must remain public, no-arg for de-serialization.
      */
     public FavoriteState() {
         // Set a default label;  most use cases will use the setter and override
-        setLabel("FAVORITE");
+        setLabel(LABEL);
     }
 
     public FavoriteState(String label) {
@@ -39,10 +41,7 @@ public final class FavoriteState extends NotificationState {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getLabel() == null) ? 0 : getLabel().hashCode());
-        return result;
+        return LABEL.hashCode();
     }
 
     @Override
@@ -53,7 +52,7 @@ public final class FavoriteState extends NotificationState {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        // At present, any instance FavoriteState is equal to another
+        // Any two instances of FavoriteState are equal to one another
         return true;
     }
 
