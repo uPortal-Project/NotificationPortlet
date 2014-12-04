@@ -149,8 +149,15 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
             {% } else { %} \
               <div class="notification-content" style="display: none;"> \
                 <ul class="notifications"> \
-                  {% _.each(category.entries, function(entry) { %} \
-                    <li> \
+                  {% _.each(category.entries, function(entry) { \
+                      var states = ""; \
+                      for (var prop in entry.states) { \
+                          if (entry.states.hasOwnProperty(prop)) { \
+                              if (states.length != 0) states += " "; \
+                              states += prop.toLowerCase(); \
+                          } \
+                      } %} \
+                    <li class="{{ states }}"> \
                       {% if (!accordion) { %} \
                         &raquo; \
                       {% } %} \
@@ -168,6 +175,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                           Due {{ month }}/{{ day }}/{{ year }} \
                         </span> \
                       {% } %} \
+                      <span class="completed-badge">&#10004;</span> \
                     </li> \
                   {% }); %} \
                 </ul> \
