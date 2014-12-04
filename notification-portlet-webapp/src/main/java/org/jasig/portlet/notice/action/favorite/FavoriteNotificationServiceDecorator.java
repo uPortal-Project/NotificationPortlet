@@ -20,8 +20,11 @@
 package org.jasig.portlet.notice.action.favorite;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.portlet.ActionRequest;
@@ -39,6 +42,7 @@ import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.NotificationState;
 
 /**
  * This class can be used to add a "favorite" or "snooze" feature to notifications 
@@ -107,12 +111,14 @@ public class FavoriteNotificationServiceDecorator implements INotificationServic
                     // If the id is in the favorites list, set favorite=true and remove the ID from the potentially
                     // missing set.
                     if (favoriteNotificationIds.contains(entry.getId())) {
-                        entry.setFavorite(true);
+                        Map<NotificationState,Date> states = new HashMap<NotificationState,Date>(entry.getStates());
+                        states.put(NotificationState.FAVORITED, null);
+                        entry.setStates(states);
                         potentiallyMissingIds.remove(entry.getId());
                     }
                     if (!currentList.contains(FavoriteAction.FAVORITE)) {
                         final List<NotificationAction> replacementList = new ArrayList<NotificationAction>(currentList);
-                        replacementList.add(!entry.isFavorite() ?
+                        replacementList.add(!entry.getStates().keySet().contains(NotificationState.FAVORITED) ?
                                 FavoriteAction.createFavoriteInstance() : FavoriteAction.createUnfavoriteInstance());
                         entry.setAvailableActions(replacementList);
                     }

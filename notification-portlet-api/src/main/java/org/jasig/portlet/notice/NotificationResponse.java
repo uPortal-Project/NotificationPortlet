@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,13 @@ public class NotificationResponse implements Serializable, Cloneable {
 
     private List<NotificationCategory> categories;
     private List<NotificationError> errors;
-    // Field indicating the response is a cloned defensive copy and can be modified (specifically,you can replace the collections with new collections)
+
+    /**
+     * Field indicating the response is a cloned defensive copy and can be
+     * modified (specifically,you can replace the collections with new
+     * collections)
+     */
+    @JsonIgnore
     @XmlTransient
     private boolean cloned = false;
 
