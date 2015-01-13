@@ -19,9 +19,9 @@
 
 package org.jasig.portlet.notice.service.jpa;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -34,12 +34,25 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Supports open-ended metadata for notifications.  The attributes collection is
- * an associative array: String (key) to String[] (values).
+ * Represents a named addressee for a notification.  There are two types of
+ * addressee:  individual and group.  The addressees list is the target(s) of
+ * the notification as the author selected them, e.g. "send this notification to
+ * graduating seniors."  The (aggregated) recipients list is the list of all
+ * users who received the notification, e.g. "johndoe," "janedoe," and
+ * "robsmith."  A single user <em>may</em> belong to two (or more) addressee
+ * groups for a single notification, but should only see <em>one copy</em> of
+ * the notification in such a case.
+ *
+ * @author drewwills
  */
 @Entity
-@Table(name=JpaNotificationService.TABLENAME_PREFIX + "ATTRIBUTE")
-/* package-private */ class JpaAttribute {
+@Table(name=JpaNotificationService.TABLENAME_PREFIX + "ADDRESSEE")
+/* package-private */ class JpaAddressee {
+
+    public enum RecipientType {
+        INDIVIDUAL,
+        GROUP
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -52,10 +65,12 @@ import javax.persistence.Table;
     @Column(name="NAME", nullable=false)
     private String name;
 
-    @ElementCollection(fetch=FetchType.EAGER)
-    @CollectionTable(name=JpaNotificationService.TABLENAME_PREFIX + "ATTRIBUTE_VALUES")
-    @Column(name="VAL")
-    private List<String> values = new ArrayList<String>();
+    @Column(name="TYPE", nullable=false)
+    private RecipientType type;
+
+    @ElementCollection(fetch=FetchType.LAZY)
+    @CollectionTable(name=JpaNotificationService.TABLENAME_PREFIX + "RECIPIENT")
+    private Set<String> recipients = new HashSet<String>();
 
     public long getId() {
         return id;
@@ -73,6 +88,14 @@ import javax.persistence.Table;
         this.entryId = entryId;
     }
 
+    public RecipientType getType() {
+        return type;
+    }
+
+    public void setType(RecipientType type) {
+        this.type = type;
+    }
+
     public String getName() {
         return name;
     }
@@ -82,35 +105,25 @@ import javax.persistence.Table;
     }
 
     /**
-     * Provides a read-only copy of this attribute's values.
+     * Provides a read-only copy of this addressee's recipients.
      */
-    public List<String> getValues() {
-        return Collections.unmodifiableList(values);
+    public Set<String> getRecipients() {
+        return Collections.unmodifiableSet(recipients);
     }
 
     /**
-     * Replaces the current values with the contents of the provided list.
+     * Replaces the current recipients with the contents of the specified set.
      */
-    public void setValues(List<String> values) {
-        this.values.clear();
-        this.values.addAll(values);
+    public void setRecipients(Set<String> recipients) {
+        this.recipients.clear();
+        this.recipients.addAll(recipients);
     }
 
     /**
-     * Inserts the specified value to the current list at the end.
+     * Adds the specified recipient to the current collection.
      */
-    public void addValue(String value) {
-        values.add(value);
-    }
-
-    /**
-     * Inserts the specified value at the specified position in the list.
-     * 
-     * @throws IndexOutOfBoundsException If the index is out of range (index < 0
-     * || index > size())
-     */
-    public void addValue(int index, String value) {
-        values.add(index, value);
+    public void addRecipient(String recipient) {
+        recipients.add(recipient);
     }
 
 }

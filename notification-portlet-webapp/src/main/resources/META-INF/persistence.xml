@@ -28,7 +28,11 @@
 
     <persistence-unit name="NoticePU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <class>org.jasig.portlet.notice.service.jpa.JpaAction</class>
+        <class>org.jasig.portlet.notice.service.jpa.JpaAddressee</class>
         <class>org.jasig.portlet.notice.service.jpa.JpaAttribute</class>
+        <class>org.jasig.portlet.notice.service.jpa.JpaEntry</class>
+        <class>org.jasig.portlet.notice.service.jpa.JpaEvent</class>
         <properties>
             <!-- property name="hibernate.ejb.cfgfile" value="/notification.cfg.xml" /-->
             <property name="hibernate.session_factory_name_is_jndi" value="false" />

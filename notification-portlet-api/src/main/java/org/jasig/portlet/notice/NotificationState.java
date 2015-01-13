@@ -39,6 +39,12 @@ public enum NotificationState {
     CREATED,
 
     /**
+     * Indicates one or more fields of the {@link NotificationEntry} were
+     * modified <em>after</em> it was <code>CREATED</code>.
+     */
+    UPDATED,
+
+    /**
      * Indicates the {@link NotificationEntry} has been pushed to a mobile
      * device.
      */
