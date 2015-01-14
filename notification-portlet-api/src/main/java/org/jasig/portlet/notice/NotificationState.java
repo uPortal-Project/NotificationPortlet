@@ -33,10 +33,11 @@ package org.jasig.portlet.notice;
 public enum NotificationState {
 
     /**
-     * Assigned when the {@link NotificationEntry} is created.  Convenient for
-     * signaling the moment a notification was created.
+     * Registered when the {@link NotificationEntry} is assigned to an
+     * individual.  Represents the creation date of a notification vis-a-vis a
+     * recipient.
      */
-    CREATED,
+    ISSUED,
 
     /**
      * Indicates one or more fields of the {@link NotificationEntry} were

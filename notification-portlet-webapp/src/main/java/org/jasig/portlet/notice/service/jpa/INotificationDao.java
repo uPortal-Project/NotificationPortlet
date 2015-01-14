@@ -19,6 +19,21 @@
 
 package org.jasig.portlet.notice.service.jpa;
 
+import java.util.Set;
+
+import org.jasig.portlet.notice.NotificationState;
+
 /* package-private */ interface INotificationDao {
+
+    JpaEntry getEntry(long entryId);
+
+    JpaEntry createOrUpdateEntry(JpaEntry entry);
+
+    void removeEntry(JpaEntry entry);
+
+    Set<JpaEntry> getEntriesByRecipient(String username);
+
+    Set<JpaEntry> getEntriesByRecipientByStatus(String username, 
+            Set<NotificationState> include, Set<NotificationState> exclude);
 
 }

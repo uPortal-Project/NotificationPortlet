@@ -78,13 +78,9 @@ import javax.persistence.Table;
     @JoinColumn(name="ENTRY_ID")
     private Set<JpaAction> actions = Collections.emptySet();
 
-    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    @JoinColumn(name="ENTRY_ID")
-    private Set<JpaAction> events = Collections.emptySet();
-
     @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="ENTRY_ID")
-    private Set<JpaAction> addressees = Collections.emptySet();
+    private Set<JpaAddressee> addressees = Collections.emptySet();
 
     public long getId() {
         return id;
@@ -156,6 +152,72 @@ import javax.persistence.Table;
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    /**
+     * Provides a read-only copy of this notification's attributes.
+     */
+    public Set<JpaAttribute> getAttributes() {
+        return Collections.unmodifiableSet(attributes);
+    }
+
+    /**
+     * Replaces the current attributes with the contents of the provided collection.
+     */
+    public void setAttributes(Set<JpaAttribute> attributes) {
+        this.attributes.clear();
+        this.attributes.addAll(attributes);
+    }
+
+    /**
+     * Adds the specified attribute to the current collection.
+     */
+    public void addAttribute(JpaAttribute attribute) {
+        attributes.add(attribute);
+    }
+
+    /**
+     * Provides a read-only copy of this notification's actions.
+     */
+    public Set<JpaAction> getActions() {
+        return Collections.unmodifiableSet(actions);
+    }
+
+    /**
+     * Replaces the current actions with the contents of the provided collection.
+     */
+    public void setActions(Set<JpaAction> actions) {
+        this.actions.clear();
+        this.actions.addAll(actions);
+    }
+
+    /**
+     * Adds the specified action to the current collection.
+     */
+    public void addAction(JpaAction attribute) {
+        actions.add(attribute);
+    }
+
+    /**
+     * Provides a read-only copy of this notification's addressees.
+     */
+    public Set<JpaAddressee> getAddressees() {
+        return Collections.unmodifiableSet(addressees);
+    }
+
+    /**
+     * Replaces the current addressees with the contents of the provided collection.
+     */
+    public void setAddressees(Set<JpaAddressee> addressees) {
+        this.addressees.clear();
+        this.addressees.addAll(addressees);
+    }
+
+    /**
+     * Adds the specified addressee to the current collection.
+     */
+    public void addAddressee(JpaAddressee addressee) {
+        addressees.add(addressee);
     }
 
 }

@@ -23,14 +23,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -68,9 +69,9 @@ import javax.persistence.Table;
     @Column(name="TYPE", nullable=false)
     private RecipientType type;
 
-    @ElementCollection(fetch=FetchType.LAZY)
-    @CollectionTable(name=JpaNotificationService.TABLENAME_PREFIX + "RECIPIENT")
-    private Set<String> recipients = new HashSet<String>();
+    @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name="ADDRESSEE_ID")
+    private Set<JpaRecipient> recipients = new HashSet<JpaRecipient>();
 
     public long getId() {
         return id;
@@ -107,14 +108,14 @@ import javax.persistence.Table;
     /**
      * Provides a read-only copy of this addressee's recipients.
      */
-    public Set<String> getRecipients() {
+    public Set<JpaRecipient> getRecipients() {
         return Collections.unmodifiableSet(recipients);
     }
 
     /**
      * Replaces the current recipients with the contents of the specified set.
      */
-    public void setRecipients(Set<String> recipients) {
+    public void setRecipients(Set<JpaRecipient> recipients) {
         this.recipients.clear();
         this.recipients.addAll(recipients);
     }
@@ -122,7 +123,7 @@ import javax.persistence.Table;
     /**
      * Adds the specified recipient to the current collection.
      */
-    public void addRecipient(String recipient) {
+    public void addRecipient(JpaRecipient recipient) {
         recipients.add(recipient);
     }
 

@@ -19,43 +19,43 @@
 
 package org.jasig.portlet.notice.service.jpa;
 
-import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.jasig.portlet.notice.NotificationState;
-
 /**
- * Represents an entry in the transaction log for a notification within the 
- * {@link JpaNotificationService}.
+ * Represents an individual who receives a notification.
  *
  * @author drewwills
  */
 @Entity
-@Table(name=JpaNotificationService.TABLENAME_PREFIX + "EVENT")
-/* package-private */ class JpaEvent {
+@Table(name=JpaNotificationService.TABLENAME_PREFIX + "RECIPIENT")
+/* package-private */ class JpaRecipient {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="ID", nullable = false)
     private long id;
 
-    @Column(name="RECIPIENT_ID", nullable = false)
-    private long recipientId;
+    @Column(name="ADDRESSEE_ID", nullable = false)
+    private long addresseeId;
 
     @Column(name="USERNAME", nullable=false)
     private String username;
 
-    @Column(name="TIMESTAMP", nullable=true)
-    private Timestamp timestamp;
-
-    @Column(name="STATE", nullable=false)
-    private NotificationState state;
+    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinColumn(name="RECIPIENT_ID")
+    private Set<JpaEvent> events = Collections.emptySet();
 
     public long getId() {
         return id;
@@ -65,12 +65,12 @@ import org.jasig.portlet.notice.NotificationState;
         this.id = id;
     }
 
-    public long getRecipioentId() {
-        return recipientId;
+    public long getAddresseeId() {
+        return addresseeId;
     }
 
-    public void setRecipioentId(long recipientId) {
-        this.recipientId = recipientId;
+    public void setAddresseeId(long addresseeId) {
+        this.addresseeId = addresseeId;
     }
 
     public String getUsername() {
@@ -81,20 +81,26 @@ import org.jasig.portlet.notice.NotificationState;
         this.username = username;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    /**
+     * Provides a read-only copy of this notification's events.
+     */
+    public Set<JpaEvent> getEvents() {
+        return Collections.unmodifiableSet(events);
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    /**
+     * Replaces the current events with the contents of the provided collection.
+     */
+    public void setEvents(Set<JpaEvent> events) {
+        this.events.clear();
+        this.events.addAll(events);
     }
 
-    public NotificationState getState() {
-        return state;
-    }
-
-    public void setState(NotificationState state) {
-        this.state = state;
+    /**
+     * Adds the specified event to the current collection.
+     */
+    public void addEvent(JpaEvent event) {
+        events.add(event);
     }
 
 }
