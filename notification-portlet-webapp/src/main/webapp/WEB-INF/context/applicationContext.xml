@@ -93,6 +93,14 @@
     </bean>
 
     <!--
+     | Snooze feature
+     +-->
+    <bean id="snoozed" class="org.jasig.portlet.notice.NotificationState" factory-method="valueOf">
+        <constructor-arg value="SNOOZED" />
+        <property name="snoozePeriodHours" value="72" />
+    </bean>
+
+    <!--
      | Notification Service Beans
      |
      | Reference these as needed within portlet contexts, or optionally define 
@@ -160,6 +168,11 @@
     </bean>
     <bean id="PortletEventNotificationService.responseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
         p:cacheManager-ref="cacheManager" p:cacheName="PortletEventNotificationService.responseCache"/>
+
+    <!-- JPA -->
+    <bean id="jpaNotificationService" class="org.jasig.portlet.notice.service.jpa.JpaNotificationService">
+        <property name="name" value="jpaNotificationService"/>
+    </bean>
 
     <!-- DEMO -->
     <bean id="demoNotifications" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">

@@ -19,6 +19,9 @@
 
 package org.jasig.portlet.notice;
 
+import java.util.Date;
+import java.util.Set;
+
 /**
  * Represents a state that a {@link NotificationEntry} is currently in, such as
  * <em>new</em>, <em>completed</em>, or <em>favorated</em>.  This list is
@@ -86,24 +89,68 @@ public enum NotificationState {
      * temporarily.  This state must be removed after a (probably configurable)
      * period has elapsed.
      */
-    SNOOZED,
+    SNOOZED {
+        private static final long MILLIS_IN_ONE_HOUR = 60L /* min */ * 60L /* sec */ * 1000L /* millis */;
+        private int snoozePeriodHours = 72;  // Default
+
+        @SuppressWarnings("unused")
+        public void setSnoozePeriodHours(int snoozePeriodHours) {
+            this.snoozePeriodHours = snoozePeriodHours;
+        }
+
+        @Override
+        public boolean isActive(Date timestamp, Set<NotificationState> subsequentHistory) {
+            long timeout = timestamp.getTime() + ((long) snoozePeriodHours * MILLIS_IN_ONE_HOUR);
+            return System.currentTimeMillis() > timeout;
+        }
+    },
 
     /**
      * Indicates the {@link NotificationEntry} is about a task that is partially
      * completed..
      */
-    IN_PROGRESS,
+    IN_PROGRESS {
+        @Override
+        public boolean isActive(Date timestamp, Set<NotificationState> subsequentHistory) {
+            // A workaround for referencing an enum member before it is declared...
+            NotificationState completed = NotificationState.valueOf("COMPLETED");
+            return !subsequentHistory.contains(completed);
+        }
+    },
 
     /**
      * Indicates the {@link NotificationEntry} is about a task that is completed.
      */
-    COMPLETED,
+    COMPLETED {
+        @Override
+        public boolean isActive(Date timestamp, Set<NotificationState> subsequentHistory) {
+            return !subsequentHistory.contains(NotificationState.IN_PROGRESS);
+        }
+    },
 
     /**
      * Indicates the {@link NotificationEntry} is no longer in the user's active
      * notifications.  Notifications may be archived by user action or by system
      * rules.
      */
-    ARCHIVED
+    ARCHIVED;
+
+    /**
+     * Indicates whether this {@link NotificationState} is still considered
+     * "active" given when it occurred (the specified timestamp) and the
+     * subsequent history of the {@link NotificationEntry} for this user.  Most
+     * states can use the default implementation of this method, which simply
+     * returns <code>true</code>.  States that may be effectively "canceled" by
+     * other states -- or by the passage of time -- should override this method.
+     * 
+     * @param timestamp The moment when this state was applied
+     * @param subsequentHistory States that were applied to this
+     * {@link NotificationEntry} for this user after this one.
+     * @return TRUE if this state is still considered active for this
+     * {@link NotificationEntry} for this user
+     */
+    public boolean isActive(Date timestamp, Set<NotificationState> subsequentHistory) {
+        return true;
+    }
 
 }

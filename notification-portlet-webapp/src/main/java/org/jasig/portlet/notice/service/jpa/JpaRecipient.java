@@ -19,18 +19,11 @@
 
 package org.jasig.portlet.notice.service.jpa;
 
-import java.util.Collections;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -52,10 +45,6 @@ import javax.persistence.Table;
 
     @Column(name="USERNAME", nullable=false)
     private String username;
-
-    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    @JoinColumn(name="RECIPIENT_ID")
-    private Set<JpaEvent> events = Collections.emptySet();
 
     public long getId() {
         return id;
@@ -79,28 +68,6 @@ import javax.persistence.Table;
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    /**
-     * Provides a read-only copy of this notification's events.
-     */
-    public Set<JpaEvent> getEvents() {
-        return Collections.unmodifiableSet(events);
-    }
-
-    /**
-     * Replaces the current events with the contents of the provided collection.
-     */
-    public void setEvents(Set<JpaEvent> events) {
-        this.events.clear();
-        this.events.addAll(events);
-    }
-
-    /**
-     * Adds the specified event to the current collection.
-     */
-    public void addEvent(JpaEvent event) {
-        events.add(event);
     }
 
 }

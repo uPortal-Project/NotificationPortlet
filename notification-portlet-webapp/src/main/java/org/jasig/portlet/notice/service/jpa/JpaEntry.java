@@ -47,6 +47,12 @@ import javax.persistence.Table;
     @Column(name="TITLE", nullable=false)
     private String title;
 
+    @Column(name="SOURCE", nullable=true)
+    private String source;
+
+    @Column(name="CATEGORY", nullable=true)
+    private String category;
+
     @Column(name="URL", nullable=true)
     private String url;
 
@@ -61,10 +67,6 @@ import javax.persistence.Table;
 
     @Column(name="IMAGE", nullable=true)
     private String image;
-
-    @Lob
-    @Column(name="ABSTRACT", nullable=true)
-    private String abs;
 
     @Lob
     @Column(name="BODY", nullable=true)
@@ -96,6 +98,22 @@ import javax.persistence.Table;
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getUrl() {
@@ -136,14 +154,6 @@ import javax.persistence.Table;
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public String getAbs() {
-        return abs;
-    }
-
-    public void setAbs(String abs) {
-        this.abs = abs;
     }
 
     public String getBody() {

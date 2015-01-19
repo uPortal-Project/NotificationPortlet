@@ -29,6 +29,8 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang.Validate;
 import org.jasig.portlet.notice.NotificationState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +44,8 @@ import org.springframework.transaction.annotation.Transactional;
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * Search for a JpaEntry with the specified Id. If the entry exists in the
@@ -77,10 +81,12 @@ import org.springframework.transaction.annotation.Transactional;
     public Set<JpaEntry> getEntriesByRecipient(String username) {
         Validate.notEmpty(username, "Argument 'username' cannot be empty");
 
-        final String jpql = "SELECT e FROM JpaEntry e WHERE e.addressees = ANY ("
-                + "SELECT a FROM JpaAddressee a WHERE a.recipient = ANY ("
-                + "SELECT r FROM JpaRecipent r WHERE r.username = :username))";
+        final String jpql = "SELECT e FROM JpaEntry e WHERE e.id = ANY ("
+                + "SELECT v FROM JpaEvent v WHERE v.username = :username))";
         TypedQuery<JpaEntry> query = entityManager.createQuery(jpql, JpaEntry.class);
+
+        log.debug("Query getEntriesByRecipient={}", query.toString());
+
         query.setParameter("username", username);
         List<JpaEntry> rslt = query.getResultList();
         return new HashSet<JpaEntry>(rslt);
@@ -93,6 +99,21 @@ import org.springframework.transaction.annotation.Transactional;
 
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<JpaEvent> getEvents(long entryId, String username) {
+        Validate.isTrue(entryId > 0, "Argument 'entryId' must be greater than zero (0)");
+        Validate.notEmpty(username, "Argument 'username' cannot be empty");
+
+        final String jpql = "SELECT v FROM JpaEvent v WHERE v.username = :username "
+                + "AND v.entry = (SELECT e FROM JpaEntry e WHERE e.id = :entryId) "
+                + "ORDER BY v.timestamp";
+        TypedQuery<JpaEvent> query = entityManager.createQuery(jpql, JpaEvent.class);
+        query.setParameter("username", username);
+        query.setParameter("entryId", entryId);
+        List<JpaEvent> rslt = query.getResultList();
+        return rslt;
     }
 
 }

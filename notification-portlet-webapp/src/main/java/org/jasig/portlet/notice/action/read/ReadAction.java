@@ -32,10 +32,10 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
 
-public final class ReadAction extends NotificationAction{
+public final class ReadAction extends NotificationAction {
 
     private static final long serialVersionUID = 1L;
-    
+
     protected static Logger logger = LoggerFactory.getLogger(ReadAction.class);
 
     /**
@@ -44,13 +44,13 @@ public final class ReadAction extends NotificationAction{
      * instances, and that's okay.
      */
     public static final ReadAction READ = new ReadAction();
-    
+
     /**
      * Stores the Ids of read notices.
      */
     private static final String READ_NOTIFICATION_IDS_PREFERENCE = 
             ReadAction.class.getName() + ".READ_NOTIFICATION_IDS_PREFERENCE";
-    
+
     /**
      * Must remain public, no-arg for de-serialization.
      */
@@ -58,11 +58,11 @@ public final class ReadAction extends NotificationAction{
         // Set a default label;  most use cases will use the setter and override
         setLabel("MARK AS READ");
     }
-    
+
     public ReadAction(String label){
         setLabel(label);
     }
-    
+
     public static final ReadAction createReadInstance() {
         return new ReadAction();
     }
@@ -70,7 +70,7 @@ public final class ReadAction extends NotificationAction{
     public static final ReadAction createUnReadInstance() {
         return new ReadAction("MARK AS UNREAD");
     }
-    
+
     /**
      * Invoking a ReadAction toggles it.
      */
@@ -86,14 +86,14 @@ public final class ReadAction extends NotificationAction{
         }
         setReadNotices(req, readNotices);
     }
-    
+
     @Override
     public int hashCode(){
         return new HashCodeBuilder(17, 31).
                 append(super.getId()).
                 toHashCode();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -105,13 +105,13 @@ public final class ReadAction extends NotificationAction{
         // At present, any instance ReadAction is equal to another
         return true;
     }
-    
+
     public void removeReadNotices (final PortletRequest req, Set<String> idsToRemove) {
         Set<String> currentIds = getReadNotices(req);
         currentIds.removeAll(idsToRemove);
         setReadNotices(req, currentIds);
     }
-    
+
     /*
      * Non-public API
      */

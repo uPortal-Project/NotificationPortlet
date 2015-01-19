@@ -19,6 +19,7 @@
 
 package org.jasig.portlet.notice.service.jpa;
 
+import java.util.List;
 import java.util.Set;
 
 import org.jasig.portlet.notice.NotificationState;
@@ -35,5 +36,15 @@ import org.jasig.portlet.notice.NotificationState;
 
     Set<JpaEntry> getEntriesByRecipientByStatus(String username, 
             Set<NotificationState> include, Set<NotificationState> exclude);
+
+    /**
+     * Provides a complete transaction log for a notification and single
+     * recipient in chronological order.
+     *
+     * @param entryId
+     * @param username
+     * @return
+     */
+    List<JpaEvent> getEvents(long entryId, String username);
 
 }

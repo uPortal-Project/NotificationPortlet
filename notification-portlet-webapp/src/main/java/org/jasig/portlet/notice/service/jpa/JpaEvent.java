@@ -23,9 +23,12 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.jasig.portlet.notice.NotificationState;
@@ -45,8 +48,9 @@ import org.jasig.portlet.notice.NotificationState;
     @Column(name="ID", nullable = false)
     private long id;
 
-    @Column(name="RECIPIENT_ID", nullable = false)
-    private long recipientId;
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="ENTRY_ID")
+    private JpaEntry entry;
 
     @Column(name="USERNAME", nullable=false)
     private String username;
@@ -65,12 +69,12 @@ import org.jasig.portlet.notice.NotificationState;
         this.id = id;
     }
 
-    public long getRecipioentId() {
-        return recipientId;
+    public JpaEntry getEntry() {
+        return entry;
     }
 
-    public void setRecipioentId(long recipientId) {
-        this.recipientId = recipientId;
+    public void setEntry(JpaEntry entry) {
+        this.entry = entry;
     }
 
     public String getUsername() {
