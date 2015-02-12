@@ -7,3 +7,4 @@ overlays/
 target/
 .DS_Store
 *.CSS
+/bin

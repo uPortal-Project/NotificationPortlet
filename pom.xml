@@ -29,6 +29,11 @@
         <resource-server.version>1.0.42</resource-server.version>
         <slf4jVersion>1.7.5</slf4jVersion>
         <spring.version>3.2.12.RELEASE</spring.version>
+        
+        <!-- The JDBC Driver used by the portlet -->
+        <jdbc.groupId>org.hsqldb</jdbc.groupId>
+        <jdbc.artifactId>hsqldb</jdbc.artifactId>
+        <jdbc.version>2.2.9</jdbc.version>
     </properties>
     
     <licenses>
@@ -205,6 +210,58 @@
                         <pushChanges>false</pushChanges>
                     </configuration>
                 </plugin>
+	            <plugin>
+	                <!--
+	                 | Invoke this plugin as follows to drop and recreate the Notification database tables...
+	                 |
+	                 |   >mvn db-init
+	                 +-->
+	                <groupId>org.codehaus.mojo</groupId>
+	                <artifactId>hibernate3-maven-plugin</artifactId>
+	                <version>3.0</version>
+	                <executions>
+	                    <execution>
+	                        <phase>db-init</phase>
+	                        <goals>
+	                            <goal>hbm2ddl</goal>
+	                        </goals>
+	                    </execution>
+	                </executions>
+	                <configuration>
+	                    <hibernatetool>      
+	                        <jpaconfiguration persistenceunit="NoticePU" 
+	                                          propertyFile="target/${project.build.finalName}/WEB-INF/classes/datasource.properties"/>
+	                        <classpath>
+	                            <path location="target/${project.build.finalName}/WEB-INF/classes" />
+	                        </classpath>                       
+	                   </hibernatetool>
+	                </configuration>
+	                <dependencies>
+	                    <dependency>
+	                        <groupId>${jdbc.groupId}</groupId>
+	                        <artifactId>${jdbc.artifactId}</artifactId>
+	                        <version>${jdbc.version}</version>
+	                        <scope>compile</scope>
+	                    </dependency>
+	                    <dependency>
+	                        <groupId>org.jasig.portlet.notification</groupId>
+	                        <artifactId>notification-portlet-api</artifactId>
+	                        <version>${project.version}</version>
+	                    </dependency>
+	                    <!-- The hibernate 3 plugin does NOT work with Hibernate 4. There currently doesn't exist any
+	                         plugin to handle this task (hbm2ddl) with Hibernate 4 -->
+	                    <dependency>
+	                        <groupId>org.hibernate</groupId>
+	                        <artifactId>hibernate-entitymanager</artifactId>
+	                        <version>3.6.10.Final</version>
+	                    </dependency>
+	                    <dependency>
+	                        <groupId>org.hibernate</groupId>
+	                        <artifactId>hibernate-tools</artifactId>
+	                        <version>3.2.4.GA</version>
+	                    </dependency>
+	                </dependencies>
+	            </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -235,6 +292,15 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
+            </plugin>
+            
+            <!-- Plug-in to add lifecycles to support db-init, data-import, and data-export -->
+            <plugin>
+                <groupId>org.jasig.portal.maven</groupId>
+                <artifactId>uportal-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <!-- extensions must be set to true to pick up the custom phases -->
+                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>
