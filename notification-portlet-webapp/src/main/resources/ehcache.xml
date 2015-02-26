@@ -56,4 +56,11 @@
         overflowToDisk="false"
         memoryStoreEvictionPolicy="LRU"/>
 
+    <cache name="StudentSuccessPlanService.schoolIdToPersonIdCache"
+           maxElementsInMemory="1000"
+           eternal="false"
+           timeToLiveSeconds="43200"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
 </ehcache>

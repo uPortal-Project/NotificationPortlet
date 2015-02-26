@@ -107,7 +107,8 @@ public final class CacheNotificationService extends AbstractNotificationService 
 
         NotificationResponse rslt = new NotificationResponse();
         final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
-        final Element m = cache.get(cacheKey);
+//        final Element m = cache.get(cacheKey);
+        final Element m = null;
         if (m != null) {
             if (log.isDebugEnabled()) {
                 log.debug("Cache HIT for user='" + username 

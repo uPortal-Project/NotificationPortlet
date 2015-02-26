@@ -109,7 +109,15 @@
     </bean>
     <bean id="RomeNotificationService.feedCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
         p:cacheManager-ref="cacheManager" p:cacheName="RomeNotificationService.feedCache"/>
-        
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <property name="requestFactory">
+            <bean class="org.springframework.http.client.CommonsClientHttpRequestFactory">
+                <property name="httpClient" ref="httpClient" />
+            </bean>
+        </property>
+    </bean>
+
     <!-- RESTful JSON:  Use 'RestfulJsonNotificationService.serviceUrls' preference  to specify services -->
     <bean id="restfulJsonNotificationService" class="org.jasig.portlet.notice.service.rest.RestfulJsonNotificationService">
         <property name="name" value="restfulJsonNotificationService"/>
@@ -129,15 +137,7 @@
                 </entry>
             </util:map>
         </property>
-        <property name="restTemplate">
-            <bean class="org.springframework.web.client.RestTemplate">
-                <property name="requestFactory">
-                    <bean class="org.springframework.http.client.CommonsClientHttpRequestFactory">
-                        <property name="httpClient" ref="httpClient" />
-                    </bean>
-                </property>
-            </bean>
-        </property>
+        <property name="restTemplate" ref="restTemplate"/>
     </bean>
     <bean id="httpConnectionManager" class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager" destroy-method="shutdown">
         <property name="params">
@@ -168,4 +168,18 @@
         <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
     </bean>
 
+    <!-- SSP notifications -->
+    <bean id="sspApi" class="org.jasig.portlet.notice.service.studentsuccessplan.SSPApi">
+        <property name="restTemplate" ref="restTemplate"/>
+    </bean>
+
+    <bean id="sspNotifications" class="org.jasig.portlet.notice.service.studentsuccessplan.SSPTaskNotificationService">
+        <property name="name" value="sspTaskNotificationService"/>
+        <property name="sspApi" ref="sspApi"/>
+        <property name="personLookup">
+            <bean class="org.jasig.portlet.notice.service.studentsuccessplan.SSPSchoolIdPersonLookup">
+                <property name="sspApi" ref="sspApi"/>
+            </bean>
+        </property>
+    </bean>
 </beans>
