@@ -66,6 +66,7 @@
                 <ref bean="portletEventNotificationService" />
                 <ref bean="jpaNotificationService" />
                 <ref bean="demoNotifications" />
+                <ref bean="sspNotifications"/>
             </list>
         </property>
     </bean>
