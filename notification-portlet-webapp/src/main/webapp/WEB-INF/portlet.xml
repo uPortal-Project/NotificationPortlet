@@ -120,7 +120,20 @@
                 <name>usePortalJsLibs</name>
                 <value>false</value>
             </preference>
-
+            
+            <!-- Indicates whether the portlet will mark a notification as 'COMPLETE' when
+                 it is clicked. -->
+            <preference>
+                <name>autoApplyStateWhenClicked</name>
+                <value>true</value>
+            </preference>
+            
+            <!-- State to apply to a notification after a click if the autoApplyStateWhenClicked 
+                 preference is true. -->
+            <preference>
+                <name>applyStateWhenClicked</name>
+                <value>COMPLETED</value>
+            </preference>
         </portlet-preferences>
         <supported-processing-event>
             <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>

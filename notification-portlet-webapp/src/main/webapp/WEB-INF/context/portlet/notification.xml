@@ -44,6 +44,9 @@
      | defined in the parent applicationContext. 
      +-->
     <bean id="rootNotificationService" class="org.jasig.portlet.notice.action.hide.HideNotificationServiceDecorator">
+        <property name="enclosedNotificationService" ref="stateChangeNotificationService"/>
+    </bean>
+    <bean id="stateChangeNotificationService" class="org.jasig.portlet.notice.action.stateChange.StateChangeNotificationServiceDecorator">
         <property name="enclosedNotificationService" ref="readNotificationService"/>
     </bean>
     <bean id="readNotificationService" class="org.jasig.portlet.notice.action.read.ReadNotificationServiceDecorator">

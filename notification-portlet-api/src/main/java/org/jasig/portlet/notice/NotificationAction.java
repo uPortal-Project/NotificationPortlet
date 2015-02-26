@@ -19,9 +19,11 @@
 
 package org.jasig.portlet.notice;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -76,8 +78,8 @@ public abstract class NotificationAction implements Serializable, Cloneable {
     /**
      * Perform this action on the notification to which it is attached.
      */
-    public abstract void invoke(ActionRequest req);
-
+	public abstract void invoke(ActionRequest req, ActionResponse res) throws IOException;
+	
     /**
      * Implements deep-copy clone.
      * 

@@ -17,27 +17,27 @@
  * under the License.
  */
 
-.notification-list-view .notification-list-item {
-    list-style-type: none;
-    font-size: 120%;
-    margin-bottom: 4px;
-}
+package org.jasig.portlet.notice.util;
 
-.notification-list-view .notification-list-item .notification-text {
-    line-height: 1.5em;
-}
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
-.notification-list-view .notification-list .notification-actions {
-    float: right;
-    margin: 0 12px 0 0;
-}
+/**
+ *
+ * @author mglazier
+ */
+public class SpringContext implements ApplicationContextAware {
 
-.notification-list-view .notification-list .notification-actions li {
-    display: inline;
-    list-style-type: none;
-}
+	private static ApplicationContext context;
 
-div.notification-text span:not(.completed).completed-badge {
-    display: none;
-}
+	@Override
+	public void setApplicationContext(ApplicationContext context) throws BeansException {
+		SpringContext.context = context;
+	}
 
+	public static ApplicationContext getApplicationContext() {
+		return context;
+	}
+
+}

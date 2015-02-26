@@ -184,4 +184,6 @@
         <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
     </bean>
 
+    <!-- Use this to get bean refs from non-Spring managed classes -->
+    <bean id="springContext" class="org.jasig.portlet.notice.util.SpringContext" />
 </beans>

@@ -19,10 +19,12 @@
 
 package org.jasig.portlet.notice.action.hide;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
@@ -70,7 +72,7 @@ public final class HideAction extends NotificationAction {
      * Invoking a HideAction toggles it.
      */
     @Override
-    public void invoke(final ActionRequest req) {
+    public void invoke(final ActionRequest req, final ActionResponse res) throws IOException {
         final NotificationEntry entry = getTarget();
         final String notificationId = entry.getId();
         final Map<String,Long> hiddenNoticesMap = this.getHiddenNoticesMap(req);

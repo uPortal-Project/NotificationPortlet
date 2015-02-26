@@ -116,4 +116,12 @@ import org.springframework.transaction.annotation.Transactional;
         return rslt;
     }
 
+	@Override
+	@Transactional
+    public JpaEvent createOrUpdateEvent(JpaEvent event) {
+        Validate.notNull(event, "Argument 'event' cannot be null");
+
+        JpaEvent rslt = entityManager.merge(event);
+        return rslt;
+    }
 }

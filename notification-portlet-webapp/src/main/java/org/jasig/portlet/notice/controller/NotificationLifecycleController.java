@@ -182,7 +182,7 @@ public class NotificationLifecycleController {
     @ActionMapping
     public void invokeUserAction(final ActionRequest req, final ActionResponse res,
             @RequestParam("notificationId") final String notificationId,
-            @RequestParam("actionId") final String actionId) {
+            @RequestParam("actionId") final String actionId) throws IOException {
 
         // Prime the pump
         notificationService.invoke(req, res, false);
@@ -204,7 +204,7 @@ public class NotificationLifecycleController {
 
         // We must have a target to proceed
         if (target != null) {
-            target.invoke(req);
+            target.invoke(req, res);
         } else {
             String msg = "Target action not found for notificationId='"
                     + notificationId + "' and actionId='" + actionId + "'";
