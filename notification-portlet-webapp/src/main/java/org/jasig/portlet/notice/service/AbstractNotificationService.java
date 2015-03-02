@@ -42,7 +42,7 @@ public abstract class AbstractNotificationService implements INotificationServic
     public String getName() {
         return name;
     }
-    
+
     @Required
     public void setName(String name) {
         this.name = name;
@@ -61,7 +61,7 @@ public abstract class AbstractNotificationService implements INotificationServic
      */
     @Override
     public void collect(final EventRequest req, final EventResponse res) { /* no-op */ }
-    
+
     /**
      * Returns <code>true</code>.  Subclasses of {@link AbstractNotificationService} 
      * that can better answer this question should override this method.
@@ -70,7 +70,7 @@ public abstract class AbstractNotificationService implements INotificationServic
     public boolean isValid(final PortletRequest req, final NotificationResponse previousResponse) {
         return true;
     }
-    
+
     /*
      * Implementation
      */
@@ -86,7 +86,7 @@ public abstract class AbstractNotificationService implements INotificationServic
                                         .append("|").append(req.getWindowID());
         return rslt.toString();
     }
-    
+
     protected final NotificationResponse prepareErrorResponse(final String source, final String message) {
         final NotificationError error = new NotificationError();
         error.setSource(source);

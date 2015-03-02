@@ -42,6 +42,7 @@
         <property name="locations">
             <list>
                 <value>classpath:configuration.properties</value>
+                <value>classpath:datasource.properties</value>
             </list>
         </property>
     </bean>
@@ -58,7 +59,9 @@
     </bean>
 
     <!-- EHCache Configuration -->
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="shared" value="true" /><!-- Shared with Hibernate -->
+    </bean>
     <bean id="notificationResponseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
         p:cacheManager-ref="cacheManager" p:cacheName="notificationResponseCache"/>
 
@@ -88,8 +91,16 @@
             </props>
         </property>
     </bean>
-    
-    <!-- 
+
+    <!--
+     | Snooze feature
+     +-->
+    <bean id="snoozed" class="org.jasig.portlet.notice.NotificationState" factory-method="valueOf">
+        <constructor-arg value="SNOOZED" />
+        <property name="snoozePeriodHours" value="72" />
+    </bean>
+
+    <!--
      | Notification Service Beans
      |
      | Reference these as needed within portlet contexts, or optionally define 
@@ -109,7 +120,7 @@
     </bean>
     <bean id="RomeNotificationService.feedCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
         p:cacheManager-ref="cacheManager" p:cacheName="RomeNotificationService.feedCache"/>
-        
+
     <!-- RESTful JSON:  Use 'RestfulJsonNotificationService.serviceUrls' preference  to specify services -->
     <bean id="restfulJsonNotificationService" class="org.jasig.portlet.notice.service.rest.RestfulJsonNotificationService">
         <property name="name" value="restfulJsonNotificationService"/>
@@ -157,6 +168,11 @@
     </bean>
     <bean id="PortletEventNotificationService.responseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
         p:cacheManager-ref="cacheManager" p:cacheName="PortletEventNotificationService.responseCache"/>
+
+    <!-- JPA -->
+    <bean id="jpaNotificationService" class="org.jasig.portlet.notice.service.jpa.JpaNotificationService">
+        <property name="name" value="jpaNotificationService"/>
+    </bean>
 
     <!-- DEMO -->
     <bean id="demoNotifications" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">

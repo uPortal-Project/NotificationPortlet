@@ -51,6 +51,7 @@
                 <ref bean="romeNotificationService" />
                 <ref bean="restfulJsonNotificationService"/>
                 <ref bean="portletEventNotificationService" />
+                <ref bean="jpaNotificationService" />
                 <ref bean="demoEmergencyAlerts" />
             </list>
         </property>

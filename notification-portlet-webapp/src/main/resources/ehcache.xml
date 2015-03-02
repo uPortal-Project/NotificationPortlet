@@ -48,7 +48,7 @@
         timeToLiveSeconds="900"
         overflowToDisk="false"
         memoryStoreEvictionPolicy="LRU"/>
-    
+
     <cache name="PortletEventNotificationService.responseCache"
         maxElementsInMemory="500"
         eternal="false"
