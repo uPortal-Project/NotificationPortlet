@@ -81,8 +81,7 @@ import org.springframework.transaction.annotation.Transactional;
     public Set<JpaEntry> getEntriesByRecipient(String username) {
         Validate.notEmpty(username, "Argument 'username' cannot be empty");
 
-        final String jpql = "SELECT e FROM JpaEntry e WHERE e.id = ANY ("
-                + "SELECT v FROM JpaEvent v WHERE v.username = :username))";
+        final String jpql = "SELECT e FROM JpaEvent v INNER JOIN v.entry e WITH v.username = :username";
         TypedQuery<JpaEntry> query = entityManager.createQuery(jpql, JpaEntry.class);
 
         log.debug("Query getEntriesByRecipient={}", query.toString());

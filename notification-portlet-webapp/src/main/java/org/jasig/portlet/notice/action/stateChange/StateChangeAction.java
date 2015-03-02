@@ -28,6 +28,7 @@ import javax.portlet.PortletPreferences;
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationState;
+import org.jasig.portlet.notice.service.CacheNotificationService;
 import org.jasig.portlet.notice.service.jpa.JpaNotificationService;
 import org.jasig.portlet.notice.util.SpringContext;
 
@@ -37,9 +38,19 @@ import org.jasig.portlet.notice.util.SpringContext;
  */
 public class StateChangeAction extends NotificationAction {
 
+	public StateChangeAction() {
+		// Set a default label;  most use cases will use the setter and override
+        setLabel("SET-STATE");
+	}
+	
+	public StateChangeAction(String label) {
+		setLabel(label);
+	}
+	
 	@Override
 	public void invoke(final ActionRequest req, final ActionResponse res) throws IOException {
 		JpaNotificationService jpaService = (JpaNotificationService) SpringContext.getApplicationContext().getBean("jpaNotificationService");
+		CacheNotificationService cacheService = (CacheNotificationService) SpringContext.getApplicationContext().getBean("cacheNotificationService");
 		
 		final PortletPreferences prefs = req.getPreferences();
         final String clickedState = prefs.getValue("applyStateWhenClicked", "COMPLETED");
@@ -59,6 +70,7 @@ public class StateChangeAction extends NotificationAction {
 		
 		if (!completedStateFound) {
 			jpaService.updateEntryState(req, entry.getId(), notificationState);
+			cacheService.clearCacheForUser(req);
 		}
 		
 		res.sendRedirect(entry.getUrl());

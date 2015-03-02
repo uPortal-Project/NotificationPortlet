@@ -35,8 +35,6 @@
 <script src="<rs:resourceURL value="/rs/jquery/1.10.2/jquery-1.10.2.min.js"/>" type="text/javascript"></script>
 <rs:aggregatedResources path="/stateChangeListLocalResources.xml"/>
 
-<link type="text/css" rel="stylesheet" href="<c:url value="/styles/simple-list.css"/>"/>
-
 <style type="text/css">
 #${n}notificationListView .hidden { display: none; }
 </style>
@@ -46,8 +44,8 @@
     <ul class="notification-list">
         <li class="notification-list-item portlet-msg-alert template hidden">
             <div class="notification-text">
-                <a class="link" href=""><span class="title"></span></a>
                 <span class="completed-badge">&#10004;</span>
+                <a class="link" href=""><span class="title"></span></a>
                 <ul class="notification-actions hidden">
                     <li class="action-template hidden"><a class="button" href="javascript:void(0);"></a></li>
                 </ul>

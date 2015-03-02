@@ -31,7 +31,7 @@
 <c:if test="${!usePortalJsLibs}">
     <rs:aggregatedResources path="/jQueryUIResources.xml"/>
 </c:if>
-<script src="<c:url value="/scripts/jquery.notice.min.js"/>" type="text/javascript"></script>
+<rs:aggregatedResources path="/simpleListLocalResources.xml"/>
 
 <style>
 #${n}emergencyAlert {

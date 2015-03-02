@@ -79,8 +79,8 @@ if (!upStateNotice.init) {
       var template = container.find(settings.selectors.template);
       var summaryTemplate = container.find(settings.selectors.summaryTemplate);
 
-      var drawActions = function(element, actionsContainer, alert) {
-
+      var drawActions = function(element, alert) {
+          var actionsContainer = element.find(settings.selectors.actions);
           var availableActions = alert.availableActions;
           var actionTemplate = actionsContainer.find(settings.selectors.actionTemplate);
 
@@ -94,13 +94,12 @@ if (!upStateNotice.init) {
             var actionElement = actionTemplate.clone();
             actionElement.removeClass('action-template');
             actionElement.toggleClass('hidden');
-            if( action.label) {
-                actionElement.find('a').attr('href', actionUrl).html(action.label + " ");
-            }
-            else if( action.id == 'StateChangeAction') {
+            if( action.id == 'StateChangeAction') {
                 element.find(settings.selectors.link).attr('href', actionUrl);
             }
-            
+            else if( action.label) {
+                actionElement.find('a').attr('href', actionUrl).html(action.label + " ");
+            }
             actionElement.appendTo(actionsContainer);
           }
 
@@ -140,7 +139,7 @@ if (!upStateNotice.init) {
             if (alert.availableActions && alert.availableActions.length != 0) {
                 var actionsContainer = element.find(settings.selectors.actions);
                 if (actionsContainer) {
-                    drawActions(element, actionsContainer, alert);
+                    drawActions(element, alert);
                 }
             }
             

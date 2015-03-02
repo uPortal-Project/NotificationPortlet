@@ -35,8 +35,6 @@
 <script src="<rs:resourceURL value="/rs/jquery/1.10.2/jquery-1.10.2.min.js"/>" type="text/javascript"></script>
 <rs:aggregatedResources path="/simpleListLocalResources.xml"/>
 
-<link type="text/css" rel="stylesheet" href="<c:url value="/styles/simple-list.min.css"/>"/>
-
 <style type="text/css">
 #${n}notificationListView .hidden { display: none; }
 </style>
@@ -49,6 +47,7 @@
                 <li class="action-template hidden"><a class="button" href="javascript:void(0);"></a></li>
             </ul>
             <div class="notification-text">
+                <span class="completed-badge">&#10004;</span>
                 <span class="title"></span> <a class="link" href=""></a>
             </div>
         </li>
