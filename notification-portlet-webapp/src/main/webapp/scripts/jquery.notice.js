@@ -94,24 +94,14 @@ if (!upnotice.init) {
               var actionElement = actionTemplate.clone();
               actionElement.removeClass('action-template');
               actionElement.toggleClass('hidden');
-              actionElement.find('a').attr('href', actionUrl).html(action.label + " ");
+              if( action.id == 'StateChangeAction') {
+                element.find(settings.selectors.link).attr('href', actionUrl);
+              }
+              else if( action.label) {
+                actionElement.find('a').attr('href', actionUrl).html(action.label + " ");
+              }
               actionElement.appendTo(actionsContainer);
               
-              if( action.id == 'StateChangeAction') {
-                  // apply the states as classes on the badge span
-                  // Are there states to apply?
-                    if (alert.states && alert.states.length != 0) {
-                        var states = "";
-                        for (var prop in alert.states) {
-                            if (alert.states.hasOwnProperty(prop)) { 
-                                if (states.length != 0) states += " ";
-                                states += prop.toLowerCase(); 
-                            } 
-                        } 
-
-                        element.find(settings.selectors.completedBadge).addClass( states);
-                    }
-              }
           }
 
           actionsContainer.toggleClass('hidden');
@@ -142,7 +132,7 @@ if (!upnotice.init) {
               element.find(settings.selectors.body).html(alert.body);
             }
             if (alert.url) {
-              var linkText = alert.linkText || alert.url;
+              var linkText = alert.title || alert.url;
               element.find(settings.selectors.link).attr('href', alert.url).html(linkText);
             }
 
@@ -154,6 +144,18 @@ if (!upnotice.init) {
                 }
             }
 
+            if (alert.states && alert.states.length != 0) {
+                var states = "";
+                for (var prop in alert.states) {
+                    if (alert.states.hasOwnProperty(prop)) { 
+                        if (states.length != 0) states += " ";
+                        states += prop.toLowerCase(); 
+                    } 
+                } 
+
+                element.find(settings.selectors.completedBadge).addClass( states);
+            }
+                    
             element.appendTo(template.parent());
           }
           

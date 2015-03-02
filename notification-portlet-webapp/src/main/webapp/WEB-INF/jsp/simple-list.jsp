@@ -48,7 +48,7 @@
             </ul>
             <div class="notification-text">
                 <span class="completed-badge">&#10004;</span>
-                <span class="title"></span> <a class="link" href=""></a>
+                <a class="link" href=""><span class="title"></span></a>
             </div>
         </li>
     </ul>
