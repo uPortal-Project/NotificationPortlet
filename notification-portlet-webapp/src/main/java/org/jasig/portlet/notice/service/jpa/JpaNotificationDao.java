@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * This DAO class handles raw CRUD operations for the JPA-flavor notifications.
  *
+ * @since 3.0
  * @author drewwills
  */
 @Repository
@@ -81,8 +82,8 @@ import org.springframework.transaction.annotation.Transactional;
     public Set<JpaEntry> getEntriesByRecipient(String username) {
         Validate.notEmpty(username, "Argument 'username' cannot be empty");
 
-        final String jpql = "SELECT e FROM JpaEntry e WHERE e.id = ANY ("
-                + "SELECT v FROM JpaEvent v WHERE v.username = :username))";
+        final String jpql = "SELECT DISTINCT v.entry FROM JpaEvent v "
+                                    + "WHERE v.username = :username";
         TypedQuery<JpaEntry> query = entityManager.createQuery(jpql, JpaEntry.class);
 
         log.debug("Query getEntriesByRecipient={}", query.toString());
