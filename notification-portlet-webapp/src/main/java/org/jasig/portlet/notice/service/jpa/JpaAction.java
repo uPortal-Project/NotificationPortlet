@@ -29,6 +29,7 @@ import javax.persistence.Table;
 /**
  * Represents a behavior invocable on a notification.
  *
+ * @since 3.0
  * @author drewwills
  */
 @Entity

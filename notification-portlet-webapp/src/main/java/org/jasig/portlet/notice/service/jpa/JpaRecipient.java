@@ -29,6 +29,7 @@ import javax.persistence.Table;
 /**
  * Represents an individual who receives a notification.
  *
+ * @since 3.0
  * @author drewwills
  */
 @Entity

@@ -35,6 +35,12 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * Corresponds to a {@link NotificationEntry} in the JPA flavor of notifications.
+ * 
+ * @since 3.0
+ * @author drewwills
+ */
 @Entity
 @Table(name=JpaNotificationService.TABLENAME_PREFIX + "ENTRY")
 /* package-private */ class JpaEntry {

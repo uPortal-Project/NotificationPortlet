@@ -36,6 +36,8 @@ import javax.persistence.Table;
 /**
  * Supports open-ended metadata for notifications.  The attributes collection is
  * an associative array: String (key) to String[] (values).
+ * 
+ * @since 3.0
  */
 @Entity
 @Table(name=JpaNotificationService.TABLENAME_PREFIX + "ATTRIBUTE")

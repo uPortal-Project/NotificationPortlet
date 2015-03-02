@@ -44,6 +44,7 @@ import javax.persistence.Table;
  * groups for a single notification, but should only see <em>one copy</em> of
  * the notification in such a case.
  *
+ * @since 3.0
  * @author drewwills
  */
 @Entity

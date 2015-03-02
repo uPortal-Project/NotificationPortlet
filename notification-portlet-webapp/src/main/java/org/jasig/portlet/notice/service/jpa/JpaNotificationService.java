@@ -48,6 +48,7 @@ import org.springframework.context.MessageSource;
  * Implementation of {@link INotificationService} backed by a Spring-/JPA-managed
  * relational database schema.
  * 
+ * @since 3.0
  * @author drewwills
  */
 public class JpaNotificationService extends AbstractNotificationService {
