@@ -27,7 +27,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Represents a behavior invokeable on a notification.
+ * Represents a behavior invocable on a notification.
  *
  * @author drewwills
  */
