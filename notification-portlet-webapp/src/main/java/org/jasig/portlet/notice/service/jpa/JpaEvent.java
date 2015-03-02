@@ -28,7 +28,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.jasig.portlet.notice.NotificationState;
@@ -37,6 +37,7 @@ import org.jasig.portlet.notice.NotificationState;
  * Represents an entry in the transaction log for a notification within the 
  * {@link JpaNotificationService}.
  *
+ * @since 3.0
  * @author drewwills
  */
 @Entity
@@ -48,7 +49,7 @@ import org.jasig.portlet.notice.NotificationState;
     @Column(name="ID", nullable = false)
     private long id;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="ENTRY_ID")
     private JpaEntry entry;
 
