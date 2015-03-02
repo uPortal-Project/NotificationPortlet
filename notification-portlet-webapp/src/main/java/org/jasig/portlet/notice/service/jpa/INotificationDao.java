@@ -24,6 +24,21 @@ import java.util.Set;
 
 import org.jasig.portlet.notice.NotificationState;
 
+/**
+ * This DAO interface defines methods for the CrUD operations available for
+ * JPA-flavor notification objects.  (E.g. {@link JpaEntry}.)  The JPA data
+ * source (package o.j.p.n.service.jpa) follows a DAO+Service pattern:  the DAO
+ * implements raw reads and updates against the back-end data store (RDBMS via
+ * JPA/Hibernate), where the Service (bean) is responsible for implementing the
+ * rules and logic that accompany reads and updates (e.g. validation,
+ * sequencing, and access restrictions).  The original/primary service bean is
+ * {@link JpaNotificationService}.  Access to JPA-flavor notification objects
+ * from outside the o.j.p.n.service.jpa package occurs ONLY through this Service
+ * bean (or similar).  For that reason, this interface is package-private.
+ * 
+ * @since 3.0
+ * @author drewwills
+ */
 /* package-private */ interface INotificationDao {
 
     JpaEntry getEntry(long entryId);
