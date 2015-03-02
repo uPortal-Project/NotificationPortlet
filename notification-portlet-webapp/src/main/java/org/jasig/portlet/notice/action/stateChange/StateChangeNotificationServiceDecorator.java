@@ -42,7 +42,7 @@ import org.jasig.portlet.notice.NotificationResponse;
  */
 public class StateChangeNotificationServiceDecorator implements INotificationService {
 
-	public static final String STATE_CHANGE_ENABLED_PREFERENCE = "autoApplyStateWhenClicked";
+	public static final String STATE_CHANGE_ENABLED_PREFERENCE = "StateChangeNotificationServiceDecorator.enabled";
     public static final String DEFAULT_STATE_CHANGE_BEHAVIOR = "false";  // The feature is disabled by default
 
     // Instance members

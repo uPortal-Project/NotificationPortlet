@@ -53,7 +53,7 @@ public class StateChangeAction extends NotificationAction {
 		CacheNotificationService cacheService = (CacheNotificationService) SpringContext.getApplicationContext().getBean("cacheNotificationService");
 		
 		final PortletPreferences prefs = req.getPreferences();
-        final String clickedState = prefs.getValue("applyStateWhenClicked", "COMPLETED");
+        final String clickedState = prefs.getValue("StateChangeNotificationServiceDecorator.applyState", "COMPLETED");
 		NotificationState notificationState = NotificationState.valueOf(clickedState);
 		
 		boolean stateFound = false;
