@@ -56,19 +56,19 @@ public class StateChangeAction extends NotificationAction {
         final String clickedState = prefs.getValue("applyStateWhenClicked", "COMPLETED");
 		NotificationState notificationState = NotificationState.valueOf(clickedState);
 		
-		boolean completedStateFound = false;
+		boolean stateFound = false;
 		
 		final NotificationEntry entry = getTarget();
 		Map<NotificationState,Date> stateMap = entry.getStates();
 		if (stateMap != null && stateMap.size() > 0) {
 			for ( NotificationState state: stateMap.keySet()) {
 				if (state == notificationState) {
-					completedStateFound = true;
+					stateFound = true;
 				}
 			}
 		}
 		
-		if (!completedStateFound) {
+		if (!stateFound) {
 			jpaService.updateEntryState(req, entry.getId(), notificationState);
 			cacheService.clearCacheForUser(req);
 		}

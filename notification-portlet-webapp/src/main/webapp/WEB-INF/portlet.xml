@@ -124,14 +124,14 @@
             <!-- Indicates whether the portlet will mark a notification as 'COMPLETE' when
                  it is clicked. -->
             <preference>
-                <name>autoApplyStateWhenClicked</name>
+                <name>StateChangeNotificationServiceDecorator.enabled</name>
                 <value>true</value>
             </preference>
             
-            <!-- State to apply to a notification after a click if the autoApplyStateWhenClicked 
+            <!-- State to apply to a notification after a click if the StateChangeNotificationServiceDecorator.enabled 
                  preference is true. -->
             <preference>
-                <name>applyStateWhenClicked</name>
+                <name>StateChangeNotificationServiceDecorator.applyState</name>
                 <value>COMPLETED</value>
             </preference>
         </portlet-preferences>

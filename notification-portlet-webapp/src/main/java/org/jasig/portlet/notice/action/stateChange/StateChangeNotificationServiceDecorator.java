@@ -81,15 +81,16 @@ public class StateChangeNotificationServiceDecorator implements INotificationSer
 		
         for (NotificationCategory category : rslt.getCategories()) {
             for (NotificationEntry entry : category.getEntries()) {
-                final List<NotificationAction> currentList = entry.getAvailableActions();
+				// only decorate if there is a URL
+				if (StringUtils.isNotBlank(entry.getUrl())) {
+					final List<NotificationAction> currentList = entry.getAvailableActions();
 
-                if (StringUtils.isNotBlank(entry.getId())) {
 					if (StringUtils.isNotBlank(entry.getId())) {
 						final List<NotificationAction> replacementList = new ArrayList<>(currentList);
 						replacementList.add( new StateChangeAction());
 						entry.setAvailableActions( replacementList);
 					}
-                }
+				}
             }
         }
 		return rslt;
