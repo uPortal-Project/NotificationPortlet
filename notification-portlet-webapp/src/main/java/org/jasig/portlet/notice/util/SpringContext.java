@@ -31,13 +31,13 @@ public class SpringContext implements ApplicationContextAware {
 
 	private static ApplicationContext context;
 
-	@Override
-	public void setApplicationContext(ApplicationContext context) throws BeansException {
-		SpringContext.context = context;
-	}
+    @Override
+    public void setApplicationContext(ApplicationContext context) throws BeansException {
+        SpringContext.context = context;
+    }
 
-	public static ApplicationContext getApplicationContext() {
-		return context;
-	}
+    public static ApplicationContext getApplicationContext() {
+        return context;
+    }
 
 }
