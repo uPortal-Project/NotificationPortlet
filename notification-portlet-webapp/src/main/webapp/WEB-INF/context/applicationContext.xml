@@ -169,6 +169,9 @@
     </bean>
 
     <!-- SSP notifications -->
+    <bean class="org.jasig.portlet.notice.service.studentsuccessplan.SSPApiLocator"/>
+    <bean id="StudentSuccessPlanService.schoolIdToPersonIdCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+          p:cacheManager-ref="cacheManager" p:cacheName="StudentSuccessPlanService.schoolIdToPersonIdCache"/>
     <bean id="sspApi" class="org.jasig.portlet.notice.service.studentsuccessplan.SSPApi">
         <property name="restTemplate" ref="restTemplate"/>
     </bean>

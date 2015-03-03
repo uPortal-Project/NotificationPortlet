@@ -3,6 +3,8 @@ package org.jasig.portlet.notice.service.studentsuccessplan;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
+ * Entity to hold SSP authentication information.
+ *
  * @author Josh Helmer, jhelmer.unicon.net
  */
 public class SSPToken {
@@ -13,6 +15,9 @@ public class SSPToken {
     private String accessToken;
 
 
+    /**
+     * Helper method to determine if an SSPToken has expired.
+     */
     public boolean hasExpired() {
         long now = System.currentTimeMillis();
         if (created + (expiresIn * 1000) + TIMEOUT_BUFFER > now) {

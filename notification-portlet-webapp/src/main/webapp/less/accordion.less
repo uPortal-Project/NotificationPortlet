@@ -124,6 +124,22 @@
                 margin-bottom: 3px;
             }
 
+            .notification-actions {
+                float: right;
+                text-align: right;
+                margin-top: 10px;
+
+                a {
+                    cursor: pointer;
+                    padding: 10px;
+                    border: 1px solid @gray2;
+                    color: @gray9;
+                    text-decoration: none;
+                    .rounded(5px);
+                    .gradient(@primary-light, fade(@primary-light, 50%), @white);
+                }
+            }
+
             .notification-back-button {
                 float: left;
                 margin-bottom: 18px;

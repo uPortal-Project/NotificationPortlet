@@ -61,6 +61,28 @@
                 <name>RestfulJsonNotificationService.serviceUrls</name>
             </preference>
 
+            <preference>
+                <name>SSPTaskNotificationService.categoryName</name>
+                <value>Student Success Plan</value>
+            </preference>
+
+            <preference>
+                <name>SSPTaskNotificationService.enabled</name>
+                <value>false</value>
+                <read-only>true</read-only>
+            </preference>
+
+            <preference>
+                <name>SSPTaskNotificationService.sourceName</name>
+                <value>Student Success Plan</value>
+            </preference>
+
+            <preference>
+                <name>SSPTaskNotificationService.schoolIdAttribute</name>
+                <value>schoolId</value>
+                <read-only>true</read-only>
+            </preference>
+
             <!-- Locations of static files, in native NotificationPortlet JSON, 
                  that should be read from the classpath and included in the 
                  response FOR THE DEMO EXPERIENCE. -->
