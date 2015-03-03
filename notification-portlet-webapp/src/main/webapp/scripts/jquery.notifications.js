@@ -43,6 +43,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
         notifications   = rootjQueryObj.find(".notification-container"),
         detailView      = rootjQueryObj.find(".notification-detail-wrapper"),
         detailContainer = rootjQueryObj.find(".notification-detail-container"),
+        actionsContainer = rootjQueryObj.find(".notification-actions"),
         backButton      = rootjQueryObj.find(".notification-back-button"),
         refreshButton   = rootjQueryObj.find(".notification-refresh a"),
         filterOptions   = rootjQueryObj.find(".notification-options"),
@@ -54,7 +55,15 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
     
     // Store the filter state (notifications that are currently being displayed), defaults to today
     var filterState = {"days": 1};
-    
+
+    var actionMap = {};
+    var registerAction = function(id, actions) {
+        actionMap[id] = actions;
+    };
+    var getActions = function(id) {
+        return actionMap[id] || [];
+    };
+
     var getNotifications = function(params, doRefresh) {
             
       // First 'prime-the-pump' with an ActionURL
@@ -140,11 +149,11 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
               <h3 class="portlet-section-header trigger-symbol" role="header"> \
                 {{ category.title }} \
                 {% if (accordion) { %} \
-                  ({{ category.entries.length }}) \
+                  ({{ (category.entries) ? category.entries.length : 0 }}) \
                 {% } %} \
               </h3> \
             </div> \
-            {% if (category.entries.length < 1) { %} \
+            {% if (!category.entries || category.entries.length < 1) { %} \
               <!-- no notifications --> \
             {% } else { %} \
               <div class="notification-content" style="display: none;"> \
@@ -161,7 +170,8 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                       {% if (!accordion) { %} \
                         &raquo; \
                       {% } %} \
-                      <a href="{{ entry.url }}" \
+                      <a href="{{ entry.url || \"javascript://\" }}" \
+                         data-id="{{ entry.id }}" \
                          data-body="{{ escape(entry.body) }}" \
                          data-title="{{ entry.title }}" \
                          data-source="{{ entry.source }}"> {{ entry.title }}</a> \
@@ -170,7 +180,9 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                                month = date.getMonth() + 1, \
                                day   = date.getDate(), \
                                year  = date.getFullYear(), \
-                               overDue = (date < new Date() ? " overdue" : ""); %} \
+                               overDue = (date < new Date() ? " overdue" : "");\
+                               data.registerAction(entry.id, entry.availableActions); \
+                      %} \
                         <span class="notification-due-date{{ overDue }}"> \
                           Due {{ month }}/{{ day }}/{{ year }} \
                         </span> \
@@ -184,7 +196,8 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           {% }); %} \
         {% } %} \
       ';
-      var compiled = _.template(html, notificationResponse, {
+      var data = _.extend({}, notificationResponse, { registerAction: registerAction });
+      var compiled = _.template(html, data, {
           variable: 'data',
           interpolate : templateSettings.interpolate,
           evaluate : templateSettings.evaluate
@@ -218,8 +231,9 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
             body   : $(this).data("body"),
             title  : $(this).data("title"),
             source : $(this).data("source"),
-            link   : $(this).attr("href")
-          }
+            link   : $(this).attr("href"),
+            id     : $(this).data("id")
+          };
 
           var html = '\
             <h3><a href="{{ link }}">{{ title }}</a></h3> \
@@ -232,11 +246,31 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
               interpolate : templateSettings.interpolate,
               evaluate : templateSettings.evaluate
           });
+
+          var actionsTemplate = [
+              '{% _.each(actions, function(action) { %}',
+                  '<a href="{{ getActionUrl(notificationId, action) }}" class="button">{{ action.label }}</a>',
+              '{% }); %}'
+          ].join('');
+          var actions = getActions(notification.id);
+          var getActionUrl = function(notificationId, action) {
+              var url = opts.invokeActionUrlTemplate
+                        .replace('NOTIFICATIONID', notificationId)
+                        .replace('ACTIONID', action.id);
+              return url;
+          };
+          var templateData = {
+              notificationId: notification.id,
+              actions: actions,
+              getActionUrl: getActionUrl
+          };
+          var actionsHtml = _.template(actionsTemplate, templateData, templateSettings);
           
           $.each([notifications, errorContainer], function () {
             $(this).hide(
               "slide", 200, function () {
                 detailContainer.html(" ").append(compiled);
+                actionsContainer.html("").html(actionsHtml);
                 detailView.show();
               });
           });

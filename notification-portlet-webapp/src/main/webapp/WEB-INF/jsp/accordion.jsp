@@ -31,6 +31,10 @@
     <portlet:param name="action" value="hideError"/>
     <portlet:param name="errorKey" value="ERRORKEY"/>
 </portlet:actionURL>
+<portlet:actionURL var="invokeActionUrlTemplate" escapeXml="false">
+    <portlet:param name="notificationId" value="NOTIFICATIONID"/>
+    <portlet:param name="actionId" value="ACTIONID"/>
+</portlet:actionURL>
 
 <c:if test="${portletPreferencesValues['usePortalJsLibs'][0] != 'true'}">
     <rs:aggregatedResources path="/accordianResources.xml"/>
@@ -61,6 +65,7 @@
                 <div class="notification-back-button">
                     <span>Back</span>
                 </div>
+                <div class="notification-actions"></div>
                 <div class="notification-detail-container"></div>
             </div>
 
@@ -87,6 +92,7 @@
     ${n}.jQuery(document).ready(
         notificationsPortletView(${n}.jQuery, "#${n}container", ${n}.underscore, {
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
+            invokeActionUrlTemplate: '${invokeActionUrlTemplate}',
             getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS"/>',
             hideErrorUrl: '${hideErrorUrl}'
         })

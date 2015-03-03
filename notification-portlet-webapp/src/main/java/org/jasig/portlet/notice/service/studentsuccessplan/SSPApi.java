@@ -52,13 +52,13 @@ public class SSPApi implements ISSPApi {
     }
 
 
-    @Value("${studentSuccessPlanService.clientId}")
+    @Value("${studentSuccessPlanService.clientId:}")
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
 
 
-    @Value("${studentSuccessPlanService.clientSecret}")
+    @Value("${studentSuccessPlanService.clientSecret:}")
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
     }
@@ -80,7 +80,7 @@ public class SSPApi implements ISSPApi {
     }
 
 
-    @Value("${studentSuccessPlanService.sspHost}")
+    @Value("${studentSuccessPlanService.sspHost:}")
     public void setSspHost(String sspHost) {
         this.sspHost = sspHost;
     }
@@ -92,6 +92,12 @@ public class SSPApi implements ISSPApi {
     }
 
 
+    /**
+     * Set the SSP API Context.   Note:  this method will ensure that that the API context
+     * starts with '/' and ensures that it does not end with a '/'.
+     *
+     * @param sspContext the API context
+     */
     @Value("${studentSuccessPlanService.sspContext:/ssp}")
     public void setSspContext(String sspContext) {
         // ensure leading '/'
@@ -108,13 +114,16 @@ public class SSPApi implements ISSPApi {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> ResponseEntity<T> doRequest(SSPApiRequest<T> request) throws MalformedURLException, RestClientException {
         SSPToken token = getAuthenticationToken(false);
 
         request.setHeader(AUTHORIZATION, token.getTokenType() + " " + token.getAccessToken());
 
-        URL url = getSSPUrl(request.getUrlFragment());
+        URL url = getSSPUrl(request.getUrlFragment(), true);
         ResponseEntity<T> response = restTemplate.exchange(url.toExternalForm(),
                 request.getMethod(),
                 request.getRequestEntity(),
@@ -136,6 +145,23 @@ public class SSPApi implements ISSPApi {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
+    public URL getSSPUrl(String urlFragment, boolean useContext) throws MalformedURLException {
+        String path = (useContext) ? sspContext + urlFragment : urlFragment;
+        return new URL(sspProtocol, sspHost, sspPort, path);
+    }
+
+
+    /**
+     * Get the authentication token to use.
+     *
+     * @param forceUpdate if true, get a new auth token even if a cached instance exists.
+     * @return The authentication token
+     * @throws MalformedURLException if the authentication URL is invalid
+     * @throws RestClientException if an error occurs when talking to SSP
+     */
     private synchronized SSPToken getAuthenticationToken(boolean forceUpdate) throws MalformedURLException, RestClientException {
         if (authenticationToken != null && !authenticationToken.hasExpired() && !forceUpdate) {
             return authenticationToken;
@@ -170,11 +196,6 @@ public class SSPApi implements ISSPApi {
 
 
     private URL getAuthenticationURL() throws MalformedURLException {
-        return getSSPUrl(authenticationUrl);
-    }
-
-
-    private URL getSSPUrl(String urlFragment) throws MalformedURLException {
-        return new URL(sspProtocol, sspHost, sspPort, sspContext + urlFragment);
+        return getSSPUrl(authenticationUrl, true);
     }
 }

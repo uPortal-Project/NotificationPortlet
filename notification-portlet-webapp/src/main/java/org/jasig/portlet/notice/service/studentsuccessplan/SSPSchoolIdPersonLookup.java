@@ -10,13 +10,11 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import javax.annotation.Resource;
+import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,11 +26,11 @@ import java.util.Map;
 public class SSPSchoolIdPersonLookup implements ISSPPersonLookup {
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private static final String USERNAME_ATTRIBUTE = "user.login.id";
     private static final String SUCCESS_QUERY = "$.success";
     private static final String RESULTS_QUERY = "$.results";
     private static final String STUDENT_ID_QUERY = "$.rows[0].id";
 
-    private String schoolIdAttributeName = "schoolId";
     private String personSearchURL = "/api/1/person/directoryperson/search?limit=2&schoolId={schoolId}&start=0";
     private ISSPApi sspApi;
     private Cache cache;
@@ -50,30 +48,27 @@ public class SSPSchoolIdPersonLookup implements ISSPPersonLookup {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String lookupPersonId(PortletRequest request) {
-        Map<String, String> userInfo = (Map<String, String>)request.getAttribute(PortletRequest.USER_INFO);
-        String studentId = userInfo.get(schoolIdAttributeName);
-
-        // todo: remove this...
-        studentId = "jjackson332";
-        if (StringUtils.isEmpty(studentId)) {
+        String studentId = getSchoolId(request);
+        if (StringUtils.isBlank(studentId)) {
             return null;
         }
 
         Element element = cache.get(studentId);
         if (element != null) {
-            log.debug("Found in cache: " + element);
-//            return (String)element.getObjectValue();
+            return (String)element.getObjectValue();
         }
 
         String url = getPersonSearchURL();
-        HttpHeaders headers = new HttpHeaders();
-        Map<String, String> variables = new HashMap<>();
-        variables.put("schoolId", studentId);
+        SSPApiRequest sspReq = new SSPApiRequest(url, String.class)
+                .addUriParameter("schoolId", studentId);
 
         try {
-            ResponseEntity<String> response = sspApi.doRequest(url, HttpMethod.GET, headers, null, String.class, variables);
+            ResponseEntity<String> response = sspApi.doRequest(sspReq);
             String userId = extractUserId(studentId, response);
 
             Element cacheElement = new Element(studentId, userId);
@@ -88,6 +83,36 @@ public class SSPSchoolIdPersonLookup implements ISSPPersonLookup {
     }
 
 
+    /**
+     * Get the schoolId value from the request.
+     *
+     * @param request the portlet request
+     * @return the school id.   May return null if the school id is not available
+     */
+    private String getSchoolId(PortletRequest request) {
+        PortletPreferences prefs = request.getPreferences();
+        String schoolIdAttributeName = prefs.getValue("SSPTaskNotificationService.schoolIdAttribute", "schoolId");
+
+        Map<String, String> userInfo = (Map<String, String>)request.getAttribute(PortletRequest.USER_INFO);
+        String studentId = userInfo.get(schoolIdAttributeName);
+        if (!StringUtils.isEmpty(studentId)) {
+            return studentId;
+        }
+
+        // if not found, fall back to username.
+        studentId = userInfo.get(USERNAME_ATTRIBUTE);
+
+        return studentId;
+    }
+
+
+    /**
+     * Parse the person lookup response from SSP.
+     *
+     * @param studentId the uPortal studentid
+     * @param response the SSP response
+     * @return the SSP id if available, else null
+     */
     private String extractUserId(String studentId, ResponseEntity<String> response) {
         Configuration config = Configuration.builder().options(
                 Option.DEFAULT_PATH_LEAF_TO_NULL
@@ -97,6 +122,7 @@ public class SSPSchoolIdPersonLookup implements ISSPPersonLookup {
                 .parse(response.getBody());
 
         String success = readContext.read(SUCCESS_QUERY);
+        // SSP passes this as a string...
         if (!"true".equalsIgnoreCase(success)) {
             return null;
         }
