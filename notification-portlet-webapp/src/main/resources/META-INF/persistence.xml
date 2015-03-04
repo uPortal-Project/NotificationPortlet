@@ -37,6 +37,11 @@
             <!-- property name="hibernate.ejb.cfgfile" value="/notification.cfg.xml" /-->
             <property name="hibernate.session_factory_name_is_jndi" value="false" />
             <property name="hibernate.format_sql" value="true" />
+            <!-- For additional detail/debugging 
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.use_sql_comments" value="true"/>
+             -->
+            
             <property name="hibernate.generate_statistics" value="true" />
             <property name="hibernate.max_fetch_depth" value="3" />
             <property name="hibernate.default_batch_fetch_size" value="4" />
@@ -54,6 +59,9 @@
                  hsqldb we need this to be update. Users *should* do a schema update before switching to new versions, or
                  this should hopefully not do something negative if it ever does update the schema (typically doesn't). -->
             <property name="hibernate.hbm2ddl.auto" value="update" />
+            
+            <!-- Dialect needed for POSTGRES to work -->
+            <property name="hibernate.dialect" value="${hibernate.dialect}"/>
         </properties>
     </persistence-unit>
 
