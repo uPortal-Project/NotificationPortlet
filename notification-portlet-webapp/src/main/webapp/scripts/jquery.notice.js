@@ -38,7 +38,8 @@ if (!upnotice.init) {
         link:            '.link',
         actions:         '.notification-actions',
         actionTemplate:  '.action-template',
-        summaryTemplate: '.summary-template'
+        summaryTemplate: '.summary-template',
+        completedBadge:  '.completed-badge'
       },
       readyCallback: function() {}
     };
@@ -78,8 +79,8 @@ if (!upnotice.init) {
       var template = container.find(settings.selectors.template);
       var summaryTemplate = container.find(settings.selectors.summaryTemplate);
 
-      var drawActions = function(actionsContainer, alert) {
-
+      var drawActions = function(element, alert) {
+          var actionsContainer = element.find(settings.selectors.actions);
           var availableActions = alert.availableActions;
           var actionTemplate = actionsContainer.find(settings.selectors.actionTemplate);
 
@@ -93,8 +94,16 @@ if (!upnotice.init) {
               var actionElement = actionTemplate.clone();
               actionElement.removeClass('action-template');
               actionElement.toggleClass('hidden');
-              actionElement.find('a').attr('href', actionUrl).html(action.label + " ");
+              if( action.id == 'StateChangeAction') {
+                // add the url to the notification text rather than
+                // as a link to the side of the text
+                element.find(settings.selectors.link).attr('href', actionUrl);
+              }
+              else if( action.label) {
+                actionElement.find('a').attr('href', actionUrl).html(action.label + " ");
+              }
               actionElement.appendTo(actionsContainer);
+              
           }
 
           actionsContainer.toggleClass('hidden');
@@ -125,7 +134,7 @@ if (!upnotice.init) {
               element.find(settings.selectors.body).html(alert.body);
             }
             if (alert.url) {
-              var linkText = alert.linkText || alert.url;
+              var linkText = alert.title || alert.url;
               element.find(settings.selectors.link).attr('href', alert.url).html(linkText);
             }
 
@@ -133,10 +142,24 @@ if (!upnotice.init) {
             if (alert.availableActions && alert.availableActions.length != 0) {
                 var actionsContainer = element.find(settings.selectors.actions);
                 if (actionsContainer) {
-                    drawActions(actionsContainer, alert);
+                    drawActions(element, alert);
                 }
             }
 
+            // states are added to the 'completedBadge' to enable behavior that 
+            // can be defined in CSS.  
+            if (alert.states && alert.states.length != 0) {
+                var states = "";
+                for (var prop in alert.states) {
+                    if (alert.states.hasOwnProperty(prop)) { 
+                        if (states.length != 0) states += " ";
+                        states += prop.toLowerCase(); 
+                    } 
+                } 
+
+                element.find(settings.selectors.completedBadge).addClass( states);
+            }
+                    
             element.appendTo(template.parent());
           }
           
