@@ -121,8 +121,9 @@
                 <value>false</value>
             </preference>
             
-            <!-- Indicates whether the portlet will mark a notification as 'COMPLETE' when
-                 it is clicked. -->
+            <!-- Indicates whether the portlet will mark a notification as the
+                 configured StateChangeNotificationServiceDecorator.applyState when
+                 it is clicked. Only applies to notifications from the JPA service. -->
             <preference>
                 <name>StateChangeNotificationServiceDecorator.enabled</name>
                 <value>true</value>

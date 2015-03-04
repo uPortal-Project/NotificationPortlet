@@ -24,7 +24,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- *
+ * This class provides support for non-Spring managed objects to obtain
+ * references to Spring managed beans.
+ * 
  * @author mglazier
  */
 public class SpringContext implements ApplicationContextAware {

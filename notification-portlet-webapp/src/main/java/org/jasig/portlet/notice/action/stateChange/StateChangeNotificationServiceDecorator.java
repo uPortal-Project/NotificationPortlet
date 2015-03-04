@@ -77,7 +77,8 @@ public class StateChangeNotificationServiceDecorator implements INotificationSer
 
         for (NotificationCategory category : rslt.getCategories()) {
             for (NotificationEntry entry : category.getEntries()) {
-                // only decorate if there is a URL
+                // only decorate if there is a URL.
+                // the state change action depends on the URL to redirect the user
                 if (StringUtils.isNotBlank(entry.getUrl())) {
                     final List<NotificationAction> currentList = entry.getAvailableActions();
 

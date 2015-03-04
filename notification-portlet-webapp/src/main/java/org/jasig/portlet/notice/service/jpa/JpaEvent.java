@@ -48,7 +48,7 @@ import org.jasig.portlet.notice.NotificationState;
     @Column(name="ID", nullable = false)
     private long id;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(fetch=FetchType.LAZY, optional=false)
     @JoinColumn(name="ENTRY_ID")
     private JpaEntry entry;
 

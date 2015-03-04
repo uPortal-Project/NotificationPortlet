@@ -95,6 +95,8 @@ if (!upnotice.init) {
               actionElement.removeClass('action-template');
               actionElement.toggleClass('hidden');
               if( action.id == 'StateChangeAction') {
+                // add the url to the notification text rather than
+                // as a link to the side of the text
                 element.find(settings.selectors.link).attr('href', actionUrl);
               }
               else if( action.label) {

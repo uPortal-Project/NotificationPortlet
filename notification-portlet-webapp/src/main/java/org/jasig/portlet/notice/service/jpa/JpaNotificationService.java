@@ -96,8 +96,17 @@ public class JpaNotificationService extends AbstractNotificationService {
 
     }
 	
-    public void updateEntryState(PortletRequest req, String entryId, NotificationState state) {
+    /**
+     * Caller must insure that the state being set has not already been added to the entry
+     * to avoid multiple events with the same state.
+     * 
+     * @param req
+     * @param entryId
+     * @param state 
+     */
+    public void addEntryState(PortletRequest req, String entryId, NotificationState state) {
         if (usernameFinder.isAuthenticated(req)) {
+           
             final String username = usernameFinder.findUsername(req);
 
             String idStr = entryId.replaceAll(ID_PREFIX, ""); // remove the prefix
@@ -111,6 +120,9 @@ public class JpaNotificationService extends AbstractNotificationService {
                 event.setUsername(username);
 
                 notificationDao.createOrUpdateEvent(event);
+            }
+            else {
+                throw new IllegalArgumentException("JpaEntry not found");
             }
         }
     }

@@ -47,6 +47,16 @@ public class StateChangeAction extends NotificationAction {
         setLabel(label);
     }
 
+    /**
+     * When invoke is called, a configured notification state is set for the entry if it has not already been set.
+     * {@link JpaNotificationService} and {@link CacheNotificationService} are used here to add the entry state and clear
+     * the cache for the user.  This class is not managed by Spring, so these objects must be obtained using the 
+     * Spring context that {@SpringContext} provides.
+     * 
+     * @param req
+     * @param res
+     * @throws IOException 
+     */
     @Override
     public void invoke(final ActionRequest req, final ActionResponse res) throws IOException {
         JpaNotificationService jpaService = (JpaNotificationService) SpringContext.getApplicationContext().getBean("jpaNotificationService");
@@ -69,7 +79,7 @@ public class StateChangeAction extends NotificationAction {
         }
 
         if (!stateFound) {
-            jpaService.updateEntryState(req, entry.getId(), notificationState);
+            jpaService.addEntryState(req, entry.getId(), notificationState);
             cacheService.clearCacheForUser(req);
         }
 
