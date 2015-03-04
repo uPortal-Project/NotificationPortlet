@@ -19,10 +19,12 @@
 
 package org.jasig.portlet.notice.action.read;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
@@ -75,7 +77,7 @@ public final class ReadAction extends NotificationAction {
      * Invoking a ReadAction toggles it.
      */
     @Override
-    public void invoke(final ActionRequest req) {
+    public void invoke(final ActionRequest req, final ActionResponse res) throws IOException {
         final NotificationEntry entry = getTarget();
         final String notificationId = entry.getId();
         final Set<String> readNotices = this.getReadNotices(req);

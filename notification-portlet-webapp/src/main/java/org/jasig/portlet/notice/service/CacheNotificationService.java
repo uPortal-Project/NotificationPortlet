@@ -191,4 +191,15 @@ public final class CacheNotificationService extends AbstractNotificationService 
 
     }
 
+	/**
+	 * Clear cache for user associated with req.
+	 * 
+	 * @param req 
+	 */
+	public void clearCacheForUser(final PortletRequest req) {
+		if (usernameFinder.isAuthenticated(req)) {
+			final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
+			cache.remove(cacheKey);
+		}
+	}
 }

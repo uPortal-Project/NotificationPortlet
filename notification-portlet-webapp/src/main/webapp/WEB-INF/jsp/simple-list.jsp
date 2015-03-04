@@ -33,9 +33,7 @@
 </portlet:actionURL>
 
 <script src="<rs:resourceURL value="/rs/jquery/1.10.2/jquery-1.10.2.min.js"/>" type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.notice.min.js"/>" type="text/javascript"></script>
-
-<link type="text/css" rel="stylesheet" href="<c:url value="/styles/simple-list.min.css"/>"/>
+<rs:aggregatedResources path="/simpleListLocalResources.xml"/>
 
 <style type="text/css">
 #${n}notificationListView .hidden { display: none; }
@@ -49,7 +47,8 @@
                 <li class="action-template hidden"><a class="button" href="javascript:void(0);"></a></li>
             </ul>
             <div class="notification-text">
-                <span class="title"></span> <a class="link" href=""></a>
+                <span class="completed-badge">&#10004;</span>
+                <a class="link" href=""><span class="title"></span></a>
             </div>
         </li>
     </ul>

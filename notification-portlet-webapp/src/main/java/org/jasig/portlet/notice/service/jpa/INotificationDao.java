@@ -62,4 +62,5 @@ import org.jasig.portlet.notice.NotificationState;
      */
     List<JpaEvent> getEvents(long entryId, String username);
 
+	JpaEvent createOrUpdateEvent(JpaEvent event);
 }

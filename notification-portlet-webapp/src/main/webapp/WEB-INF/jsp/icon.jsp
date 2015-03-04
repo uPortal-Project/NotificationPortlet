@@ -31,7 +31,7 @@
 <c:if test="${!usePortalJsLibs}">
     <rs:aggregatedResources path="/jQueryResources.xml"/>
 </c:if>
-<script src="<c:url value="/scripts/jquery.notice.min.js"/>" type="text/javascript"></script>
+<rs:aggregatedResources path="/simpleListLocalResources.xml"/>
 
 <link rel="stylesheet" href="<rs:resourceURL value="/rs/fontawesome/4.0.3/css/font-awesome.min.css"/>" type="text/css" media="screen" />
 

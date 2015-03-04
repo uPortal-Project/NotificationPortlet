@@ -19,6 +19,7 @@
 
 package org.jasig.portlet.notice.service.jpa;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -95,7 +96,38 @@ public class JpaNotificationService extends AbstractNotificationService {
         return rslt;
 
     }
+	
+    /**
+     * Caller must insure that the state being set has not already been added to the entry
+     * to avoid multiple events with the same state.
+     * 
+     * @param req
+     * @param entryId
+     * @param state 
+     */
+    public void addEntryState(PortletRequest req, String entryId, NotificationState state) {
+        if (usernameFinder.isAuthenticated(req)) {
+           
+            final String username = usernameFinder.findUsername(req);
 
+            String idStr = entryId.replaceAll(ID_PREFIX, ""); // remove the prefix
+
+            JpaEntry jpaEntry = notificationDao.getEntry(Long.parseLong(idStr));
+            if (jpaEntry != null) {
+                JpaEvent event = new JpaEvent();
+                event.setEntry(jpaEntry);
+                event.setState(state);
+                event.setTimestamp(new Timestamp(new Date().getTime()));
+                event.setUsername(username);
+
+                notificationDao.createOrUpdateEvent(event);
+            }
+            else {
+                throw new IllegalArgumentException("JpaEntry not found");
+            }
+        }
+    }
+	
     /*
      * Implementation
      */
