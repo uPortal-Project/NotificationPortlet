@@ -61,7 +61,7 @@
             <property name="hibernate.hbm2ddl.auto" value="update" />
             
             <!-- Dialect needed for POSTGRES to work -->
-            <property name="hibernate.dialect" value="${environment.build.hibernate.dialect}"/>
+            <property name="hibernate.dialect" value="${hibernate.dialect}"/>
         </properties>
     </persistence-unit>
 
