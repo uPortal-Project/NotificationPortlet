@@ -146,6 +146,8 @@ if (!upnotice.init) {
                 }
             }
 
+            // states are added to the 'completedBadge' to enable behavior that 
+            // can be defined in CSS.  
             if (alert.states && alert.states.length != 0) {
                 var states = "";
                 for (var prop in alert.states) {
