@@ -32,7 +32,6 @@ import org.jasig.portlet.notice.NotificationState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -54,7 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
      * persistence context, it is returned;  otherwise, null is returned.
      */
     @Override
-    @Transactional(readOnly=true, propagation=Propagation.SUPPORTS)
+    @Transactional(readOnly=true)
     public JpaEntry getEntry(long entryId) {
         Validate.isTrue(entryId > 0, "Invalid entryId:  " + entryId);
 
@@ -81,7 +80,7 @@ import org.springframework.transaction.annotation.Transactional;
     }
 
     @Override
-    @Transactional(readOnly=true, propagation=Propagation.SUPPORTS)
+    @Transactional(readOnly=true)
     public Set<JpaEntry> getEntriesByRecipient(String username) {
         Validate.notEmpty(username, "Argument 'username' cannot be empty");
 
@@ -97,7 +96,7 @@ import org.springframework.transaction.annotation.Transactional;
     }
 
     @Override
-    @Transactional(readOnly=true, propagation=Propagation.SUPPORTS)
+    @Transactional(readOnly=true)
     public Set<JpaEntry> getEntriesByRecipientByStatus(String username,
             Set<NotificationState> include, Set<NotificationState> exclude) {
         Validate.notEmpty(username, "Argument 'username' cannot be empty");
@@ -107,7 +106,7 @@ import org.springframework.transaction.annotation.Transactional;
     }
 
     @Override
-    @Transactional(readOnly=true, propagation=Propagation.SUPPORTS)
+    @Transactional(readOnly=true)
     public List<JpaEvent> getEvents(long entryId, String username) {
         Validate.isTrue(entryId > 0, "Argument 'entryId' must be greater than zero (0)");
         Validate.notEmpty(username, "Argument 'username' cannot be empty");
