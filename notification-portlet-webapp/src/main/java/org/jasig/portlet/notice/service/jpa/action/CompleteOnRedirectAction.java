@@ -17,14 +17,13 @@
  * under the License.
  */
 
-package org.jasig.portlet.notice.action.stateChange;
+package org.jasig.portlet.notice.service.jpa.action;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletPreferences;
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationState;
@@ -36,14 +35,16 @@ import org.jasig.portlet.notice.util.SpringContext;
  *
  * @author mglazier
  */
-public class StateChangeAction extends NotificationAction {
+public class CompleteOnRedirectAction extends NotificationAction {
 
-    public StateChangeAction() {
+    private static final long serialVersionUID = 1L;
+
+    public CompleteOnRedirectAction() {
         // Set a default label;  most use cases will use the setter and override
         setLabel("SET-STATE");
     }
 
-    public StateChangeAction(String label) {
+    public CompleteOnRedirectAction(String label) {
         setLabel(label);
     }
 
@@ -60,27 +61,11 @@ public class StateChangeAction extends NotificationAction {
     @Override
     public void invoke(final ActionRequest req, final ActionResponse res) throws IOException {
         JpaNotificationService jpaService = (JpaNotificationService) SpringContext.getApplicationContext().getBean("jpaNotificationService");
-        CacheNotificationService cacheService = (CacheNotificationService) SpringContext.getApplicationContext().getBean("cacheNotificationService");
-
-        final PortletPreferences prefs = req.getPreferences();
-        final String clickedState = prefs.getValue("StateChangeNotificationServiceDecorator.applyState", "COMPLETED");
-        NotificationState notificationState = NotificationState.valueOf(clickedState);
-
-        boolean stateFound = false;
 
         final NotificationEntry entry = getTarget();
         Map<NotificationState, Date> stateMap = entry.getStates();
-        if (stateMap != null && stateMap.size() > 0) {
-            for (NotificationState state : stateMap.keySet()) {
-                if (state == notificationState) {
-                    stateFound = true;
-                }
-            }
-        }
-
-        if (!stateFound) {
-            jpaService.addEntryState(req, entry.getId(), notificationState);
-            cacheService.clearCacheForUser(req);
+        if (stateMap != null && !stateMap.containsKey(NotificationState.COMPLETED)) {
+            jpaService.addEntryState(req, entry.getId(), NotificationState.COMPLETED);
         }
 
         res.sendRedirect(entry.getUrl());

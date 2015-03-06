@@ -205,6 +205,9 @@ public class NotificationLifecycleController {
         // We must have a target to proceed
         if (target != null) {
             target.invoke(req, res);
+            // It's reasonable to assume we need to purge
+            // caches for this user after invoking his action 
+            notificationService.invoke(req, res, false);
         } else {
             String msg = "Target action not found for notificationId='"
                     + notificationId + "' and actionId='" + actionId + "'";
