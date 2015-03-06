@@ -231,10 +231,14 @@
 	                    <hibernatetool>      
 	                        <jpaconfiguration persistenceunit="NoticePU" 
 	                                          propertyFile="target/${project.build.finalName}/WEB-INF/classes/datasource.properties"/>
+	                        <hbm2ddl export="true" create="true" drop="true"/>                   
 	                        <classpath>
 	                            <path location="target/${project.build.finalName}/WEB-INF/classes" />
 	                        </classpath>                       
 	                   </hibernatetool>
+	                   <componentProperties>
+                           <drop>true</drop>
+                       </componentProperties>
 	                </configuration>
 	                <dependencies>
 	                    <dependency>
