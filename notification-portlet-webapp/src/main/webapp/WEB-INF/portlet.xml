@@ -68,6 +68,13 @@
                 <name>DemoNotificationService.locations</name>
             </preference>
 
+            <!-- Set to true to enable the JPA Notification source.  This will display notifications stored in
+                 the portlet's notification database. -->
+            <preference>
+                <name>JpaNotificationService.enabled</name>
+                <value>false</value>
+            </preference>
+
             <!-- Name of the jsp view file for displaying notifications. -->
             <preference>
                 <name>NotificationController.viewName</name>
@@ -186,6 +193,13 @@
                 <name>DemoNotificationService.locations</name>
             </preference>
 
+            <!-- Set to true to enable the JPA Notification source.  This will display notifications stored in
+                 the portlet's notification database. -->
+            <preference>
+                <name>JpaNotificationService.enabled</name>
+                <value>false</value>
+            </preference>
+
             <!-- Required for the PortletEventNotificationService. -->
             <preference>
                 <name>NotificationLifecycleController.doEvents</name>
@@ -250,6 +264,17 @@
         <portlet-info>
             <title>Emergency Alert Admin</title>
         </portlet-info>
+
+        <portlet-preferences>
+
+            <!-- Set to true to enable the JPA Notification source.  This will display notifications stored in
+                 the portlet's notification database. -->
+            <preference>
+                <name>JpaNotificationService.enabled</name>
+                <value>false</value>
+            </preference>
+
+        </portlet-preferences>
     </portlet>
 
     <portlet>
@@ -292,6 +317,13 @@
                  response FOR THE DEMO EXPERIENCE. -->
             <preference>
                 <name>DemoNotificationService.locations</name>
+            </preference>
+
+            <!-- Set to true to enable the JPA Notification source.  This will display notifications stored in
+                 the portlet's notification database. -->
+            <preference>
+                <name>JpaNotificationService.enabled</name>
+                <value>false</value>
             </preference>
 
             <!-- Required for the PortletEventNotificationService. -->

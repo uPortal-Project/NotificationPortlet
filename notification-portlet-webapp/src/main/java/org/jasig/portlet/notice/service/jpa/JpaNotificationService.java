@@ -29,6 +29,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -64,6 +67,7 @@ public class JpaNotificationService extends AbstractNotificationService {
     private static final String UNCATEGORIZED_MESSAGE_CODE = "uncategorized";
     private static final String UNCATEGORIZED_DEFAULT_MESSAGE = "(Uncategorized)";
     private static final String ID_PREFIX = "jpa_";
+    private static final String PREFS_ENABLED = "JpaNotificationService.enabled";
 
     @Autowired
     private INotificationDao notificationDao;
@@ -78,9 +82,11 @@ public class JpaNotificationService extends AbstractNotificationService {
 
         NotificationResponse rslt = EMPTY_RESPONSE;  // default
 
+        PortletPreferences prefs = req.getPreferences();
+
         // We do not perform a check for unauthenticated users (but this
         // is an assumption that may need revisiting in the future).
-        if (usernameFinder.isAuthenticated(req)) {
+        if (usernameFinder.isAuthenticated(req) && Boolean.parseBoolean(prefs.getValue(PREFS_ENABLED, "false"))) {
             final String username = usernameFinder.findUsername(req);
 
             log.debug("Fetching notifications for user:  {}", username);
