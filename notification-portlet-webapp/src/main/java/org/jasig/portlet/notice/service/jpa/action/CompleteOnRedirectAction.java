@@ -40,8 +40,9 @@ public class CompleteOnRedirectAction extends NotificationAction {
     private static final long serialVersionUID = 1L;
 
     public CompleteOnRedirectAction() {
-        // Set a default label;  most use cases will use the setter and override
-        setLabel("SET-STATE");
+        // Provide a sensible (default) label;  most
+        // use cases will use the setter and override
+        setLabel("COMPLETE");
     }
 
     public CompleteOnRedirectAction(String label) {
