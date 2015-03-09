@@ -37,4 +37,37 @@
 
     <bean class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 
+    <!-- 
+     | Root Notification Service bean
+     |
+     | It's customary to use a CacheNotificationService here to wrap beans 
+     | defined in the parent applicationContext. 
+     +-->
+    <bean id="rootNotificationService" class="org.jasig.portlet.notice.action.hide.HideNotificationServiceDecorator">
+        <property name="enclosedNotificationService" ref="readNotificationService"/>
+    </bean>
+    <bean id="readNotificationService" class="org.jasig.portlet.notice.action.read.ReadNotificationServiceDecorator">
+        <property name="enclosedNotificationService" ref="favoriteNotificationService"/>
+    </bean>
+    <!-- Favorites must process prior to hide (e.g. be wrapped by hide not the other way around) because it discards
+         favorites that are not present in the notifications when there are no errors from any services.
+         If hide occurred first, it might hide something you had marked as favorite and you'd lose your favorite. -->
+    <bean id="favoriteNotificationService" class="org.jasig.portlet.notice.action.favorite.FavoriteNotificationServiceDecorator">
+        <property name="enclosedNotificationService" ref="cacheNotificationService"/>
+    </bean>
+
+    <bean id="cacheNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
+        <property name="name" value="notificationCacheNoticationService"/>
+        <property name="embeddedServices">
+            <list>
+                <ref bean="classLoaderResourceNotificationService" />
+                <ref bean="romeNotificationService" />
+                <ref bean="restfulJsonNotificationService"/>
+                <ref bean="portletEventNotificationService" />
+                <ref bean="jpaNotificationService" />
+                <ref bean="demoNotifications" />
+            </list>
+        </property>
+    </bean>
+
 </beans>

@@ -127,21 +127,6 @@
                 <name>usePortalJsLibs</name>
                 <value>false</value>
             </preference>
-            
-            <!-- Indicates whether the portlet will mark a notification as the
-                 configured StateChangeNotificationServiceDecorator.applyState when
-                 it is clicked. Only applies to notifications from the JPA service. -->
-            <preference>
-                <name>StateChangeNotificationServiceDecorator.enabled</name>
-                <value>true</value>
-            </preference>
-            
-            <!-- State to apply to a notification after a click if the StateChangeNotificationServiceDecorator.enabled 
-                 preference is true. -->
-            <preference>
-                <name>StateChangeNotificationServiceDecorator.applyState</name>
-                <value>COMPLETED</value>
-            </preference>
         </portlet-preferences>
         <supported-processing-event>
             <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>
