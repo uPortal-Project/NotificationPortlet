@@ -44,7 +44,7 @@ public enum NotificationState {
 
     /**
      * Indicates one or more fields of the {@link NotificationEntry} were
-     * modified <em>after</em> it was <code>CREATED</code>.
+     * modified <em>after</em> it was created.
      */
     UPDATED,
 

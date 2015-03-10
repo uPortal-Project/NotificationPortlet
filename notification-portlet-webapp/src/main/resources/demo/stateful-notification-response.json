@@ -10,7 +10,7 @@
           "title": "Notifications Supports State Transitions",
           "source": "Demo Service",
           "states": {
-            "CREATED": null,
+            "ISSUED": null,
             "PUSHED": null,
             "TEXTED": null,
             "READ": null,
