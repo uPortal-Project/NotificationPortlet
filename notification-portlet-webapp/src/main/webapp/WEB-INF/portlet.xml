@@ -83,6 +83,12 @@
                 <read-only>true</read-only>
             </preference>
 
+            <preference>
+                <name>SSPTaskNotificationService.enableMarkCompletedAction</name>
+                <value>false</value>
+                <read-only>true</read-only>
+            </preference>
+
             <!-- Locations of static files, in native NotificationPortlet JSON, 
                  that should be read from the classpath and included in the 
                  response FOR THE DEMO EXPERIENCE. -->
