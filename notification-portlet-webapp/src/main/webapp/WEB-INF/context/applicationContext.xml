@@ -188,18 +188,18 @@
     </bean>
 
     <!-- SSP notifications -->
-    <bean class="org.jasig.portlet.notice.service.studentsuccessplan.SSPApiLocator"/>
+    <bean class="org.jasig.portlet.notice.service.ssp.SSPApiLocator"/>
     <bean id="StudentSuccessPlanService.schoolIdToPersonIdCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
           p:cacheManager-ref="cacheManager" p:cacheName="StudentSuccessPlanService.schoolIdToPersonIdCache"/>
-    <bean id="sspApi" class="org.jasig.portlet.notice.service.studentsuccessplan.SSPApi">
+    <bean id="sspApi" class="org.jasig.portlet.notice.service.ssp.SSPApi">
         <property name="restTemplate" ref="restTemplate"/>
     </bean>
 
-    <bean id="sspNotifications" class="org.jasig.portlet.notice.service.studentsuccessplan.SSPTaskNotificationService">
+    <bean id="sspNotifications" class="org.jasig.portlet.notice.service.ssp.SSPTaskNotificationService">
         <property name="name" value="sspTaskNotificationService"/>
         <property name="sspApi" ref="sspApi"/>
         <property name="personLookup">
-            <bean class="org.jasig.portlet.notice.service.studentsuccessplan.SSPSchoolIdPersonLookup">
+            <bean class="org.jasig.portlet.notice.service.ssp.SSPSchoolIdPersonLookup">
                 <property name="sspApi" ref="sspApi"/>
             </bean>
         </property>

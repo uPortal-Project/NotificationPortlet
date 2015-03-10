@@ -1,4 +1,4 @@
-package org.jasig.portlet.notice.service.studentsuccessplan;
+package org.jasig.portlet.notice.service.ssp;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 

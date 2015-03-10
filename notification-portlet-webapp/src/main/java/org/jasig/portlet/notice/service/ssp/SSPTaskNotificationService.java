@@ -1,4 +1,4 @@
-package org.jasig.portlet.notice.service.studentsuccessplan;
+package org.jasig.portlet.notice.service.ssp;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -222,7 +222,7 @@ public class SSPTaskNotificationService extends AbstractNotificationService {
 
         Date createDate = readContext.read(format("$.rows[%d].createdDate", index), Date.class);
         Map<NotificationState, Date> states = new HashMap<>();
-        states.put(NotificationState.CREATED, createDate);
+        states.put(NotificationState.ISSUED, createDate);
 
         try {
             // the date is in an odd format, need to parse by hand...

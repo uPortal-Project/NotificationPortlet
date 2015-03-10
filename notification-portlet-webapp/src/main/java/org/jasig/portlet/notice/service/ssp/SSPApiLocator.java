@@ -1,4 +1,4 @@
-package org.jasig.portlet.notice.service.studentsuccessplan;
+package org.jasig.portlet.notice.service.ssp;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

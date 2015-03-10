@@ -1,23 +1,17 @@
-package org.jasig.portlet.notice.service.studentsuccessplan;
+package org.jasig.portlet.notice.service.ssp;
 
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.ReadContext;
 import org.jasig.portlet.notice.NotificationAction;
-import org.jasig.portlet.notice.service.studentsuccessplan.ISSPApi;
-import org.jasig.portlet.notice.service.studentsuccessplan.SSPApi;
-import org.jasig.portlet.notice.service.studentsuccessplan.SSPApiLocator;
-import org.jasig.portlet.notice.service.studentsuccessplan.SSPApiRequest;
-import org.jasig.portlet.notice.service.studentsuccessplan.SSPTaskNotificationService;
+import org.jasig.portlet.notice.service.ssp.ISSPApi;
+import org.jasig.portlet.notice.service.ssp.SSPApiLocator;
+import org.jasig.portlet.notice.service.ssp.SSPApiRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.portlet.ActionRequest;
-import java.net.MalformedURLException;
-import java.util.Date;
+import javax.portlet.ActionResponse;
+
+import java.io.IOException;
 
 /**
  * Mark an SSP task as completed.
@@ -25,7 +19,8 @@ import java.util.Date;
  * @author Josh Helmer, jhelmer.unicon.net
  */
 /* package private */ class MarkTaskCompletedAction extends NotificationAction {
-    private static final long serialVersionUid = 1l;
+
+    private static final long serialVersionUID = 1L;
 
     private static final String MARK_TASK_COMPLETE_FRAGMENT = "/api/1/mygps/task/mark?taskId={taskId}&complete={completed}";
     private String taskId;
@@ -38,9 +33,11 @@ import java.util.Date;
 
 
     @Override
-    public void invoke(ActionRequest req) {
+    public void invoke(ActionRequest req, ActionResponse res) throws IOException {
         ResponseEntity<String> updateResponse = null;
-        SSPApiRequest updateReq = new SSPApiRequest(MARK_TASK_COMPLETE_FRAGMENT, String.class)
+
+        @SuppressWarnings("unchecked")
+        SSPApiRequest<String> updateReq = new SSPApiRequest<String>(MARK_TASK_COMPLETE_FRAGMENT, String.class)
                 .setMethod(HttpMethod.PUT)
                 .addUriParameter("taskId", taskId)
                 .addUriParameter("completed", true);
