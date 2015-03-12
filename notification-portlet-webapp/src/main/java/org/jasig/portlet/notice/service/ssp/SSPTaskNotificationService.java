@@ -44,6 +44,7 @@ public class SSPTaskNotificationService extends AbstractNotificationService {
 
     private static final String NOTIFICATION_CATEGORY_PREF = "SSPTaskNotificationService.categoryName";
     private static final String SSP_NOTIFICATIONS_ENABLED = "SSPTaskNotificationService.enabled";
+    private static final String SSP_NOTIFICATIONS_ENABLE_MARK_COMPLETED = "SSPTaskNotificationService.enableMarkCompletedAction";
     private static final String DEFAULT_CATEGORY = "Student Success Plan";
     private static final String NOTIFICATION_SOURCE_PREF = "SSPTaskNotificationService.sourceName";
     private static final String DEFAULT_NOTIFICATION_SOURCE = "Student Success Plan";
@@ -171,6 +172,7 @@ public class SSPTaskNotificationService extends AbstractNotificationService {
         for (int i = 0; i < ((JSONArray)rows).size(); i++) {
             NotificationEntry entry = mapNotificationEntry(readContext, i, source);
             if (entry != null) {
+                attachActions(request, entry);
                 list.add(entry);
             }
         }
@@ -237,15 +239,30 @@ public class SSPTaskNotificationService extends AbstractNotificationService {
             log.warn("Error parsing due date.  Ignoring", e);
         }
 
-        // add actions...  not handled as a decorator since this task is specific to
-        // SSP task notifications.
-        MarkTaskCompletedAction action = new MarkTaskCompletedAction(id);
-
-        List<NotificationAction> actions = new ArrayList<>();
-        actions.add(action);
-        entry.setAvailableActions(actions);
 
         return entry;
+    }
+
+
+    /**
+     * Attach any SSP specific actions to this entry, if enabled.
+     *
+     * @param request the portlet request
+     * @param entry the entry
+     */
+    private void attachActions(PortletRequest request, NotificationEntry entry) {
+        PortletPreferences prefs = request.getPreferences();
+        String stringVal = prefs.getValue(SSP_NOTIFICATIONS_ENABLE_MARK_COMPLETED, "false");
+        boolean enableMarkCompleted = ("true".equalsIgnoreCase(stringVal));
+
+        List<NotificationAction> actions = new ArrayList<>();
+
+        if (enableMarkCompleted) {
+            MarkTaskCompletedAction action = new MarkTaskCompletedAction(entry.getId());
+            actions.add(action);
+        }
+
+        entry.setAvailableActions(actions);
     }
 
 
