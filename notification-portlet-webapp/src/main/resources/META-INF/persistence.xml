@@ -33,6 +33,7 @@
         <class>org.jasig.portlet.notice.service.jpa.JpaAttribute</class>
         <class>org.jasig.portlet.notice.service.jpa.JpaEntry</class>
         <class>org.jasig.portlet.notice.service.jpa.JpaEvent</class>
+        <mapping-file>META-INF/queries.xml</mapping-file>
         <properties>
             <!-- property name="hibernate.ejb.cfgfile" value="/notification.cfg.xml" /-->
             <property name="hibernate.session_factory_name_is_jndi" value="false" />

@@ -42,8 +42,11 @@ import org.jasig.portlet.notice.NotificationState;
 /* package-private */ interface INotificationDao {
 
     JpaEntry getEntry(long entryId);
+    JpaEntry getFullEntry(long entryId);
 
     JpaEntry createOrUpdateEntry(JpaEntry entry);
+
+    List<JpaEntry> list(Integer page, Integer pageSize);
 
     void removeEntry(JpaEntry entry);
 
@@ -51,6 +54,11 @@ import org.jasig.portlet.notice.NotificationState;
 
     Set<JpaEntry> getEntriesByRecipientByStatus(String username, 
             Set<NotificationState> include, Set<NotificationState> exclude);
+
+    JpaAddressee createOrUpdateAddressee(JpaAddressee addressee);
+    JpaAddressee getAddressee(long addresseeId);
+
+    List<JpaEvent> getEvents(long entryId);
 
     /**
      * Provides a complete transaction log for a notification and single
@@ -63,4 +71,6 @@ import org.jasig.portlet.notice.NotificationState;
     List<JpaEvent> getEvents(long entryId, String username);
 
 	JpaEvent createOrUpdateEvent(JpaEvent event);
+
+    JpaEvent getEvent(long eventId);
 }

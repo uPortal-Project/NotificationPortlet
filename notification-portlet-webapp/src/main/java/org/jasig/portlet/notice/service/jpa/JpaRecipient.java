@@ -70,5 +70,4 @@ import javax.persistence.Table;
     public void setUsername(String username) {
         this.username = username;
     }
-
 }

@@ -19,8 +19,12 @@
 
 package org.jasig.portlet.notice.service.jpa;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 import java.sql.Timestamp;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -43,7 +47,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name=JpaNotificationService.TABLENAME_PREFIX + "ENTRY")
-/* package-private */ class JpaEntry {
+/* package-private */ public class JpaEntry {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -80,15 +84,15 @@ import javax.persistence.Table;
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name="ENTRY_ID")
-    private Set<JpaAttribute> attributes = Collections.emptySet();
+    private Set<JpaAttribute> attributes = new HashSet<>();
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name="ENTRY_ID")
-    private Set<JpaAction> actions = Collections.emptySet();
+    private Set<JpaAction> actions = new HashSet<>();
 
     @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="ENTRY_ID")
-    private Set<JpaAddressee> addressees = Collections.emptySet();
+    private Set<JpaAddressee> addressees = new HashSet<>();
 
     public long getId() {
         return id;
@@ -182,7 +186,9 @@ import javax.persistence.Table;
      */
     public void setAttributes(Set<JpaAttribute> attributes) {
         this.attributes.clear();
-        this.attributes.addAll(attributes);
+        for (JpaAttribute attr : attributes) {
+            addAttribute(attr);
+        }
     }
 
     /**
@@ -190,6 +196,7 @@ import javax.persistence.Table;
      */
     public void addAttribute(JpaAttribute attribute) {
         attributes.add(attribute);
+        attribute.setEntryId(getId());
     }
 
     /**
@@ -226,7 +233,9 @@ import javax.persistence.Table;
      */
     public void setAddressees(Set<JpaAddressee> addressees) {
         this.addressees.clear();
-        this.addressees.addAll(addressees);
+        for (JpaAddressee addressee : addressees) {
+            addAddressee(addressee);
+        }
     }
 
     /**
@@ -234,6 +243,7 @@ import javax.persistence.Table;
      */
     public void addAddressee(JpaAddressee addressee) {
         addressees.add(addressee);
+        addressee.setEntryId(getId());
     }
 
 }

@@ -35,7 +35,7 @@
 
 
     <context:annotation-config/>
-    <context:component-scan base-package="org.jasig.portlet.notice.util"/>
+    <context:component-scan base-package="org.jasig.portlet.notice.util, org.jasig.portlet.notice.service"/>
 
     <!-- Properties configuration -->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" lazy-init="false">
@@ -186,12 +186,12 @@
 
     <!-- Use this to get bean refs from non-Spring managed classes -->
     <bean id="springContext" class="org.jasig.portlet.notice.util.SpringContext" />
-    
-    <!-- 
+
+    <!--
      | Root Notification Service bean
      |
-     | It's customary to use a CacheNotificationService here to wrap beans 
-     | defined in the parent applicationContext. 
+     | It's customary to use a CacheNotificationService here to wrap beans
+     | defined in the parent applicationContext.
      +-->
     <bean id="rootNotificationService" class="org.jasig.portlet.notice.action.hide.HideNotificationServiceDecorator">
         <property name="enclosedNotificationService" ref="stateChangeNotificationService"/>
@@ -208,7 +208,7 @@
     <bean id="favoriteNotificationService" class="org.jasig.portlet.notice.action.favorite.FavoriteNotificationServiceDecorator">
         <property name="enclosedNotificationService" ref="cacheNotificationService"/>
     </bean>
-    
+
     <bean id="cacheNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
         <property name="name" value="notificationCacheNoticationService"/>
         <property name="embeddedServices">
@@ -220,6 +220,36 @@
                 <ref bean="jpaNotificationService" />
                 <ref bean="demoNotifications" />
             </list>
+        </property>
+    </bean>
+
+    <!-- Notification JPA -> DTO mapping -->
+    <bean id="addresseePostProcessor" class="org.jasig.portlet.notice.service.jpa.AddresseePostProcessor"/>
+
+    <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
+        <property name="mappingFiles">
+            <list>
+                <value>classpath*:/mapping/jpa-mappings.xml</value>
+            </list>
+        </property>
+        <property name="eventListeners">
+            <util:list>
+                <bean class="org.jasig.portlet.notice.service.jpa.NotificationDTOMapperEventListener">
+                    <property name="postProcessorMap">
+                        <util:map>
+                            <entry key="org.jasig.portlet.notice.service.jpa.JpaEntry">
+                                <bean class="org.jasig.portlet.notice.service.jpa.JpaEntryPostProcessor">
+                                    <property name="addresseePostProcessor" ref="addresseePostProcessor"/>
+                                </bean>
+                            </entry>
+                            <entry key="org.jasig.portlet.notice.service.jpa.JpaAddressee" value-ref="addresseePostProcessor"/>
+                        </util:map>
+                    </property>
+                </bean>
+            </util:list>
+        </property>
+        <property name="customFieldMapper">
+            <bean class="org.jasig.portlet.notice.service.jpa.LazyInitializationMapper"/>
         </property>
     </bean>
 </beans>
