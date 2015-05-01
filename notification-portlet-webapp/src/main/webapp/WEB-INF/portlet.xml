@@ -146,6 +146,17 @@
                 <value>false</value>
             </preference>
 
+            <!-- The following two preferences control sorting of entries within
+                 a category.  The default is "natural" sorting, meaning the
+                 order in which entries appear is left to the data source(s). -->
+            <preference>
+                <name>Sorting.sortStrategy</name>
+            </preference>
+            <preference>
+                <name>Sorting.sortOrder</name>
+                <value>ASCENDING</value>
+            </preference>
+
             <!-- If true, notifications will piggyback on the portal's JavaScript library (jQuery).  The needs
                  of this portlet are very lightweight so we should default to 'true' in this case but that's
                  pending broader consensus. -->

@@ -45,6 +45,7 @@ import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.NotificationResult;
 import org.jasig.portlet.notice.util.UsernameFinder;
+import org.jasig.portlet.notice.util.sort.Sorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -88,7 +89,7 @@ public class NotificationLifecycleController {
     private INotificationService notificationService;
 
     @ResourceMapping("GET-NOTIFICATIONS-UNCATEGORIZED")
-    public ModelAndView getNotifications(final ResourceRequest req, final @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
+    public ModelAndView getNotificationsUncategorized(final ResourceRequest req, final @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
 
         // RequestParam("key") String key, HttpServletRequest request, ModelMap model
         log.debug("Invoking getNotifications for user:  " + usernameFinder.findUsername(req));
@@ -107,12 +108,15 @@ public class NotificationLifecycleController {
         // Combine all categories into one list and create a category list.  The category list will include categories that have no elements so
         // it can be used for a consistent filtering interface if the data source provides a full list.  (This is helpful for an interface such as
         // student jobs where you always want the user to see a consistent list of all the categories for a category filter).
-        final List<NotificationEntry> allEntries = new ArrayList<NotificationEntry>();
+        List<NotificationEntry> allEntries = new ArrayList<NotificationEntry>();
         final Set<String> categoryList = new HashSet<String>();
         for (final NotificationCategory notificationCategory : notifications.getCategories()) {
             categoryList.add(notificationCategory.getTitle());
             addAndCategorizeEntries(allEntries, notificationCategory);
         }
+
+        // Apply specified sorting (if any)...
+        allEntries = Sorting.sort(req, allEntries);
 
         final Map<String,Object> model = new HashMap<String,Object>();
         model.put("feed", allEntries);

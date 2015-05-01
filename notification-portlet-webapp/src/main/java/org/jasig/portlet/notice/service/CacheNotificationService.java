@@ -76,7 +76,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
         }
 
         if (refresh) {
-            // Make certain we have a cache MISS on fetch()
+            // Make certain we have a cache MISS on next fetch()
             final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
             cache.remove(cacheKey);
         }
@@ -104,7 +104,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
             log.debug("Notifications requested for user='" + username + "' and windowId=" + req.getWindowID());
         }
 
-        NotificationResponse rslt = new NotificationResponse();
+        CacheTuple tuple = null;  // Existing or new?
         final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
         final Element m = cache.get(cacheKey);
         if (m != null) {
@@ -114,7 +114,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
             }
             // We have a cached element, but it could be 
             // PARTIALLY invalid; make sure it's fresh
-            CacheTuple tuple = (CacheTuple) m.getObjectValue();
+            tuple = (CacheTuple) m.getObjectValue();
             Map<String,NotificationResponse> iterable = 
                     new HashMap<String,NotificationResponse>(tuple.getResponses());  // Can't iterate & modify the same collection
             for (Map.Entry<String,NotificationResponse> entry : iterable.entrySet()) {
@@ -131,10 +131,6 @@ public final class CacheNotificationService extends AbstractNotificationService 
                     tuple.getResponses().put(entry.getKey(), freshResponse);
                 }
             }
-            // Construct a new NotificationResponse from constituent parts...
-            for (Map.Entry<String,NotificationResponse> entry : tuple.getResponses().entrySet()) {
-                rslt = rslt.combine(entry.getValue());
-            }
         } else {
             if (log.isDebugEnabled()) {
                 log.debug("Cache MISS for user='" + username 
@@ -142,17 +138,18 @@ public final class CacheNotificationService extends AbstractNotificationService 
             }
             // For whatever reason we can't pull from cache;  we need to hit
             // the underlying data sources, then cache what we receive
-            CacheTuple tuple = new CacheTuple();
+            tuple = new CacheTuple();
             for(INotificationService service : servicesMap.values()) {
                 final NotificationResponse nr = getResponseFromService(req, service);
                 tuple.getResponses().put(service.getName(), nr);
             }
             cache.put(new Element(cacheKey, tuple));
+        }
 
-            // Construct a new NotificationResponse from constituent parts...
-            for (Map.Entry<String,NotificationResponse> entry : tuple.getResponses().entrySet()) {
-                rslt = rslt.combine(entry.getValue());
-            }
+        // Construct a new NotificationResponse from constituent parts...
+        NotificationResponse rslt = new NotificationResponse();
+        for (Map.Entry<String,NotificationResponse> entry : tuple.getResponses().entrySet()) {
+            rslt = rslt.combine(entry.getValue());
         }
 
         return rslt;

@@ -37,6 +37,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.util.sort.Sorting;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.ModelAndView;
@@ -61,9 +62,9 @@ public class NotificationController {
     @RenderMapping
     public String showNotificationsList(final RenderRequest req) {
         final PortletPreferences prefs = req.getPreferences();
-        
+
         String viewName;
-        
+
         if(WindowState.NORMAL.equals(req.getWindowState())) {
             viewName = prefs.getValue(NORMAL_VIEW_NAME_PREFERENCE, NORMAL_VIEW_NAME_DEFAULT);
             if(NORMAL_VIEW_NAME_DEFAULT.equals(viewName)) {
@@ -102,6 +103,9 @@ public class NotificationController {
                 session.setAttribute(ATTRIBUTE_HIDDEN_ERRORS, hidden);
             }
             notifications = notifications.filterErrors(hidden);
+
+            // Apply specified sorting (if any)...
+            notifications = Sorting.sort(req, notifications);
 
             model.put("notificationResponse", notifications);
             return new ModelAndView("json", model);
