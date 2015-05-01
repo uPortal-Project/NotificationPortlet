@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jasig.portlet.notification</groupId>
     <artifactId>notification-portlet-parent</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-M2</version>
     <packaging>pom</packaging>
     <name>NotificationPortlet</name>
 
@@ -17,7 +17,7 @@
         <connection>scm:git:git://github.com/Jasig/NotificationPortlet.git</connection>
         <developerConnection>scm:git:git@github.com:Jasig/NotificationPortlet.git</developerConnection>
         <url>https://github.com/Jasig/NotificationPortlet</url>
-      <tag>HEAD</tag>
+      <tag>NotificationPortlet-3.0.0-M2</tag>
   </scm>
 
     <properties>
@@ -229,9 +229,8 @@
 	                </executions>
 	                <configuration>
 	                    <hibernatetool>      
-	                        <jpaconfiguration persistenceunit="NoticePU" 
-	                                          propertyFile="target/${project.build.finalName}/WEB-INF/classes/datasource.properties"/>
-	                        <hbm2ddl export="true" create="true" drop="true"/>                   
+	                        <jpaconfiguration persistenceunit="NoticePU" propertyFile="target/${project.build.finalName}/WEB-INF/classes/datasource.properties" />
+	                        <hbm2ddl export="true" create="true" drop="true" />                   
 	                        <classpath>
 	                            <path location="target/${project.build.finalName}/WEB-INF/classes" />
 	                        </classpath>                       
