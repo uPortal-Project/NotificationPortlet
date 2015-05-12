@@ -173,7 +173,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                          data-id="{{ entry.id }}" \
                          data-body="{{ escape(entry.body) }}" \
                          data-title="{{ entry.title }}" \
-                         data-source="{{ entry.source }}"> {{ entry.title }}</a> \
+                         data-source="{{ entry.source }}"><i class="fa fa-exclamation-triangle"></i> {{ entry.title }}</a> \
                       {% if ( entry.dueDate ) { \
                            var date  = new Date(entry.dueDate.time), \
                                month = date.getMonth() + 1, \
@@ -182,9 +182,15 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                                overDue = (date < new Date() ? " overdue" : "");\
                                data.registerAction(entry.id, entry.availableActions); \
                       %} \
-                        <span class="notification-due-date{{ overDue }}"> \
-                          Due {{ month }}/{{ day }}/{{ year }} \
-                        </span> \
+                        {% if (overDue) { %} \
+                          <p><span class="label label-danger"> \
+                            Due {{ month }}/{{ day }}/{{ year }} \
+                            &nbsp;<i class="fa fa-exclamation-circle"></i></span></p> \
+                        {% } else { %} \
+                          <p><span class="label label-default"> \
+                            Due {{ month }}/{{ day }}/{{ year }} \
+                          </span></p> \
+                        {% } %} \
                       {% } %} \
                       <span class="completed-badge">&#10004;</span> \
                     </li> \
