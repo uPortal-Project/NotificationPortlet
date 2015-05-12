@@ -340,9 +340,9 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
       if ( data.errors ) {
         var html = '\
           {% _.each(errors, function(error) { %} \
-            <div class="portlet-msg-error" errorkey="{{ error.key }}"> \
+            <div class="alert alert-danger alert-dismissible" role="alert" errorkey="{{ error.key }}"> \
               {{ error.source }}: {{ error.error }} \
-              <a href="#" class="remove" title="Hide"></a> \
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
             </div> \
           {% }); %} \
         ';  
