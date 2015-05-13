@@ -70,8 +70,10 @@
 
             <!-- errors -->
             <div class="notification-error-container" style="display: none;"></div>
-  
-     </div>
+
+        </div>
+
+    </div>
 
 </div>
 

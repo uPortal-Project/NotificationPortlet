@@ -93,24 +93,19 @@
                     margin: 0;
 
                     li {
-                        list-style: none !important;
-                        line-height: 18px;
+                        list-style-image: url("../images/chevron-right.png");
                         font-size: 16px;
-                        margin: 10px 0;
+                        margin: 15px 0;
+
+                        p {
+                            margin: 0;
+                        }
                     }
                     li.completed a {
                         text-decoration: line-through;
                     }
                     li:not(.completed) .completed-badge {
                         display: none;
-                    }
-                }
-
-                .notification-due-date {
-                    color: @gray6;
-
-                    &.overdue {
-                        color: @red;
                     }
                 }
             }
@@ -120,7 +115,9 @@
             padding: 20px 20px;
 
             h3 {
-                margin-bottom: 3px;
+                margin-bottom: 10px;
+                font-size: 22px;
+                font-weight: bold;
             }
 
             .notification-actions {
@@ -187,6 +184,10 @@
             }
         }
 
+        .notification-error-container {
+            margin: 20px;
+        }
+
         .no-notifications-container {
             padding: 20px 20px;
             h3 {
@@ -201,20 +202,6 @@
         .notification-trigger {
             padding: 10px 0 5px 0;
             border-bottom: 1px solid @gray8;
-        }
-
-        .portlet-msg-error {
-            margin-top: 10px;
-            overflow: auto;
-
-            .remove {
-                display: block;
-                float: right;
-                background: url("../images/cross.png") no-repeat top left;
-                height: 16px;
-                width: 16px;
-                cursor: pointer;
-            }
         }
     }
 
