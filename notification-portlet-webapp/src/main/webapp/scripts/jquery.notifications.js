@@ -166,9 +166,6 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                           } \
                       } %} \
                     <li class="{{ states }}"> \
-                      {% if (!accordion) { %} \
-                        &raquo; \
-                      {% } %} \
                       <a href="{{ entry.url || \"javascript://\" }}" \
                          data-id="{{ entry.id }}" \
                          data-body="{{ escape(entry.body) }}" \
