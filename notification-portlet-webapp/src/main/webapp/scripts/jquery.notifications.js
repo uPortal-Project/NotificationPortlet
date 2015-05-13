@@ -173,23 +173,25 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                          data-id="{{ entry.id }}" \
                          data-body="{{ escape(entry.body) }}" \
                          data-title="{{ entry.title }}" \
-                         data-source="{{ entry.source }}"><i class="fa fa-exclamation-triangle"></i> {{ entry.title }}</a> \
+                         data-source="{{ entry.source }}" \
+                         data-duedate="{{ entry.dueDate.time }}"> \
+                         <i class="fa fa-exclamation-triangle"></i> {{ entry.title }}\
+                        </a> \
                       {% if ( entry.dueDate ) { \
-                           var date  = new Date(entry.dueDate.time), \
-                               month = date.getMonth() + 1, \
-                               day   = date.getDate(), \
-                               year  = date.getFullYear(), \
-                               overDue = (date < new Date() ? " overdue" : "");\
-                               data.registerAction(entry.id, entry.availableActions); \
+                        var date  = new Date(entry.dueDate.time), \
+                          month = date.getMonth() + 1, \
+                          day   = date.getDate(), \
+                          year  = date.getFullYear(), \
+                          overDue = (date < new Date() ? " overdue" : "");\
+                          data.registerAction(entry.id, entry.availableActions); \
                       %} \
-                        {% if (overDue) { %} \
-                          <p><span class="label label-danger"> \
-                            Due {{ month }}/{{ day }}/{{ year }} \
-                            &nbsp;<i class="fa fa-exclamation-circle"></i></span></p> \
-                        {% } else { %} \
-                          <p><span class="label label-default"> \
-                            Due {{ month }}/{{ day }}/{{ year }} \
-                          </span></p> \
+                      {% if (overDue) { %} \
+                        <p><span class="label label-danger"> \
+                          Due {{ month }}/{{ day }}/{{ year }} \
+                          &nbsp;<i class="fa fa-exclamation-circle"></i></span></p> \
+                      {% } else { %} \
+                        <p><span class="label label-default"> \
+                          Due {{ month }}/{{ day }}/{{ year }}</span></p> \
                         {% } %} \
                       {% } %} \
                       <span class="completed-badge">&#10004;</span> \
@@ -237,16 +239,24 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
             title  : $(this).data("title"),
             source : $(this).data("source"),
             link   : $(this).attr("href"),
+            ddate  : $(this).data("duedate"),
             id     : $(this).data("id")
           };
 
           var html = '\
-            <h3><a href="{{ link }}">{{ title }}</a></h3> \
-            <p>{{ unescape(body) }}</p> \
-            <p class="notification-source"> \
-              Source: <a href="{{ link }}">{{ source }}</a> \
-            </p> \
+          <h3><a href="{{ link }}">{{ title }}</a></h3> \
+          <p>{{ unescape(body) }}</p> \
+          <p><span class="label label-default">Due {{ ddate }}</span></p> \
+          <p class="notification-source"> \
+            Source: <a href="{{ link }}">{{ source }}</a> \
+          </p> \
           ';
+
+          var getDateFormat = function(date) {
+            var thisDueDate = new Date(date);
+            return thisDueDate;
+          };
+
           var compiled = _.template(html, notification, {
               interpolate : templateSettings.interpolate,
               evaluate : templateSettings.evaluate
