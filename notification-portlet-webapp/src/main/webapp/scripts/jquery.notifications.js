@@ -56,11 +56,33 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
     var filterState = {"days": 1};
 
     var actionMap = {};
+
     var registerAction = function(id, actions) {
         actionMap[id] = actions;
     };
+
     var getActions = function(id) {
         return actionMap[id] || [];
+    };
+
+    var getDateFormat = function(date) {
+      var currentDate = new Date(date);
+      var year = currentDate.getFullYear();
+      var month = currentDate.getMonth() + 1;
+      var day =  currentDate.getDate();
+      var formatDate = month + '/' + day + '/' + year;
+
+      return formatDate;
+    };
+
+    var isPastDue = function(date) {
+      var pastDue = false;
+      var overDue = new Date(date);
+      if (overDue < new Date()) {
+        pastDue = true;
+      }
+
+      return pastDue;
     };
 
     var getNotifications = function(params, doRefresh) {
@@ -175,20 +197,15 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                          <i class="fa fa-exclamation-triangle"></i> {{ entry.title }}\
                         </a> \
                       {% if ( entry.dueDate ) { \
-                        var date  = new Date(entry.dueDate.time), \
-                          month = date.getMonth() + 1, \
-                          day   = date.getDate(), \
-                          year  = date.getFullYear(), \
-                          overDue = (date < new Date() ? " overdue" : "");\
-                          data.registerAction(entry.id, entry.availableActions); \
+                        data.registerAction(entry.id, entry.availableActions); \
                       %} \
-                      {% if (overDue) { %} \
+                      {% if (data.isPastDue(entry.dueDate.time)) { %} \
                         <p><span class="label label-danger"> \
-                          Due {{ month }}/{{ day }}/{{ year }} \
+                          Due {{ data.getDateFormat(entry.dueDate.time) }} \
                           &nbsp;<i class="fa fa-exclamation-circle"></i></span></p> \
                       {% } else { %} \
                         <p><span class="label label-default"> \
-                          Due {{ month }}/{{ day }}/{{ year }}</span></p> \
+                          Due {{ data.getDateFormat(entry.dueDate.time) }}</span></p> \
                         {% } %} \
                       {% } %} \
                       <span class="completed-badge">&#10004;</span> \
@@ -200,7 +217,11 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           {% }); %} \
         {% } %} \
       ';
-      var data = _.extend({}, notificationResponse, { registerAction: registerAction });
+      var data = _.extend({}, notificationResponse, {
+        registerAction: registerAction,
+        isPastDue: isPastDue,
+        getDateFormat: getDateFormat
+      });
       var compiled = _.template(html, data, {
           variable: 'data',
           interpolate : templateSettings.interpolate,
@@ -243,20 +264,27 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           var html = '\
           <h3><a href="{{ link }}">{{ title }}</a></h3> \
           <p>{{ unescape(body) }}</p> \
-          <p><span class="label label-default">Due {{ ddate }}</span></p> \
+          {% if (isPastDue(ddate)) { %} \
+            <p><span class="label label-danger"> \
+              Due {{ getDateFormat(ddate) }} \
+              &nbsp;<i class="fa fa-exclamation-circle"></i></span></p> \
+          {% } else { %} \
+            <p><span class="label label-default"> \
+              Due {{ getDateFormat(ddate) }}</span></p> \
+          {% } %} \
           <p class="notification-source"> \
             Source: <a href="{{ link }}">{{ source }}</a> \
           </p> \
           ';
 
-          var getDateFormat = function(date) {
-            var thisDueDate = new Date(date);
-            return thisDueDate;
-          };
+          var data = _.extend({}, notification, {
+            isPastDue: isPastDue,
+            getDateFormat: getDateFormat
+          });
 
-          var compiled = _.template(html, notification, {
-              interpolate : templateSettings.interpolate,
-              evaluate : templateSettings.evaluate
+          var compiled = _.template(html, data, {
+            interpolate : templateSettings.interpolate,
+            evaluate : templateSettings.evaluate
           });
 
           var actionsTemplate = [
