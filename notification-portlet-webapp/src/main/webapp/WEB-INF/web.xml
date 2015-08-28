@@ -58,12 +58,4 @@
         <url-pattern>/WEB-INF/servlet/view</url-pattern>
     </servlet-mapping>
 
-    <!-- For some reason Tomcat 7.0.39 wasn't resolving the taglibs in the tags folder automatically -->
-    <jsp-config>
-        <taglib>
-            <taglib-uri>http://org.jasig.portlet/NotificationPortlet/date</taglib-uri>
-            <taglib-location>/WEB-INF/tags/date.tld</taglib-location>
-        </taglib>
-    </jsp-config>
-
 </web-app>
