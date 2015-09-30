@@ -19,13 +19,13 @@
 
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:p="http://www.springframework.org/schema/p"
-    xmlns:util="http://www.springframework.org/schema/util"
-    xsi:schemaLocation="
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
         http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
@@ -40,22 +40,7 @@
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" lazy-init="false">
         <property name="locations">
             <list>
-                <value>classpath:configuration.properties</value>
-                <value>classpath:datasource.properties</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- Use this to get bean refs from non-Spring managed classes -->
-    <bean id="springContext" class="org.jasig.portlet.notice.util.SpringContext" />
-
-    <!-- 
-     | Message source for this application. 
-     +-->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basenames">
-            <list>
-                <value>messages</value>
+                <value>classpath:test-configuration.properties</value>
             </list>
         </property>
     </bean>
@@ -65,26 +50,12 @@
         <property name="shared" value="true" /><!-- Shared with Hibernate -->
     </bean>
     <bean id="notificationResponseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
-        p:cacheManager-ref="cacheManager" p:cacheName="notificationResponseCache"/>
-
-    <!-- 
-     | view resolvers
-     +-->
-    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="order" value="10" />
-        <property name="cache" value="true" />
-        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-        <property name="prefix" value="/WEB-INF/jsp/" />
-        <property name="suffix" value=".jsp" />
-    </bean>
-    <bean id="xmlViewResolver" class="org.springframework.web.servlet.view.XmlViewResolver">
-        <property name="order" value="1"/>
-    </bean>
+          p:cacheManager-ref="cacheManager" p:cacheName="notificationResponseCache"/>
 
     <!-- Abstract Default Exception Handler Bean -->
     <bean id="defaultExceptionHandlerTemplate"
-        class="org.springframework.web.portlet.handler.SimpleMappingExceptionResolver"
-        abstract="true">
+          class="org.springframework.web.portlet.handler.SimpleMappingExceptionResolver"
+          abstract="true">
         <property name="defaultErrorView" value="defError"/>
         <property name="exceptionMappings">
             <props>
@@ -95,41 +66,26 @@
     </bean>
 
     <!--
-     | Snooze feature
-     +-->
-    <bean id="snoozed" class="org.jasig.portlet.notice.NotificationState" factory-method="valueOf">
-        <constructor-arg value="SNOOZED" />
-        <property name="snoozePeriodHours" value="72" />
-    </bean>
-
-    <!--
      | Notification Service Beans
      |
-     | Reference these as needed within portlet contexts, or optionally define 
+     | Reference these as needed within portlet contexts, or optionally define
      | additional service beans there.
      +-->
 
-    <!-- ClassLoader:  Use 'ClassLoaderResourceNotificationService.locations' preference to specify location of data files -->
+    <!-- ClassLoader:  Use 'ClassLoaderResourceNotificationService.locations' preference to specify location of data files
     <bean id="classLoaderResourceNotificationService" class="org.jasig.portlet.notice.service.classloader.ClassLoaderResourceNotificationService">
         <property name="name" value="classLoaderResourceNotificationService"/>
     </bean>
     <bean id="ClassLoaderResourceNotificationService.responseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
-        p:cacheManager-ref="cacheManager" p:cacheName="ClassLoaderResourceNotificationService.responseCache"/>
+          p:cacheManager-ref="cacheManager" p:cacheName="ClassLoaderResourceNotificationService.responseCache"/>-->
 
-    <!-- Rome (RSS/Atom):  Use 'RomeNotificationService.urls' preference to specify feeds -->
-    <bean id="romeNotificationService" class="org.jasig.portlet.notice.service.rome.RomeNotificationService">
-        <property name="name" value="romeNoticationService"/>
-    </bean>
-    <bean id="RomeNotificationService.feedCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
-        p:cacheManager-ref="cacheManager" p:cacheName="RomeNotificationService.feedCache"/>
-
-   <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
         <property name="requestFactory">
             <bean class="org.springframework.http.client.CommonsClientHttpRequestFactory">
                 <property name="httpClient" ref="httpClient" />
             </bean>
         </property>
-   </bean>
+    </bean>
 
     <bean id="oAuth2RestTemplate" class="org.springframework.security.oauth2.client.OAuth2RestTemplate">
         <constructor-arg name="resource" ref="oAuthClientResourceDetails"/>
@@ -160,8 +116,10 @@
                 </entry>
             </util:map>
         </property>
-       <property name="restTemplate" ref="restTemplate"/><property name="oAuth2RestTemplate" ref="oAuth2RestTemplate"/>
+        <property name="restTemplate" ref="restTemplate"/>
+        <property name="oAuth2RestTemplate" ref="oAuth2RestTemplate"/>
     </bean>
+
     <bean id="httpConnectionManager" class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager" destroy-method="shutdown">
         <property name="params">
             <bean class="org.apache.commons.httpclient.params.HttpConnectionManagerParams">
@@ -170,48 +128,10 @@
             </bean>
         </property>
     </bean>
+
     <bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
         <constructor-arg ref="httpConnectionManager" />
     </bean>
 
-    <!-- PortletEvent:  Use 'NotificationLifecycleController.doEvents' preference to turn on event processing for a portlet definition -->
-    <bean id="portletEventNotificationService" class="org.jasig.portlet.notice.service.event.PortletEventNotificationService">
-        <property name="name" value="portletEventNotificationService"/>
-    </bean>
-    <bean id="PortletEventNotificationService.responseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
-        p:cacheManager-ref="cacheManager" p:cacheName="PortletEventNotificationService.responseCache"/>
-
-    <!-- JPA -->
-    <bean id="jpaNotificationService" class="org.jasig.portlet.notice.service.jpa.JpaNotificationService">
-        <property name="name" value="jpaNotificationService"/>
-    </bean>
-
-    <!-- DEMO -->
-    <bean id="demoNotifications" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
-        <property name="name" value="demoNotifications"/>
-        <property name="active" value="true"/>
-    </bean>
-    <bean id="demoEmergencyAlerts" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
-        <property name="name" value="demoEmergencyAlerts"/>
-        <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
-    </bean>
-
-    <!-- SSP notifications -->
-    <bean class="org.jasig.portlet.notice.service.ssp.SSPApiLocator"/>
-    <bean id="StudentSuccessPlanService.schoolIdToPersonIdCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
-          p:cacheManager-ref="cacheManager" p:cacheName="StudentSuccessPlanService.schoolIdToPersonIdCache"/>
-    <bean id="sspApi" class="org.jasig.portlet.notice.service.ssp.SSPApi">
-        <property name="restTemplate" ref="restTemplate"/>
-    </bean>
-
-    <bean id="sspNotifications" class="org.jasig.portlet.notice.service.ssp.SSPTaskNotificationService">
-        <property name="name" value="sspTaskNotificationService"/>
-        <property name="sspApi" ref="sspApi"/>
-        <property name="personLookup">
-            <bean class="org.jasig.portlet.notice.service.ssp.SSPSchoolIdPersonLookup">
-                <property name="sspApi" ref="sspApi"/>
-            </bean>
-        </property>
-    </bean>
 
 </beans>

@@ -28,6 +28,7 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +42,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
@@ -58,10 +60,16 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
 
     private Map<String,IParameterEvaluator> urlParameters;
     private RestTemplate restTemplate;
+
+    private OAuth2RestTemplate oAuth2RestTemplate;
+
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private UsernameFinder usernameFinder;
+
+    @Autowired
+    private HttpClient httpClient;
 
     @Required
     public void setUsernameEvaluator(IParameterEvaluator usernameEvaluator) {
@@ -82,6 +90,21 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
         this.restTemplate = restTemplate;
     }
 
+    public void setoAuth2RestTemplate(OAuth2RestTemplate oAuth2RestTemplate)
+    {
+        this.oAuth2RestTemplate=oAuth2RestTemplate;
+    }
+
+    protected RestTemplate getRestTemplate()
+    {
+        return restTemplate;
+    }
+
+    protected OAuth2RestTemplate getoAuth2RestTemplate()
+    {
+        return oAuth2RestTemplate;
+    }
+
     @Override
     public NotificationResponse fetch(PortletRequest req) {
         
@@ -96,17 +119,37 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
             if (log.isDebugEnabled()) {
                 log.debug("Invoking uri '" + url + "' with the following parameters:  " + params.toString());
             }
-            try {
-                final NotificationResponse response = restTemplate.execute(
-                        url, HttpMethod.GET, 
-                        requestCallback, responseExtractor, params);
-                rslt = rslt.combine(response);
-            } catch (Exception e) {
-                final String msg = "Failed to invoke the following service at '" 
-                        + url + "' for user " + usernameFinder.findUsername(req);
-                log.error(msg, e);
-                rslt = prepareErrorResponse(getName(), "Service Unavailable");
+            // Handle non OAuth resources separately
+            if (oAuth2RestTemplate.getResource().getClientId()==null||oAuth2RestTemplate.getResource().getClientId().equals("")) {
+                try {
+
+                    final NotificationResponse response = restTemplate.execute(
+                            url, HttpMethod.GET,
+                            requestCallback, responseExtractor, params);
+                    rslt = rslt.combine(response);
+                } catch (Exception e) {
+                    final String msg = "Failed to invoke the following service at '"
+                            + url + "' for user " + usernameFinder.findUsername(req);
+                    log.error(msg, e);
+                    rslt = prepareErrorResponse(getName(), "Service Unavailable");
+                }// Handle OAuth resource with a specific OAuthRestTemplate
             }
+            else
+            {
+                try {
+
+                    final NotificationResponse response = oAuth2RestTemplate.execute(
+                            url, HttpMethod.GET,
+                            requestCallback, responseExtractor, params);
+                    rslt = rslt.combine(response);
+                } catch (Exception e) {
+                    final String msg = "Failed to invoke the following OAuth2 service at '"
+                            + url + "' for user " + usernameFinder.findUsername(req);
+                    log.error(msg, e);
+                    rslt = prepareErrorResponse(getName(), "Service Unavailable");
+                }
+            }
+
         }
         
         return rslt;
