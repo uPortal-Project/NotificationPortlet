@@ -24,6 +24,7 @@
         <commons.lang>2.6</commons.lang>
         <filters.file>src/main/filters/notifications.properties</filters.file>
         <hibernate.version>4.2.15.Final</hibernate.version>
+        <hsql.version>2.3.3</hsql.version>
         <jackson.version>1.9.11</jackson.version>
         <junit.version>4.11</junit.version>
         <logbackVersion>1.0.13</logbackVersion>
@@ -37,7 +38,7 @@
         <!-- The JDBC Driver used by the portlet -->
         <jdbc.groupId>org.hsqldb</jdbc.groupId>
         <jdbc.artifactId>hsqldb</jdbc.artifactId>
-        <jdbc.version>2.2.9</jdbc.version>
+        <jdbc.version>${hsql.version}</jdbc.version>
     </properties>
     
     <licenses>

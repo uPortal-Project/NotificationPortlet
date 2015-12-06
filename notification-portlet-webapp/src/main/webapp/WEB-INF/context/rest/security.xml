@@ -25,9 +25,9 @@
         <authentication-provider>
             <user-service>
                 <user name="rest-read" password="rest-read"
-                      authorities="#{T(org.jasig.portlet.notice.controller.rest.Roles).REST_READ}"/>
+                      authorities="#{T(org.jasig.portlet.notice.controller.rest.Role).REST_READ.getName()}"/>
                 <user name="rest-user" password="rest-user"
-                      authorities="#{T(org.jasig.portlet.notice.controller.rest.Roles).REST_WRITE}"/>
+                      authorities="#{T(org.jasig.portlet.notice.controller.rest.Role).REST_WRITE.getName()}"/>
             </user-service>
         </authentication-provider>
     </authentication-manager>
