@@ -1,5 +1,13 @@
 package org.jasig.portlet.notice.controller.rest;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.jasig.portlet.notice.rest.AddresseeDTO;
 import org.jasig.portlet.notice.rest.EntryDTO;
 import org.jasig.portlet.notice.rest.EventDTO;
@@ -16,13 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -105,10 +106,10 @@ public class JPANotificationRESTController {
 
 
     /**
-     * Get the list of addressees for a notification.
+     * Get the set of addressees for a notification.
      *
      * @param id the notification id
-     * @return the list of addressees
+     * @return the set of addressees
      */
     @RequestMapping(value = "/{notificationId}/addressees", method = RequestMethod.GET)
     @ResponseBody

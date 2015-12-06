@@ -25,6 +25,7 @@
         <filters.file>src/main/filters/notifications.properties</filters.file>
         <hibernate.version>4.2.15.Final</hibernate.version>
         <jackson.version>1.9.11</jackson.version>
+        <junit.version>4.11</junit.version>
         <logbackVersion>1.0.13</logbackVersion>
         <resource-server.version>1.0.42</resource-server.version>
         <slf4jVersion>1.7.5</slf4jVersion>
@@ -238,6 +239,23 @@
                 <scope>runtime</scope>
             </dependency>
             <!-- End of logging section -->
+
+            <!-- Provided dependencies -->
+            <dependency>
+                <groupId>javax.portlet</groupId>
+                <artifactId>portlet-api</artifactId>
+                <version>2.0</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Test dependencies -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -260,21 +278,6 @@
                         <tagNameFormat>NotificationPortlet-@{project.version}</tagNameFormat>
                         <pushChanges>false</pushChanges>
                     </configuration>
-                </plugin>
-                <!-- Compile groovy classes - only set for test classes -->
-                <plugin>
-                    <groupId>org.codehaus.gmavenplus</groupId>
-                    <artifactId>gmavenplus-plugin</artifactId>
-                    <version>1.2</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>addTestSources</goal>
-                                <goal>testCompile</goal>
-                                <goal>removeTestStubs</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
 	            <plugin>
 	                <!--
