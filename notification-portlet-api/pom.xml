@@ -20,12 +20,10 @@
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
 
         <!-- Logging section -->
@@ -56,8 +54,6 @@
         <dependency>
             <groupId>javax.portlet</groupId>
             <artifactId>portlet-api</artifactId>
-            <version>2.0</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- ===== Test Dependencies ====================================== -->
@@ -65,8 +61,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

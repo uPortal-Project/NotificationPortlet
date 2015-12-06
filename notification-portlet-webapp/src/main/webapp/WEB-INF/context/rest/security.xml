@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        ">
+
+    <global-method-security pre-post-annotations="enabled"/>
+    <http use-expressions="true">
+        <!-- may eventually want to move to more fine-grained permissions -->
+        <intercept-url pattern="/**" method="GET" access="@restApiSecurityService.isEnabled() and (hasRole('ROLE_REST_READ') or hasRole('ROLE_REST_WRITE'))"/>
+        <intercept-url pattern="/**" method="POST" access="@restApiSecurityService.isEnabled() and hasRole('ROLE_REST_WRITE')"/>
+        <intercept-url pattern="/**" method="DELETE" access="denyAll"/>
+        <intercept-url pattern="/**" method="PUT" access="denyAll"/>
+
+        <http-basic/>
+    </http>
+
+    <!-- TODO:  Implementations will need to provide a customized spring security configuration that
+      is configured for their environment.  The REST API should *NEVER* be enabled in production
+      with these settings! -->
+    <authentication-manager>
+        <authentication-provider>
+            <user-service>
+                <user name="rest-read" password="rest-read"
+                      authorities="#{T(org.jasig.portlet.notice.controller.rest.Role).REST_READ.getName()}"/>
+                <user name="rest-user" password="rest-user"
+                      authorities="#{T(org.jasig.portlet.notice.controller.rest.Role).REST_WRITE.getName()}"/>
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+</beans:beans>

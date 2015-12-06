@@ -34,7 +34,7 @@
 
 
     <context:annotation-config/>
-    <context:component-scan base-package="org.jasig.portlet.notice.util"/>
+    <context:component-scan base-package="org.jasig.portlet.notice.util, org.jasig.portlet.notice.service"/>
 
     <!-- Properties configuration -->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" lazy-init="false">
@@ -49,7 +49,7 @@
     <!-- Use this to get bean refs from non-Spring managed classes -->
     <bean id="springContext" class="org.jasig.portlet.notice.util.SpringContext" />
 
-    <!-- 
+    <!--
      | Message source for this application. 
      +-->
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -92,14 +92,6 @@
                 <prop key="javax.portlet.UnavailableException">notAvailable</prop>
             </props>
         </property>
-    </bean>
-
-    <!--
-     | Snooze feature
-     +-->
-    <bean id="snoozed" class="org.jasig.portlet.notice.NotificationState" factory-method="valueOf">
-        <constructor-arg value="SNOOZED" />
-        <property name="snoozePeriodHours" value="72" />
     </bean>
 
     <!--
@@ -184,6 +176,36 @@
     <bean id="demoEmergencyAlerts" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
         <property name="name" value="demoEmergencyAlerts"/>
         <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
+    </bean>
+
+    <!-- Notification JPA -> DTO mapping -->
+    <bean id="addresseePostProcessor" class="org.jasig.portlet.notice.service.jpa.AddresseePostProcessor"/>
+
+    <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
+        <property name="mappingFiles">
+            <list>
+                <value>classpath*:/mapping/jpa-mappings.xml</value>
+            </list>
+        </property>
+        <property name="eventListeners">
+            <util:list>
+                <bean class="org.jasig.portlet.notice.service.jpa.NotificationDTOMapperEventListener">
+                    <property name="postProcessorMap">
+                        <util:map>
+                            <entry key="org.jasig.portlet.notice.service.jpa.JpaEntry">
+                                <bean class="org.jasig.portlet.notice.service.jpa.JpaEntryPostProcessor">
+                                    <property name="addresseePostProcessor" ref="addresseePostProcessor"/>
+                                </bean>
+                            </entry>
+                            <entry key="org.jasig.portlet.notice.service.jpa.JpaAddressee" value-ref="addresseePostProcessor"/>
+                        </util:map>
+                    </property>
+                </bean>
+            </util:list>
+        </property>
+        <property name="customFieldMapper">
+            <bean class="org.jasig.portlet.notice.service.jpa.LazyInitializationMapper"/>
+        </property>
     </bean>
 
     <!-- SSP notifications -->

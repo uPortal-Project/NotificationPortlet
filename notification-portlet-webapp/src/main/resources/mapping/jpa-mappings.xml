@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+    <configuration>
+        <stop-on-errors>true</stop-on-errors>
+        <wildcard>true</wildcard>
+    </configuration>
+
+
+    <mapping wildcard="true">
+        <class-a is-accessible="true">org.jasig.portlet.notice.service.jpa.JpaEntry</class-a>
+        <class-b>org.jasig.portlet.notice.rest.EntryDTO</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a is-accessible="true">org.jasig.portlet.notice.service.jpa.JpaAttribute</class-a>
+        <class-b>org.jasig.portlet.notice.rest.AttributeDTO</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a is-accessible="true">org.jasig.portlet.notice.service.jpa.JpaAddressee</class-a>
+        <class-b>org.jasig.portlet.notice.rest.AddresseeDTO</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a is-accessible="true">org.jasig.portlet.notice.service.jpa.JpaAction</class-a>
+        <class-b>org.jasig.portlet.notice.rest.ActionDTO</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a is-accessible="true">org.jasig.portlet.notice.service.jpa.JpaRecipient</class-a>
+        <class-b>org.jasig.portlet.notice.rest.RecipientDTO</class-b>
+    </mapping>
+
+    <mapping>
+        <class-a is-accessible="true">org.jasig.portlet.notice.service.jpa.JpaEvent</class-a>
+        <class-b>org.jasig.portlet.notice.rest.EventDTO</class-b>
+    </mapping>
+</mappings>

@@ -25,8 +25,13 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang.Validate;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.jasig.portlet.notice.NotificationState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,13 +65,49 @@ import org.springframework.transaction.annotation.Transactional;
         return rslt;
     }
 
+
+    @Transactional(readOnly = true)
+    public JpaEntry getFullEntry(long entryId) {
+        Validate.isTrue(entryId > 0, "Invalid entryId: " + entryId);
+
+
+        TypedQuery<JpaEntry> query = entityManager.createNamedQuery("JpaEntry.getFullById", JpaEntry.class);
+        query.setParameter("entryId", entryId);
+        return query.getSingleResult();
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<JpaEntry> list(Integer page, Integer pageSize) {
+        TypedQuery<JpaEntry> query = entityManager.createNamedQuery("JpaEntry.getAll", JpaEntry.class);
+
+        if (page != null && pageSize != null) {
+            query.setFirstResult(page * pageSize);
+            query.setMaxResults(pageSize);
+        }
+
+        return query.getResultList();
+    }
+
+
     @Override
     @Transactional
     public JpaEntry createOrUpdateEntry(JpaEntry entry) {
         Validate.notNull(entry, "Argument 'entry' cannot be null");
 
-        JpaEntry rslt = entityManager.merge(entry);
-        return rslt;
+        if (entry.getId() == 0) {
+            // need to save and then flush to ensure the auto-generated
+            // key value is populated in the entity.
+            entityManager.persist(entry);
+            entityManager.flush();
+        } else {
+            // should always work with the object returned from merge
+            // rather than the original.
+            entry = entityManager.merge(entry);
+        }
+
+        return entry;
     }
 
     @Override
@@ -104,6 +145,20 @@ import org.springframework.transaction.annotation.Transactional;
         throw new UnsupportedOperationException();
     }
 
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<JpaEvent> getEvents(long entryId) {
+        Validate.isTrue(entryId > 0, "Argument 'entryId' must be greater than zero (0)");
+
+        TypedQuery query = entityManager.createNamedQuery("JpaEvent.getAllByEntryId", JpaEvent.class);
+        query.setParameter("entryId", entryId);
+
+        List<JpaEvent> events = query.getResultList();
+        return events;
+    }
+
+
     @Override
     @Transactional(readOnly=true)
     public List<JpaEvent> getEvents(long entryId, String username) {
@@ -120,12 +175,52 @@ import org.springframework.transaction.annotation.Transactional;
         return rslt;
     }
 
-	@Override
+
+    @Override
+    @Transactional
+    public JpaAddressee createOrUpdateAddressee(JpaAddressee addressee) {
+        Validate.notNull(addressee, "Argument 'addressee' cannot be null");
+
+        if (addressee.getId() == 0) {
+            entityManager.persist(addressee);
+            entityManager.flush();
+        } else {
+            addressee = entityManager.merge(addressee);
+        }
+
+        return addressee;
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public JpaAddressee getAddressee(long addresseeId) {
+        Validate.isTrue(addresseeId > 0, "'addresseeId' must be greater than 0");
+
+        JpaAddressee addr = entityManager.find(JpaAddressee.class, addresseeId);
+        return addr;
+    }
+
+
+    @Override
     @Transactional
     public JpaEvent createOrUpdateEvent(JpaEvent event) {
         Validate.notNull(event, "Argument 'event' cannot be null");
 
-        JpaEvent rslt = entityManager.merge(event);
-        return rslt;
+        if (event.getId() == 0) {
+            entityManager.persist(event);
+            entityManager.flush();
+        } else {
+            event = entityManager.merge(event);
+        }
+        return event;
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public JpaEvent getEvent(long eventId) {
+        JpaEvent event = entityManager.find(JpaEvent.class, eventId);
+        return event;
     }
 }
