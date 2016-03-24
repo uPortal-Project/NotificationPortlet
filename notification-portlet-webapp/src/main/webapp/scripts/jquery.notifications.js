@@ -193,7 +193,10 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                          data-body="{{ escape(entry.body) }}" \
                          data-title="{{ entry.title }}" \
                          data-source="{{ entry.source }}" \
-                         data-duedate="{{ entry.dueDate.time }}"> \
+                         {% if (entry.dueDate) { %} \
+                         data-duedate="{{ entry.dueDate.time }}" \
+                         {% } %} \
+                         > \
                          <i class="fa fa-exclamation-triangle"></i> {{ entry.title }}\
                         </a> \
                       {% if ( entry.dueDate ) { \
@@ -264,6 +267,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           var html = '\
           <h3><a href="{{ link }}">{{ title }}</a></h3> \
           <p>{{ unescape(body) }}</p> \
+        {% if (ddate) { %} \
           {% if (isPastDue(ddate)) { %} \
             <p><span class="label label-danger"> \
               Due {{ getDateFormat(ddate) }} \
@@ -272,6 +276,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
             <p><span class="label label-default"> \
               Due {{ getDateFormat(ddate) }}</span></p> \
           {% } %} \
+        {% } %} \
           <p class="notification-source"> \
             Source: <a href="{{ link }}">{{ source }}</a> \
           </p> \
