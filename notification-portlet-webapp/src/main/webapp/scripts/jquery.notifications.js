@@ -266,7 +266,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
 
           var html = '\
           <h3><a href="{{ link }}">{{ title }}</a></h3> \
-          <p>{{ unescape(body) }}</p> \
+          <div>{{ unescape(body) }}</div> \
         {% if (ddate) { %} \
           {% if (isPastDue(ddate)) { %} \
             <p><span class="label label-danger"> \
