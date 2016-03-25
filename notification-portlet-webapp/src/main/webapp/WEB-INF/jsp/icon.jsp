@@ -60,7 +60,7 @@
 
 <div id="${n}notificationIcon">
     <a href="${url}" title="<spring:message code="view.notifications"/>">
-        <i class="fa fa-warning"></i>
+        <i class="fa ${faIcon}"></i>
     </a>
     <div class="notification-badge" style="display: none;"><span class="notification-count"></span></div>
 </div>

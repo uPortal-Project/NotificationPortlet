@@ -410,6 +410,13 @@
                 <value>up</value>
             </preference>
 
+            <!-- Set the Font Awesome icon name to use for the Notifications icon.
+                 Example values are 'fa-warning', 'fa-envelope'. -->
+            <preference>
+                <name>NotificationIconController.faIcon</name>
+                <value>fa-warning</value>
+            </preference>
+
             <!-- Used for both width and height of the icon. -->
             <preference>
                 <name>NotificationIconController.size</name>
