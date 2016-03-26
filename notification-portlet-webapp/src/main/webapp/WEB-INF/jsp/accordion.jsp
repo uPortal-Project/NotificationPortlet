@@ -61,9 +61,6 @@
 
             <!-- detail view -->
             <div class="notification-detail-wrapper" style="display: none;">
-                <div class="notification-back-button">
-                    <span>Back</span>
-                </div>
                 <div class="notification-actions"></div>
                 <div class="notification-detail-container"></div>
             </div>
