@@ -41,6 +41,8 @@ public final class NotificationIconController {
 
     private static final String USE_PPORTAL_JS_LIBS_PREFERENCE = "usePortalJsLibs";
     private static final String PPORTAL_JS_NAMESPACE_PREFERENCE = "portalJsNamespace";
+    private static final String ICON_PREFERENCE = "NotificationIconController.faIcon";
+    private static final String ICON_DEFAULT = "fa-warning";
     private static final String SIZE_PREFERENCE = "NotificationIconController.size";
     private static final String SIZE_DEFAULT = "18";
     private static final String URL_PREFERENCE = "NotificationIconController.url";
@@ -58,6 +60,9 @@ public final class NotificationIconController {
 
         final String portalJsNamespace = prefs.getValue(PPORTAL_JS_NAMESPACE_PREFERENCE, "up");  // Matches the current convention in uPortal
         model.put("portalJsNamespace", portalJsNamespace);
+
+        final String faIcon = prefs.getValue(ICON_PREFERENCE, ICON_DEFAULT);
+        model.put("faIcon", faIcon);
 
         final String size = prefs.getValue(SIZE_PREFERENCE, SIZE_DEFAULT);
         model.put("size", size);
