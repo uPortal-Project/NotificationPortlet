@@ -29,8 +29,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +42,8 @@ import org.slf4j.LoggerFactory;
  * The data from the overall NotificationResponse instance
  * is returned to the portlet to be rendered.
  */
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
-@XmlRootElement
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+//@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationResponse implements Serializable, Cloneable {
 

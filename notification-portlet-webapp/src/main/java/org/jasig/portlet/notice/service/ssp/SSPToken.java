@@ -18,7 +18,7 @@
  */
 package org.jasig.portlet.notice.service.ssp;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Entity to hold SSP authentication information.

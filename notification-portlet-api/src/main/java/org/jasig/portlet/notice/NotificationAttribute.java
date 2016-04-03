@@ -27,14 +27,14 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Represents an extra, weakly-typed piece of meta data attached to a 
  * {@link NotificationEntry}.  These attributes are normally displayed, 
  * as-provided, on the details screen. 
  */
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationAttribute implements Serializable, Cloneable {
 

@@ -1,16 +1,14 @@
 package org.jasig.portlet.notice.rest;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Josh Helmer, jhelmer.unicon.net
  * @since 3.0
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class RecipientDTO implements Serializable {
     private static final long serialVersionUid = 1l;
 
