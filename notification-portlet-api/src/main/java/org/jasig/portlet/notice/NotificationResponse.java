@@ -49,6 +49,7 @@ public class NotificationResponse implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
+    @XmlTransient
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private List<NotificationCategory> categories;
