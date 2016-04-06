@@ -26,9 +26,9 @@ import javax.portlet.ActionResponse;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Represents a behavior that a user may invoke on a notification.  The 
@@ -36,7 +36,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  * and Favorite.  Concrete service impls must provide the business logic to 
  * perform the action, as well as implement the invoke method.
  */
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(using = JsonNotificationActionDeserializer.class)
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class NotificationAction implements Serializable, Cloneable {

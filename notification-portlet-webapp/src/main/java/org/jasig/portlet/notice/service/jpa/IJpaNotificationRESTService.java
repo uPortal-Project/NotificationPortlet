@@ -1,6 +1,6 @@
 package org.jasig.portlet.notice.service.jpa;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.jasig.portlet.notice.rest.AddresseeDTO;
 import org.jasig.portlet.notice.rest.EntryDTO;
 import org.jasig.portlet.notice.rest.EventDTO;

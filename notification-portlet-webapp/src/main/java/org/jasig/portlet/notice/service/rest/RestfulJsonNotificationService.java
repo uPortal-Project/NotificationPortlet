@@ -31,7 +31,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jasig.portlet.notice.NotificationError;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.service.AbstractNotificationService;

@@ -29,9 +29,10 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * This class represents a single notification.  It defines a handful of 
@@ -45,7 +46,7 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
  * <p>The {@link NotificationCategory} 
  * class contains all the entries for the same category title.
  */
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationEntry implements Serializable, Cloneable {
 

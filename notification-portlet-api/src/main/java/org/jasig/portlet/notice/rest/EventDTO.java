@@ -1,6 +1,6 @@
 package org.jasig.portlet.notice.rest;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jasig.portlet.notice.NotificationState;
 
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  * @author Josh Helmer, jhelmer.unicon.net
  * @since 3.0
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EventDTO implements Serializable {
     private static final long serialVersionUid = 1l;
 

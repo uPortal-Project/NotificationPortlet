@@ -23,14 +23,14 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * This class is used report errors when a INotificationService
  * tries to retrieve notifications but is unable to due to
  * some error.
  */
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationError implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;

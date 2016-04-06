@@ -28,7 +28,7 @@
     
     <context:annotation-config/>
     
-    <bean name="json" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+    <bean name="json" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
         <property name="disableCaching" value="true" />
     </bean>
 </beans>
