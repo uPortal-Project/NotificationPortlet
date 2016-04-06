@@ -48,7 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 /**
- * Implementation of {@link INotificationService} backed by a Spring-/JPA-managed
+ * Implementation of {@code INotificationService} backed by a Spring-/JPA-managed
  * relational database schema.
  * 
  * @since 3.0

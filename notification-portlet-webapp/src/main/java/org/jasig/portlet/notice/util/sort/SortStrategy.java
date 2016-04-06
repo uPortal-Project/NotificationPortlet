@@ -26,7 +26,7 @@ import org.jasig.portlet.notice.NotificationEntry;
 
 /**
  * Indicates how to sort {@link NotificationEntry} objects within a
- * {@link NotificationCategory}.  Sorting options are typically based on
+ * {@code NotificationCategory}.  Sorting options are typically based on
  * strongly-typed member variables.  Non-null values always come before null
  * values.
  */

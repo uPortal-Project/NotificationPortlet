@@ -52,7 +52,7 @@ public class CompleteOnRedirectAction extends NotificationAction {
      * When invoke is called, a configured notification state is set for the entry if it has not already been set.
      * {@link JpaNotificationService} and {@link CacheNotificationService} are used here to add the entry state and clear
      * the cache for the user.  This class is not managed by Spring, so these objects must be obtained using the 
-     * Spring context that {@SpringContext} provides.
+     * Spring context that {@code SpringContext} provides.
      * 
      * @param req
      * @param res
