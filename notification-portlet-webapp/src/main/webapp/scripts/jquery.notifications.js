@@ -43,7 +43,6 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
         detailView      = rootjQueryObj.find(".notification-detail-wrapper"),
         detailContainer = rootjQueryObj.find(".notification-detail-container"),
         actionsContainer = rootjQueryObj.find(".notification-actions"),
-        backButton      = rootjQueryObj.find(".notification-back-button"),
         refreshButton   = rootjQueryObj.find(".notification-refresh a"),
         filterOptions   = rootjQueryObj.find(".notification-options"),
         todayFilter     = filterOptions.find(".today"),
@@ -116,7 +115,6 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
 
           // Unbind click events
           links.unbind("click");
-          backButton.unbind("click");
           filterOptions.find("a").unbind("click");
 
           // Clear out notifications and errors
@@ -189,6 +187,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                       } %} \
                     <li class="{{ states }}"> \
                       <a href="{{ entry.url || \"javascript://\" }}" \
+                         data-linkText="{{ escape(entry.linkText) }}" \
                          data-id="{{ entry.id }}" \
                          data-body="{{ escape(entry.body) }}" \
                          data-title="{{ entry.title }}" \
@@ -260,12 +259,13 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
             title  : $(this).data("title"),
             source : $(this).data("source"),
             link   : $(this).attr("href"),
+            lnkTxt : $(this).data("linkText"),
             ddate  : $(this).data("duedate"),
             id     : $(this).data("id")
           };
 
           var html = '\
-          <h3><a href="{{ link }}">{{ title }}</a></h3> \
+          <h3>{{ title }}</h3> \
           <div>{{ unescape(body) }}</div> \
         {% if (ddate) { %} \
           {% if (isPastDue(ddate)) { %} \
@@ -278,8 +278,20 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           {% } %} \
         {% } %} \
           <p class="notification-source"> \
-            Source: <a href="{{ link }}">{{ source }}</a> \
+            Source: {{ source }} \
           </p> \
+          <div class="buttons"> \
+          {% if (link) {%} \
+            {% if (lnkTxt) {%} \
+            <a class="btn btn-success" href="{{link}}">{{lnkTxt}}</a> \
+            {%} else if (source) {%} \
+            <a class="btn btn-success" href="{{link}}">View Notice in {{source}}</a> \
+            {%} else {%} \
+            <a class="btn btn-success" href="{{link}}">Follow Notice Link</a> \
+            {% } %} \
+          {% } %} \
+            <a class="btn btn-primary notification-back-button">Back to Notifications</a> \
+          </div> \
           ';
 
           var data = _.extend({}, notification, {
@@ -315,6 +327,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
             $(this).hide(
               "slide", 200, function () {
                 detailContainer.html(" ").append(compiled);
+                bindEvent.goBack();
                 actionsContainer.html("").html(actionsHtml);
                 detailView.show();
               });
@@ -326,6 +339,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
 
       // Go back to all notifications
       goBack: function () {
+        backButton = rootjQueryObj.find(".notification-back-button");
         backButton.click(function () {
           detailView.hide(
             "slide", {direction: "right"}, 200, function () {

@@ -116,6 +116,7 @@
             padding: 20px 20px;
 
             h3 {
+                margin-top: 0px;
                 margin-bottom: 10px;
                 font-size: 22px;
                 font-weight: bold;
@@ -137,28 +138,8 @@
                 }
             }
 
-            .notification-back-button {
-                float: left;
-                margin-bottom: 18px;
-                cursor: pointer;
-                padding: 10px;
-                border: 1px solid @gray2;
-                color: @gray9 !important;
-                text-decoration: none;
-                .rounded (5px);
-                .gradient(@primary-light, fade(@primary-light, 50%), @white);
-
-                span {
-                    font-weight: normal !important;
-                    color: @gray7 !important;
-                    margin-bottom: 0 !important;
-                    padding-left: 15px;
-                    background: url("../images/bullet-left.png") no-repeat left 50%;
-                }
-
-                &.hover, &.active {
-                    .gradient(@primary, fade(@primary-light, 50%), @white);
-                }
+            .buttons a {
+              margin-right: 1.25em;
             }
 
             .notification-detail-container {
