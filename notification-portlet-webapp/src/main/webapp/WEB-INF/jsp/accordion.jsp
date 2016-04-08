@@ -57,7 +57,7 @@
         <div class="notification-portlet-wrapper" style="display: none;">
             
         <!-- accordion -->
-        <div class="notification-container accordion"></div>
+        <div class="notification-container accordion">
 
             <!-- detail view -->
             <div class="notification-detail-wrapper" style="display: none;">
