@@ -52,23 +52,21 @@
 
     <!-- loading -->
     <div class="notification-loading"></div>
-  
-        <!-- notifications -->
-        <div class="notification-portlet-wrapper" style="display: none;">
-            
+
+    <!-- notifications -->
+    <div class="notification-portlet-wrapper" style="display: none;">
+
         <!-- accordion -->
-        <div class="notification-container accordion">
+        <div class="notification-container accordion"></div>
 
-            <!-- detail view -->
-            <div class="notification-detail-wrapper" style="display: none;">
-                <div class="notification-actions"></div>
-                <div class="notification-detail-container"></div>
-            </div>
-
-            <!-- errors -->
-            <div class="notification-error-container" style="display: none;"></div>
-
+        <!-- detail view -->
+        <div class="notification-detail-wrapper" style="display: none;">
+            <div class="notification-actions"></div>
+            <div class="notification-detail-container"></div>
         </div>
+
+        <!-- errors -->
+        <div class="notification-error-container" style="display: none;"></div>
 
     </div>
 
