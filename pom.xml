@@ -40,7 +40,7 @@
         <jdbc.artifactId>hsqldb</jdbc.artifactId>
         <jdbc.version>${hsql.version}</jdbc.version>
     </properties>
-    
+
     <licenses>
         <license>
             <name>JA-SIG Collaborative Licence</name>
@@ -65,6 +65,11 @@
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons.lang}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.2</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
@@ -284,61 +289,61 @@
                         <pushChanges>false</pushChanges>
                     </configuration>
                 </plugin>
-	            <plugin>
-	                <!--
-	                 | Invoke this plugin as follows to drop and recreate the Notification database tables...
-	                 |
-	                 |   >mvn db-init
-	                 +-->
-	                <groupId>org.codehaus.mojo</groupId>
-	                <artifactId>hibernate3-maven-plugin</artifactId>
-	                <version>3.0</version>
-	                <executions>
-	                    <execution>
-	                        <phase>db-init</phase>
-	                        <goals>
-	                            <goal>hbm2ddl</goal>
-	                        </goals>
-	                    </execution>
-	                </executions>
-	                <configuration>
-	                    <hibernatetool>
-	                        <jpaconfiguration persistenceunit="NoticePU" propertyFile="target/${project.build.finalName}/WEB-INF/classes/datasource.properties" />
-	                        <hbm2ddl export="true" create="true" drop="true" />
-	                        <classpath>
-	                            <path location="target/${project.build.finalName}/WEB-INF/classes" />
-	                        </classpath>
-	                   </hibernatetool>
-	                   <componentProperties>
+                <plugin>
+                    <!--
+                     | Invoke this plugin as follows to drop and recreate the Notification database tables...
+                     |
+                     |   >mvn db-init
+                     +-->
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>hibernate3-maven-plugin</artifactId>
+                    <version>3.0</version>
+                    <executions>
+                        <execution>
+                            <phase>db-init</phase>
+                            <goals>
+                                <goal>hbm2ddl</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <hibernatetool>
+                            <jpaconfiguration persistenceunit="NoticePU" propertyFile="target/${project.build.finalName}/WEB-INF/classes/datasource.properties" />
+                            <hbm2ddl export="true" create="true" drop="true" />
+                            <classpath>
+                                <path location="target/${project.build.finalName}/WEB-INF/classes" />
+                            </classpath>
+                       </hibernatetool>
+                       <componentProperties>
                            <drop>true</drop>
                        </componentProperties>
-	                </configuration>
-	                <dependencies>
-	                    <dependency>
-	                        <groupId>${jdbc.groupId}</groupId>
-	                        <artifactId>${jdbc.artifactId}</artifactId>
-	                        <version>${jdbc.version}</version>
-	                        <scope>compile</scope>
-	                    </dependency>
-	                    <dependency>
-	                        <groupId>org.jasig.portlet.notification</groupId>
-	                        <artifactId>notification-portlet-api</artifactId>
-	                        <version>${project.version}</version>
-	                    </dependency>
-	                    <!-- The hibernate 3 plugin does NOT work with Hibernate 4. There currently doesn't exist any
-	                         plugin to handle this task (hbm2ddl) with Hibernate 4 -->
-	                    <dependency>
-	                        <groupId>org.hibernate</groupId>
-	                        <artifactId>hibernate-entitymanager</artifactId>
-	                        <version>3.6.10.Final</version>
-	                    </dependency>
-	                    <dependency>
-	                        <groupId>org.hibernate</groupId>
-	                        <artifactId>hibernate-tools</artifactId>
-	                        <version>3.2.4.GA</version>
-	                    </dependency>
-	                </dependencies>
-	            </plugin>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>${jdbc.groupId}</groupId>
+                            <artifactId>${jdbc.artifactId}</artifactId>
+                            <version>${jdbc.version}</version>
+                            <scope>compile</scope>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.jasig.portlet.notification</groupId>
+                            <artifactId>notification-portlet-api</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                        <!-- The hibernate 3 plugin does NOT work with Hibernate 4. There currently doesn't exist any
+                             plugin to handle this task (hbm2ddl) with Hibernate 4 -->
+                        <dependency>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-entitymanager</artifactId>
+                            <version>3.6.10.Final</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-tools</artifactId>
+                            <version>3.2.4.GA</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
