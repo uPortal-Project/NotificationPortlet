@@ -27,39 +27,25 @@ function arrayPop(item, ary) {
     return array;
 }
 
-function today() {
-    var lenCheck = function (num) {
-        return (num.toString().length > 1) ? num : '0' + num;
-    };
-    var d = new Date();
-    
-    return lenCheck(d.getMonth()+1) + "/" + lenCheck(d.getDate()) + "/" + d.getFullYear();
-}
-
-
-
-
 /**
  * Job Posting
  */
 
-var jobPostings = function(){
+(function(){
 
-/**
- * New process:
- * 1. Display loading screen (underscore template)
- * 2. done - Do handshake
- * 3. done - Get job list
- *     a. done - If successful proceed..
- *     b. If error: display error message instead of loading screen
- * 4. done - Populate Categories list (underscore template)
- * 5. done - Populate Hiring Center dropdown (underscore template)
- * 6. done - Render datatables
- * 7. done - Hook up all the event handlers (data tables init call?)
- *
- */
-
-
+    /**
+     * New process:
+     * 1. Display loading screen (underscore template)
+     * 2. done - Do handshake
+     * 3. done - Get job list
+     *     a. done - If successful proceed..
+     *     b. If error: display error message instead of loading screen
+     * 4. done - Populate Categories list (underscore template)
+     * 5. done - Populate Hiring Center dropdown (underscore template)
+     * 6. done - Render datatables
+     * 7. done - Hook up all the event handlers (data tables init call?)
+     *
+     */
 
     // private variables *******
     var settings = {
@@ -69,6 +55,7 @@ var jobPostings = function(){
     };
     var categories;
     var jsonErrors = [];
+    var jobList;
 
     var oTable, _,$;
 
@@ -77,11 +64,12 @@ var jobPostings = function(){
     };
 
     var getJobs = function() {
-        var jqxhr = $.getJSON(settings.urls.getNotificationsUrl, function(data) {
+        $.getJSON(settings.urls.getNotificationsUrl, function(data) {
             categories = data.categories;
             jobList = data.feed;
             jsonErrors = data.errors;
-        }).done(function() {
+        })
+        .done(function() {
             if(jsonErrors.length > 0) {
                 returnError(jsonErrors);
             }
@@ -129,8 +117,8 @@ var jobPostings = function(){
     var toggleFavorite = function(el) {
         var star = $(el).children('i');
 
-        var jqxhr = $.get( el.href, function() {
-          star.toggleClass('fa-star-o fa-star');
+        $.get( el.href, function() {
+            star.toggleClass('fa-star-o fa-star');
         })
         .fail(function() {
             //console.log("error");
@@ -150,14 +138,14 @@ var jobPostings = function(){
         /**
          * Modal Button Event handlers
          */
-        $('#' + settings.portletId + ' .emailFriendButton').on('click', function(e) {
+        $('#' + settings.portletId + ' .emailFriendButton').on('click', function() {
             $('#' + settings.portletId + ' .modal-overlay').show();
         });
-        $('#' + settings.portletId + ' .cancelEmailButton').on('click', function(e) {
+        $('#' + settings.portletId + ' .cancelEmailButton').on('click', function() {
             $('#' + settings.portletId + ' .modal-overlay').hide();
         });
-        $('#' + settings.portletId + ' .sendEmailButton').on('click', function(e) {
-            $.post( "test.php", $('#' + settings.portletId + ' .emailFriendForm').serialize());
+        $('#' + settings.portletId + ' .sendEmailButton').on('click', function() {
+            $.post( 'test.php', $('#' + settings.portletId + ' .emailFriendForm').serialize());
             $('#' + settings.portletId + ' .modal-overlay').hide();
             toggleModal();
         });
@@ -169,7 +157,7 @@ var jobPostings = function(){
 
     var applyFilter = function(def, col) {
         oTable.fnFilter(def, col, true, false);
-    }
+    };
 
     var returnError = function(errObj) {
         var errResult = '';
@@ -177,18 +165,18 @@ var jobPostings = function(){
         for (var i = 0; i < errObj.length; i++) {
             var errObjKey = errObj[i];
 
-            errResult += errObjKey.source + ": " + errObjKey.error + "<br/>";
+            errResult += errObjKey.source + ': ' + errObjKey.error + '<br/>';
         }
         $('#errorOutput').show().html(errResult);
-    }
+    };
 
     var removeLoadingOverlay = function() {
         /**
          * Since the table is rendered, hide the loading overlay
          */
-        var node = document.getElementById("loading");
+        var node = document.getElementById('loading');
         if (node.parentNode) {
-          node.parentNode.removeChild(node);
+            node.parentNode.removeChild(node);
         }
     };
 
@@ -198,7 +186,7 @@ var jobPostings = function(){
             /* Note the use of a DataTables 'private' function thought the 'oApi' object */
             var anNodes = this.oApi._fnGetTrNodes(oSettings);
             var anDisplay = $('tbody tr', oSettings.nTable);
-              
+
             /* Remove nodes which are being displayed */
             for ( var i=0 ; i<anDisplay.length ; i++ )
             {
@@ -208,7 +196,7 @@ var jobPostings = function(){
                     anNodes.splice( iIndex, 1 );
                 }
             }
-              
+
             /* Fire back the array to the caller */
             return anNodes;
         };
@@ -217,7 +205,7 @@ var jobPostings = function(){
          * Date Filter
          */
         $.fn.dataTableExt.afnFiltering.push(
-            function(oSettings, aData, iDataIndex) {
+            function(oSettings, aData) {
 
                 var min = document.getElementById(settings.portletId + 'date-range').value;
                 if (min === '' ) {
@@ -226,7 +214,6 @@ var jobPostings = function(){
                 min = Date.parse(min);
 
                 var iStartDateCol = 3;
-                var iEndDateCol = 3;
 
                 var colDate = Date.parse(aData[iStartDateCol]);
 
@@ -239,22 +226,22 @@ var jobPostings = function(){
         // End date Filter
 
         $.extend( true, $.fn.dataTable.defaults, {
-            "sDom": "<'row'<'col-md-6 toggleCheckbox'><'col-md-6 text-right'l>t<'row'<'col-md-6'i><'col-md-6'p>>",
-            "sPaginationType": "bootstrap",
-            "oLanguage": {
-                "sLengthMenu": "Show _MENU_ entries"
+            'sDom': '<\'row\'<\'col-md-6 toggleCheckbox\'><\'col-md-6 text-right\'l>t<\'row\'<\'col-md-6\'i><\'col-md-6\'p>>',
+            'sPaginationType': 'bootstrap',
+            'oLanguage': {
+                'sLengthMenu': 'Show _MENU_ entries'
             }
         } );
-        
+
         /* Default class modification */
         $.extend( $.fn.dataTableExt.oStdClasses, {
-            "sWrapper": "dataTables_wrapper form-inline"
+            'sWrapper': 'dataTables_wrapper form-inline'
         } );
 
         $.fn.dataTableExt.oApi.fnFilterClear  = function(oSettings) {
             /* Remove global filter */
-            oSettings.oPreviousSearch.sSearch = "";
-              
+            oSettings.oPreviousSearch.sSearch = '';
+
             /* Remove the text of the global filter in the input boxes */
             if (typeof oSettings.aanFeatures.f != 'undefined')
             {
@@ -264,15 +251,15 @@ var jobPostings = function(){
                     $('input', n[i]).val('');
                 }
             }
-              
+
             /* Remove the search text for the column filters - NOTE - if you have input boxes for these
              * filters, these will need to be reset
              */
-            for ( var i=0, iLen=oSettings.aoPreSearchCols.length ; i<iLen ; i++ )
+            for ( i=0, iLen=oSettings.aoPreSearchCols.length ; i<iLen ; i++ )
             {
-                oSettings.aoPreSearchCols[i].sSearch = "";
+                oSettings.aoPreSearchCols[i].sSearch = '';
             }
-              
+
             /* Redraw */
             oSettings.oApi._fnReDraw(oSettings);
         };
@@ -281,21 +268,21 @@ var jobPostings = function(){
         $.fn.dataTableExt.oApi.fnPagingInfo = function (oSettings)
         {
             return {
-                "iStart":         oSettings._iDisplayStart,
-                "iEnd":           oSettings.fnDisplayEnd(),
-                "iLength":        oSettings._iDisplayLength,
-                "iTotal":         oSettings.fnRecordsTotal(),
-                "iFilteredTotal": oSettings.fnRecordsDisplay(),
-                "iPage":          oSettings._iDisplayLength === -1 ?
+                'iStart':         oSettings._iDisplayStart,
+                'iEnd':           oSettings.fnDisplayEnd(),
+                'iLength':        oSettings._iDisplayLength,
+                'iTotal':         oSettings.fnRecordsTotal(),
+                'iFilteredTotal': oSettings.fnRecordsDisplay(),
+                'iPage':          oSettings._iDisplayLength === -1 ?
                     0 : Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
-                "iTotalPages":    oSettings._iDisplayLength === -1 ?
+                'iTotalPages':    oSettings._iDisplayLength === -1 ?
                     0 : Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
             };
         };
         /* Bootstrap style pagination control */
         $.extend( $.fn.dataTableExt.oPagination, {
-            "bootstrap": {
-                "fnInit": function( oSettings, nPaging, fnDraw ) {
+            'bootstrap': {
+                'fnInit': function( oSettings, nPaging, fnDraw ) {
                     var oLang = oSettings.oLanguage.oPaginate;
                     var fnClickHandler = function ( e ) {
                         e.preventDefault();
@@ -311,11 +298,11 @@ var jobPostings = function(){
                         '</ul>'
                     );
                     var els = $('a', nPaging);
-                    $(els[0]).bind( 'click.DT', { action: "previous" }, fnClickHandler );
-                    $(els[1]).bind( 'click.DT', { action: "next" }, fnClickHandler );
+                    $(els[0]).bind( 'click.DT', { action: 'previous' }, fnClickHandler );
+                    $(els[1]).bind( 'click.DT', { action: 'next' }, fnClickHandler );
                 },
 
-                "fnUpdate": function (oSettings, fnDraw) {
+                'fnUpdate': function (oSettings, fnDraw) {
                     var iListLength = 5;
                     var oPaging = oSettings.oInstance.fnPagingInfo();
                     var an = oSettings.aanFeatures.p;
@@ -377,32 +364,32 @@ var jobPostings = function(){
         if ($.fn.DataTable.TableTools) {
             // Set the classes that TableTools uses to something suitable for Bootstrap
             $.extend( true, $.fn.DataTable.TableTools.classes, {
-                "container": "DTTT btn-group",
-                "buttons": {
-                    "normal": "btn",
-                    "disabled": "disabled"
+                'container': 'DTTT btn-group',
+                'buttons': {
+                    'normal': 'btn',
+                    'disabled': 'disabled'
                 },
-                "collection": {
-                    "container": "DTTT_dropdown dropdown-menu",
-                    "buttons": {
-                        "normal": "",
-                        "disabled": "disabled"
+                'collection': {
+                    'container': 'DTTT_dropdown dropdown-menu',
+                    'buttons': {
+                        'normal': '',
+                        'disabled': 'disabled'
                     }
                 },
-                "print": {
-                    "info": "DTTT_print_info modal"
+                'print': {
+                    'info': 'DTTT_print_info modal'
                 },
-                "select": {
-                    "row": "active"
+                'select': {
+                    'row': 'active'
                 }
             } );
 
             // Have the collection use a bootstrap compatible dropdown
             $.extend( true, $.fn.DataTable.TableTools.DEFAULTS.oTags, {
-                "collection": {
-                    "container": "ul",
-                    "button": "li",
-                    "liner": "a"
+                'collection': {
+                    'container': 'ul',
+                    'button': 'li',
+                    'liner': 'a'
                 }
             } );
         }
@@ -411,25 +398,25 @@ var jobPostings = function(){
          * Default sort: Date (col 3), newest first
          */
         $('#' + settings.portletId + 'jobPostings').dataTable( {
-            "aaData": jobList,
-            "aaSorting": [[ 3, "desc" ]],
-            "aoColumnDefs": [
+            'aaData': jobList,
+            'aaSorting': [[ 3, 'desc' ]],
+            'aoColumnDefs': [
                 {
-                    "bSortable": false,
-                    "aTargets": [ 0, 1 ]
+                    'bSortable': false,
+                    'aTargets': [ 0, 1 ]
                 },
                 {
-                    "aTargets": [ 0 ],
-                    "sWidth": "10%",
-                    "mData": "attributes.status",
-                    "mRender": function ( data, type, full ) {
+                    'aTargets': [ 0 ],
+                    'sWidth': '10%',
+                    'mData': 'attributes.status',
+                    'mRender': function ( data, type, full ) {
                         if (data[0].toLowerCase() === 'open') {
                             return '<a href="' + full.url + '" target="_blank" class="btn btn-sm btn-success">Apply</a>';
                         } else {
                             return 'Apply in Person';//data[0].toLowerCase();
                         }
                     },
-                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                    'fnCreatedCell': function (nTd, sData, oData) {
                         if (oData.attributes.status !== 'open') {
                             $(nTd).addClass('small-text');
                         }
@@ -437,12 +424,11 @@ var jobPostings = function(){
 
                 },
                 {
-                    "aTargets": [ 1 ],
-                    "sWidth": "5%",
-                    "mData": "favorite",
-                    "sClass": "favorite hidden-xs",
-                    "mRender": function ( data, type, full ) {
-                        var favClass, linkTitle;
+                    'aTargets': [ 1 ],
+                    'sWidth': '5%',
+                    'mData': 'favorite',
+                    'sClass': 'favorite hidden-xs',
+                    'mRender': function ( data, type, full ) {
                         if (full.attributes.status[0].toLowerCase() === 'open') {
                             var url = settings.urls.invokeActionUrlTemplate.replace(/NOTIFICATIONID/,full.id).replace(/ACTIONID/, 'FavoriteAction');
                             if (data === true) {
@@ -456,66 +442,66 @@ var jobPostings = function(){
                     }
                 },
                 {
-                    "aTargets": [ 2 ],
-                    "sWidth": "30%",
-                    "mData": "title",
-                    "sClass": 'jobTitle',
-                    "mRender": function( data, type, full ) {
+                    'aTargets': [ 2 ],
+                    'sWidth': '30%',
+                    'mData': 'title',
+                    'sClass': 'jobTitle',
+                    'mRender': function( data, type, full ) {
                         return '<a href="' + full.id + '" title="' + full.linkText + '" class="jobDetailsLink" >' + data + '</a>';
                     }
                 },
                 {
-                    "aTargets": [ 3 ],
-                    "sWidth": "10%",
-                    "sClass": "hidden-xs",
-                    "mData": "attributes.postDate",
-                    "mRender": function( data, type, full ) {
+                    'aTargets': [ 3 ],
+                    'sWidth': '10%',
+                    'sClass': 'hidden-xs',
+                    'mData': 'attributes.postDate',
+                    'mRender': function( data ) {
                         //var d = Date.parse(data);
                         return data[0];
                         // return data + '('+d+')';
                     }
                 },
                 {
-                    "aTargets": [ 4 ],
-                    "sWidth": "15%",
-                    "mData": "id",
-                    "sClass": "hidden-xs hidden-sm",
-                    "mRender": function (data, type, full) {
+                    'aTargets': [ 4 ],
+                    'sWidth': '15%',
+                    'mData': 'id',
+                    'sClass': 'hidden-xs hidden-sm',
+                    'mRender': function (data) {
                         return data;
                     }
                 },
                 {
-                    "aTargets": [ 5 ],
-                    "mData": "attributes.department",
-                    "sClass": "hidden-xs"
+                    'aTargets': [ 5 ],
+                    'mData': 'attributes.department',
+                    'sClass': 'hidden-xs'
                 },
                 {
-                    "aTargets": [ 6 ],
-                    "mData": "attributes.category",
-                    "bVisible": false
+                    'aTargets': [ 6 ],
+                    'mData': 'attributes.category',
+                    'bVisible': false
                 },
                 {
-                    "aTargets": [ 7 ],
-                    "mData": "source",
-                    "bVisible": false
+                    'aTargets': [ 7 ],
+                    'mData': 'source',
+                    'bVisible': false
                 },
                 {
-                    "aTargets": [ 8 ],
-                    "mData": "attributes.description",
-                    "bVisible": false
+                    'aTargets': [ 8 ],
+                    'mData': 'attributes.description',
+                    'bVisible': false
                 },
                 {
-                    "aTargets": [ 9 ],
-                    "mData": "attributes.qualifications",
-                    "bVisible": false
+                    'aTargets': [ 9 ],
+                    'mData': 'attributes.qualifications',
+                    'bVisible': false
                 }
             ],
-            "fnInitComplete": function(oSettings, json) {
+            'fnInitComplete': function() {
                 oTable = this;
 
                 // Apply filters
                 // Category filters
-                $('.searchControls :checkbox').change(function(e) {
+                $('.searchControls :checkbox').change(function() {
                     var cbDef;
                     if ($(this).is(':checked')) {
                         cbArray.push(this.value);
@@ -548,7 +534,7 @@ var jobPostings = function(){
                 });
 
                 // Keyword textbox search filter
-                $('#' + settings.portletId + 'searchTerms').keyup(function(e) {
+                $('#' + settings.portletId + 'searchTerms').keyup(function() {
                     applyFilter(this.value, null);
                 });
 
@@ -577,12 +563,12 @@ var jobPostings = function(){
                     $('.primary-nav').children().removeClass('active');
                     $(e.target).parent().addClass('active');
                 });
-                
+
                 // Create toggle in person jobs checkbox
                 var cbl = $('<label>');
                 var tcb = $('<input>', {
-                    type:"checkbox",
-                    id:"inPersonCb",
+                    type:'checkbox',
+                    id:'inPersonCb',
                     checked:true
                 });
                 // cbl.html(tcb);
@@ -617,4 +603,4 @@ var jobPostings = function(){
             return oTable;
         }
     };
-}();
+})();
