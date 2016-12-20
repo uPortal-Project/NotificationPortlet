@@ -94,10 +94,6 @@ public class HideNotificationServiceDecorator implements INotificationService {
         final NotificationResponse sourceResponse = enclosedNotificationService.fetch(req);
         NotificationResponse rslt = sourceResponse.cloneIfNotCloned();
 
-        final Set<String> currentlyHiddenNotificationIds = HideAction.INSTANCE.getHiddenNoticesMap(req).keySet();
-
-        logger.debug("The currentlyHiddenNotificationIds for username='{}' are:  {}", req.getRemoteUser(), currentlyHiddenNotificationIds);
-
         // Add and implement the hide behavior with our copy
         for (NotificationCategory category : rslt.getCategories()) {
 
@@ -121,13 +117,7 @@ public class HideNotificationServiceDecorator implements INotificationService {
                     entry.setAvailableActions(replacementList); // Also sets HideAction.targetEntity
                 }
 
-                /*
-                 * And 2 requirements for an entry to be removed based on it:
-                 * 
-                 *   - (1) It must be hidden by the user
-                 *   - (2) We must not be in "display hidden notices" mode (TODO:  Implement!)
-                 */
-                if (StringUtils.isNotBlank(entry.getId()) && currentlyHiddenNotificationIds.contains(entry.getId())) {
+                if (isEntryHidden(entry, req)) {
                     logger.debug("Hiding entry with id='{}' for username='{}' based on user's previous action", entry.getId(), req.getRemoteUser());
                     entriesAfterHiding.remove(entry);
                 }
@@ -146,6 +136,23 @@ public class HideNotificationServiceDecorator implements INotificationService {
     @Override
     public boolean isValid(PortletRequest req, NotificationResponse previousResponse) {
         return enclosedNotificationService.isValid(req, previousResponse);
+    }
+
+    /*
+     * Implementation
+     */
+
+    private boolean isEntryHidden(NotificationEntry entry, PortletRequest req) {
+
+
+        /*
+         * There are 2 requirements for an entry to be removed based on it:
+         *
+         *   - (1) It must be hidden by the user
+         *   - (2) We must not be in "display hidden notices" mode (TODO:  Implement!)
+         */
+        final Set<String> currentlyHiddenNotificationIds = HideAction.INSTANCE.getHiddenNoticesMap(req).keySet();
+        return StringUtils.isNotBlank(entry.getId()) && currentlyHiddenNotificationIds.contains(entry.getId());
     }
 
 }

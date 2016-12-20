@@ -112,7 +112,10 @@ public final class HideAction extends NotificationAction {
 
     /**
      * Returns a mutable, empty map if the current data is in an unworkable state.
+     *
+     * @deprecated We're moving this implementation to JPA tables.
      */
+    @Deprecated
     /* package-private */ Map<String,Long> getHiddenNoticesMap(final PortletRequest req) {
 
         final Map<String,Long> rslt = new HashMap<String,Long>();
