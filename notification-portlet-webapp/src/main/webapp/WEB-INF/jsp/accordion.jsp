@@ -45,9 +45,9 @@
     <!-- options menu -->
     <div class="notification-options" style="display: none;">
         <p class="notification-date-filter">
-            View: <a class="all" href="#">All</a> | <a class="today active" href="#">Today</a>
+            View: <a class="all" href="javascript:void(0);">All</a> | <a class="today active" href="javascript:void(0);">Today</a>
         </p>
-        <p class="notification-refresh"><a href="#">Refresh</a></p>
+        <p class="notification-refresh"><a href="javascript:void(0);"><i class="fa fa-refresh" aria-hidden="true"></i> Refresh</a></p>
     </div>
 
     <!-- loading -->

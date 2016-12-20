@@ -187,10 +187,15 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                           } \
                       } %} \
                     <li class="{{ states }}"> \
-                      <a href="{{ entry.url || \"javascript://\" }}" \
+                      <a href="{{ \"javascript://\" }}" \
+                         {% if (entry.url) { %} \
+                         data-url="{{ entry.url }}" \
+                         {% } %} \
                          data-linkText="{{ escape(entry.linkText) }}" \
                          data-id="{{ entry.id }}" \
+                         {% if (entry.body) { %} \
                          data-body="{{ escape(entry.body) }}" \
+                         {% } %} \
                          data-title="{{ entry.title }}" \
                          data-source="{{ entry.source }}" \
                          {% if (entry.dueDate) { %} \
@@ -257,7 +262,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
             body   : $(this).data("body"),
             title  : $(this).data("title"),
             source : $(this).data("source"),
-            link   : $(this).attr("href"),
+            link   : $(this).data("url"),
             lnkTxt : $(this).data("linkText"),
             ddate  : $(this).data("duedate"),
             id     : $(this).data("id")
@@ -265,17 +270,19 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
 
           var html = '\
           <h3>{{ title }}</h3> \
-          <div>{{ unescape(body) }}</div> \
-        {% if (ddate) { %} \
-          {% if (isPastDue(ddate)) { %} \
-            <p><span class="label label-danger"> \
-              Due {{ getDateFormat(ddate) }} \
-              &nbsp;<i class="fa fa-exclamation-circle"></i></span></p> \
-          {% } else { %} \
-            <p><span class="label label-default"> \
-              Due {{ getDateFormat(ddate) }}</span></p> \
+          {% if (ddate) { %} \
+            <div>{{ unescape(body) }}</div> \
           {% } %} \
-        {% } %} \
+          {% if (ddate) { %} \
+            {% if (isPastDue(ddate)) { %} \
+              <p><span class="label label-danger"> \
+                Due {{ getDateFormat(ddate) }} \
+                &nbsp;<i class="fa fa-exclamation-circle"></i></span></p> \
+            {% } else { %} \
+              <p><span class="label label-default"> \
+                Due {{ getDateFormat(ddate) }}</span></p> \
+            {% } %} \
+          {% } %} \
           <p class="notification-source"> \
             Source: {{ source }} \
           </p> \
