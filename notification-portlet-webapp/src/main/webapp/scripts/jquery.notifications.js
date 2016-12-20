@@ -32,7 +32,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
   };
 
     var rootjQueryObj = $(rootSelector);
-  
+
     // Cache existing DOM elements
     var portlet         = rootjQueryObj.find(".notification-portlet-wrapper"),
         outerContainer  = rootjQueryObj,
@@ -47,10 +47,10 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
         filterOptions   = rootjQueryObj.find(".notification-options"),
         todayFilter     = filterOptions.find(".today"),
         allFilter       = filterOptions.find(".all");
-        
+
     // Notification gets cached in the AJAX callback but is created here for scope
     var notification;
-    
+
     // Store the filter state (notifications that are currently being displayed), defaults to today
     var filterState = {"days": 1};
 
@@ -85,7 +85,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
     };
 
     var getNotifications = function(params, doRefresh) {
-            
+
       // First 'prime-the-pump' with an ActionURL
       $.ajax({
         type: 'POST',
@@ -100,9 +100,9 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
         type     : 'POST',
         dataType : 'json',
         data     : params,
-        
+
         beforeSend: function () {
-          
+
           // Hide detail view
           if ( detailView.is(":visible") ) {
             detailView.hide();
@@ -121,10 +121,10 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           notifications.html(" ");
           errorContainer.html(" ");
         },
-        
+
         success: function (data) {
           var notificationResponse = data.notificationResponse;
-          
+
           // Build notifications
           buildNotifications(notificationResponse);
 
@@ -146,7 +146,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           portlet.fadeIn("fast");
           filterOptions.fadeIn("fast");
         },
-        
+
         error: function () {
             rootjQueryObj.html(" ").text("Request for data failed.");
         }
@@ -178,6 +178,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
               <div class="notification-content" style="display: none;"> \
                 <ul class="notifications"> \
                   {% _.each(category.entries, function(entry) { \
+                      data.registerAction(entry.id, entry.availableActions); \
                       var states = ""; \
                       for (var prop in entry.states) { \
                           if (entry.states.hasOwnProperty(prop)) { \
@@ -197,17 +198,15 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                          {% } %} \
                          > \
                          <i class="fa fa-exclamation-triangle"></i> {{ entry.title }}\
-                        </a> \
-                      {% if ( entry.dueDate ) { \
-                        data.registerAction(entry.id, entry.availableActions); \
-                      %} \
-                      {% if (data.isPastDue(entry.dueDate.time)) { %} \
-                        <p><span class="label label-danger"> \
-                          Due {{ data.getDateFormat(entry.dueDate.time) }} \
-                          &nbsp;<i class="fa fa-exclamation-circle"></i></span></p> \
-                      {% } else { %} \
-                        <p><span class="label label-default"> \
-                          Due {{ data.getDateFormat(entry.dueDate.time) }}</span></p> \
+                      </a> \
+                      {% if (entry.dueDate) { %} \
+                        {% if (data.isPastDue(entry.dueDate.time)) { %} \
+                          <p><span class="label label-danger"> \
+                            Due {{ data.getDateFormat(entry.dueDate.time) }} \
+                            &nbsp;<i class="fa fa-exclamation-circle"></i></span></p> \
+                        {% } else { %} \
+                          <p><span class="label label-default"> \
+                            Due {{ data.getDateFormat(entry.dueDate.time) }}</span></p> \
                         {% } %} \
                       {% } %} \
                       <span class="completed-badge">&#10004;</span> \
@@ -322,7 +321,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
               getActionUrl: getActionUrl
           };
           var actionsHtml = _.template(actionsTemplate, templateData, templateSettings);
-          
+
           $.each([notifications, errorContainer], function () {
             $(this).hide(
               "slide", 200, function () {
@@ -355,27 +354,27 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           function () { $(this).removeClass('hover') }
         );
       },
-      
+
       refresh: function () {
         refreshButton.click(function () {
           getNotifications(filterState, 'true');
           return false;
         });
       },
-      
+
       filterOptions: function (data) {
         todayFilter.click(function () {
           filter($(this), {"days":1});
           return false;
         });
-        
+
         allFilter.click(function () {
           filter($(this));
           return false;
         });
       }
     };
-    
+
     // Filter notifications by passing params via ajax ie {"days":1} is today, also stores and returns filterState
     var filter = function(link, params) {
       filterState = params || {};
@@ -388,7 +387,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
       }
       return filterState;
     };
-    
+
     // Errors (broken feeds)
     var errorHandling = function(data) {
       if ( data.errors ) {
@@ -404,7 +403,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
             interpolate : templateSettings.interpolate,
             evaluate : templateSettings.evaluate
         });
-        
+
         errorContainer.show().append(compile);
         errorContainer.find(".remove").click(function () {
          var thisErrorContainer = $(this).parent();

@@ -36,7 +36,7 @@
 
     <bean class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 
-    <!-- 
+    <!--
      | Root Notification Service bean
      |
      | It's customary to use a CacheNotificationService here to wrap beans 

@@ -29,13 +29,13 @@ import javax.portlet.EventResponse;
 import javax.portlet.PortletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class can be used to add a "hide" or "snooze" feature to notifications 
@@ -51,7 +51,8 @@ public class HideNotificationServiceDecorator implements INotificationService {
 
     // Instance members
     private INotificationService enclosedNotificationService;
-    private final Log log = LogFactory.getLog(getClass());
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public void setEnclosedNotificationService(INotificationService enclosedNotificationService) {
         this.enclosedNotificationService = enclosedNotificationService;
@@ -75,10 +76,15 @@ public class HideNotificationServiceDecorator implements INotificationService {
     @Override
     public NotificationResponse fetch(PortletRequest req) {
 
+        logger.debug("Processing notifications for username='{}'", req.getRemoteUser());
+
         // Just pass through the enclosed collection if this feature is disabled
         if (HideAction.INSTANCE.calculateHideDurationMillis(req) < 0) {
+            logger.debug("Ignoring Hide behavior for username='{}' because the feature is disabled.", req.getRemoteUser());
             return enclosedNotificationService.fetch(req);
         }
+
+        logger.debug("Processing Hide behavior for username='{}' because the feature is NOT disabled.", req.getRemoteUser());
 
         /*
          * We will build a fresh NotificationResponse based on a deep-copy of the one we enclose
@@ -89,6 +95,8 @@ public class HideNotificationServiceDecorator implements INotificationService {
         NotificationResponse rslt = sourceResponse.cloneIfNotCloned();
 
         final Set<String> currentlyHiddenNotificationIds = HideAction.INSTANCE.getHiddenNoticesMap(req).keySet();
+
+        logger.debug("The currentlyHiddenNotificationIds for username='{}' are:  {}", req.getRemoteUser(), currentlyHiddenNotificationIds);
 
         // Add and implement the hide behavior with our copy
         for (NotificationCategory category : rslt.getCategories()) {
@@ -107,6 +115,7 @@ public class HideNotificationServiceDecorator implements INotificationService {
                  *   - (2) It must not have a HideAction already
                  */
                 if (StringUtils.isNotBlank(entry.getId()) && !currentList.contains(HideAction.INSTANCE)) {
+                    logger.debug("Adding hide action to notification with id='{}' for username='{}'", entry.getId(), req.getRemoteUser());
                     final List<NotificationAction> replacementList = new ArrayList<NotificationAction>(currentList);
                     replacementList.add(new HideAction());
                     entry.setAvailableActions(replacementList); // Also sets HideAction.targetEntity
@@ -119,6 +128,7 @@ public class HideNotificationServiceDecorator implements INotificationService {
                  *   - (2) We must not be in "display hidden notices" mode (TODO:  Implement!)
                  */
                 if (StringUtils.isNotBlank(entry.getId()) && currentlyHiddenNotificationIds.contains(entry.getId())) {
+                    logger.debug("Hiding entry with id='{}' for username='{}' based on user's previous action", entry.getId(), req.getRemoteUser());
                     entriesAfterHiding.remove(entry);
                 }
             }
