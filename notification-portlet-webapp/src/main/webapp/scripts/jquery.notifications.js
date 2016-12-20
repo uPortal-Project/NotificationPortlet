@@ -270,7 +270,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
 
           var html = '\
           <h3>{{ title }}</h3> \
-          {% if (ddate) { %} \
+          {% if (body) { %} \
             <div>{{ unescape(body) }}</div> \
           {% } %} \
           {% if (ddate) { %} \
