@@ -25,13 +25,8 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang.Validate;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
 import org.jasig.portlet.notice.NotificationState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +64,6 @@ import org.springframework.transaction.annotation.Transactional;
     @Transactional(readOnly = true)
     public JpaEntry getFullEntry(long entryId) {
         Validate.isTrue(entryId > 0, "Invalid entryId: " + entryId);
-
 
         TypedQuery<JpaEntry> query = entityManager.createNamedQuery("JpaEntry.getFullById", JpaEntry.class);
         query.setParameter("entryId", entryId);
@@ -139,9 +133,6 @@ import org.springframework.transaction.annotation.Transactional;
     @Transactional(readOnly=true)
     public Set<JpaEntry> getEntriesByRecipientByStatus(String username,
             Set<NotificationState> include, Set<NotificationState> exclude) {
-        Validate.notEmpty(username, "Argument 'username' cannot be empty");
-
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException();
     }
 
@@ -151,7 +142,7 @@ import org.springframework.transaction.annotation.Transactional;
     public List<JpaEvent> getEvents(long entryId) {
         Validate.isTrue(entryId > 0, "Argument 'entryId' must be greater than zero (0)");
 
-        TypedQuery query = entityManager.createNamedQuery("JpaEvent.getAllByEntryId", JpaEvent.class);
+        TypedQuery<JpaEvent> query = entityManager.createNamedQuery("JpaEvent.getAllByEntryId", JpaEvent.class);
         query.setParameter("entryId", entryId);
 
         List<JpaEvent> events = query.getResultList();

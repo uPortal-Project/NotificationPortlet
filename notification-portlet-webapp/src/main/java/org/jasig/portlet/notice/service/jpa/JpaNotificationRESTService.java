@@ -18,12 +18,8 @@
  */
 package org.jasig.portlet.notice.service.jpa;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
-import org.hibernate.Hibernate;
 import org.jasig.portlet.notice.rest.AddresseeDTO;
-import org.jasig.portlet.notice.rest.AttributeDTO;
 import org.jasig.portlet.notice.rest.EntryDTO;
 import org.jasig.portlet.notice.rest.EventDTO;
 import org.jasig.portlet.notice.rest.RecipientDTO;
@@ -31,11 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 
 /**
  * @author Josh Helmer, jhelmer.unicon.net

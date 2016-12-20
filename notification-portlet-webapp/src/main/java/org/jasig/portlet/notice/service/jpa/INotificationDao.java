@@ -40,7 +40,14 @@ import org.jasig.portlet.notice.NotificationState;
  */
 /* package-private */ interface INotificationDao {
 
+    /**
+     * Obtains an entry not including addressee info.
+     */
     JpaEntry getEntry(long entryId);
+
+    /**
+     * Obtains an entry that includes addressee info.
+     */
     JpaEntry getFullEntry(long entryId);
 
     JpaEntry createOrUpdateEntry(JpaEntry entry);
@@ -69,7 +76,7 @@ import org.jasig.portlet.notice.NotificationState;
      */
     List<JpaEvent> getEvents(long entryId, String username);
 
-	JpaEvent createOrUpdateEvent(JpaEvent event);
+    JpaEvent createOrUpdateEvent(JpaEvent event);
 
     JpaEvent getEvent(long eventId);
 }

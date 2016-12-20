@@ -18,11 +18,9 @@
  */
 package org.jasig.portlet.notice.service.jpa;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jasig.portlet.notice.rest.AddresseeDTO;
 import org.jasig.portlet.notice.rest.EntryDTO;
 import org.jasig.portlet.notice.rest.EventDTO;
-import org.jasig.portlet.notice.rest.RecipientDTO;
 
 import java.util.List;
 import java.util.Set;
@@ -52,7 +50,6 @@ public interface IJpaNotificationRESTService {
      */
     EntryDTO getNotification(long id, boolean full);
 
-
     /**
      * Create a notification.
      *
@@ -60,7 +57,6 @@ public interface IJpaNotificationRESTService {
      * @return the newly created Entry
      */
     EntryDTO createNotification(EntryDTO notification);
-
 
     /**
      * Get the List addressees for a notification.
@@ -70,14 +66,12 @@ public interface IJpaNotificationRESTService {
      */
     Set<AddresseeDTO> getAddressees(long notificationId);
 
-
     /**
      * Get a single addressee by id.
      * @param addresseeId the addressee id
      * @return the addressee if found, else null
      */
     AddresseeDTO getAddressee(long addresseeId);
-
 
     /**
      * Create the addressee.
@@ -88,7 +82,6 @@ public interface IJpaNotificationRESTService {
      */
     AddresseeDTO createAddressee(long notificationId, AddresseeDTO addressee);
 
-
     /**
      * Get the list of events by notification.
      *
@@ -96,7 +89,6 @@ public interface IJpaNotificationRESTService {
      * @return the list of events
      */
     List<EventDTO> getEventsByNotification(long notificationId);
-
 
     /**
      * Get a single event.
@@ -106,7 +98,6 @@ public interface IJpaNotificationRESTService {
      */
     EventDTO getEvent(long eventId);
 
-
     /**
      * Create an event.
      *
@@ -115,4 +106,5 @@ public interface IJpaNotificationRESTService {
      * @return the newly created event
      */
     EventDTO createEvent(long notificationId, EventDTO entry);
+
 }

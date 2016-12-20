@@ -18,9 +18,6 @@
  */
 package org.jasig.portlet.notice.service.jpa;
 
-import org.hibernate.annotations.NamedQueries;
-import org.hibernate.annotations.NamedQuery;
-
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.HashSet;

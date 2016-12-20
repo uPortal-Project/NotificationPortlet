@@ -19,7 +19,6 @@
 package org.jasig.portlet.notice.service.jpa;
 
 import org.jasig.portlet.notice.rest.AddresseeDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Post processor for Handling dozer mappings from AddresseeDTO -&gt; JpaAddressee.

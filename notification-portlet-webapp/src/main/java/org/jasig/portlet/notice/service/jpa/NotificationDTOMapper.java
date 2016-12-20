@@ -20,7 +20,6 @@ package org.jasig.portlet.notice.service.jpa;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.dozer.Mapper;
 import org.jasig.portlet.notice.rest.AddresseeDTO;
 import org.jasig.portlet.notice.rest.EntryDTO;
@@ -32,7 +31,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 
 /**
  * @author Josh Helmer, jhelmer.unicon.net

@@ -62,7 +62,7 @@ public class NotificationDTOMapperEventListener implements DozerEventListener {
 
     @Override
     public void mappingFinished(DozerEvent event) {
-        Class cls = event.getDestinationObject().getClass();
+        Class<? extends Object> cls = event.getDestinationObject().getClass();
         if (postProcessorMap.containsKey(cls)) {
             IMappedClassPostProcessor processor = postProcessorMap.get(cls);
             processor.process(event.getDestinationObject(), event.getSourceObject());
