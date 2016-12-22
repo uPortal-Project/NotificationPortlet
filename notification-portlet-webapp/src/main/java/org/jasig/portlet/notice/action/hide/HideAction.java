@@ -128,7 +128,10 @@ public final class HideAction extends NotificationAction {
             }
         }
 
-        long rslt = Long.parseLong(hideDurationHours) * MILLIS_IN_ONE_HOUR;
+        logger.debug("Calculated hideDurationHours={} for entry with id='{}', title='{}'",
+                                hideDurationHours, entry.getId(), entry.getTitle());
+
+        final long rslt = Long.parseLong(hideDurationHours) * MILLIS_IN_ONE_HOUR;
         return rslt;
 
     }
