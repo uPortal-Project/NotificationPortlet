@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -204,6 +205,18 @@ public class NotificationEntry implements Serializable, Cloneable {
     @JsonDeserialize(using=JsonAttributesDeserializer.class)
     public void setAttributes(List<NotificationAttribute> attributes) {
         this.attributes = new ArrayList<NotificationAttribute>(attributes);  // defensive copy
+    }
+
+    /**
+     * Convenience method for obtaining the attributes in a more usable collection.
+     */
+    @JsonIgnore
+    public Map<String,List<String>> getAttributesMap() {
+        Map<String,List<String>> rslt = new HashMap<>();
+        for (NotificationAttribute a : attributes) {
+            rslt.put(a.getName(), a.getValues());
+        }
+        return rslt;
     }
 
     /**

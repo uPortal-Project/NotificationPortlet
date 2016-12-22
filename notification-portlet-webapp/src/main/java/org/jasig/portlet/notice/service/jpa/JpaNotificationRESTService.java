@@ -19,10 +19,13 @@
 package org.jasig.portlet.notice.service.jpa;
 
 import org.apache.commons.lang3.Validate;
+import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.rest.AddresseeDTO;
 import org.jasig.portlet.notice.rest.EntryDTO;
 import org.jasig.portlet.notice.rest.EventDTO;
 import org.jasig.portlet.notice.rest.RecipientDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,27 +37,24 @@ import java.util.Set;
  * @author Josh Helmer, jhelmer.unicon.net
  * @since 3.0
  */
-@Service
+@Service("jpaNotificationRestService")
 public class JpaNotificationRESTService implements IJpaNotificationRESTService {
+
     @Autowired
     private INotificationDao notificationDao;
+
+    @Autowired
+    private JpaNotificationService jpaNotificationService;
+
     @Autowired
     private INotificationDTOMapper notificationMapper;
 
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<EntryDTO> getNotifications(Integer page, Integer pageSize) {
-        List<JpaEntry> entries = notificationDao.list(page, pageSize);
-
-        return notificationMapper.toEntryList(entries);
-    }
-
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     @Transactional(readOnly = true)
     public EntryDTO getNotification(long id, boolean full) {
-        JpaEntry entry = full ? notificationDao.getFullEntry(id) : notificationDao.getEntry(id);
+        final JpaEntry entry = full ? notificationDao.getFullEntry(id) : notificationDao.getEntry(id);
         if (entry == null) {
             return null;
         }
@@ -62,24 +62,60 @@ public class JpaNotificationRESTService implements IJpaNotificationRESTService {
         return notificationMapper.toEntry(entry);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public EntryDTO getNotification(NotificationEntry entry, boolean full) {
+        EntryDTO rslt = null;  // default
+        if (jpaNotificationService.contains(entry)) {
+            final String idString = entry.getId().substring(JpaNotificationService.ID_PREFIX.length());
+            final long id = Long.parseLong(idString);
+            rslt = getNotification(id, full);
+        }
+        return rslt;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EntryDTO> getNotifications(Integer page, Integer pageSize) {
+        final List<JpaEntry> entries = notificationDao.list(page, pageSize);
+
+        return notificationMapper.toEntryList(entries);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EntryDTO> getNotificationsBySourceAndCustomAttribute(String source, String attributeName, String attributeValue) {
+        Validate.notBlank(source, "Argument 'source' cannot be blank");
+        Validate.notBlank(source, "Argument 'attributeName' cannot be blank");
+        // Does it make sense to allow blank attributeValue?
+
+        logger.debug("Invoking getNotificationsBySourceAndCustomAttribute with "
+                + "source='{}', attributeName='{}', attributeValue='{}'",
+                source, attributeName, attributeValue);
+
+        final List<JpaEntry> entries = notificationDao.getNotificationsBySourceAndCustomAttribute(source, attributeName, attributeValue);
+        logger.debug("Found the following {} entries:  {}", entries.size(), entries);
+
+        return notificationMapper.toEntryList(entries);
+    }
 
     @Override
     @Transactional
     public EntryDTO createNotification(EntryDTO entry) {
         Validate.isTrue(entry.getId() == 0, "Do not include an 'id' attribute when creating entries");
 
-        JpaEntry jpaEntry = notificationMapper.toJpaEntry(entry);
+        final JpaEntry jpaEntry = notificationMapper.toJpaEntry(entry);
+        logger.debug("notificationMapper produced the following JpaEntry:  {}", jpaEntry);
 
-        JpaEntry inserted = notificationDao.createOrUpdateEntry(jpaEntry);
+        final JpaEntry inserted = notificationDao.createOrUpdateEntry(jpaEntry);
 
         return notificationMapper.toEntry(inserted);
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public Set<AddresseeDTO> getAddressees(long notificationId) {
-        JpaEntry jpaEntry = notificationDao.getFullEntry(notificationId);
+        final JpaEntry jpaEntry = notificationDao.getFullEntry(notificationId);
         if (jpaEntry == null) {
             return null;
         }
@@ -87,18 +123,16 @@ public class JpaNotificationRESTService implements IJpaNotificationRESTService {
         return notificationMapper.toAddresseeSet(jpaEntry.getAddressees());
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public AddresseeDTO getAddressee(long addresseeId) {
-        JpaAddressee addr = notificationDao.getAddressee(addresseeId);
+        final JpaAddressee addr = notificationDao.getAddressee(addresseeId);
         if (addr == null) {
             return null;
         }
 
         return notificationMapper.toAddressee(addr);
     }
-
 
     @Override
     @Transactional
@@ -108,32 +142,42 @@ public class JpaNotificationRESTService implements IJpaNotificationRESTService {
             Validate.isTrue(r.getId() == 0, "Do not include an 'id' attribute on recipients when creating addressees");
         }
 
-        JpaEntry entry = notificationDao.getEntry(notificationId);
+        final JpaEntry entry = notificationDao.getEntry(notificationId);
         if (entry == null) {
             return null;
         }
 
-        JpaAddressee jpa = notificationMapper.toJpaAddressee(addressee);
+        final JpaAddressee jpa = notificationMapper.toJpaAddressee(addressee);
         entry.addAddressee(jpa);
 
-        JpaAddressee persisted = notificationDao.createOrUpdateAddressee(jpa);
+        final JpaAddressee persisted = notificationDao.createOrUpdateAddressee(jpa);
         return notificationMapper.toAddressee(persisted);
     }
-
 
     @Override
     @Transactional(readOnly = true)
     public List<EventDTO> getEventsByNotification(long notificationId) {
-        List<JpaEvent> events = notificationDao.getEvents(notificationId);
+        final List<JpaEvent> events = notificationDao.getEvents(notificationId);
 
         return notificationMapper.toEventList(events);
     }
 
+    /**
+     * Provides a complete transaction log for a notification and a single
+     * recipient <strong>in chronological order</strong>.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<EventDTO> getEventsByNotificationAndUser(long notificationId, String username) {
+        final List<JpaEvent> events = notificationDao.getEvents(notificationId, username);
+
+        return notificationMapper.toEventList(events);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public EventDTO getEvent(long eventId) {
-        JpaEvent event = notificationDao.getEvent(eventId);
+        final JpaEvent event = notificationDao.getEvent(eventId);
         if (event == null) {
             return null;
         }
@@ -141,17 +185,17 @@ public class JpaNotificationRESTService implements IJpaNotificationRESTService {
         return notificationMapper.toEvent(event);
     }
 
-
     @Override
     @Transactional
     public EventDTO createEvent(long notificationId, EventDTO event) {
         Validate.isTrue(event.getId() == 0, "Do not include an 'id' attribute when creating events");
 
-        JpaEntry entry = notificationDao.getEntry(notificationId);
-        JpaEvent jpa = notificationMapper.toJpaEvent(event);
+        final JpaEntry entry = notificationDao.getEntry(notificationId);
+        final JpaEvent jpa = notificationMapper.toJpaEvent(event);
         jpa.setEntry(entry);
 
-        JpaEvent jpaResult = notificationDao.createOrUpdateEvent(jpa);
+        final JpaEvent jpaResult = notificationDao.createOrUpdateEvent(jpa);
         return notificationMapper.toEvent(jpaResult);
     }
+
 }

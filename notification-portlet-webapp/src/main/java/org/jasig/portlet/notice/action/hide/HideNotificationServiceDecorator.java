@@ -20,7 +20,6 @@ package org.jasig.portlet.notice.action.hide;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -78,13 +77,13 @@ public class HideNotificationServiceDecorator implements INotificationService {
 
         logger.debug("Processing notifications for username='{}'", req.getRemoteUser());
 
-        // Just pass through the enclosed collection if this feature is disabled
-        if (HideAction.INSTANCE.calculateHideDurationMillis(req) < 0) {
-            logger.debug("Ignoring Hide behavior for username='{}' because the feature is disabled.", req.getRemoteUser());
-            return enclosedNotificationService.fetch(req);
-        }
-
-        logger.debug("Processing Hide behavior for username='{}' because the feature is NOT disabled.", req.getRemoteUser());
+//        // Just pass through the enclosed collection if this feature is disabled
+//        if (HideAction.INSTANCE.calculateHideDurationMillis(req) < 0) {
+//            logger.debug("Ignoring Hide behavior for username='{}' because the feature is disabled.", req.getRemoteUser());
+//            return enclosedNotificationService.fetch(req);
+//        }
+//
+//        logger.debug("Processing Hide behavior for username='{}' because the feature is NOT disabled.", req.getRemoteUser());
 
         /*
          * We will build a fresh NotificationResponse based on a deep-copy of the one we enclose
@@ -117,7 +116,7 @@ public class HideNotificationServiceDecorator implements INotificationService {
                     entry.setAvailableActions(replacementList); // Also sets HideAction.targetEntity
                 }
 
-                if (isEntryHidden(entry, req)) {
+                if (HideAction.INSTANCE.isEntrySnoozed(entry, req)) {
                     logger.debug("Hiding entry with id='{}' for username='{}' based on user's previous action", entry.getId(), req.getRemoteUser());
                     entriesAfterHiding.remove(entry);
                 }
@@ -136,23 +135,6 @@ public class HideNotificationServiceDecorator implements INotificationService {
     @Override
     public boolean isValid(PortletRequest req, NotificationResponse previousResponse) {
         return enclosedNotificationService.isValid(req, previousResponse);
-    }
-
-    /*
-     * Implementation
-     */
-
-    private boolean isEntryHidden(NotificationEntry entry, PortletRequest req) {
-
-
-        /*
-         * There are 2 requirements for an entry to be removed based on it:
-         *
-         *   - (1) It must be hidden by the user
-         *   - (2) We must not be in "display hidden notices" mode (TODO:  Implement!)
-         */
-        final Set<String> currentlyHiddenNotificationIds = HideAction.INSTANCE.getHiddenNoticesMap(req).keySet();
-        return StringUtils.isNotBlank(entry.getId()) && currentlyHiddenNotificationIds.contains(entry.getId());
     }
 
 }

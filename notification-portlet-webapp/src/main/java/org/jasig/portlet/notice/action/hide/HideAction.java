@@ -19,7 +19,7 @@
 package org.jasig.portlet.notice.action.hide;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
@@ -27,12 +27,20 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
+import org.jasig.portlet.notice.NotificationState;
+import org.jasig.portlet.notice.rest.EventDTO;
+import org.jasig.portlet.notice.util.JpaServices;
+import org.jasig.portlet.notice.util.SpringContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class HideAction extends NotificationAction {
+
+    public static final String HIDE_DURATION_HOURS_ATTRIBUTE_NAME = HideAction.class.getName()
+                                                    + ".HIDE_DURATION_HOURS_ATTRIBUTE_NAME";
 
     /**
      * This INSTANCE is only for convenience -- HideAction is not a singleton.  
@@ -41,23 +49,11 @@ public final class HideAction extends NotificationAction {
      */
     public static final HideAction INSTANCE = new HideAction();
 
-    /**
-     * Stores the Ids of hidden notices.
-     */
-    private static final String HIDDEN_NOTIFICATION_IDS_PREFERENCE = 
-            HideAction.class.getName() + ".HIDDEN_NOTIFICATION_IDS_PREFERENCE";
-
-    /**
-     * Tracks when each notice was hidden.
-     */
-    private static final String HIDDEN_NOTIFICATION_TIMESTAMPS_PREFERENCE = 
-            HideAction.class.getName() + ".HIDDEN_NOTIFICATION_TIMESTAMPS_PREFERENCE";
-
     private static final long MILLIS_IN_ONE_HOUR = 60L * 60L * 1000L;
 
     private static final long serialVersionUID = 1L;
 
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(HideAction.class);
 
     /**
      * Must remain public, no-arg for de-serialization.
@@ -72,17 +68,20 @@ public final class HideAction extends NotificationAction {
      */
     @Override
     public void invoke(final ActionRequest req, final ActionResponse res) throws IOException {
+
         final NotificationEntry entry = getTarget();
-        final String notificationId = entry.getId();
-        final Map<String,Long> hiddenNoticesMap = this.getHiddenNoticesMap(req);
-        if (hiddenNoticesMap.containsKey(notificationId)) {
-            // Un-hide
-            hiddenNoticesMap.remove(notificationId);
+
+        /*
+         * The HideAction works like a toggle
+         */
+        if (!isEntrySnoozed(entry, req)) {
+            // Hide it...
+            hide(entry, req);
         } else {
-            // Hide
-            hiddenNoticesMap.put(notificationId, System.currentTimeMillis());
+            // Un-hide it...
+            unhide(entry, req);
         }
-        setHiddenNoticesMap(req, hiddenNoticesMap);
+
     }
 
     @Override
@@ -106,84 +105,88 @@ public final class HideAction extends NotificationAction {
         return true;
     }
 
-    /*
-     * Non-public API
-     */
+    /* package-private */ long calculateHideDurationMillis(final NotificationEntry entry, final PortletRequest req) {
 
-    /**
-     * Returns a mutable, empty map if the current data is in an unworkable state.
-     *
-     * @deprecated We're moving this implementation to JPA tables.
-     */
-    @Deprecated
-    /* package-private */ Map<String,Long> getHiddenNoticesMap(final PortletRequest req) {
-
-        final Map<String,Long> rslt = new HashMap<String,Long>();
+        /*
+         * A notification may specify it's own duration as an attribute;
+         * if it doesn't, there is a default from the (portlet) publication record.
+         */
 
         final PortletPreferences prefs = req.getPreferences();
 
-        // Each hide action has a notification and a timestamp
-        final String[] ids = prefs.getValues(HIDDEN_NOTIFICATION_IDS_PREFERENCE, new String[0]);
-        final String[] timestamps = prefs.getValues(HIDDEN_NOTIFICATION_TIMESTAMPS_PREFERENCE, new String[0]);
-        if (ids.length != timestamps.length) {
-            log.warn("Collections for ids and timestamps were not the same length for user:  " + req.getRemoteUser());
-        } else {
-            // Build the Map
-            try {
-                final long hideDurationMillis = calculateHideDurationMillis(req);
-                final boolean hideForever = hideDurationMillis == 0L;
-                for (int i=0; i < ids.length; i++) {
-                    final String id = ids[i];
-                    final long timestamp = Long.parseLong(timestamps[i]);
-                    if (hideForever || (timestamp + hideDurationMillis > System.currentTimeMillis())) {
-                        rslt.put(id, timestamp);
-                    }
-                }
-            } catch (NumberFormatException nfe) {
-                log.warn("Failed to build the HideTuple collection for user:  " + req.getRemoteUser());
-                throw new RuntimeException(nfe);
+        // This is the default
+        String hideDurationHours = prefs.getValue(
+                HideNotificationServiceDecorator.HIDE_DURATION_HOURS_PREFERENCE, 
+                HideNotificationServiceDecorator.DEFAULT_HIDE_DURATION.toString());
+
+        // Duration specified on the entry itself will trump
+        final Map<String,List<String>> attributes = entry.getAttributesMap();
+        if (attributes.containsKey(HIDE_DURATION_HOURS_ATTRIBUTE_NAME)) {
+            final List<String> values = attributes.get(HIDE_DURATION_HOURS_ATTRIBUTE_NAME);
+            if (values.size() != 0) {
+                hideDurationHours = values.get(0);  // First is the only one that matters
             }
         }
 
-        /*
-         * Update the data if (1) what we built is different from 
-         * what we expected to build for any reason, and (2) we can
-         */
-        final boolean isActionPhase = req.getAttribute(PortletRequest.LIFECYCLE_PHASE)
-                                            .equals(PortletRequest.ACTION_PHASE);
-        if (rslt.size() != ids.length && isActionPhase) {
-            setHiddenNoticesMap((ActionRequest) req, rslt);
-        }
-
+        long rslt = Long.parseLong(hideDurationHours) * MILLIS_IN_ONE_HOUR;
         return rslt;
 
     }
 
-    /* package-private */ void setHiddenNoticesMap(final PortletRequest req, final Map<String,Long> hiddenNoticesMap) {
-        final String[] ids = new String[hiddenNoticesMap.size()];
-        final String[] timestamps = new String[hiddenNoticesMap.size()];
-        int index = 0;
-        for (Map.Entry<String,Long> y : hiddenNoticesMap.entrySet()) {
-            ids[index] = y.getKey();
-            timestamps[index++] = y.getValue().toString();
+    /* package-private */ boolean isEntrySnoozed(NotificationEntry entry, PortletRequest req) {
+
+        // An id is required for hide behavior
+        if (StringUtils.isBlank(entry.getId())) {
+            return false;
         }
-        final PortletPreferences prefs = req.getPreferences();
-        try {
-            prefs.setValues(HIDDEN_NOTIFICATION_IDS_PREFERENCE, ids);
-            prefs.setValues(HIDDEN_NOTIFICATION_TIMESTAMPS_PREFERENCE, timestamps);
-            prefs.store();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+
+        boolean rslt = false;  // default (clearly)
+
+        final long snoozeDurationMillis = calculateHideDurationMillis(entry, req);
+
+        final JpaServices jpaServices = (JpaServices) SpringContext.getApplicationContext().getBean("jpaServices");
+        final List<EventDTO> history = jpaServices.getHistory(entry, req.getRemoteUser());
+        logger.debug("List<EventDTO> within getNotificationsBySourceAndCustomAttribute contains {} elements", history.size());
+
+        // Review the history...
+        for (EventDTO event : history) {
+            switch (event.getState()) {
+                case SNOOZED:
+                    logger.debug("Found a SNOOZED event:  {}", event);
+                    // Nice, but it only counts if it isn't expired...
+                    if (event.getTimestamp().getTime() + snoozeDurationMillis > System.currentTimeMillis()) {
+                        rslt = true;
+                    }
+                    break;
+                case ISSUED:
+                    logger.debug("Found an ISSUED event:  {}", event);
+                    // Re-issuing a notification un-snoozes it...
+                    rslt = false;
+                    break;
+                default:
+                    // We don't care about any other events in the SNOOZED evaluation...
+                    break;
+            }
         }
+
+        logger.debug("Returning SNOOZED='{}' for the following notification:  {}", rslt, entry);
+        return rslt;
+
     }
 
-    /* package-private */ long calculateHideDurationMillis(final PortletRequest req) {
-        final PortletPreferences prefs = req.getPreferences();
-        final String hideDurationHours = prefs.getValue(
-                HideNotificationServiceDecorator.HIDE_DURATION_HOURS_PREFERENCE, 
-                HideNotificationServiceDecorator.DEFAULT_HIDE_DURATION.toString());
-        final long rslt = Long.parseLong(hideDurationHours) * MILLIS_IN_ONE_HOUR;
-        return rslt;
+    /*
+     * Implementation
+     */
+
+    private void hide(NotificationEntry entry, ActionRequest req) {
+        final JpaServices jpaServices = (JpaServices) SpringContext.getApplicationContext().getBean("jpaServices");
+        jpaServices.applyState(entry, req.getRemoteUser(), NotificationState.SNOOZED);
+    }
+
+    private void unhide(NotificationEntry entry, ActionRequest req) {
+        final JpaServices jpaServices = (JpaServices) SpringContext.getApplicationContext().getBean("jpaServices");
+        // Re-issuing trumps the snooze
+        jpaServices.applyState(entry, req.getRemoteUser(), NotificationState.ISSUED);
     }
 
 }

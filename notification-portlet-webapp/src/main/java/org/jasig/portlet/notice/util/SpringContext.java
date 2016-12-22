@@ -21,6 +21,7 @@ package org.jasig.portlet.notice.util;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 /**
  * This class provides support for non-Spring managed objects to obtain
@@ -28,9 +29,10 @@ import org.springframework.context.ApplicationContextAware;
  * 
  * @author mglazier
  */
+@Component
 public class SpringContext implements ApplicationContextAware {
 
-	private static ApplicationContext context;
+    private static ApplicationContext context;
 
     @Override
     public void setApplicationContext(ApplicationContext context) throws BeansException {

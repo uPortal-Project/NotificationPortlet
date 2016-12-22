@@ -60,10 +60,11 @@ public class JpaNotificationService extends AbstractNotificationService {
      */
     public static final String TABLENAME_PREFIX = "NOTICE_";
 
+    /* package-private */ static final String ID_PREFIX = "jpa_";
+
     private static final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
     private static final String UNCATEGORIZED_MESSAGE_CODE = "uncategorized";
     private static final String UNCATEGORIZED_DEFAULT_MESSAGE = "(Uncategorized)";
-    private static final String ID_PREFIX = "jpa_";
     private static final String PREFS_ENABLED = "JpaNotificationService.enabled";
 
     @Autowired
@@ -73,6 +74,13 @@ public class JpaNotificationService extends AbstractNotificationService {
     private MessageSource messages;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    /**
+     * Is the {@link NotificationEntry} object owned by the JPA service?
+     */
+    public boolean contains(NotificationEntry entry) {
+        return entry.getId().startsWith(ID_PREFIX);
+    }
 
     @Override
     public NotificationResponse fetch(PortletRequest req) {
@@ -110,7 +118,7 @@ public class JpaNotificationService extends AbstractNotificationService {
      */
     public void addEntryState(PortletRequest req, String entryId, NotificationState state) {
         if (usernameFinder.isAuthenticated(req)) {
-           
+
             final String username = usernameFinder.findUsername(req);
 
             String idStr = entryId.replaceAll(ID_PREFIX, ""); // remove the prefix

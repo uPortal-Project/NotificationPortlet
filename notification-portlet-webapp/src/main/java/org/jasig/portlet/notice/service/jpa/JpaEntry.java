@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.jasig.portlet.notice.service.jpa;
 
 import java.sql.Timestamp;
@@ -30,7 +31,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -79,15 +79,12 @@ import javax.persistence.Table;
     private String body;
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    @JoinColumn(name="ENTRY_ID")
     private Set<JpaAttribute> attributes = new HashSet<>();
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    @JoinColumn(name="ENTRY_ID")
     private Set<JpaAction> actions = new HashSet<>();
 
     @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name="ENTRY_ID")
     private Set<JpaAddressee> addressees = new HashSet<>();
 
     public long getId() {
@@ -182,9 +179,7 @@ import javax.persistence.Table;
      */
     public void setAttributes(Set<JpaAttribute> attributes) {
         this.attributes.clear();
-        for (JpaAttribute attr : attributes) {
-            addAttribute(attr);
-        }
+        this.attributes.addAll(attributes);
     }
 
     /**
@@ -192,7 +187,6 @@ import javax.persistence.Table;
      */
     public void addAttribute(JpaAttribute attribute) {
         attributes.add(attribute);
-        attribute.setEntryId(getId());
     }
 
     /**
@@ -229,9 +223,7 @@ import javax.persistence.Table;
      */
     public void setAddressees(Set<JpaAddressee> addressees) {
         this.addressees.clear();
-        for (JpaAddressee addressee : addressees) {
-            addAddressee(addressee);
-        }
+        this.addressees.addAll(addressees);
     }
 
     /**
@@ -239,7 +231,14 @@ import javax.persistence.Table;
      */
     public void addAddressee(JpaAddressee addressee) {
         addressees.add(addressee);
-        addressee.setEntryId(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "JpaEntry [id=" + id + ", title=" + title + ", source=" + source + ", category=" + category + ", url="
+                + url + ", linkText=" + linkText + ", priority=" + priority + ", dueDate=" + dueDate + ", image="
+                + image + ", body=" + body + ", attributes=" + attributes + ", actions=" + actions + ", addressees="
+                + addressees + "]";
     }
 
 }

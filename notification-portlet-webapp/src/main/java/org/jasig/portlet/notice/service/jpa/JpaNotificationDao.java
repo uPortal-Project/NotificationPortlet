@@ -84,6 +84,22 @@ import org.springframework.transaction.annotation.Transactional;
         return query.getResultList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<JpaEntry> getNotificationsBySourceAndCustomAttribute(String source, String attributeName, String attributeValue) {
+        final String jpql = "SELECT e FROM JpaEntry e "
+                + "WHERE e.source = :source "
+                + "AND EXISTS ("
+                    + "SELECT a FROM JpaAttribute a "
+                    + "WHERE a.entry = e "
+                    + "AND a.name = :name "
+                    + "AND :value MEMBER OF a.values)";
+        final TypedQuery<JpaEntry> query = entityManager.createQuery(jpql, JpaEntry.class);
+        query.setParameter("source", source);
+        query.setParameter("name", attributeName);
+        query.setParameter("value", attributeValue);
+        return query.getResultList();
+    }
 
     @Override
     @Transactional

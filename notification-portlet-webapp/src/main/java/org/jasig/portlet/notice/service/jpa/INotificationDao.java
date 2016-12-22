@@ -54,6 +54,8 @@ import org.jasig.portlet.notice.NotificationState;
 
     List<JpaEntry> list(Integer page, Integer pageSize);
 
+    List<JpaEntry> getNotificationsBySourceAndCustomAttribute(String source, String attributeName, String attributeValue);
+
     void removeEntry(JpaEntry entry);
 
     Set<JpaEntry> getEntriesByRecipient(String username);
@@ -68,11 +70,7 @@ import org.jasig.portlet.notice.NotificationState;
 
     /**
      * Provides a complete transaction log for a notification and single
-     * recipient in chronological order.
-     *
-     * @param entryId
-     * @param username
-     * @return
+     * recipient <strong>in chronological order</strong>.
      */
     List<JpaEvent> getEvents(long entryId, String username);
 
