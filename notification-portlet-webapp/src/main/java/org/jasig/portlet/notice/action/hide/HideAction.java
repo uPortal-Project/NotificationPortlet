@@ -53,7 +53,7 @@ public final class HideAction extends NotificationAction {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger logger = LoggerFactory.getLogger(HideAction.class);
+    private final Logger logger = LoggerFactory.getLogger(HideAction.class);
 
     /**
      * Must remain public, no-arg for de-serialization.

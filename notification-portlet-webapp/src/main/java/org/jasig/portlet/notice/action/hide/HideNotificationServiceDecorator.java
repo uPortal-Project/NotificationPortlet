@@ -77,14 +77,6 @@ public class HideNotificationServiceDecorator implements INotificationService {
 
         logger.debug("Processing notifications for username='{}'", req.getRemoteUser());
 
-//        // Just pass through the enclosed collection if this feature is disabled
-//        if (HideAction.INSTANCE.calculateHideDurationMillis(req) < 0) {
-//            logger.debug("Ignoring Hide behavior for username='{}' because the feature is disabled.", req.getRemoteUser());
-//            return enclosedNotificationService.fetch(req);
-//        }
-//
-//        logger.debug("Processing Hide behavior for username='{}' because the feature is NOT disabled.", req.getRemoteUser());
-
         /*
          * We will build a fresh NotificationResponse based on a deep-copy of the one we enclose
          * 
