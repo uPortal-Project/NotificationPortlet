@@ -23,6 +23,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -40,8 +42,9 @@ import javax.persistence.Table;
     @Column(name="ID", nullable = false)
     private long id;
 
-    @Column(name="ADDRESSEE_ID", nullable = false)
-    private long addresseeId;
+    @ManyToOne
+    @JoinColumn(name="ADDRESSEE_ID")
+    private JpaAddressee addressee;
 
     @Column(name="USERNAME", nullable=false)
     private String username;
@@ -54,12 +57,12 @@ import javax.persistence.Table;
         this.id = id;
     }
 
-    public long getAddresseeId() {
-        return addresseeId;
+    public JpaAddressee getAddressee() {
+        return addressee;
     }
 
-    public void setAddresseeId(long addresseeId) {
-        this.addresseeId = addresseeId;
+    public void setAddressee(JpaAddressee addressee) {
+        this.addressee = addressee;
     }
 
     public String getUsername() {
@@ -69,4 +72,10 @@ import javax.persistence.Table;
     public void setUsername(String username) {
         this.username = username;
     }
+
+    @Override
+    public String toString() {
+        return "JpaRecipient [id=" + id + ", username=" + username + "]";
+    }
+
 }

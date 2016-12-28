@@ -81,9 +81,6 @@
         <property name="ignoreResourceNotFound" value="true" />
     </bean>
 
-    <!-- Use this to get bean refs from non-Spring managed classes -->
-    <bean id="springContext" class="org.jasig.portlet.notice.util.SpringContext" />
-
     <!--
      | Message source for this application. 
      +-->

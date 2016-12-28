@@ -30,7 +30,9 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AttributeDTO implements Serializable {
-    private static final long serialVersionUid = 1l;
+
+    private static final long serialVersionUID = 1L;
+
     private long id;
     private String name;
     private List<String> values = new ArrayList<>();

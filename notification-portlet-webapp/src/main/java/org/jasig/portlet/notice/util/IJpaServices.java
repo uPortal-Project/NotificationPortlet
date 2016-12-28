@@ -16,23 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jasig.portlet.notice.service.jpa;
 
-import org.jasig.portlet.notice.rest.AddresseeDTO;
+package org.jasig.portlet.notice.util;
 
-/**
- * Post processor for Handling dozer mappings from AddresseeDTO -&gt; JpaAddressee.
- * Just ensures that the addresseeId value is set in the JPA version.
- *
- * @author Josh Helmer, jhelmer.unicon.net
- * @since 3.0
- */
-public class AddresseePostProcessor implements IMappedClassPostProcessor<JpaAddressee, AddresseeDTO> {
+import java.util.List;
 
-    @Override
-    public void process(JpaAddressee mappedObject, AddresseeDTO srcObject) {
-        for (JpaRecipient recipient : mappedObject.getRecipients()) {
-            recipient.setAddressee(mappedObject);
-        }
-    }
+import org.jasig.portlet.notice.NotificationEntry;
+import org.jasig.portlet.notice.NotificationState;
+import org.jasig.portlet.notice.rest.EventDTO;
+
+public interface IJpaServices {
+
+    List<EventDTO> getHistory(NotificationEntry entry, String username);
+
+    void applyState(NotificationEntry entry, String username, NotificationState state);
+
 }

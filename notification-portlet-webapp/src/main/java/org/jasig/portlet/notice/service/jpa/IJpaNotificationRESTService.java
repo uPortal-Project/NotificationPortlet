@@ -18,6 +18,7 @@
  */
 package org.jasig.portlet.notice.service.jpa;
 
+import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.rest.AddresseeDTO;
 import org.jasig.portlet.notice.rest.EntryDTO;
 import org.jasig.portlet.notice.rest.EventDTO;
@@ -32,8 +33,19 @@ import java.util.Set;
  * @since 3.0
  */
 public interface IJpaNotificationRESTService {
+
     /**
-     * Get the list of notifications.
+     * Get an {@link EntryDTO} by id.
+     */
+    EntryDTO getNotification(long id, boolean full);
+
+    /**
+     * Get an {@link EntryDTO} for a {@link NotificationEntry}, if applicable.
+     */
+    EntryDTO getNotification(NotificationEntry entry, boolean full);
+
+    /**
+     * Get a paged list of all notifications in the data source.
      *
      * @param page 0 based page #
      * @param pageSize page size
@@ -42,13 +54,11 @@ public interface IJpaNotificationRESTService {
     List<EntryDTO> getNotifications(Integer page, Integer pageSize);
 
     /**
-     * Get a notification by id.
-     *
-     * @param id the notification id
-     * @param full if true, will fetch the addressee info as well, otherwise will omit
-     * @return The entry if found, else null
+     * Supports custom integrations and decorators.  Allows another component
+     * within the Notification app to find entries that match a source (a string
+     * representing the other component) and a custom criterion.
      */
-    EntryDTO getNotification(long id, boolean full);
+    List<EntryDTO> getNotificationsBySourceAndCustomAttribute(String source, String attributeName, String attributeValue);
 
     /**
      * Create a notification.
@@ -91,6 +101,14 @@ public interface IJpaNotificationRESTService {
     List<EventDTO> getEventsByNotification(long notificationId);
 
     /**
+     * Get the list of events by notification.
+     *
+     * @param notificationId the notification id
+     * @return the list of events
+     */
+    List<EventDTO> getEventsByNotificationAndUser(long notificationId, String username);
+
+    /**
      * Get a single event.
      *
      * @param eventId the event id
@@ -102,9 +120,9 @@ public interface IJpaNotificationRESTService {
      * Create an event.
      *
      * @param notificationId the notification id
-     * @param entry the entry to create.  Should *NOT* contain an id.
+     * @param event the entry to create.  Should *NOT* contain an id.
      * @return the newly created event
      */
-    EventDTO createEvent(long notificationId, EventDTO entry);
+    EventDTO createEvent(long notificationId, EventDTO event);
 
 }

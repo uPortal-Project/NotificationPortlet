@@ -42,17 +42,19 @@ public class JpaEntryPostProcessor implements IMappedClassPostProcessor<JpaEntry
 
     @Override
     public void process(JpaEntry mappedObject, EntryDTO src) {
+
         for (JpaAttribute attr : mappedObject.getAttributes()) {
-            attr.setEntryId(mappedObject.getId());
+            attr.setEntry(mappedObject);
         }
 
         for (JpaAddressee addr : mappedObject.getAddressees()) {
-            addr.setEntryId(mappedObject.getId());
+            addr.setEntry(mappedObject);
             addresseePostProcessor.process(addr, null);
         }
 
         for (JpaAction action : mappedObject.getActions()) {
-            action.setEntryId(mappedObject.getId());
+            action.setEntry(mappedObject);
         }
     }
+
 }

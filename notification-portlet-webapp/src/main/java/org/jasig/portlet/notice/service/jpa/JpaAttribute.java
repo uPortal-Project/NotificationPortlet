@@ -30,6 +30,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -47,8 +49,9 @@ import javax.persistence.Table;
     @Column(name="ID", nullable = false)
     private long id;
 
-    @Column(name="ENTRY_ID", nullable = false)
-    private long entryId;
+    @ManyToOne
+    @JoinColumn(name="ENTRY_ID")
+    private JpaEntry entry;
 
     @Column(name="NAME", nullable=false)
     private String name;
@@ -66,12 +69,12 @@ import javax.persistence.Table;
         this.id = id;
     }
 
-    public long getEntryId() {
-        return entryId;
+    public JpaEntry getEntry() {
+        return entry;
     }
 
-    public void setEntryId(long entryId) {
-        this.entryId = entryId;
+    public void setEntry(JpaEntry entry) {
+        this.entry = entry;
     }
 
     public String getName() {
@@ -112,6 +115,11 @@ import javax.persistence.Table;
      */
     public void addValue(int index, String value) {
         values.add(index, value);
+    }
+
+    @Override
+    public String toString() {
+        return "JpaAttribute [id=" + id + ", name=" + name + ", values=" + values + "]";
     }
 
 }

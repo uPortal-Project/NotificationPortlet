@@ -38,16 +38,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationAttribute implements Serializable, Cloneable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String name;
-	private List<String> values = Collections.emptyList();
+    private String name;
+    private List<String> values = Collections.emptyList();
 
-	public NotificationAttribute() {}
+    public NotificationAttribute() {}
 
-	/**
-	 * Shortcut constructor.
-	 */
+    /**
+     * Shortcut constructor.
+     */
     public NotificationAttribute(String name, String value) {
         this(name, Arrays.asList(new String[] { value }));
     }
@@ -57,21 +57,21 @@ public class NotificationAttribute implements Serializable, Cloneable {
         this.values = new ArrayList<String>(values);  // defensive copy
     }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public List<String> getValues() {
-		return Collections.unmodifiableList(values);
-	}
+    public List<String> getValues() {
+        return Collections.unmodifiableList(values);
+    }
 
-	public void setValues(List<String> values) {
-		this.values = new ArrayList<String>(values);  // defensive copy
-	}
+    public void setValues(List<String> values) {
+        this.values = new ArrayList<String>(values);  // defensive copy
+    }
 
     /**
      * Implements deep-copy clone.
@@ -91,7 +91,7 @@ public class NotificationAttribute implements Serializable, Cloneable {
         return rslt;
 
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj){
@@ -128,5 +128,5 @@ public class NotificationAttribute implements Serializable, Cloneable {
         builder.append("]");
         return builder.toString();
     }
-	
+
 }

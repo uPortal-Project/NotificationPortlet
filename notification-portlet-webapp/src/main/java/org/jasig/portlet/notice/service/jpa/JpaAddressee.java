@@ -32,6 +32,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -57,8 +58,9 @@ import javax.persistence.Table;
     @Column(name="ID", nullable = false)
     private long id;
 
-    @Column(name="ENTRY_ID", nullable = false)
-    private long entryId;
+    @ManyToOne
+    @JoinColumn(name="ENTRY_ID")
+    private JpaEntry entry;
 
     @Column(name="NAME", nullable=false)
     private String name;
@@ -67,7 +69,6 @@ import javax.persistence.Table;
     private RecipientType type;
 
     @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name="ADDRESSEE_ID")
     private Set<JpaRecipient> recipients = new HashSet<JpaRecipient>();
 
     public long getId() {
@@ -78,12 +79,12 @@ import javax.persistence.Table;
         this.id = id;
     }
 
-    public long getEntryId() {
-        return entryId;
+    public JpaEntry getEntryId() {
+        return entry;
     }
 
-    public void setEntryId(long entryId) {
-        this.entryId = entryId;
+    public void setEntry(JpaEntry entry) {
+        this.entry = entry;
     }
 
     public RecipientType getType() {
@@ -114,9 +115,7 @@ import javax.persistence.Table;
      */
     public void setRecipients(Set<JpaRecipient> recipients) {
         this.recipients.clear();
-        for (JpaRecipient recip : recipients) {
-            addRecipient(recip);
-        }
+        this.recipients.addAll(recipients);
     }
 
     /**
@@ -124,6 +123,11 @@ import javax.persistence.Table;
      */
     public void addRecipient(JpaRecipient recipient) {
         recipients.add(recipient);
-        recipient.setAddresseeId(getId());
     }
+
+    @Override
+    public String toString() {
+        return "JpaAddressee [id=" + id + ", name=" + name + ", type=" + type + ", recipients=" + recipients + "]";
+    }
+
 }
