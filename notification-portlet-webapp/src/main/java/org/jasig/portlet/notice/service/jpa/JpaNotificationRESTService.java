@@ -86,7 +86,7 @@ public class JpaNotificationRESTService implements IJpaNotificationRESTService {
     @Transactional(readOnly = true)
     public List<EntryDTO> getNotificationsBySourceAndCustomAttribute(String source, String attributeName, String attributeValue) {
         Validate.notBlank(source, "Argument 'source' cannot be blank");
-        Validate.notBlank(source, "Argument 'attributeName' cannot be blank");
+        Validate.notBlank(attributeName, "Argument 'attributeName' cannot be blank");
         // Does it make sense to allow blank attributeValue?
 
         logger.debug("Invoking getNotificationsBySourceAndCustomAttribute with "

@@ -69,7 +69,7 @@ import javax.persistence.Table;
         this.id = id;
     }
 
-    public JpaEntry getEntryId() {
+    public JpaEntry getEntry() {
         return entry;
     }
 

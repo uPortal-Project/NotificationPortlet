@@ -120,29 +120,43 @@ public class NotificationDTOMapperTest extends GroovyTestCase {
 
     @Test
     public void testMapDTOEntry() {
+
         def jpa = new JpaEntry(
             id: 1,
             title: 'jpatitle',
             image: 'jpaimage',
-            body: 'jpabody',
-            attributes: [
-                new JpaAttribute(name: 'name1', values: ['val1', 'val2']),
-                new JpaAttribute(name: 'name2', values: ['jpa1', 'jpa2', 'jpa3'])
-            ],
-            addressees: [
-                new JpaAddressee(name: 'user1', type: RecipientType.INDIVIDUAL, recipients: [
-                    new JpaRecipient(id: 100, username: 'test-user1'),
-                    new JpaRecipient(id: 101, username: 'test-user2')
-                ]),
-                new JpaAddressee(name: 'user2', type: RecipientType.GROUP, recipients: [
-                    new JpaRecipient(id: 200, username: 'test-group1')
-                ])
-            ],
-            actions: [
-                new JpaAction(id: 1, label: 'label1', clazz: 'org.jasig.test.Class1'),
-                new JpaAction(id: 2, label: 'label2', clazz: 'org.jasig.test.Class2')
-            ]
+            body: 'jpabody'
         );
+
+        def attributes = [
+            new JpaAttribute(name: 'name1', entry: jpa, values: ['val1', 'val2']),
+            new JpaAttribute(name: 'name2', entry: jpa, values: ['jpa1', 'jpa2', 'jpa3'])
+        ];
+
+        def addressees = [
+            new JpaAddressee(name: 'user1', entry: jpa, type: RecipientType.INDIVIDUAL, recipients: [
+                new JpaRecipient(id: 100, username: 'test-user1'),
+                new JpaRecipient(id: 101, username: 'test-user2')
+            ]),
+            new JpaAddressee(name: 'group1', entry: jpa, type: RecipientType.GROUP, recipients: [
+                new JpaRecipient(id: 200, username: 'test-group1')
+            ])
+        ];
+        addressees.each {
+            def addressee = it;
+            addressee.getRecipients().each {
+                it.setAddressee(addressee);
+            }
+        }
+
+        def actions = [
+            new JpaAction(id: 1, entry: jpa, label: 'label1', clazz: 'org.jasig.test.Class1'),
+            new JpaAction(id: 2, entry: jpa, label: 'label2', clazz: 'org.jasig.test.Class2')
+        ];
+
+        jpa.setAttributes(new HashSet<JpaAttribute>(attributes));
+        jpa.setAddressees(new HashSet<JpaAddressee>(addressees));
+        jpa.setActions(new HashSet<JpaAction>(actions));
 
         EntryDTO dto = mapper.map(jpa, EntryDTO);
         assertMatches(jpa, dto);
@@ -200,7 +214,7 @@ public class NotificationDTOMapperTest extends GroovyTestCase {
     private void assertAttributeMapping(JpaAttribute attr1, AttributeDTO attr2, JpaEntry entry) {
         assert attr1 != null;
         assert attr2 != null;
-        assert attr1.entryId == entry.id;
+        assert attr1.entry.equals(entry);
 
         assert attr1.values.size() == attr2.values.size();
         assert attr1.values.containsAll(attr2.values);
@@ -210,7 +224,7 @@ public class NotificationDTOMapperTest extends GroovyTestCase {
     private void assertAddresseeMapping(JpaAddressee addr1, AddresseeDTO addr2, JpaEntry entry) {
         assert addr1 != null;
         assert addr2 != null;
-        assert addr1.entryId == entry.id;
+        assert addr1.entry.equals(entry);
 
         assert addr1.name == addr2.name;
         assert addr1.type == addr2.type;
@@ -226,7 +240,7 @@ public class NotificationDTOMapperTest extends GroovyTestCase {
     private void assertRecipientMapping(JpaRecipient recip1, RecipientDTO recip2, JpaAddressee addr) {
         assert recip1 != null;
         assert recip2 != null;
-        assert recip1.addresseeId == addr.id;
+        assert recip1.addressee.equals(addr);
 
         assert recip1.id == recip2.id;
         assert recip1.username == recip2.username;
@@ -236,7 +250,7 @@ public class NotificationDTOMapperTest extends GroovyTestCase {
     private void assertEventMapping(JpaEvent event1, EventDTO event2, JpaRecipient recipient) {
         assert event1 != null;
         assert event2 != null;
-        assert event1.recipientId == recipient.id;
+        assert event1.recipient.equals(recipient);
 
         assert event1.id == event2.id;
         assert event1.timestamp == event2.timestamp;
