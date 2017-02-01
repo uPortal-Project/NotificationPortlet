@@ -40,20 +40,20 @@
         </portlet-info>
         <portlet-preferences>
 
-            <!-- Locations of static files, in native NotificationPortlet JSON, 
-                 that should be read from the classpath and included in the 
+            <!-- Locations of static files, in native NotificationPortlet JSON,
+                 that should be read from the classpath and included in the
                  response. -->
             <preference>
                 <name>ClassLoaderResourceNotificationService.locations</name>
             </preference>
 
-            <!-- Zero or more URLs for feeds that should be read-in and 
+            <!-- Zero or more URLs for feeds that should be read-in and
                  converted to Notifications by the RomeNotificationService. -->
             <preference>
                 <name>RomeNotificationService.urls</name>
             </preference>
 
-            <!-- Zero or more URLs for web service endpoints for the 
+            <!-- Zero or more URLs for web service endpoints for the
                  RestfulJsonNotificationService. -->
             <preference>
                 <name>RestfulJsonNotificationService.serviceUrls</name>
@@ -87,8 +87,8 @@
                 <read-only>true</read-only>
             </preference>
 
-            <!-- Locations of static files, in native NotificationPortlet JSON, 
-                 that should be read from the classpath and included in the 
+            <!-- Locations of static files, in native NotificationPortlet JSON,
+                 that should be read from the classpath and included in the
                  response FOR THE DEMO EXPERIENCE. -->
             <preference>
                 <name>DemoNotificationService.locations</name>
@@ -127,8 +127,8 @@
                 <name>NotificationLifecycleController.invokeRedirectPort</name>
             </preference>
 
-            <!-- Specifies how long a user-hidden notification should remain 
-                 hidden, in hours.  A value of zero means notifications will be 
+            <!-- Specifies how long a user-hidden notification should remain
+                 hidden, in hours.  A value of zero means notifications will be
                  hidden forever, and any negative value disables the hide feature. -->
             <preference>
                 <name>HideNotificationServiceDecorator.hideDurationHours</name>
@@ -189,27 +189,27 @@
         </portlet-info>
         <portlet-preferences>
 
-            <!-- Locations of static files, in native NotificationPortlet JSON, 
-                 that should be read from the classpath and included in the 
+            <!-- Locations of static files, in native NotificationPortlet JSON,
+                 that should be read from the classpath and included in the
                  response. -->
             <preference>
                 <name>ClassLoaderResourceNotificationService.locations</name>
             </preference>
 
-            <!-- Zero or more URLs for feeds that should be read-in and 
+            <!-- Zero or more URLs for feeds that should be read-in and
                  converted to Notifications by the RomeNotificationService. -->
             <preference>
                 <name>RomeNotificationService.urls</name>
             </preference>
 
-            <!-- Zero or more URLs for web service endpoints for the 
+            <!-- Zero or more URLs for web service endpoints for the
                  RestfulJsonNotificationService. -->
             <preference>
                 <name>RestfulJsonNotificationService.serviceUrls</name>
             </preference>
 
-            <!-- Locations of static files, in native NotificationPortlet JSON, 
-                 that should be read from the classpath and included in the 
+            <!-- Locations of static files, in native NotificationPortlet JSON,
+                 that should be read from the classpath and included in the
                  response FOR THE DEMO EXPERIENCE. -->
             <preference>
                 <name>DemoNotificationService.locations</name>
@@ -256,7 +256,7 @@
                 <value>up</value>
             </preference>
 
-            <!-- If true, emergency alerts will advance on their own (via 
+            <!-- If true, emergency alerts will advance on their own (via
                  JavaScript) when there are more than one to display. -->
             <preference>
                 <name>EmergencyAlertController.autoAdvance</name>
@@ -315,20 +315,20 @@
         </portlet-info>
         <portlet-preferences>
 
-            <!-- Locations of static files, in native NotificationPortlet JSON, 
-                 that should be read from the classpath and included in the 
+            <!-- Locations of static files, in native NotificationPortlet JSON,
+                 that should be read from the classpath and included in the
                  response. -->
             <preference>
                 <name>ClassLoaderResourceNotificationService.locations</name>
             </preference>
 
-            <!-- Zero or more URLs for feeds that should be read-in and 
+            <!-- Zero or more URLs for feeds that should be read-in and
                  converted to Notifications by the RomeNotificationService. -->
             <preference>
                 <name>RomeNotificationService.urls</name>
             </preference>
 
-            <!-- Zero or more URLs for web service endpoints for the 
+            <!-- Zero or more URLs for web service endpoints for the
                  RestfulJsonNotificationService. -->
             <preference>
                 <name>RestfulJsonNotificationService.serviceUrls</name>
@@ -362,8 +362,8 @@
                 <read-only>true</read-only>
             </preference>
 
-            <!-- Locations of static files, in native NotificationPortlet JSON, 
-                 that should be read from the classpath and included in the 
+            <!-- Locations of static files, in native NotificationPortlet JSON,
+                 that should be read from the classpath and included in the
                  response FOR THE DEMO EXPERIENCE. -->
             <preference>
                 <name>DemoNotificationService.locations</name>
@@ -410,17 +410,17 @@
                 <value>up</value>
             </preference>
 
+            <!-- Set the background color shown when there is an active notification -->
+            <preference>
+                <name>NotificationIconController.activeColor</name>
+                <value>#d9534f</value>
+            </preference>
+
             <!-- Set the Font Awesome icon name to use for the Notifications icon.
                  Example values are 'fa-warning', 'fa-envelope'. -->
             <preference>
                 <name>NotificationIconController.faIcon</name>
-                <value>fa-warning</value>
-            </preference>
-
-            <!-- Used for both width and height of the icon. -->
-            <preference>
-                <name>NotificationIconController.size</name>
-                <value>18</value>
+                <value>fa-bell</value>
             </preference>
 
             <!-- Used for both width and height of the icon. -->

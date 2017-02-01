@@ -32,41 +32,25 @@
 </c:if>
 <rs:aggregatedResources path="/simpleListLocalResources.xml"/>
 
-<link rel="stylesheet" href="<rs:resourceURL value="/rs/fontawesome/4.0.3/css/font-awesome.min.css"/>" type="text/css" media="screen" />
-
 <style>
-#${n}notificationIcon {
-    display: inline-block;
-}
-#${n}notificationIcon i {
-    font-size: ${size}px;
-}
-#${n}notificationIcon .notification-badge {
-    display: inline-block;
-    background-color: #cb4437;
-    border-radius: 2px;
-    padding: 2px;
-    font: bold 11px Arial;
-    color: #fff;
-    min-width: 15px;
-    position: relative;
-    right: 12px;
-    margin-right: -12px;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(0,0,0,0.1);
-    top: -${size / 2}px;
-}
+    #${n}notificationIcon .badge {
+        transition: background-color 0.5s;
+    }
+    #${n}notificationIcon .badge.active {
+        background-color: ${activeNotificationColor};
+    }
 </style>
 
 <div id="${n}notificationIcon">
     <a href="${url}" title="<spring:message code="view.notifications"/>">
-        <i class="fa ${faIcon}"></i>
+        <div class="badge" role="alert" aria-live="polite">
+            <i class="fa ${faIcon}" aria-label="<spring:message code="notifications" />"></i>
+            <span class="notification-count"></span>
+        </div>
     </a>
-    <div class="notification-badge" style="display: none;"><span class="notification-count"></span></div>
 </div>
 
 <script type="text/javascript">
-
     var ${n} = ${n} || {};
     <c:choose>
         <c:when test="${!usePortalJsLibs}">
@@ -86,11 +70,12 @@
         }, function(feed) {
             if (feed && feed.length > 0) {
                 $('#${n}notificationIcon .notification-count').html(feed.length);
-                $('#${n}notificationIcon .notification-badge').slideDown();
+                $('#${n}notificationIcon .badge').addClass('active');
+            } else {
+                $('#${n}notificationIcon .notification-count').html('0');
+                $('#${n}notificationIcon .badge').removeClass('active');
             }
         });
 
     });
-
 </script>
-
