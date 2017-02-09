@@ -30,10 +30,10 @@ import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 /**
- * Renders a small notification icon with an ajax-based badge that shows the 
- * current number of botifications.  Clicking on the icon brings up the regular 
+ * Renders a small notification icon with an ajax-based badge that shows the
+ * current number of botifications.  Clicking on the icon brings up the regular
  * Notification portlet.
- * 
+ *
  * @author awills
  */
 @RequestMapping("VIEW")
@@ -42,9 +42,9 @@ public final class NotificationIconController {
     private static final String USE_PPORTAL_JS_LIBS_PREFERENCE = "usePortalJsLibs";
     private static final String PPORTAL_JS_NAMESPACE_PREFERENCE = "portalJsNamespace";
     private static final String ICON_PREFERENCE = "NotificationIconController.faIcon";
-    private static final String ICON_DEFAULT = "fa-warning";
-    private static final String SIZE_PREFERENCE = "NotificationIconController.size";
-    private static final String SIZE_DEFAULT = "18";
+    private static final String ICON_DEFAULT = "fa-bell";
+    private static final String ACTIVE_COLOR_PREFERENCE = "NotificationIconController.activeColor";
+    private static final String ACTIVE_COLOR_DEFAULT = "#d9534f";
     private static final String URL_PREFERENCE = "NotificationIconController.url";
     private static final String URL_DEFAULT = "/uPortal/p/notification";
     private static final String VIEW_NAME = "icon";
@@ -64,8 +64,8 @@ public final class NotificationIconController {
         final String faIcon = prefs.getValue(ICON_PREFERENCE, ICON_DEFAULT);
         model.put("faIcon", faIcon);
 
-        final String size = prefs.getValue(SIZE_PREFERENCE, SIZE_DEFAULT);
-        model.put("size", size);
+        final String activeNotificationColor = prefs.getValue(ACTIVE_COLOR_PREFERENCE, ACTIVE_COLOR_DEFAULT);
+        model.put("activeNotificationColor", activeNotificationColor);
 
         final String url = prefs.getValue(URL_PREFERENCE, URL_DEFAULT);
         model.put("url", url);
