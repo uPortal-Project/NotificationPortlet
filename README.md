@@ -1,5 +1,7 @@
 # Apereo Notification Portlet
 
+[![Build Status](https://travis-ci.org/Jasig/NotificationPortlet.svg?branch=master)](https://travis-ci.org/Jasig/NotificationPortlet)
+
 This is a [Sponsored Portlet][] in the uPortal project.
 
 ## Configuration
