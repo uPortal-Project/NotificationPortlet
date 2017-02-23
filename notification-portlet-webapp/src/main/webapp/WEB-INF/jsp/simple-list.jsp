@@ -31,7 +31,7 @@
     <portlet:param name="actionId" value="ACTIONID"/>
 </portlet:actionURL>
 
-<script src="<rs:resourceURL value="/rs/jquery/1.10.2/jquery-1.10.2.min.js"/>" type="text/javascript"></script>
+<script src="<rs:resourceURL value="/rs/jquery/1.11.0/jquery-1.11.0.min.js"/>" type="text/javascript"></script>
 <rs:aggregatedResources path="/simpleListLocalResources.xml"/>
 
 <style type="text/css">
