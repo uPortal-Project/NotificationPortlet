@@ -1,6 +1,7 @@
 # Apereo Notification Portlet
 
-[![Build Status](https://travis-ci.org/Jasig/NotificationPortlet.svg?branch=master)](https://travis-ci.org/Jasig/NotificationPortlet)
+[![Linux Build Status](https://travis-ci.org/Jasig/NotificationPortlet.svg?branch=master)](https://travis-ci.org/Jasig/NotificationPortlet)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/we2hk9cv24f47oao/branch/master?svg=true)](https://ci.appveyor.com/project/ChristianMurphy/notificationportlet/branch/master)
 
 This is a [Sponsored Portlet][] in the uPortal project.
 
@@ -21,5 +22,3 @@ Specify the encryption key using the `UP_JASYPT_KEY` environment variable.
 [Sponsored Portlet]: https://wiki.jasig.org/display/PLT/Jasig+Sponsored+Portlets
 
 [Notifications portlet in Confluence]: https://wiki.jasig.org/pages/viewpage.action?pageId=47875986
-
-
