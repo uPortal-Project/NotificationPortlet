@@ -39,8 +39,6 @@
     <portlet:param name="actionId" value="ACTIONID"/>
 </portlet:actionURL>
 
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
-
 <link rel="stylesheet" href="<rs:resourceURL value='/rs/bootstrap-namespaced/3.1.1/css/bootstrap.min.css'/>" type="text/css" />
 <link rel="stylesheet" href="<c:url value="/css/job-postings.css"/>" type="text/css"></link>
 <!--[if lt IE 10]>
