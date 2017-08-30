@@ -19,16 +19,18 @@
     under the License.
 
 -->
-<beans xmlns="http://www.springframework.org/schema/beans" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:util="http://www.springframework.org/schema/util" 
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
     <!-- main portlet annotation -->
     <context:annotation-config/>
+
+    <bean parent="propertyConfigurer"/>
 
     <!-- Controller beans -->
     <bean class="org.jasig.portlet.notice.controller.NotificationLifecycleController" />
@@ -39,8 +41,8 @@
     <!--
      | Root Notification Service bean
      |
-     | It's customary to use a CacheNotificationService here to wrap beans 
-     | defined in the parent applicationContext. 
+     | It's customary to use a CacheNotificationService here to wrap beans
+     | defined in the parent applicationContext.
      +-->
     <bean id="rootNotificationService" class="org.jasig.portlet.notice.action.hide.HideNotificationServiceDecorator">
         <property name="enclosedNotificationService" ref="readNotificationService"/>
