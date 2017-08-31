@@ -134,6 +134,12 @@
             <version>${hsql.version}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.jasig.portal</groupId>
+            <artifactId>uPortal-spring</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.jasig.resourceserver</groupId>
             <artifactId>resource-server-content</artifactId>
