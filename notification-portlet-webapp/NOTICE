@@ -20,13 +20,13 @@ This project includes:
   AntLR Parser Generator under BSD License
   AOP alliance under Public Domain
   Apache Commons BeanUtils under The Apache Software License, Version 2.0
+  Apache Commons Codec under The Apache Software License, Version 2.0
+  Apache Commons Collections under Apache License, Version 2.0
   Apache Commons Lang under The Apache Software License, Version 2.0
   Apache Commons Logging under The Apache Software License, Version 2.0
   Apache Groovy under The Apache Software License, Version 2.0
   ASM Core under BSD
   ASM helper Minidev under The Apache Software License, Version 2.0
-  Commons Codec under The Apache Software License, Version 2.0
-  Commons Collections under The Apache Software License, Version 2.0
   Commons DBCP under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   Commons Lang under The Apache Software License, Version 2.0
@@ -90,4 +90,5 @@ This project includes:
   spring-security-core under The Apache Software License, Version 2.0
   spring-security-web under The Apache Software License, Version 2.0
   standard under Apache License, Version 2.0
+  uPortal under The Apache License, Version 2.0
 
