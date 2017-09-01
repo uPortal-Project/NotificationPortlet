@@ -20,77 +20,83 @@
 --%>
 <jsp:directive.include file="/WEB-INF/jsp/include.jsp"/>
 
+<%-- store a unique portlet id --%>
 <c:set var="n"><portlet:namespace/></c:set>
 
+<%-- determine the notification service url to pull the notices --%>
 <portlet:actionURL var="invokeNotificationServiceUrl" escapeXml="false">
     <portlet:param name="uuid" value="${uuid}"/>
     <portlet:param name="action" value="invokeNotificationService"/>
-</portlet:actionURL>
-<portlet:actionURL var="hideErrorUrl" escapeXml="false">
-    <portlet:param name="action" value="hideError"/>
-    <portlet:param name="errorKey" value="ERRORKEY"/>
 </portlet:actionURL>
 <portlet:actionURL var="invokeActionUrlTemplate" escapeXml="false">
     <portlet:param name="notificationId" value="NOTIFICATIONID"/>
     <portlet:param name="actionId" value="ACTIONID"/>
 </portlet:actionURL>
 
-<c:if test="${portletPreferencesValues['usePortalJsLibs'][0] != 'true'}">
-    <rs:aggregatedResources path="/accordianResources.xml"/>
+<%-- are using our own JQuery libraries or uPortal --%>
+<c:if test="${!usePortalJsLibs}">
+    <rs:aggregatedResources path="/jQueryUIResources.xml"/>
 </c:if>
-<rs:aggregatedResources path="/accordianLocalResources.xml"/>
 
-<div id="${n}container" class="notification-portlet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <!-- options menu -->
-    <div class="notification-options" style="display: none;">
-        <p class="notification-date-filter">
-            View: <a class="all" href="javascript:void(0);">All</a> | <a class="today active" href="javascript:void(0);">Today</a>
-        </p>
-        <p class="notification-refresh"><a href="javascript:void(0);"><i class="fa fa-refresh" aria-hidden="true"></i> Refresh</a></p>
-    </div>
+<script src="<c:url value="/scripts/modal-notice.js"/>" type="text/javascript"></script>
 
-    <!-- loading -->
-    <div class="notification-loading"></div>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <!-- notifications -->
-    <div class="notification-portlet-wrapper" style="display: none;">
+<%-- HTML Fragment --%>
 
-        <!-- accordion -->
-        <div class="notification-container accordion"></div>
-
-        <!-- detail view -->
-        <div class="notification-detail-wrapper" style="display: none;">
-            <div class="notification-actions"></div>
-            <div class="notification-detail-container"></div>
+<div id="${n}emergencyAlert" class="modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="title text-center" role="heading"></h2>
+            </div>
+            <div class="modal-body" role="main">
+                <p class="body"></p>
+                <a class="link" href=""></a>
+                <ul class="notification-actions hidden list-inline text-center">
+                  <li class="action-template hidden"><a class="btn btn-primary"
+                      data-dismiss="modal" data-target="#${n}emergencyAlert"
+                      href="javascript:void(0);"></a></li>
+                </ul>
+            </div>
         </div>
-
-        <!-- errors -->
-        <div class="notification-error-container" style="display: none;"></div>
-
     </div>
-
 </div>
-
-<!-- call ajax on dynamic portlet id -->
 <script type="text/javascript">
     var ${n} = ${n} || {};
-<c:choose>
-    <c:when test="${portletPreferencesValues['usePortalJsLibs'][0] != 'true'}">
-        ${n}.jQuery = jQuery.noConflict(true);
-        ${n}.underscore = _.noConflict();
-    </c:when>
-    <c:otherwise>
-        ${n}.jQuery = up.jQuery;
-        ${n}.underscore = up._;
-    </c:otherwise>
-</c:choose>
-    ${n}.jQuery(document).ready(
-        notificationsPortletView(${n}.jQuery, "#${n}container", ${n}.underscore, {
+    <c:choose>
+        <c:when test="${!usePortalJsLibs}">
+            ${n}.jQuery = jQuery.noConflict(true);
+        </c:when>
+        <c:otherwise>
+            <c:set var="ns"><c:if test="${ not empty portalJsNamespace }">${ portalJsNamespace }.</c:if></c:set>
+            ${n}.jQuery = ${ ns }jQuery;
+        </c:otherwise>
+    </c:choose>
+
+    ${n}.jQuery(function(){
+        var $ = ${n}.jQuery;
+
+        var container = $("#${n}emergencyAlert");
+
+        upmodal_notice.show($, container, {
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
             invokeActionUrlTemplate: '${invokeActionUrlTemplate}',
-            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS"/>',
-            hideErrorUrl: '${hideErrorUrl}'
-        })
-    );
+            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>',
+            readyCallback: function() {
+                if (feed && feed.length > 0) {
+                    up.jQuery('#${n}emergencyAlert').on('hide.bs.modal', function (e) {
+                        var link = up.jQuery('#${n}emergencyAlert').find('.notification-actions li.action a');
+                        up.jQuery.get(link.attr('href'));
+                    });
+                    up.jQuery("#${n}emergencyAlert").modal("show");
+                }
+            }
+        });
+
+    });
+
 </script>
+
