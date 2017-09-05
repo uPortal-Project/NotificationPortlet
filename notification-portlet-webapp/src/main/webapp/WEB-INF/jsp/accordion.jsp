@@ -40,11 +40,10 @@
 </c:if>
 <rs:aggregatedResources path="/accordianLocalResources.xml"/>
 
-<div id="notifModal" class="modal fade" role="dialog">
-<div id="${n}container" class="notification-portlet modal-dialog" style="background-color: #bbb;">
+<div id="${n}container" class="notification-portlet">
 
     <!-- options menu -->
-    <div class="notification-options modal-header" style="display: none;">
+    <div class="notification-options" style="display: none;">
         <p class="notification-date-filter">
             View: <a class="all" href="javascript:void(0);">All</a> | <a class="today active" href="javascript:void(0);">Today</a>
         </p>
@@ -55,7 +54,7 @@
     <div class="notification-loading"></div>
 
     <!-- notifications -->
-    <div class="notification-portlet-wrapper modal-body" style="display: none;">
+    <div class="notification-portlet-wrapper" style="display: none;">
 
         <!-- accordion -->
         <div class="notification-container accordion"></div>
@@ -71,7 +70,6 @@
 
     </div>
 
-</div>
 </div>
 
 <!-- call ajax on dynamic portlet id -->

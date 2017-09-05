@@ -41,19 +41,6 @@
     }
 </style>
 
-<c:choose>
-<c:when test="true">
-<div id="${n}notificationIcon">
-    <a href="javascript;" title="<spring:message code='view.notifications'/>"
-        data-toggle="modal" data-target="#notifModal">
-        <div class="badge" role="alert" aria-live="polite">
-            <i class="fa ${faIcon}" aria-label="<spring:message code="notifications" />"></i>
-            <span class="notification-count"></span>
-        </div>
-    </a>
-</div>
-</c:when>
-<c:otherwise>
 <div id="${n}notificationIcon">
     <a href="${url}" title="<spring:message code="view.notifications"/>">
         <div class="badge" role="alert" aria-live="polite">
@@ -62,8 +49,6 @@
         </div>
     </a>
 </div>
-</c:otherwise>
-</c:choose>
 
 <script type="text/javascript">
     var ${n} = ${n} || {};
