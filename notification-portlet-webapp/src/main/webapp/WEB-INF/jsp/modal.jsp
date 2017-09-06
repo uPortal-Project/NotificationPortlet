@@ -54,14 +54,17 @@ recommended and more common approach).
                 <h2 class="np-title text-center" role="heading"></h2>
             </div>
             <div class="modal-body" role="main">
-                <p class="np-body"></p>
-                <a class="np-link" href=""></a>
-                <ul class="np-actions list-inline text-center">
-                    <!-- Template HTML for actions defined on the notice -->
-                    <li class="np-action-template hidden"><a class="btn btn-primary"
-                        data-dismiss="modal" data-target="#${n}"
-                        href="javascript:void(0);"></a></li>
-                </ul>
+                <!-- Use an HTML from in case the body of the notice contains form fields -->
+                <form method="POST" class="np-action-form">
+                    <p class="np-body"></p>
+                    <a class="np-link" href=""></a>
+                    <ul class="np-actions list-inline text-center">
+                        <!-- Template HTML for actions defined on the notice -->
+                        <li class="np-action-template hidden">
+                            <a class="btn" href="javascript:void(0);"></a>
+                        </li>
+                    </ul>
+                </form>
             </div>
         </div>
     </div>

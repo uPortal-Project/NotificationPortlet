@@ -32,6 +32,7 @@ if (!upmodal_notice.init) {
       selectors: {
         content:         '.np-content',
         title:           '.np-title',
+        form:            '.np-action-form',
         body:            '.np-body',
         link:            '.np-link',
         actions:         '.np-actions',
@@ -41,7 +42,7 @@ if (!upmodal_notice.init) {
     };
 
     // First 'prime-the-pump' with an ActionURL
-    function initNotices($, settings, callback) {
+    var initNotices = function($, settings, callback) {
       $.ajax({
         type:    'POST',
         url:     settings.invokeNotificationServiceUrl,
@@ -53,7 +54,7 @@ if (!upmodal_notice.init) {
     }
 
     // Then fetch the notifications with a ResourceURL
-    function fetchNotices($, settings, callback) {
+    var fetchNotices = function($, settings, callback) {
       $.ajax({
         url:      settings.getNotificationsUrl,
         type:     'POST',
@@ -71,6 +72,18 @@ if (!upmodal_notice.init) {
     upmodal_notice.launch = function ($, container, options) {
 
       var settings = $.extend({}, defaults, options);
+
+      var handleAction = function() {
+        var actionButton = $(this);
+        var formElement = container.find(settings.selectors.form);
+        $.post(actionButton.attr('data-url'), formElement.serialize(), function(data, textStatus, jqXHR) {
+          if (console && console.log) {
+            console.log('handleAction received status: ' + textStatus);
+          }
+        });
+        // Any action closes the modal window
+        container.modal('hide');
+      }
 
       var resetDialog = function() {
         container.off('hidden.bs.modal'); // Clear previous event handler(s)
@@ -93,7 +106,11 @@ if (!upmodal_notice.init) {
             actionElement.removeClass('np-action-template');
             actionElement.toggleClass('hidden');
             actionElement.addClass('np-action');
-            actionElement.find('a').attr('href', actionUrl).html(action.label);
+            if (i == 0) {
+              // Only the first button is btn-primary
+              actionElement.find('a').addClass('btn-primary');
+            }
+            actionElement.find('a').attr('data-url', actionUrl).html(action.label).click(handleAction);
             actionElement.appendTo(actionsContainer);
           }
         } else {
