@@ -33,66 +33,58 @@
     <portlet:param name="actionId" value="ACTIONID"/>
 </portlet:actionURL>
 
-<%-- are using our own JQuery libraries or uPortal --%>
-<c:if test="${!usePortalJsLibs}">
-    <rs:aggregatedResources path="/jQueryUIResources.xml"/>
-</c:if>
+<%--
+
+NOTE: the modal.jsp display strategy is based on Bootstrap, which should not be loaded on the page
+more that once.  This display strategy *requires* usePortalJSLibs=true (which is both the
+recommended and more common approach).
+
+--%>
 
 <script src="<c:url value="/scripts/modal-notice.js"/>" type="text/javascript"></script>
 
 <%-- HTML Fragment --%>
 
-<div id="${n}emergencyAlert" class="modal fade" role="dialog" data-backdrop="static">
+<div id="${n}" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content np-content">
             <div class="modal-header">
-                <h2 class="title text-center" role="heading"></h2>
+                <!-- Default method of closing the  dialog, in case the notice doesn't define one -->
+                <button type="button" class="close np-close" data-dismiss="modal" aria-label="Close" style="display: none;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="np-title text-center" role="heading"></h2>
             </div>
             <div class="modal-body" role="main">
-                <p class="body"></p>
-                <a class="link" href=""></a>
-                <ul class="notification-actions hidden list-inline text-center">
-                  <li class="action-template hidden"><a class="btn btn-primary"
-                      data-dismiss="modal" data-target="#${n}emergencyAlert"
-                      href="javascript:void(0);"></a></li>
-                </ul>
+                <!-- Use an HTML from in case the body of the notice contains form fields -->
+                <form method="POST" class="np-action-form">
+                    <p class="np-body"></p>
+                    <a class="np-link" href=""></a>
+                    <ul class="np-actions list-inline text-center">
+                        <!-- Template HTML for actions defined on the notice -->
+                        <li class="np-action-template hidden">
+                            <a class="btn" href="javascript:void(0);"></a>
+                        </li>
+                    </ul>
+                </form>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    var ${n} = ${n} || {};
-    <c:choose>
-        <c:when test="${!usePortalJsLibs}">
-            ${n}.jQuery = jQuery.noConflict(true);
-        </c:when>
-        <c:otherwise>
-            <c:set var="ns"><c:if test="${ not empty portalJsNamespace }">${ portalJsNamespace }.</c:if></c:set>
-            ${n}.jQuery = ${ ns }jQuery;
-        </c:otherwise>
-    </c:choose>
+(function($) {
 
-    ${n}.jQuery(function(){
-        var $ = ${n}.jQuery;
+    $(function() {
+        var container = $("#${n}");
 
-        var container = $("#${n}emergencyAlert");
-
-        upmodal_notice.show($, container, {
+        upmodal_notice.launch($, container, {
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
             invokeActionUrlTemplate: '${invokeActionUrlTemplate}',
-            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>',
-            readyCallback: function() {
-                if (feed && feed.length > 0) {
-                    up.jQuery('#${n}emergencyAlert').on('hide.bs.modal', function (e) {
-                        var link = up.jQuery('#${n}emergencyAlert').find('.notification-actions li.action a');
-                        up.jQuery.get(link.attr('href'));
-                    });
-                    up.jQuery("#${n}emergencyAlert").modal("show");
-                }
-            }
+            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>'
         });
 
     });
 
+})(up.jQuery);
 </script>
 
