@@ -72,19 +72,10 @@ recommended and more common approach).
     $(function() {
         var container = $("#${n}");
 
-        upmodal_notice.show($, container, {
+        upmodal_notice.launch($, container, {
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
             invokeActionUrlTemplate: '${invokeActionUrlTemplate}',
-            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>',
-            readyCallback: function() {
-                if (feed && feed.length > 0) {
-                    $('#${n}').on('hide.bs.modal', function(e) {
-                        var link = $('#${n}').find('.np-actions li.np-action a');
-                        $.get(link.attr('href'));
-                    });
-                    $("#${n}").modal("show");
-                }
-            }
+            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>'
         });
 
     });

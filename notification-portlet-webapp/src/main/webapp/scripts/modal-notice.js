@@ -37,8 +37,7 @@ if (!upmodal_notice.init) {
         actions:         '.np-actions',
         actionTemplate:  '.np-action-template',
         closeButton:     '.np-close'
-      },
-      readyCallback: function() {}
+      }
     };
 
     // First 'prime-the-pump' with an ActionURL
@@ -67,19 +66,20 @@ if (!upmodal_notice.init) {
           container.html(" ").text("AJAX failed. ~ THE END ~");
         }
       });
-
     }
 
-    upmodal_notice.show = function ($, container, options) {
+    upmodal_notice.launch = function ($, container, options) {
 
       var settings = $.extend({}, defaults, options);
 
       var resetDialog = function() {
+        container.off('hidden.bs.modal'); // Clear previous event handler(s)
         container.find(settings.selectors.closeButton).hide();
         container.find(settings.selectors.actions).find('.np-action').remove();
       }
 
-      var drawActions = function(actionsContainer, alert) {
+      var drawActions = function(alert) {
+        var actionsContainer = container.find(settings.selectors.actions);
         var availableActions = alert.availableActions;
         var actionTemplate = actionsContainer.find(settings.selectors.actionTemplate);
         if (availableActions && availableActions.length > 0) {
@@ -102,42 +102,44 @@ if (!upmodal_notice.init) {
         }
       }
 
-      var drawAlert = function(container, alert) {
-        var element = container.find(settings.selectors.content);
+      var drawAlert = function(alert) {
+        var content = container.find(settings.selectors.content);
         // Insert context
-        element.find(settings.selectors.title).html(alert.title);
+        content.find(settings.selectors.title).html(alert.title);
         if (alert.body) {
-          element.find(settings.selectors.body).html(alert.body);
+          content.find(settings.selectors.body).html(alert.body);
         }
         if (alert.url) {
           var linkText = alert.linkText || alert.url;
-          element.find(settings.selectors.link).attr('href', alert.url).html(linkText);
+          content.find(settings.selectors.link).attr('href', alert.url).html(linkText);
         }
         // Add the actions
-        var actionsContainer = element.find(settings.selectors.actions);
-        drawActions(actionsContainer, alert);
+        drawActions(alert);
+      }
+
+      var showNextNotice = function(feed, index) {
+        var alert = feed[index];
+        resetDialog();
+        drawAlert(alert);
+        if (feed.length > index + 1) {
+          // There are more notices after this one...
+          container.on('hidden.bs.modal', function() {
+            showNextNotice(feed, index + 1);
+          });
+        }
+        container.modal("show");
       }
 
       var showEachNoticeInTurn = function(feed) {
         // Do we have any notices to show?
         if (feed && feed.length != 0) {
-          // Iterate the notices
-          for (var i=0; i < feed.length; i++) {
-            resetDialog();
-            var alert = feed[i];
-            drawAlert(container, alert);
-          }
-          // Invoke the specified callback function, if any
-          settings.readyCallback();
+          showNextNotice(feed, 0);
         }
       }
+
       // Invoke notifications
       initNotices($, settings, showEachNoticeInTurn);
     }
 
-    upmodal_notice.pullFeed = function ($, options, callback) {
-      var settings = $.extend({}, defaults, options);
-      initNotices($, settings, callback);
-    }
   })();
 }
