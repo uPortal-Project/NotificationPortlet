@@ -94,14 +94,15 @@
                 <name>DemoNotificationService.locations</name>
             </preference>
 
-            <!-- Set to true to enable the JPA Notification source.  This will display notifications stored in
-                 the portlet's notification database. -->
+            <!-- Set to true to enable the JPA Notification source.  This will display notifications
+                 stored in the portlet's notification database. -->
             <preference>
                 <name>JpaNotificationService.enabled</name>
                 <value>false</value>
             </preference>
 
-            <!-- Name of the jsp view file for displaying notifications. -->
+            <!-- Name of the jsp view file for displaying notifications. Two suitable JSPs are
+                 included with the project:  'accordion' and 'modal'-->
             <preference>
                 <name>NotificationController.viewName</name>
                 <value>accordion</value>
@@ -157,9 +158,9 @@
                 <value>ASCENDING</value>
             </preference>
 
-            <!-- If true, notifications will piggyback on the portal's JavaScript library (jQuery).  The needs
-                 of this portlet are very lightweight so we should default to 'true' in this case but that's
-                 pending broader consensus. -->
+            <!-- If true, notifications will piggyback on the portal's JavaScript library (jQuery).
+                 The needs of this portlet are very lightweight so we should default to 'true' in
+                 this case but that's pending broader consensus. -->
             <preference>
                 <name>usePortalJsLibs</name>
                 <value>false</value>

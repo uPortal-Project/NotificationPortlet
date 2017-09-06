@@ -30,12 +30,13 @@ if (!upmodal_notice.init) {
 
     var defaults = {
       selectors: {
-        content:         '.modal-content',
-        title:           '.title',
-        body:            '.body',
-        link:            '.link',
-        actions:         '.notification-actions',
-        actionTemplate:  '.action-template'
+        content:         '.np-content',
+        title:           '.np-title',
+        body:            '.np-body',
+        link:            '.np-link',
+        actions:         '.np-actions',
+        actionTemplate:  '.np-action-template',
+        closeButton:     '.np-close'
       },
       readyCallback: function() {}
     };
@@ -73,54 +74,65 @@ if (!upmodal_notice.init) {
 
       var settings = $.extend({}, defaults, options);
 
+      var resetDialog = function() {
+        container.find(settings.selectors.closeButton).hide();
+        container.find(settings.selectors.actions).find('.np-action').remove();
+      }
+
       var drawActions = function(actionsContainer, alert) {
         var availableActions = alert.availableActions;
         var actionTemplate = actionsContainer.find(settings.selectors.actionTemplate);
-        for (var i=0; i < availableActions.length; i++) {
-          var action = availableActions[i];
-          var actionUrl = settings.invokeActionUrlTemplate
-                          .replace('NOTIFICATIONID', alert.id)
-                          .replace('ACTIONID', action.id);
-          var actionElement = actionTemplate.clone();
-          actionElement.removeClass('action-template');
-          actionElement.toggleClass('hidden');
-          actionElement.addClass('action');
-          actionElement.find('a').attr('href', actionUrl).html("ACCEPT");
-          actionElement.appendTo(actionsContainer);
+        if (availableActions && availableActions.length > 0) {
+          // Draw actions if we have them...
+          for (var i=0; i < availableActions.length; i++) {
+            var action = availableActions[i];
+            var actionUrl = settings.invokeActionUrlTemplate
+                            .replace('NOTIFICATIONID', alert.id)
+                            .replace('ACTIONID', action.id);
+            var actionElement = actionTemplate.clone();
+            actionElement.removeClass('np-action-template');
+            actionElement.toggleClass('hidden');
+            actionElement.addClass('np-action');
+            actionElement.find('a').attr('href', actionUrl).html(action.label);
+            actionElement.appendTo(actionsContainer);
+          }
+        } else {
+          // Or offer a close (x) button if we don't...
+          actionsContainer.find(settings.selectors.closeButton).show();
         }
-        actionsContainer.toggleClass('hidden');
       }
 
-      var drawNotices = function(feed) {
+      var drawAlert = function(container, alert) {
+        var element = container.find(settings.selectors.content);
+        // Insert context
+        element.find(settings.selectors.title).html(alert.title);
+        if (alert.body) {
+          element.find(settings.selectors.body).html(alert.body);
+        }
+        if (alert.url) {
+          var linkText = alert.linkText || alert.url;
+          element.find(settings.selectors.link).attr('href', alert.url).html(linkText);
+        }
+        // Add the actions
+        var actionsContainer = element.find(settings.selectors.actions);
+        drawActions(actionsContainer, alert);
+      }
+
+      var showEachNoticeInTurn = function(feed) {
         // Do we have any notices to show?
         if (feed && feed.length != 0) {
           // Iterate the notices
           for (var i=0; i < feed.length; i++) {
+            resetDialog();
             var alert = feed[i];
-            var element = container.find(settings.selectors.content);
-            // Insert context
-            element.find(settings.selectors.title).html(alert.title);
-            if (alert.body) {
-              element.find(settings.selectors.body).html(alert.body);
-            }
-            if (alert.url) {
-              var linkText = alert.linkText || alert.url;
-              element.find(settings.selectors.link).attr('href', alert.url).html(linkText);
-            }
-            // Are actions available?
-            if (alert.availableActions && alert.availableActions.length != 0) {
-              var actionsContainer = element.find(settings.selectors.actions);
-              if (actionsContainer) {
-                drawActions(actionsContainer, alert);
-              }
-            }
+            drawAlert(container, alert);
           }
           // Invoke the specified callback function, if any
           settings.readyCallback();
         }
       }
       // Invoke notifications
-      initNotices($, settings, drawNotices);
+      initNotices($, settings, showEachNoticeInTurn);
     }
 
     upmodal_notice.pullFeed = function ($, options, callback) {
