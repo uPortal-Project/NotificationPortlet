@@ -50,7 +50,9 @@ recommended and more common approach).
         <div class="modal-content np-content">
             <div class="modal-header">
                 <!-- Default method of closing the  dialog, in case the notice doesn't define one -->
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close np-close" data-dismiss="modal" aria-label="Close" style="display: none;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <h2 class="np-title text-center" role="heading"></h2>
             </div>
             <div class="modal-body" role="main">

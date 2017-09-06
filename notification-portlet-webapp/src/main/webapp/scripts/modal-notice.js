@@ -115,7 +115,7 @@ if (!upmodal_notice.init) {
           }
         } else {
           // Or offer a close (x) button if we don't...
-          actionsContainer.find(settings.selectors.closeButton).show();
+          container.find(settings.selectors.closeButton).show();
         }
       }
 
