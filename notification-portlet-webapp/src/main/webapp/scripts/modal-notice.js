@@ -23,64 +23,56 @@
 var upmodal_notice = upmodal_notice || {};
 
 if (!upmodal_notice.init) {
-
   upmodal_notice.init = true;
 
-  (function() {
-
+  (function($) {
     var defaults = {
       selectors: {
-        content:         '.np-content',
-        title:           '.np-title',
-        form:            '.np-action-form',
-        body:            '.np-body',
-        link:            '.np-link',
-        actions:         '.np-actions',
-        actionTemplate:  '.np-action-template',
-        closeButton:     '.np-close'
+        content: '.np-content',
+        title: '.np-title',
+        form: '.np-action-form',
+        body: '.np-body',
+        link: '.np-link',
+        actions: '.np-actions',
+        actionTemplate: '.np-action-template',
+        closeButton: '.np-close'
       }
     };
 
     // First 'prime-the-pump' with an ActionURL
-    var initNotices = function($, settings, callback) {
+    var initNotices = function(settings, callback) {
       $.ajax({
-        type:    'POST',
-        url:     settings.invokeNotificationServiceUrl,
-        async:   false,
+        type: 'POST',
+        url: settings.invokeNotificationServiceUrl,
+        async: false,
         success: function() {
-          fetchNotices($, settings, callback);
-        }
+          fetchNotices(settings, callback);
+        },
+        error: console.error
       });
     }
 
     // Then fetch the notifications with a ResourceURL
-    var fetchNotices = function($, settings, callback) {
+    var fetchNotices = function(settings, callback) {
       $.ajax({
-        url:      settings.getNotificationsUrl,
-        type:     'POST',
+        url: settings.getNotificationsUrl,
+        type: 'POST',
         dataType: 'json',
-        success:  function (data) {
-          feed = data.feed;
+        success: function (data) {
+          var feed = data.feed;
           callback(feed);
         },
-        error:    function () {
-          container.html(" ").text("AJAX failed. ~ THE END ~");
-        }
+        error: console.error
       });
     }
 
-    upmodal_notice.launch = function ($, container, options) {
-
+    upmodal_notice.launch = function (container, options) {
       var settings = $.extend({}, defaults, options);
 
       var handleAction = function() {
         var actionButton = $(this);
         var formElement = container.find(settings.selectors.form);
-        $.post(actionButton.attr('data-url'), formElement.serialize(), function(data, textStatus, jqXHR) {
-          if (console && console.log) {
-            console.log('handleAction received status: ' + textStatus);
-          }
-        });
+        $.post(actionButton.attr('data-url'), formElement.serialize(), console.log);
         // Any action closes the modal window
         container.modal('hide');
       }
@@ -95,24 +87,28 @@ if (!upmodal_notice.init) {
         var actionsContainer = container.find(settings.selectors.actions);
         var availableActions = alert.availableActions;
         var actionTemplate = actionsContainer.find(settings.selectors.actionTemplate);
+
         if (availableActions && availableActions.length > 0) {
           // Draw actions if we have them...
-          for (var i=0; i < availableActions.length; i++) {
-            var action = availableActions[i];
-            var actionUrl = settings.invokeActionUrlTemplate
-                            .replace('NOTIFICATIONID', alert.id)
-                            .replace('ACTIONID', action.id);
+          availableActions.forEach(function (action, index) {
+            var actionUrl = settings
+              .invokeActionUrlTemplate
+              .replace('NOTIFICATIONID', alert.id)
+              .replace('ACTIONID', action.id);
+
             var actionElement = actionTemplate.clone();
             actionElement.removeClass('np-action-template');
             actionElement.toggleClass('hidden');
             actionElement.addClass('np-action');
-            if (i == 0) {
+
+            if (index === 0) {
               // Only the first button is btn-primary
               actionElement.find('a').addClass('btn-primary');
             }
+
             actionElement.find('a').attr('data-url', actionUrl).html(action.label).click(handleAction);
             actionElement.appendTo(actionsContainer);
-          }
+          })
         } else {
           // Or offer a close (x) button if we don't...
           container.find(settings.selectors.closeButton).show();
@@ -123,13 +119,16 @@ if (!upmodal_notice.init) {
         var content = container.find(settings.selectors.content);
         // Insert context
         content.find(settings.selectors.title).html(alert.title);
+
         if (alert.body) {
           content.find(settings.selectors.body).html(alert.body);
         }
+
         if (alert.url) {
           var linkText = alert.linkText || alert.url;
           content.find(settings.selectors.link).attr('href', alert.url).html(linkText);
         }
+
         // Add the actions
         drawActions(alert);
       }
@@ -138,6 +137,7 @@ if (!upmodal_notice.init) {
         var alert = feed[index];
         resetDialog();
         drawAlert(alert);
+
         if (feed.length > index + 1) {
           // There are more notices after this one...
           container.on('hidden.bs.modal', function() {
@@ -149,14 +149,13 @@ if (!upmodal_notice.init) {
 
       var showEachNoticeInTurn = function(feed) {
         // Do we have any notices to show?
-        if (feed && feed.length != 0) {
+        if (feed && feed.length !== 0) {
           showNextNotice(feed, 0);
         }
       }
 
       // Invoke notifications
-      initNotices($, settings, showEachNoticeInTurn);
+      initNotices(settings, showEachNoticeInTurn);
     }
-
-  })();
+  })(up.jQuery);
 }
