@@ -19,7 +19,7 @@ hibernate.connection.password=ENC(9ffpQXJi/EPih9o+Xshm5g==)
 
 Specify the encryption key using the `UP_JASYPT_KEY` environment variable.
 
-### [Modal Notification](docs/modal.md)
+### [Modal Notification](notification-portlet-webapp/docs/modal.md)
 Modal Notification is a single notice that will be presented until the user clicks the `Accept` button. This feature could be used for a Terms of Service pop-up that must be accepted before
 accessing the portal.
 
