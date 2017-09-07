@@ -1,6 +1,9 @@
 # Modal Notification
 
-Modal Notification is a single notice that will be presented until the user clicks the `Accept` button.
+The `modal` display strategy presents notices in a Bootstrap modal dialog.  If the notice 
+defines actions, they will be rendered as buttons at the bottom of the dialog;  any button
+will dismiss the dialog, as well as invoke the spe,cified action server-side.  Notices that
+do not define actions will offer a 'close' (x) option in the upper-right corner of the dialog.  
 This feature could be used for a Terms of Service pop-up that must be accepted before
 accessing the portal.
 
