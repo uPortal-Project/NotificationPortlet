@@ -89,7 +89,7 @@ public class HideNotificationServiceDecorator implements INotificationService {
         for (NotificationCategory category : rslt.getCategories()) {
 
             // We have to track if any were removed, and which ones remain
-            final List<NotificationEntry> entriesAfterHiding = new ArrayList<NotificationEntry>(category.getEntries());
+            final List<NotificationEntry> entriesAfterHiding = new ArrayList<>(category.getEntries());
 
             for (NotificationEntry entry : category.getEntries()) {
 
