@@ -166,6 +166,10 @@
             <preference>
                 <name>FilteringNotificationServiceDecorator.maxPriority</name>
             </preference>
+            <preference>
+                <name>FilteringNotificationServiceDecorator.requiredRole</name>
+                <value>false</value>
+            </preference>
 
             <!-- If true, notifications will piggyback on the portal's JavaScript library (jQuery).
                  Currently as of 2017/09/07, setting this preference to 'true' doesn't work;  there
@@ -175,6 +179,21 @@
                 <value>false</value>
             </preference>
         </portlet-preferences>
+
+        <!-- The role-name (the internal name used by the portlet) should not have spaces in it -->
+        <security-role-ref>
+            <role-name>Faculty</role-name>
+            <role-link>Faculty</role-link>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>Staff</role-name>
+            <role-link>Staff</role-link>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>Students</role-name>
+            <role-link>Students</role-link>
+        </security-role-ref>
+
         <supported-processing-event>
             <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>
         </supported-processing-event>
@@ -260,6 +279,10 @@
             <preference>
                 <name>FilteringNotificationServiceDecorator.maxPriority</name>
             </preference>
+            <preference>
+                <name>FilteringNotificationServiceDecorator.requiredRole</name>
+                <value>false</value>
+            </preference>
 
             <!-- If true, emergency alerts will piggyback on the portal's JavaScript library (jQuery).  The needs
                  of this portlet are very lightweight so we'll default to 'true' in this case. -->
@@ -283,6 +306,21 @@
             </preference>
 
         </portlet-preferences>
+
+        <!-- The role-name (the internal name used by the portlet) should not have spaces in it -->
+        <security-role-ref>
+            <role-name>Faculty</role-name>
+            <role-link>Faculty</role-link>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>Staff</role-name>
+            <role-link>Staff</role-link>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>Students</role-name>
+            <role-link>Students</role-link>
+        </security-role-ref>
+
         <supported-processing-event>
             <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>
         </supported-processing-event>
@@ -423,6 +461,10 @@
             <preference>
                 <name>FilteringNotificationServiceDecorator.maxPriority</name>
             </preference>
+            <preference>
+                <name>FilteringNotificationServiceDecorator.requiredRole</name>
+                <value>false</value>
+            </preference>
 
             <!-- If true, notification icon will piggyback on the portal's JavaScript library (jQuery).  The needs
                  of this portlet are very lightweight so we'll default to 'true' in this case. -->
@@ -458,6 +500,21 @@
             </preference>
 
         </portlet-preferences>
+
+        <!-- The role-name (the internal name used by the portlet) should not have spaces in it -->
+        <security-role-ref>
+            <role-name>Faculty</role-name>
+            <role-link>Faculty</role-link>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>Staff</role-name>
+            <role-link>Staff</role-link>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>Students</role-name>
+            <role-link>Students</role-link>
+        </security-role-ref>
+
         <supported-processing-event>
             <qname xmlns:x="https://source.jasig.org/schemas/portlet/notification">x:NotificationResult</qname>
         </supported-processing-event>

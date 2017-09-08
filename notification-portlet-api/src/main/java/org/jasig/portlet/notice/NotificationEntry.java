@@ -212,7 +212,7 @@ public class NotificationEntry implements Serializable, Cloneable {
 
     @JsonDeserialize(using=JsonAttributesDeserializer.class)
     public void setAttributes(List<NotificationAttribute> attributes) {
-        this.attributes = new ArrayList<NotificationAttribute>(attributes);  // defensive copy
+        this.attributes = new ArrayList<>(attributes);  // defensive copy
     }
 
     /**
@@ -238,7 +238,7 @@ public class NotificationEntry implements Serializable, Cloneable {
     }
 
     public void setAvailableActions(List<NotificationAction> availableActions) {
-        this.availableActions = new ArrayList<NotificationAction>();  // defensive copy
+        this.availableActions = new ArrayList<>();  // defensive copy
         for (NotificationAction action : availableActions) {
             // We must make ourself the target of any 
             // action at the time it becomes attached
@@ -263,7 +263,7 @@ public class NotificationEntry implements Serializable, Cloneable {
      * @since 2.2
      */
     public void setStates(Map<NotificationState,Date> states) {
-        this.states = new HashMap<NotificationState,Date>(states);  // defensive copy
+        this.states = new HashMap<>(states);  // defensive copy
     }
 
     /**
@@ -279,12 +279,12 @@ public class NotificationEntry implements Serializable, Cloneable {
         final NotificationEntry rslt = (NotificationEntry) super.clone();
 
         // Adjust to satisfy deep-copy strategy
-        List<NotificationAttribute> atrList = new ArrayList<NotificationAttribute>(attributes.size());
+        List<NotificationAttribute> atrList = new ArrayList<>(attributes.size());
         for (NotificationAttribute attr : attributes) {
             atrList.add((NotificationAttribute) attr.clone());
         }
         rslt.setAttributes(atrList);
-        List<NotificationAction> actList = new ArrayList<NotificationAction>(availableActions.size());
+        List<NotificationAction> actList = new ArrayList<>(availableActions.size());
         for (NotificationAction action : availableActions) {
             actList.add((NotificationAction) action.clone());
         }

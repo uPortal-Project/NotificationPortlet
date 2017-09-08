@@ -54,8 +54,8 @@ import org.slf4j.LoggerFactory;
         // Remember lower number is higher priority...
         final boolean rslt = entry.getPriority() >= maxPriority
                 || entry.getPriority() == NotificationEntry.PRIORITY_UNSPECIFIED;
-        logger.debug("Filtering entry... maxPriority='{}', entry.priority='{}', decision='{}'",
-                maxPriority, entry.getPriority(), rslt);
+        logger.debug("Filtering entry '{}'... maxPriority='{}', entry.priority='{}', decision='{}'",
+                entry.getTitle(), maxPriority, entry.getPriority(), rslt);
         return rslt;
     }
 

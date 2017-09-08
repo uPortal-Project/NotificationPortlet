@@ -35,6 +35,7 @@ import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.util.PortletXmlRoleService;
 import org.jasig.portlet.notice.util.UsernameFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class FilteringNotificationServiceDecorator implements INotificationService  {
 
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
+    private static final String PORTLET_XML_ROLE_SERVICE_ATTRIBUTE =
+            "FilteringNotificationServiceDecorator.portletXmlRoleService";
 
     private enum FilterMapper {
 
@@ -61,7 +64,7 @@ public class FilteringNotificationServiceDecorator implements INotificationServi
                 if (preferenceValues.length != 0) {
                     // We only support the first value...
                     int priority = Integer.valueOf(preferenceValues[0]);
-                    return Collections.singleton((INotificationFilter) new MinimumPriorityNotificationFilter(priority));
+                    return Collections.singleton(new MinimumPriorityNotificationFilter(priority));
                 } else {
                     return Collections.emptySet();
                 }
@@ -77,10 +80,33 @@ public class FilteringNotificationServiceDecorator implements INotificationServi
                 if (preferenceValues.length != 0) {
                     // We only support the first value...
                     int priority = Integer.valueOf(preferenceValues[0]);
-                    return Collections.singleton((INotificationFilter) new MaximumPriorityNotificationFilter(priority));
+                    return Collections.singleton(new MaximumPriorityNotificationFilter(priority));
                 } else {
                     return Collections.emptySet();
                 }
+            }
+        },
+
+        REQUIRED_ROLE {
+            private static final String PREFERENCE_NAME = "FilteringNotificationServiceDecorator.requiredRole";
+
+            @Override
+            Set<INotificationFilter> fromPortletRequest(PortletRequest req) {
+                final String[] preferenceValues = req.getPreferences().getValues(PREFERENCE_NAME, EMPTY_STRING_ARRAY);
+                // We only support the first value, and we're looking for 'true' (ignoring case)...
+                if (preferenceValues.length != 0 && Boolean.valueOf(preferenceValues[0])) {
+                    // Gather the user's roles...
+                    final Set<String> userRoles = new HashSet<>();
+                    PortletXmlRoleService portletXmlRoleService =
+                            (PortletXmlRoleService) req.getAttribute(PORTLET_XML_ROLE_SERVICE_ATTRIBUTE);
+                    for (String definedRole : portletXmlRoleService.getAllRoles()) {
+                        if (req.isUserInRole(definedRole)) {
+                            userRoles.add(definedRole);
+                        }
+                    }
+                    return Collections.singleton(new RequiredRoleNotificationFilter(userRoles));
+                }
+                return Collections.emptySet();
             }
         };
 
@@ -93,6 +119,9 @@ public class FilteringNotificationServiceDecorator implements INotificationServi
 
     @Autowired
     private UsernameFinder usernameFinder;
+
+    @Autowired
+    private PortletXmlRoleService portletXmlRoleService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -123,6 +152,7 @@ public class FilteringNotificationServiceDecorator implements INotificationServi
 
         // Gather the filters...
         final Set<INotificationFilter> filters = new HashSet<>();
+        req.setAttribute(PORTLET_XML_ROLE_SERVICE_ATTRIBUTE, portletXmlRoleService);
         for (FilterMapper mapper : FilterMapper.values()) {
             filters.addAll(mapper.fromPortletRequest(req));
         }
