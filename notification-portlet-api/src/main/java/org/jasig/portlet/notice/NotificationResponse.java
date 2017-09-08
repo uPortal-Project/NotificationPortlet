@@ -64,8 +64,8 @@ public class NotificationResponse implements Serializable, Cloneable {
     private boolean cloned = false;
 
     public NotificationResponse() {
-        categories = new ArrayList<NotificationCategory>();
-        errors = new ArrayList<NotificationError>();
+        categories = new ArrayList<>();
+        errors = new ArrayList<>();
     }
 
     public NotificationResponse(NotificationResponse response) {
@@ -73,8 +73,8 @@ public class NotificationResponse implements Serializable, Cloneable {
     }
 
     public NotificationResponse(List<NotificationCategory> categories, List<NotificationError> errors) {
-        this.categories = new ArrayList<NotificationCategory>(categories);  // defensive copy
-        this.errors = new ArrayList<NotificationError>(errors);  // defensive copy
+        this.categories = new ArrayList<>(categories);  // defensive copy
+        this.errors = new ArrayList<>(errors);  // defensive copy
     }
 
     public List<NotificationCategory> getCategories() {
@@ -82,7 +82,7 @@ public class NotificationResponse implements Serializable, Cloneable {
     }
 
     public void setCategories(List<NotificationCategory> categories) {
-        this.categories = new ArrayList<NotificationCategory>(categories);  // defensive copy
+        this.categories = new ArrayList<>(categories);  // defensive copy
     }
 
     public List<NotificationError> getErrors() {
@@ -90,7 +90,7 @@ public class NotificationResponse implements Serializable, Cloneable {
     }
 
     public void setErrors(List<NotificationError> errors) {
-        this.errors = new ArrayList<NotificationError>(errors); // defensive copy
+        this.errors = new ArrayList<>(errors); // defensive copy
     }
 
     /**
@@ -147,7 +147,7 @@ public class NotificationResponse implements Serializable, Cloneable {
      */
     public NotificationResponse filterErrors(Set<Integer> hiddenErrorKeys) {
         NotificationResponse rslt = new NotificationResponse(this);
-        List<NotificationError> filteredErrors = new ArrayList<NotificationError>();
+        List<NotificationError> filteredErrors = new ArrayList<>();
         for (NotificationError r : errors) {
             if (!hiddenErrorKeys.contains(r.getKey())) {
                 filteredErrors.add(r);
@@ -181,12 +181,12 @@ public class NotificationResponse implements Serializable, Cloneable {
         final NotificationResponse rslt = (NotificationResponse) super.clone();
 
         // Adjust to satisfy deep-copy strategy
-        List<NotificationCategory> cList = new ArrayList<NotificationCategory>(categories.size());
+        List<NotificationCategory> cList = new ArrayList<>(categories.size());
         for (NotificationCategory category : categories) {
             cList.add((NotificationCategory) category.clone());
         }
         rslt.setCategories(cList);
-        List<NotificationError> eList = new ArrayList<NotificationError>(errors.size());
+        List<NotificationError> eList = new ArrayList<>(errors.size());
         for (NotificationError error : errors) {
             eList.add((NotificationError) error.clone());
         }
@@ -248,4 +248,5 @@ public class NotificationResponse implements Serializable, Cloneable {
     private void setCloned(boolean cloned) {
         this.cloned = cloned;
     }
+
 }

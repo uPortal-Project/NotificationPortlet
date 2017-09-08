@@ -77,7 +77,7 @@ recommended and more common approach).
     $(function() {
         var container = $("#${n}");
 
-        upmodal_notice.launch(container, {
+        upmodal_notice.launch($, container, {
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
             invokeActionUrlTemplate: '${invokeActionUrlTemplate}',
             getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>'

@@ -130,15 +130,23 @@
      +-->
 
     <!-- ClassLoader:  Use 'ClassLoaderResourceNotificationService.locations' preference to specify location of data files -->
-    <bean id="classLoaderResourceNotificationService" class="org.jasig.portlet.notice.service.classloader.ClassLoaderResourceNotificationService">
-        <property name="name" value="classLoaderResourceNotificationService"/>
+    <bean id="classLoaderResourceNotificationService" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+        <property name="enclosedNotificationService">
+            <bean class="org.jasig.portlet.notice.service.classloader.ClassLoaderResourceNotificationService">
+                <property name="name" value="classLoaderResourceNotificationService"/>
+            </bean>
+        </property>
     </bean>
     <bean id="ClassLoaderResourceNotificationService.responseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
         p:cacheManager-ref="cacheManager" p:cacheName="ClassLoaderResourceNotificationService.responseCache"/>
 
     <!-- Rome (RSS/Atom):  Use 'RomeNotificationService.urls' preference to specify feeds -->
-    <bean id="romeNotificationService" class="org.jasig.portlet.notice.service.rome.RomeNotificationService">
-        <property name="name" value="romeNoticationService"/>
+    <bean id="romeNotificationService" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+        <property name="enclosedNotificationService">
+            <bean class="org.jasig.portlet.notice.service.rome.RomeNotificationService">
+                <property name="name" value="romeNoticationService"/>
+            </bean>
+        </property>
     </bean>
     <bean id="RomeNotificationService.feedCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
         p:cacheManager-ref="cacheManager" p:cacheName="RomeNotificationService.feedCache"/>
@@ -152,25 +160,29 @@
     </bean>
 
     <!-- RESTful JSON:  Use 'RestfulJsonNotificationService.serviceUrls' preference  to specify services -->
-    <bean id="restfulJsonNotificationService" class="org.jasig.portlet.notice.service.rest.RestfulJsonNotificationService">
-        <property name="name" value="restfulJsonNotificationService"/>
-        <!-- For HTTP Basic AuthN -->
-        <property name="usernameEvaluator">
-            <bean class="org.jasig.portlet.notice.service.rest.StringLiteralParameterEvaluator" p:value="${restfulJsonNotificationService.basicauth.username}"/>
+    <bean id="restfulJsonNotificationService" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+        <property name="enclosedNotificationService">
+            <bean class="org.jasig.portlet.notice.service.rest.RestfulJsonNotificationService">
+                <property name="name" value="restfulJsonNotificationService"/>
+                <!-- For HTTP Basic AuthN -->
+                <property name="usernameEvaluator">
+                    <bean class="org.jasig.portlet.notice.service.rest.StringLiteralParameterEvaluator" p:value="${restfulJsonNotificationService.basicauth.username}"/>
+                </property>
+                <property name="passwordEvaluator">
+                    <bean class="org.jasig.portlet.notice.service.rest.StringLiteralParameterEvaluator" p:value="${restfulJsonNotificationService.basicauth.password}"/>
+                </property>
+                <property name="urlParameters">
+                    <util:map>
+                        <entry key="username">
+                            <bean class="org.jasig.portlet.notice.service.rest.UserAttributeParameterEvaluator">
+                                <property name="userAttributeKey" value="user.login.id"/>
+                            </bean>
+                        </entry>
+                    </util:map>
+                </property>
+                <property name="restTemplate" ref="restTemplate"/>
+            </bean>
         </property>
-        <property name="passwordEvaluator">
-            <bean class="org.jasig.portlet.notice.service.rest.StringLiteralParameterEvaluator" p:value="${restfulJsonNotificationService.basicauth.password}"/>
-        </property>
-        <property name="urlParameters">
-            <util:map>
-                <entry key="username">
-                    <bean class="org.jasig.portlet.notice.service.rest.UserAttributeParameterEvaluator">
-                        <property name="userAttributeKey" value="user.login.id"/>
-                    </bean>
-                </entry>
-            </util:map>
-        </property>
-        <property name="restTemplate" ref="restTemplate"/>
     </bean>
     <bean id="httpConnectionManager" class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager" destroy-method="shutdown">
         <property name="params">
@@ -185,23 +197,43 @@
     </bean>
 
     <!-- PortletEvent:  Use 'NotificationLifecycleController.doEvents' preference to turn on event processing for a portlet definition -->
-    <bean id="portletEventNotificationService" class="org.jasig.portlet.notice.service.event.PortletEventNotificationService">
-        <property name="name" value="portletEventNotificationService"/>
+    <bean id="portletEventNotificationService" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+        <property name="enclosedNotificationService">
+            <bean class="org.jasig.portlet.notice.service.event.PortletEventNotificationService">
+                <property name="name" value="portletEventNotificationService"/>
+            </bean>
+        </property>
     </bean>
     <bean id="PortletEventNotificationService.responseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
         p:cacheManager-ref="cacheManager" p:cacheName="PortletEventNotificationService.responseCache"/>
 
     <!-- JPA -->
-    <bean id="jpaNotificationService" class="org.jasig.portlet.notice.service.jpa.JpaNotificationService">
+    <bean id="jpaNotificationService" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+        <property name="enclosedNotificationService">
+            <ref bean="jpaNotificationServiceInnerBean" />
+        </property>
+    </bean>
+    <!-- This bean must be visible in the application context because other beans depend on it -->
+    <bean id="jpaNotificationServiceInnerBean" class="org.jasig.portlet.notice.service.jpa.JpaNotificationService">
         <property name="name" value="jpaNotificationService"/>
     </bean>
 
     <!-- DEMO -->
-    <bean id="demoNotifications" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
-        <property name="name" value="demoNotifications"/>
-        <property name="active" value="true"/>
+    <bean id="demoNotifications" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+        <property name="enclosedNotificationService">
+            <bean class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
+                <property name="name" value="demoNotifications"/>
+                <property name="active" value="true"/>
+            </bean>
+        </property>
     </bean>
-    <bean id="demoEmergencyAlerts" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
+    <bean id="demoEmergencyAlerts" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+        <property name="enclosedNotificationService">
+            <ref bean="demoEmergencyAlertsInnerBean" />
+        </property>
+    </bean>
+    <!-- This bean must be visible in the application context because other beans depend on it -->
+    <bean id="demoEmergencyAlertsInnerBean" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
         <property name="name" value="demoEmergencyAlerts"/>
         <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
     </bean>
@@ -237,21 +269,24 @@
     </bean>
 
     <!-- SSP notifications -->
+    <bean id="sspNotifications" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+        <property name="enclosedNotificationService">
+            <bean class="org.jasig.portlet.notice.service.ssp.SSPTaskNotificationService">
+                <property name="name" value="sspTaskNotificationService"/>
+                <property name="sspApi" ref="sspApi"/>
+                <property name="personLookup">
+                    <bean class="org.jasig.portlet.notice.service.ssp.SSPSchoolIdPersonLookup">
+                        <property name="sspApi" ref="sspApi"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
     <bean class="org.jasig.portlet.notice.service.ssp.SSPApiLocator"/>
     <bean id="StudentSuccessPlanService.schoolIdToPersonIdCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
           p:cacheManager-ref="cacheManager" p:cacheName="StudentSuccessPlanService.schoolIdToPersonIdCache"/>
     <bean id="sspApi" class="org.jasig.portlet.notice.service.ssp.SSPApi">
         <property name="restTemplate" ref="restTemplate"/>
-    </bean>
-
-    <bean id="sspNotifications" class="org.jasig.portlet.notice.service.ssp.SSPTaskNotificationService">
-        <property name="name" value="sspTaskNotificationService"/>
-        <property name="sspApi" ref="sspApi"/>
-        <property name="personLookup">
-            <bean class="org.jasig.portlet.notice.service.ssp.SSPSchoolIdPersonLookup">
-                <property name="sspApi" ref="sspApi"/>
-            </bean>
-        </property>
     </bean>
 
 </beans>

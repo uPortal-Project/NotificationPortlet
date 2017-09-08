@@ -7,11 +7,40 @@ This is a [Sponsored Portlet][] in the uPortal project.
 
 ## Configuration
 
-See also [documentation in the external wiki][Notifications portlet in Confluence].
+See also the [legacy documentation in the external wiki][].
 
-### Using Encrypted Property Values
+### Java Properties
 
-You may optionally provide sensitive configuration items -- such as database passwords -- in encrypted format.  Use the [Jasypt CLI Tools](http://www.jasypt.org/cli.html) to encrypt the sensitive value, then include it in a `.properties` file like this:
+Some configuration settings for the Notification portlet are managed in Java properties files that
+are loaded by a Spring `PropertySourcesPlaceholderConfigurer`.  (Other settings are data, managed in
+the "portlet publication record" a.k.a. `portlet-definition.xml` file;  these are covered elsewhere
+in this doc.)
+
+The properties files that are sourced by Spring are:
+
+  - `classpath:datasource.properties`
+  - `classpath:configuration.properties`
+  - `file:${portal.home}/global.properties`
+  - `file:${portal.home}/notification.properties`
+
+For a definitive, comprehensive list of these settings you must look inside `datasource.properties`
+and `configuration.properties`.  (This `README` may be incomplete and/or out of date.)
+
+#### The `portal.home` Directory
+
+uPortal version 5 uses a directory called `portal.home` for properties files that live outside of
+-- and have the ability to _override_ properties files within-- the webapp in Tommcat.  Please
+review the [README file for uPortal-Start][] for more information on this sytem.
+
+The Notification portlet sources the shared `global.properties` file, as well as it's own (private)
+file called `notification.properties` in the `portal.home` directory.
+
+#### Using Encrypted Property Values
+
+Within the properties files that are sourced by Spring, you may optionally provide sensitive
+configuration items -- such as database passwords -- in encrypted format.  Use the
+[Jasypt CLI Tools][] to encrypt the sensitive value, then include it in a `.properties` file
+like this:
 
 ```
 hibernate.connection.password=ENC(9ffpQXJi/EPih9o+Xshm5g==)
@@ -19,7 +48,42 @@ hibernate.connection.password=ENC(9ffpQXJi/EPih9o+Xshm5g==)
 
 Specify the encryption key using the `UP_JASYPT_KEY` environment variable.
 
-### [Modal Notification](notification-portlet-webapp/docs/modal.md)
+### Publication Data
+
+Besides Java properties, some configuration settings are managed as data in the _Portlet Publication
+Record_ (the `portlet-definition.xml` file in uPortal).  These settings are defined on a per-
+publication basis, so you can have several publications of the same portlet with each of them
+configured differently.
+
+#### Filtering
+
+You can filter the notices that come from data sources in the publication record.  Use the following
+portlet preferences to _exclude_ some notices from appearing in the display:
+
+<table>
+  <tr>
+    <th>Portlet Preference</th>
+    <th>Possible Value(s)</th>
+  </tr>
+  <tr>
+    <td>FilteringNotificationServiceDecorator.minPriority</td>
+    <td>Number between 1 and 5</td>
+  </tr>
+  <tr>
+    <td>FilteringNotificationServiceDecorator.maxPriority</td>
+    <td>Number between 1 and 5</td>
+  </tr>
+  <tr>
+    <td>FilteringNotificationServiceDecorator.requiredRole</td>
+    <td>
+      Either 'true' or 'false'; a value of 'true' enables role checking, but a notice must define an
+      attribute named 'org.jasig.portlet.notice.service.filter.RequiredRoleNotificationFilter.requiredRole'
+      to be subject to filtering.
+    </td>
+  </tr>
+</table>
+
+### [Modal Notifications][]
 
 The `modal` display strategy presents notices in a Bootstrap modal dialog.  If the notice 
 defines actions, they will be rendered as buttons at the bottom of the dialog;  any button
@@ -29,5 +93,7 @@ This feature could be used for a Terms of Service pop-up that must be accepted b
 accessing the portal.
 
 [Sponsored Portlet]: https://wiki.jasig.org/display/PLT/Jasig+Sponsored+Portlets
-
-[Notifications portlet in Confluence]: https://wiki.jasig.org/pages/viewpage.action?pageId=47875986
+[legacy documentation in the external wiki]: https://wiki.jasig.org/pages/viewpage.action?pageId=47875986
+[README file for uPortal-Start]: https://github.com/Jasig/uPortal-start/blob/master/README.md
+[Jasypt CLI Tools]: http://www.jasypt.org/cli.html
+[Modal Notifications]: notification-portlet-webapp/docs/modal.md

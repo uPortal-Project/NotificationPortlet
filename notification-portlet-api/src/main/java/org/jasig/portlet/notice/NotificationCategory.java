@@ -45,7 +45,7 @@ public class NotificationCategory implements Serializable, Cloneable {
 	 * Constructor.
 	 */
 	public NotificationCategory() {
-	    entries = new ArrayList<NotificationEntry>();
+	    entries = new ArrayList<>();
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class NotificationCategory implements Serializable, Cloneable {
 	 */
 	public NotificationCategory(String title, List<NotificationEntry> entries) {
 		this.title = title;
-		this.entries = new ArrayList<NotificationEntry>(entries);  // defensive copy
+		this.entries = new ArrayList<>(entries);  // defensive copy
 	}
 
 	public String getTitle() {
@@ -69,7 +69,7 @@ public class NotificationCategory implements Serializable, Cloneable {
 	}
 
 	public void setEntries(List<NotificationEntry> entries) {
-		this.entries = new ArrayList<NotificationEntry>(entries);
+		this.entries = new ArrayList<>(entries);
 	}	                            
 
 	public void addEntries(List<NotificationEntry> newEntries) {
@@ -89,7 +89,7 @@ public class NotificationCategory implements Serializable, Cloneable {
         final NotificationCategory rslt = (NotificationCategory) super.clone();
 
         // Adjust to satisfy deep-copy strategy
-        List<NotificationEntry> eList = new ArrayList<NotificationEntry>(entries.size());
+        List<NotificationEntry> eList = new ArrayList<>(entries.size());
         for (NotificationEntry entry : entries) {
             eList.add((NotificationEntry) entry.clone());
         }

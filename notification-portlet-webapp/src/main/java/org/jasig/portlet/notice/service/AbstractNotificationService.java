@@ -79,8 +79,13 @@ public abstract class AbstractNotificationService implements INotificationServic
     protected UsernameFinder usernameFinder;
 
     protected final String createServiceUserWindowSpecificCacheKey(PortletRequest req) {
-        // Use the username combined with the name given to this Notification 
-        // service (until we discover a reason that's not good enough).
+        /*
+         * Cache keys are specific to (all of the below)...
+         *
+         *   - Service Name
+         *   - Username
+         *   - Portlet WindowId
+         */
         final StringBuilder rslt = new StringBuilder();
         rslt.append(getName()).append("|").append(usernameFinder.findUsername(req))
                                         .append("|").append(req.getWindowID());

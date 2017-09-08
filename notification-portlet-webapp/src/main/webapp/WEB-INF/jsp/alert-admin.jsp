@@ -20,22 +20,19 @@
 --%>
 <jsp:directive.include file="/WEB-INF/jsp/include.jsp"/>
 
-<div class="fl-widget portlet" role="section">
-    <div class="fl-widget-titlebar titlebar portlet-titlebar" role="sectionhead">
-        <h2 class="title" role="heading"><spring:message code="alertAdmin.title"/></h2>
-        <h3><spring:message code="alertAdmin.text"/> <strong><spring:message code="alertAdmin.${value}"/></strong></h3>
-    </div>
+<div>
+    <h2 class="title" role="heading"><spring:message code="alertAdmin.title"/></h2>
+
+    <p class="lead bg-warning"><spring:message code="alertAdmin.text"/> <strong><spring:message code="alertAdmin.${value}"/></strong></p>
     
-    <div class="toolbar" role="toolbar">
-        <ul>
-            <li style="list-style: none;"><a class="button" href="<portlet:actionURL/>"><spring:message code="alertAdmin.button.${value}"/></a></li>
-        </ul>
-    </div>
+    <ul>
+        <li style="list-style: none;">
+            <a class="btn btn-primary btn-lg" href="<portlet:actionURL/>">
+                <spring:message code="alertAdmin.button.${value}"/>
+            </a>
+        </li>
+    </ul>
     
-    <div class="fl-widget-content content portlet-content" role="main">
-        <div class="portlet-note" role="note">
-            <p><spring:message code="alertAdmin.note"/></p>
-        </div>
-    </div>
+    <p><spring:message code="alertAdmin.note"/></p>
 </div>
 
