@@ -25,7 +25,8 @@ var upmodal_notice = upmodal_notice || {};
 if (!upmodal_notice.init) {
   upmodal_notice.init = true;
 
-  (function($) {
+  (function() { // necessary?
+
     var defaults = {
       selectors: {
         content: '.np-content',
@@ -39,35 +40,35 @@ if (!upmodal_notice.init) {
       }
     };
 
-    // First 'prime-the-pump' with an ActionURL
-    var initNotices = function(settings, callback) {
-      $.ajax({
-        type: 'POST',
-        url: settings.invokeNotificationServiceUrl,
-        async: false,
-        success: function() {
-          fetchNotices(settings, callback);
-        },
-        error: console.error
-      });
-    }
-
-    // Then fetch the notifications with a ResourceURL
-    var fetchNotices = function(settings, callback) {
-      $.ajax({
-        url: settings.getNotificationsUrl,
-        type: 'POST',
-        dataType: 'json',
-        success: function (data) {
-          var feed = data.feed;
-          callback(feed);
-        },
-        error: console.error
-      });
-    }
-
-    upmodal_notice.launch = function (container, options) {
+    upmodal_notice.launch = function ($, container, options) {
       var settings = $.extend({}, defaults, options);
+
+      // First 'prime-the-pump' with an ActionURL
+      var initNotices = function(settings, callback) {
+        $.ajax({
+          type: 'POST',
+          url: settings.invokeNotificationServiceUrl,
+          async: false,
+          success: function() {
+            fetchNotices(settings, callback);
+          },
+          error: console.error
+        });
+      }
+
+      // Then fetch the notifications with a ResourceURL
+      var fetchNotices = function(settings, callback) {
+        $.ajax({
+          url: settings.getNotificationsUrl,
+          type: 'POST',
+          dataType: 'json',
+          success: function (data) {
+            var feed = data.feed;
+            callback(feed);
+          },
+          error: console.error
+        });
+      }
 
       var handleAction = function() {
         var actionButton = $(this);
@@ -157,5 +158,7 @@ if (!upmodal_notice.init) {
       // Invoke notifications
       initNotices(settings, showEachNoticeInTurn);
     }
-  })(up.jQuery);
+
+  })();
+
 }

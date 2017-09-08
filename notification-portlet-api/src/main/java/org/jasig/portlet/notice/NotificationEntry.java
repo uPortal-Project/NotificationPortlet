@@ -51,6 +51,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationEntry implements Serializable, Cloneable {
 
+    /**
+     * The <code>priority</code> field of a {@link NotificationEntry} will contain this value when
+     * the priority is unspecified by the source.
+     *
+     * @since 3.1
+     */
+    public static final int PRIORITY_UNSPECIFIED = 0;
+
     private static final long serialVersionUID = 1L;
 
     /*

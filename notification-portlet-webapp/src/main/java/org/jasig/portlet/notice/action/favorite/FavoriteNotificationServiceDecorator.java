@@ -91,7 +91,7 @@ public class FavoriteNotificationServiceDecorator implements INotificationServic
         NotificationResponse rslt = sourceResponse.cloneIfNotCloned();
 
         final Set<String> favoriteNotificationIds = FavoriteAction.FAVORITE.getFavoriteNotices(req);
-        Set<String> potentiallyMissingIds = new HashSet<String>(favoriteNotificationIds);
+        Set<String> potentiallyMissingIds = new HashSet<>(favoriteNotificationIds);
 
         // Add and implement the favorite behavior with our copy
         for (NotificationCategory category : rslt.getCategories()) {
@@ -110,13 +110,13 @@ public class FavoriteNotificationServiceDecorator implements INotificationServic
                     // If the id is in the favorites list, set favorite=true and remove the ID from the potentially
                     // missing set.
                     if (favoriteNotificationIds.contains(entry.getId())) {
-                        Map<NotificationState,Date> states = new HashMap<NotificationState,Date>(entry.getStates());
+                        Map<NotificationState,Date> states = new HashMap<>(entry.getStates());
                         states.put(NotificationState.FAVORITED, null);
                         entry.setStates(states);
                         potentiallyMissingIds.remove(entry.getId());
                     }
                     if (!currentList.contains(FavoriteAction.FAVORITE)) {
-                        final List<NotificationAction> replacementList = new ArrayList<NotificationAction>(currentList);
+                        final List<NotificationAction> replacementList = new ArrayList<>(currentList);
                         replacementList.add(!entry.getStates().keySet().contains(NotificationState.FAVORITED) ?
                                 FavoriteAction.createFavoriteInstance() : FavoriteAction.createUnfavoriteInstance());
                         entry.setAvailableActions(replacementList);

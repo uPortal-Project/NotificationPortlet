@@ -158,9 +158,18 @@
                 <value>ASCENDING</value>
             </preference>
 
+            <!-- The following preferences control filtering:  the ability to
+                 exclude notices based on priority, category, etc. -->
+            <preference>
+                <name>FilteringNotificationServiceDecorator.minPriority</name>
+            </preference>
+            <preference>
+                <name>FilteringNotificationServiceDecorator.maxPriority</name>
+            </preference>
+
             <!-- If true, notifications will piggyback on the portal's JavaScript library (jQuery).
-                 The needs of this portlet are very lightweight so we should default to 'true' in
-                 this case but that's pending broader consensus. -->
+                 Currently as of 2017/09/07, setting this preference to 'true' doesn't work;  there
+                 appears to be a library incompatibility. -->
             <preference>
                 <name>usePortalJsLibs</name>
                 <value>false</value>
@@ -241,6 +250,15 @@
                  is empty -->
             <preference>
                 <name>NotificationLifecycleController.invokeRedirectPort</name>
+            </preference>
+
+            <!-- The following preferences control filtering:  the ability to
+                 exclude notices based on priority, category, etc. -->
+            <preference>
+                <name>FilteringNotificationServiceDecorator.minPriority</name>
+            </preference>
+            <preference>
+                <name>FilteringNotificationServiceDecorator.maxPriority</name>
             </preference>
 
             <!-- If true, emergency alerts will piggyback on the portal's JavaScript library (jQuery).  The needs
@@ -395,6 +413,15 @@
                  is empty -->
             <preference>
                 <name>NotificationLifecycleController.invokeRedirectPort</name>
+            </preference>
+
+            <!-- The following preferences control filtering:  the ability to
+                 exclude notices based on priority, category, etc. -->
+            <preference>
+                <name>FilteringNotificationServiceDecorator.minPriority</name>
+            </preference>
+            <preference>
+                <name>FilteringNotificationServiceDecorator.maxPriority</name>
             </preference>
 
             <!-- If true, notification icon will piggyback on the portal's JavaScript library (jQuery).  The needs
