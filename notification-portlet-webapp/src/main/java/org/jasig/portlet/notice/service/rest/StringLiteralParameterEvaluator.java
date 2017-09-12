@@ -20,7 +20,7 @@ package org.jasig.portlet.notice.service.rest;
 
 import javax.portlet.PortletRequest;
 
-public class StringLiteralParameterEvaluator implements IParameterEvaluator {
+public class StringLiteralParameterEvaluator extends AbstractParameterEvaluator {
     private String value;
 
     public void setValue(String value) {

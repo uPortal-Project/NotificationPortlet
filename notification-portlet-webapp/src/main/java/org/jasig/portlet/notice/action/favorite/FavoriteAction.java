@@ -30,7 +30,7 @@ import javax.portlet.PortletRequest;
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
 
-public final class FavoriteAction extends NotificationAction {
+public class FavoriteAction extends NotificationAction {
 
     /**
      * This INSTANCE is only for convenience -- FAVORITE and UNFAVORITE not singletons.

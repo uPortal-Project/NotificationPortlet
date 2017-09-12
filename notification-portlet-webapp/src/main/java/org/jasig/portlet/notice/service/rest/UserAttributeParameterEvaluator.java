@@ -21,7 +21,7 @@ package org.jasig.portlet.notice.service.rest;
 import javax.portlet.PortletRequest;
 import java.util.Map;
 
-public class UserAttributeParameterEvaluator implements IParameterEvaluator {
+public class UserAttributeParameterEvaluator extends AbstractParameterEvaluator {
     private String userAttributeKey;
 
     public void setUserAttributeKey(String userAttributeKey) {
@@ -33,4 +33,5 @@ public class UserAttributeParameterEvaluator implements IParameterEvaluator {
         Map<String,String> userInfo = (Map<String,String>) request.getAttribute(PortletRequest.USER_INFO);
         return userInfo.get(this.userAttributeKey);
     }
+
 }

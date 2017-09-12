@@ -171,15 +171,6 @@
                 <property name="passwordEvaluator">
                     <bean class="org.jasig.portlet.notice.service.rest.StringLiteralParameterEvaluator" p:value="${restfulJsonNotificationService.basicauth.password}"/>
                 </property>
-                <property name="urlParameters">
-                    <util:map>
-                        <entry key="username">
-                            <bean class="org.jasig.portlet.notice.service.rest.UserAttributeParameterEvaluator">
-                                <property name="userAttributeKey" value="user.login.id"/>
-                            </bean>
-                        </entry>
-                    </util:map>
-                </property>
                 <property name="restTemplate" ref="restTemplate"/>
             </bean>
         </property>
@@ -194,6 +185,11 @@
     </bean>
     <bean id="httpClient" class="org.apache.commons.httpclient.HttpClient">
         <constructor-arg ref="httpConnectionManager" />
+    </bean>
+    <!-- The restfulJsonNotificationService finds IParameterEvaluator beans in the app context and knows how o use them -->
+    <bean id="usernameParameterEvaluator" class="org.jasig.portlet.notice.service.rest.UserAttributeParameterEvaluator">
+        <property name="token" value="username"/>
+        <property name="userAttributeKey" value="user.login.id"/>
     </bean>
 
     <!-- PortletEvent:  Use 'NotificationLifecycleController.doEvents' preference to turn on event processing for a portlet definition -->

@@ -20,22 +20,23 @@ package org.jasig.portlet.notice.service.rest;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jasig.portlet.notice.NotificationError;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.service.AbstractNotificationService;
 import org.jasig.portlet.notice.util.UsernameFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpMethod;
@@ -58,7 +59,7 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
 
     private Map<String,IParameterEvaluator> urlParameters;
     private RestTemplate restTemplate;
-    private final Log log = LogFactory.getLog(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private UsernameFinder usernameFinder;
@@ -73,8 +74,18 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
         this.passwordEvaluator = passwordEvaluator;
     }
 
-    public void setUrlParameters(Map<String,IParameterEvaluator> urlParameters) {
-        this.urlParameters = new HashMap<String,IParameterEvaluator>(urlParameters);
+    /**
+     * Gathers beans that implement {@link IParameterEvaluator} and prepares to leverage them in
+     * dynamic URLs.
+     *
+     * @since 3.1
+     */
+    @Autowired
+    public void setUrlParameterEvaluators(Set<IParameterEvaluator> evaluators) {
+        final Map<String,IParameterEvaluator> map = new HashMap<>();
+        evaluators.stream().forEach( evaluator -> map.put(evaluator.getToken(), evaluator));
+        urlParameters = Collections.unmodifiableMap(map);
+        logger.info("Found the following IParameterEvaluator beans:  {}", urlParameters);
     }
 
     @Required
@@ -93,9 +104,7 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
 
         final String[] serviceUrls = prefs.getValues(SERVICE_URLS_PREFERENCE, new String[0]);
         for (final String url : serviceUrls) {
-            if (log.isDebugEnabled()) {
-                log.debug("Invoking uri '" + url + "' with the following parameters:  " + params.toString());
-            }
+            logger.debug("Invoking uri '{}' with the following parameters:  {}", url, params);
             try {
                 final NotificationResponse response = restTemplate.execute(
                         url, HttpMethod.GET, 
@@ -104,7 +113,7 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
             } catch (Exception e) {
                 final String msg = "Failed to invoke the following service at '" 
                         + url + "' for user " + usernameFinder.findUsername(req);
-                log.error(msg, e);
+                logger.error(msg, e);
                 rslt = prepareErrorResponse(getName(), "Service Unavailable");
             }
         }
@@ -118,7 +127,7 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
      */
     
     private Map<String,String> createParameters(PortletRequest req) {
-        final Map<String,String> rslt = new HashMap<String,String>();
+        final Map<String,String> rslt = new HashMap<>();
         for(final Map.Entry<String,IParameterEvaluator> y : urlParameters.entrySet()) {
             final String key = y.getKey();
             final String value = urlParameters.get(key).evaluate(req);
@@ -148,10 +157,7 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
             // Perform BASIC AuthN if credentials are provided
             if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
 
-                if (log.isDebugEnabled()) {
-                    final boolean hasPassword = password != null;
-                    log.debug("Preparing ClientHttpRequest for user '" + username + "' (password provided = " +  hasPassword + ")");
-                }
+                logger.debug("Preparing ClientHttpRequest for user '{}' (password provided = true)", username);
 
                 final String authString = username.concat(":").concat(password);
                 final String encodedAuthString = new Base64().encodeToString(authString.getBytes());
@@ -169,23 +175,23 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
         @Override
         public NotificationResponse extractData(ClientHttpResponse res) {
             
-            NotificationResponse rslt = null;
+            NotificationResponse rslt;
             
-            InputStream inpt = null;
+            InputStream inpt;
             try {
                 inpt = res.getBody();
                 rslt = mapper.readValue(inpt, NotificationResponse.class);
             } catch (Throwable t) {
-                log.error("Failed to invoke the remote service at " + res.getHeaders().getLocation(), t);
+                logger.error("Failed to invoke the remote service at " + res.getHeaders().getLocation(), t);
                 final NotificationError error = new NotificationError();
                 try {
                     error.setError(res.getRawStatusCode() + ":  " + res.getStatusText());
                 } catch (IOException e) {
-                    log.error("Failed to read the ClientHttpResponse", e);
+                    logger.error("Failed to read the ClientHttpResponse", e);
                 }
                 error.setSource(getClass().getSimpleName());
                 rslt = new NotificationResponse();
-                rslt.setErrors(Arrays.asList(new NotificationError[] { error }));
+                rslt.setErrors(Collections.singletonList(error));
             }
             return rslt;
         }

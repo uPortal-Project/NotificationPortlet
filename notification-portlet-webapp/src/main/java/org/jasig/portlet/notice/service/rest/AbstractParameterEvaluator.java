@@ -16,29 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.jasig.portlet.notice.service.rest;
 
-import javax.portlet.PortletRequest;
+/**
+ * Base class for {@link IParameterEvaluator} implementations.
+ *
+ * @since 3.1
+ */
+public abstract class AbstractParameterEvaluator implements IParameterEvaluator {
 
-public interface IParameterEvaluator {
+    private String token;
 
-    /**
-     * The replacement token that this {@link IParameterEvaluator} instance will perform replacement
-     * on.  Services that use parameter evaluators will place these onjects into the evaluation
-     * context based on the key they specify.
-     *
-     * @return The token this evaluator replaces
-     * @since 3.1
-     */
-    String getToken();
+    @Override
+    public final String getToken() {
+        return token;
+    }
 
-    /**
-     * Provides a value for the configured parameter, or <code>null</code> if 
-     * none is available.
-     * 
-     * @param req The current, active PortletRequest
-     * @return A valid value or <code>null</code>
-     */
-    String evaluate(PortletRequest req);
+    public final void setToken(String token) {
+        this.token = token;
+    }
 
 }

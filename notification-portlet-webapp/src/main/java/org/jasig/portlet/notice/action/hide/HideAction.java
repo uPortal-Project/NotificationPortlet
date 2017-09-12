@@ -37,7 +37,7 @@ import org.jasig.portlet.notice.util.SpringContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class HideAction extends NotificationAction {
+public class HideAction extends NotificationAction {
 
     public static final String HIDE_DURATION_HOURS_ATTRIBUTE_NAME = HideAction.class.getName()
                                                     + ".HIDE_DURATION_HOURS_ATTRIBUTE_NAME";

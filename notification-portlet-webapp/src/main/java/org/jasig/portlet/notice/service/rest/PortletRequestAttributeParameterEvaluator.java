@@ -20,7 +20,7 @@ package org.jasig.portlet.notice.service.rest;
 
 import javax.portlet.PortletRequest;
 
-public class PortletRequestAttributeParameterEvaluator implements IParameterEvaluator {
+public class PortletRequestAttributeParameterEvaluator extends AbstractParameterEvaluator {
     protected String attributeKey;
 
     public void setAttributeKey(String attributeKey) {

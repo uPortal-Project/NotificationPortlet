@@ -33,7 +33,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
 
-public final class ReadAction extends NotificationAction {
+public class ReadAction extends NotificationAction {
 
     private static final long serialVersionUID = 1L;
 
