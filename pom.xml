@@ -318,7 +318,6 @@
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <localCheckout>true</localCheckout>
                         <tagNameFormat>NotificationPortlet-@{project.version}</tagNameFormat>
-                        <pushChanges>false</pushChanges>
                     </configuration>
                 </plugin>
                 <plugin>
