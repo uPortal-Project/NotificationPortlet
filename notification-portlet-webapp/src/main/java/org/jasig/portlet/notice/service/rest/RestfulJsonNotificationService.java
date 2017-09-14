@@ -177,10 +177,9 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
             
             NotificationResponse rslt;
             
-            InputStream inpt;
-            try {
-                inpt = res.getBody();
+            try (InputStream inpt = res.getBody()) {
                 rslt = mapper.readValue(inpt, NotificationResponse.class);
+                logger.debug("Produced the following NotificationResponse based on the ClientHttpResponse:  {}", rslt);
             } catch (Throwable t) {
                 logger.error("Failed to invoke the remote service at " + res.getHeaders().getLocation(), t);
                 final NotificationError error = new NotificationError();
