@@ -59,9 +59,6 @@
                  hsqldb we need this to be update. Users *should* do a schema update before switching to new versions, or
                  this should hopefully not do something negative if it ever does update the schema (typically doesn't). -->
             <property name="hibernate.hbm2ddl.auto" value="update" />
-            
-            <!-- Dialect needed for POSTGRES to work -->
-            <property name="hibernate.dialect" value="${hibernate.dialect}"/>
         </properties>
     </persistence-unit>
 
