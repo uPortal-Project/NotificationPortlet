@@ -43,6 +43,14 @@ recommended and more common approach).
 
 <script src="<c:url value="/scripts/modal-notice.js"/>" type="text/javascript"></script>
 
+<style>
+/* Prevent the dialog from becoming longer than some displays, which would make it difficult to use. */
+#${n} .modal-body {
+    max-height: 40rem;
+    overflow-y: scroll;
+}
+</style>
+
 <%-- HTML Fragment --%>
 
 <div id="${n}" class="modal fade" role="dialog" data-backdrop="static">
