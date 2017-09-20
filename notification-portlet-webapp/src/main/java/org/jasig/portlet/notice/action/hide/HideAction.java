@@ -116,8 +116,7 @@ public class HideAction extends NotificationAction {
 
         // This is the default
         String hideDurationHours = prefs.getValue(
-                HideNotificationServiceDecorator.HIDE_DURATION_HOURS_PREFERENCE, 
-                HideNotificationServiceDecorator.DEFAULT_HIDE_DURATION.toString());
+                HideNotificationServiceDecorator.HIDE_DURATION_HOURS_PREFERENCE, null);
 
         // Duration specified on the entry itself will trump
         final Map<String,List<String>> attributes = entry.getAttributesMap();
@@ -128,10 +127,12 @@ public class HideAction extends NotificationAction {
             }
         }
 
-        logger.debug("Calculated hideDurationHours={} for entry with id='{}', title='{}'",
-                                hideDurationHours, entry.getId(), entry.getTitle());
+        final long rslt = hideDurationHours != null
+                ? Long.parseLong(hideDurationHours) * MILLIS_IN_ONE_HOUR
+                : HideNotificationServiceDecorator.HIDE_DURATION_NONE;
+        logger.debug("Calculated calculateHideDurationMillis={} for entry with id='{}', title='{}'",
+                                rslt, entry.getId(), entry.getTitle());
 
-        final long rslt = Long.parseLong(hideDurationHours) * MILLIS_IN_ONE_HOUR;
         return rslt;
 
     }
@@ -147,30 +148,34 @@ public class HideAction extends NotificationAction {
 
         final long snoozeDurationMillis = calculateHideDurationMillis(entry, req);
 
-        final JpaServices jpaServices = (JpaServices) SpringContext.getApplicationContext().getBean("jpaServices");
-        final List<EventDTO> history = jpaServices.getHistory(entry, req.getRemoteUser());
-        logger.debug("List<EventDTO> within getNotificationsBySourceAndCustomAttribute contains {} elements", history.size());
+        // An entry with a negative snooze duration cannot be snoozed
+        if (snoozeDurationMillis > HideNotificationServiceDecorator.HIDE_DURATION_NONE) {
+            final JpaServices jpaServices = (JpaServices) SpringContext.getApplicationContext().getBean("jpaServices");
+            final List<EventDTO> history = jpaServices.getHistory(entry, req.getRemoteUser());
+            logger.debug("List<EventDTO> within getNotificationsBySourceAndCustomAttribute contains {} elements", history.size());
 
-        // Review the history...
-        for (EventDTO event : history) {
-            switch (event.getState()) {
-                case SNOOZED:
-                    logger.debug("Found a SNOOZED event:  {}", event);
-                    // Nice, but it only counts if it isn't expired...
-                    if (event.getTimestamp().getTime() + snoozeDurationMillis > System.currentTimeMillis()) {
-                        rslt = true;
-                    }
-                    break;
-                case ISSUED:
-                    logger.debug("Found an ISSUED event:  {}", event);
-                    // Re-issuing a notification un-snoozes it...
-                    rslt = false;
-                    break;
-                default:
-                    // We don't care about any other events in the SNOOZED evaluation...
-                    break;
+            // Review the history...
+            for (EventDTO event : history) {
+                switch (event.getState()) {
+                    case SNOOZED:
+                        logger.debug("Found a SNOOZED event:  {}", event);
+                        // Nice, but it only counts if it isn't expired...
+                        if (event.getTimestamp().getTime() + snoozeDurationMillis > System.currentTimeMillis()) {
+                            rslt = true;
+                        }
+                        break;
+                    case ISSUED:
+                        logger.debug("Found an ISSUED event:  {}", event);
+                        // Re-issuing a notification un-snoozes it...
+                        rslt = false;
+                        break;
+                    default:
+                        // We don't care about any other events in the SNOOZED evaluation...
+                        break;
+                }
             }
         }
+
 
         logger.debug("Returning SNOOZED='{}' for the following notification:  {}", rslt, entry);
         return rslt;

@@ -72,9 +72,17 @@ var upmodal_notice = upmodal_notice || {};
             var handleAction = function() {
                 var actionButton = $(this);
                 var formElement = container.find(settings.selectors.form);
-                $.post(actionButton.attr('data-url'), formElement.serialize(), console.log);
-                // Any action closes the modal window
-                container.modal('hide');
+                if (actionButton.attr('data-ajax') === 'false') {
+                    // This alert is an exception;  submit the form directly.
+                    formElement.attr('action', actionButton.attr('data-url')).submit();
+                } else {
+                    // Submit via AJAX (default)
+                    $.post(actionButton.attr('data-url'), formElement.serialize(), function(data, textStatus, jqXHR) {
+                        console.log(data, textStatus, jqXHR);
+                    });
+                    // Any action closes the modal window
+                    container.modal('hide');
+                }
             }
 
             var resetDialog = function() {
@@ -108,6 +116,14 @@ var upmodal_notice = upmodal_notice || {};
 
                         actionElement.find('a').attr('data-url', actionUrl).html(action.label)
                                 .click(handleAction);
+
+                        // By default, actions on this dialog submit to the server via
+                        // AJAX;  but you can turn that behavior off for a single notice.
+                        if (alert.attributes['org.jasig.portlet.notice.action.AJAX']
+                                && alert.attributes['org.jasig.portlet.notice.action.AJAX'][0] === 'false') {
+                            actionElement.find('a').attr('data-ajax', 'false');
+                        }
+
                         actionElement.appendTo(actionsContainer);
                     })
                 } else {

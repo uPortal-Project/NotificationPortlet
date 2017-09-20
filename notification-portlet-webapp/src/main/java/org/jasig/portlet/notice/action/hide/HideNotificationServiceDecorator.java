@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 public class HideNotificationServiceDecorator implements INotificationService {
 
     public static final String HIDE_DURATION_HOURS_PREFERENCE = "HideNotificationServiceDecorator.hideDurationHours";
-    public static final Integer DEFAULT_HIDE_DURATION = -1;  // The feature is disabled by default
+    public static final long HIDE_DURATION_NONE = -1L;  // The feature is disabled by default
 
     // Instance members
     private INotificationService enclosedNotificationService;
@@ -96,19 +96,29 @@ public class HideNotificationServiceDecorator implements INotificationService {
                 final List<NotificationAction> currentList = entry.getAvailableActions();
 
                 /*
-                 * There are 2 requirements for an entry to be decorated with Hide behavior:
+                 * There are 3 requirements for an entry to be decorated with Hide behavior:
                  * 
                  *   - (1) It must have an id set
-                 *   - (2) It must not have a HideAction already
+                 *   - (2) It must not have a HideAction (or subclass) already
+                 *   - (3) Hiding the entry must be *meaningful* (i.e. must be a duration specified
+                 *         on either the portlet or the entry)
                  */
-                if (StringUtils.isNotBlank(entry.getId()) && !currentList.contains(HideAction.INSTANCE)) {
+                if (StringUtils.isNotBlank(entry.getId()) // #1
+                        && !currentList.stream().anyMatch(action -> action instanceof HideAction) // #2
+                        && HideAction.INSTANCE.calculateHideDurationMillis(entry, req)
+                                > HIDE_DURATION_NONE) { // #3
                     logger.debug("Adding hide action to notification with id='{}' for username='{}'", entry.getId(), req.getRemoteUser());
-                    final List<NotificationAction> replacementList = new ArrayList<NotificationAction>(currentList);
+                    final List<NotificationAction> replacementList = new ArrayList<>(currentList);
                     replacementList.add(new HideAction());
                     entry.setAvailableActions(replacementList); // Also sets HideAction.targetEntity
                 }
 
-                if (HideAction.INSTANCE.isEntrySnoozed(entry, req)) {
+                /*
+                 * Now that we know yea or nay (WRT Hide behavior), is the entry currently hidden?
+                 */
+                if (entry.getAvailableActions().stream()
+                        .filter(action -> action instanceof HideAction)
+                        .anyMatch(action -> ((HideAction) action).isEntrySnoozed(entry, req))) {
                     logger.debug("Hiding entry with id='{}' for username='{}' based on user's previous action", entry.getId(), req.getRemoteUser());
                     entriesAfterHiding.remove(entry);
                 }
