@@ -24,6 +24,7 @@ import org.jasig.portlet.notice.rest.AddresseeDTO;
 import org.jasig.portlet.notice.rest.EntryDTO;
 import org.jasig.portlet.notice.rest.EventDTO;
 import org.jasig.portlet.notice.rest.RecipientDTO;
+import org.jasig.portlet.notice.util.JpaServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author Josh Helmer, jhelmer.unicon.net
+ * Allows you to interact with the same data as {@link JpaNotificationService} but provides write
+ * operations.
+ *
  * @since 3.0
  */
 @Service("jpaNotificationRestService")
@@ -44,10 +47,10 @@ public class JpaNotificationRESTService implements IJpaNotificationRESTService {
     private INotificationDao notificationDao;
 
     @Autowired
-    private JpaNotificationService jpaNotificationService;
+    private INotificationDTOMapper notificationMapper;
 
     @Autowired
-    private INotificationDTOMapper notificationMapper;
+    private JpaServices jpaServices;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -66,7 +69,7 @@ public class JpaNotificationRESTService implements IJpaNotificationRESTService {
     @Transactional(readOnly = true)
     public EntryDTO getNotification(NotificationEntry entry, boolean full) {
         EntryDTO rslt = null;  // default
-        if (jpaNotificationService.contains(entry)) {
+        if (jpaServices.contains(entry)) {
             final String idString = entry.getId().substring(JpaNotificationService.ID_PREFIX.length());
             final long id = Long.parseLong(idString);
             rslt = getNotification(id, full);
