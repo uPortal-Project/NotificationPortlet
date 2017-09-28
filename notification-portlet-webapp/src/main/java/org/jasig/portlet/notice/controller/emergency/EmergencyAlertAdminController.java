@@ -46,7 +46,7 @@ public final class EmergencyAlertAdminController {
     @RenderMapping()
     public ModelAndView showAdmin(PortletRequest req) {
         
-        Map<String,Object> model = new HashMap<String,Object>();
+        Map<String,Object> model = new HashMap<>();
         boolean enabled = notificationService.isActive();
         model.put("value", enabled ? "enabled" : "disabled");
         return new ModelAndView(VIEWNAME, model);

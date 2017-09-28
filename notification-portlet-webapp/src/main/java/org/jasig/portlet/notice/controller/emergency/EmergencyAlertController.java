@@ -55,7 +55,7 @@ public final class EmergencyAlertController {
     @RenderMapping()
     public ModelAndView showAlert(PortletRequest req) {
 
-        final Map<String,Object> model = new HashMap<String,Object>(); 
+        final Map<String,Object> model = new HashMap<>();
         final PortletPreferences prefs = req.getPreferences();   
 
         final boolean usePortalJsLibs = Boolean.valueOf(prefs.getValue(USE_PPORTAL_JS_LIBS_PREFERENCE, "true"));  // default is true
