@@ -61,7 +61,7 @@ public class JpaNotificationService extends AbstractNotificationService {
      */
     public static final String TABLENAME_PREFIX = "NOTICE_";
 
-    /* package-private */ static final String ID_PREFIX = "jpa_";
+    public static final String ID_PREFIX = "jpa_";
 
     private static final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
     private static final String UNCATEGORIZED_MESSAGE_CODE = "uncategorized";
@@ -75,13 +75,6 @@ public class JpaNotificationService extends AbstractNotificationService {
     private MessageSource messages;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * Is the {@link NotificationEntry} object owned by the JPA service?
-     */
-    public boolean contains(NotificationEntry entry) {
-        return entry.getId().startsWith(ID_PREFIX);
-    }
 
     @Override
     public NotificationResponse fetch(PortletRequest req) {

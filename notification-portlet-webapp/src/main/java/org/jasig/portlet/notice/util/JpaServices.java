@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationState;
+import org.jasig.portlet.notice.action.hide.HideNotificationServiceDecorator;
 import org.jasig.portlet.notice.rest.AttributeDTO;
 import org.jasig.portlet.notice.rest.EntryDTO;
 import org.jasig.portlet.notice.rest.EventDTO;
@@ -68,12 +69,16 @@ public class JpaServices implements IJpaServices {
                 + "one from an external data source;  this strategy supports status changes.";
 
     @Autowired
-    JpaNotificationService jpaNotificationService;
-
-    @Autowired
-    IJpaNotificationRESTService jpaNotificationRestService;
+    private IJpaNotificationRESTService jpaNotificationRestService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+     * Is the {@link NotificationEntry} object owned by the JPA service?
+     */
+    public boolean contains(NotificationEntry entry) {
+        return entry.getId().startsWith(JpaNotificationService.ID_PREFIX);
+    }
 
     /**
      * Provides the known history of status changes for the specified user and
@@ -89,7 +94,7 @@ public class JpaServices implements IJpaServices {
          * entries that it owns.  If the entry is not already a JPA-backed
          * entry, we would use a JPA-side "proxy."
          */
-        final EntryDTO entryDto = jpaNotificationService.contains(entry)
+        final EntryDTO entryDto = contains(entry)
                 ? jpaNotificationRestService.getNotification(entry, false)
                 : fetchJpaProxyIfAvailable(entry);
 
@@ -110,7 +115,7 @@ public class JpaServices implements IJpaServices {
          * entries that it owns.  If the entry is not already a JPA-backed
          * entry, we need to create a JPA-side "proxy."
          */
-        final EntryDTO entryDto = jpaNotificationService.contains(entry)
+        final EntryDTO entryDto = contains(entry)
                 ? jpaNotificationRestService.getNotification(entry, false)
                 : fetchOrCreateJpaProxy(entry);
 

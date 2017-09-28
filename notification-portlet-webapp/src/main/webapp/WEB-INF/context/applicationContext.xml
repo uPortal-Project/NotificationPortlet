@@ -206,12 +206,10 @@
     <!-- JPA -->
     <bean id="jpaNotificationService" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
         <property name="enclosedNotificationService">
-            <ref bean="jpaNotificationServiceInnerBean" />
+            <bean class="org.jasig.portlet.notice.service.jpa.JpaNotificationService">
+                <property name="name" value="jpaNotificationService"/>
+            </bean>
         </property>
-    </bean>
-    <!-- This bean must be visible in the application context because other beans depend on it -->
-    <bean id="jpaNotificationServiceInnerBean" class="org.jasig.portlet.notice.service.jpa.JpaNotificationService">
-        <property name="name" value="jpaNotificationService"/>
     </bean>
 
     <!-- DEMO -->
