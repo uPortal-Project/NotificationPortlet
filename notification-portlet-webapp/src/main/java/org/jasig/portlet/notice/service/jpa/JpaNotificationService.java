@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Service;
 
 /**
  * Implementation of {@code INotificationService} backed by a Spring-/JPA-managed
@@ -61,9 +60,8 @@ public class JpaNotificationService extends AbstractNotificationService {
      */
     public static final String TABLENAME_PREFIX = "NOTICE_";
 
-    /* package-private */ static final String ID_PREFIX = "jpa_";
+    public static final String ID_PREFIX = "jpa_";
 
-    private static final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
     private static final String UNCATEGORIZED_MESSAGE_CODE = "uncategorized";
     private static final String UNCATEGORIZED_DEFAULT_MESSAGE = "(Uncategorized)";
     private static final String PREFS_ENABLED = "JpaNotificationService.enabled";
@@ -76,17 +74,10 @@ public class JpaNotificationService extends AbstractNotificationService {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    /**
-     * Is the {@link NotificationEntry} object owned by the JPA service?
-     */
-    public boolean contains(NotificationEntry entry) {
-        return entry.getId().startsWith(ID_PREFIX);
-    }
-
     @Override
     public NotificationResponse fetch(PortletRequest req) {
 
-        NotificationResponse rslt = EMPTY_RESPONSE;  // default
+        NotificationResponse rslt = NotificationResponse.EMPTY_RESPONSE;  // default
 
         PortletPreferences prefs = req.getPreferences();
 

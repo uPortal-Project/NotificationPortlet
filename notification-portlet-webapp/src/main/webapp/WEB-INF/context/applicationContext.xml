@@ -21,15 +21,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
-    xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:p="http://www.springframework.org/schema/p"
     xmlns:util="http://www.springframework.org/schema/util"
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-        http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
-        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
 
@@ -206,13 +202,15 @@
     <!-- JPA -->
     <bean id="jpaNotificationService" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
         <property name="enclosedNotificationService">
-            <ref bean="jpaNotificationServiceInnerBean" />
+            <bean class="org.jasig.portlet.notice.service.jpa.JpaNotificationService">
+                <property name="name" value="jpaNotificationService"/>
+            </bean>
         </property>
     </bean>
-    <!-- This bean must be visible in the application context because other beans depend on it -->
-    <bean id="jpaNotificationServiceInnerBean" class="org.jasig.portlet.notice.service.jpa.JpaNotificationService">
-        <property name="name" value="jpaNotificationService"/>
-    </bean>
+
+    <!-- JDBC -->
+    <bean id="AbstractJdbcNotificationService.responseCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+          p:cacheManager-ref="cacheManager" p:cacheName="AbstractJdbcNotificationService.responseCache"/>
 
     <!-- DEMO -->
     <bean id="demoNotifications" class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">

@@ -34,19 +34,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class contains all the categories and errors
- * retrieved by an INotificationService. It is also
- * used to aggregate all the NotificationResponses from
- * various services into a single NotificationResponse.
- * The data from the overall NotificationResponse instance
- * is returned to the portlet to be rendered.
+ * This class contains all the categories and errors retrieved by an INotificationService. It is
+ * also used to aggregate all the NotificationResponses from various services into a single
+ * NotificationResponse.  The data from the overall NotificationResponse instance is returned to the
+ * portlet to be rendered.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-//@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationResponse implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Useful for returning an empty set of notices.
+     */
+    public static final NotificationResponse EMPTY_RESPONSE = new NotificationResponse() {
+        @Override
+        public void setCategories(List<NotificationCategory> categories) {
+            throw new UnsupportedOperationException("NotificationResponse.EMPTY_RESPONSE is and must be immutable");
+        }
+        @Override
+        public void setErrors(List<NotificationError> errors) {
+            throw new UnsupportedOperationException("NotificationResponse.EMPTY_RESPONSE is and must be immutable");
+        }
+    };
 
     @XmlTransient
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -228,8 +239,7 @@ public class NotificationResponse implements Serializable, Cloneable {
     }
 
     private void addErrors(List<NotificationError> newErrors) {
-        for(NotificationError error : newErrors)
-            errors.add(error);
+        errors.addAll(newErrors);
     }
 
     public NotificationResponse cloneIfNotCloned() {
@@ -241,7 +251,7 @@ public class NotificationResponse implements Serializable, Cloneable {
         return this;
     }
 
-    public boolean isCloned() {
+    private boolean isCloned() {
         return cloned;
     }
 

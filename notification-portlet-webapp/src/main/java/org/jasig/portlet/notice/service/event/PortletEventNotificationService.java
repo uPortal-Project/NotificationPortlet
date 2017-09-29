@@ -43,8 +43,6 @@ import org.jasig.portlet.notice.service.AbstractNotificationService;
 
 public final class PortletEventNotificationService extends AbstractNotificationService {
 
-    private final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
-
     private final Log log = LogFactory.getLog(getClass());
     private Cache cache;
 
@@ -128,7 +126,7 @@ public final class PortletEventNotificationService extends AbstractNotificationS
     @Override
     public NotificationResponse fetch(final PortletRequest req) {
 
-        NotificationResponse rslt = EMPTY_RESPONSE;  // default is empty
+        NotificationResponse rslt = NotificationResponse.EMPTY_RESPONSE;  // default is empty
 
         final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
         final Element m = cache.get(cacheKey);

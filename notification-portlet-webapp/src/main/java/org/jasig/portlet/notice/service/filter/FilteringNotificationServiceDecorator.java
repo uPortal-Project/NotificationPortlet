@@ -117,13 +117,21 @@ public class FilteringNotificationServiceDecorator implements INotificationServi
     // Instance members
     private INotificationService enclosedNotificationService;
 
-    @Autowired
     private UsernameFinder usernameFinder;
 
-    @Autowired
     private PortletXmlRoleService portletXmlRoleService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    public void setUsernameFinder(UsernameFinder usernameFinder) {
+        this.usernameFinder = usernameFinder;
+    }
+
+    @Autowired
+    public void setPortletXmlRoleService(PortletXmlRoleService portletXmlRoleService) {
+        this.portletXmlRoleService = portletXmlRoleService;
+    }
 
     public void setEnclosedNotificationService(INotificationService enclosedNotificationService) {
         this.enclosedNotificationService = enclosedNotificationService;
