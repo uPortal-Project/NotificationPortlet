@@ -42,7 +42,7 @@ import org.xml.sax.InputSource;
  *
  * @since 3.1
  */
-@Service
+@Service("portletXmlRoleService")
 public class PortletXmlRoleService implements ServletContextAware {
 
     private static final String PORTLET_XML_PATH = "/WEB-INF/portlet.xml";

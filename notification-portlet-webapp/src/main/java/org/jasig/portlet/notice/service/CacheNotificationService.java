@@ -35,7 +35,10 @@ import net.sf.ehcache.Element;
 
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator;
 import org.jasig.portlet.notice.service.jdbc.AbstractJdbcNotificationService;
+import org.jasig.portlet.notice.util.PortletXmlRoleService;
+import org.jasig.portlet.notice.util.UsernameFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -92,9 +95,27 @@ public final class CacheNotificationService extends AbstractNotificationService 
         final Map<String,AbstractJdbcNotificationService> discoverableServices =
                 BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext,
                         AbstractJdbcNotificationService.class);
-        for (AbstractJdbcNotificationService s : discoverableServices.values()) {
-            servicesMap.put(s.getName(), s);
-            logger.info("Added discovered Notification Service:  {}", s.getName());
+        if (discoverableServices.size() != 0) {
+            /*
+             * To match the behavior/capabilities of INotificationService beans declared in the
+             * applicationContext.xml, we need to decorate these beans in a
+             * FilteringNotificationServiceDecorator.  We're also obligated to provide the
+             * dependencies of FilteringNotificationServiceDecorator.
+             */
+            final UsernameFinder usernameFinder =
+                    (UsernameFinder) applicationContext.getBean("usernameFinder");
+            final PortletXmlRoleService portletXmlRoleService =
+                    (PortletXmlRoleService) applicationContext.getBean("portletXmlRoleService");
+
+            for (AbstractJdbcNotificationService s : discoverableServices.values()) {
+                final FilteringNotificationServiceDecorator decorator = new FilteringNotificationServiceDecorator();
+                decorator.setEnclosedNotificationService(s);
+                decorator.setUsernameFinder(usernameFinder);
+                decorator.setPortletXmlRoleService(portletXmlRoleService);
+
+                servicesMap.put(decorator.getName(), decorator);
+                logger.info("Added discovered Notification Service:  {}", s.getName());
+            }
         }
     }
 
