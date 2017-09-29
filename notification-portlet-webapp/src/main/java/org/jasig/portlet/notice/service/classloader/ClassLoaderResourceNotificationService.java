@@ -45,8 +45,6 @@ import org.jasig.portlet.notice.service.AbstractNotificationService;
 public class ClassLoaderResourceNotificationService extends AbstractNotificationService {
 
     public static final String LOCATIONS_PREFERENCE = "ClassLoaderResourceNotificationService.locations";
-    
-    private static final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final Log log = LogFactory.getLog(getClass());
@@ -63,7 +61,7 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
         
         final ArrayList<String> locations = getLocations(req);
         if (locations.isEmpty()) {
-            return EMPTY_RESPONSE;
+            return NotificationResponse.EMPTY_RESPONSE;
         }
 
         NotificationResponse rslt = null;

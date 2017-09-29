@@ -54,7 +54,6 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
     private static final int MAX_DAY_DELTA = 14;
     private static final int BLUE_SHIFT = -7;
 
-    private final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
     private boolean active = true;  // Default
     private final Logger log = LoggerFactory.getLogger(getClass());
     
@@ -69,7 +68,7 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
     @Override
     public NotificationResponse fetch(PortletRequest req) {
         
-        NotificationResponse rslt = EMPTY_RESPONSE;  // default
+        NotificationResponse rslt = NotificationResponse.EMPTY_RESPONSE;  // default
         
         // Are we active?
         if (active) {

@@ -49,11 +49,18 @@
         memoryStoreEvictionPolicy="LRU"/>
 
     <cache name="PortletEventNotificationService.responseCache"
-        maxElementsInMemory="500"
-        eternal="false"
-        timeToLiveSeconds="300"
-        overflowToDisk="false"
-        memoryStoreEvictionPolicy="LRU"/>
+           maxElementsInMemory="500"
+           eternal="false"
+           timeToLiveSeconds="300"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="AbstractJdbcNotificationService.responseCache"
+           maxElementsInMemory="500"
+           eternal="false"
+           timeToLiveSeconds="300"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>
 
     <cache name="StudentSuccessPlanService.schoolIdToPersonIdCache"
            maxElementsInMemory="1000"

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -32,34 +33,39 @@ import javax.portlet.PortletRequest;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.service.jdbc.AbstractJdbcNotificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.context.ApplicationContext;
 
 /**
- * This class contains all the notification service providers. It implements
- * the EHCache implementation. An instance of this class is called from the
- * DataController in order to retrieve the notifications for a given user.
+ * This class decorates and aggregates all the notification service providers. It also provides
+ * caching via EHCache. Each child context (e.g. portlet) has it's own instance of this class.
  */
 public final class CacheNotificationService extends AbstractNotificationService {
 
-    private final Map<String,INotificationService> servicesMap = new HashMap<String,INotificationService>();
+    // Wired by Spring
+    private ApplicationContext applicationContext;
+    private List<INotificationService> embeddedServices;
     private Cache cache;
-    private final Log log = LogFactory.getLog(getClass());
+
+    // Managed internally
+    private final Map<String,INotificationService> servicesMap = new HashMap<>();
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     @Required
-    public void setEmbeddedServices(final List<INotificationService> services) {
-        servicesMap.clear();  // reset the Map
-        for (INotificationService s : services) {
-            if (servicesMap.containsKey(s.getName())) {
-                // This is a configuration error
-                String msg = "Notification services names must be unique;  duplicate detected for name:  " + s.getName();
-                throw new IllegalArgumentException(msg);
-            }
-            servicesMap.put(s.getName(), s);
-        }
+    public void setEmbeddedServices(List<INotificationService> embeddedServices) {
+        this.embeddedServices = embeddedServices;
     }
 
     @Resource(name="notificationResponseCache")
@@ -67,13 +73,36 @@ public final class CacheNotificationService extends AbstractNotificationService 
         this.cache = cache;
     }
 
-    @Override
-    public void invoke(final ActionRequest req, final ActionResponse res, final boolean refresh) {
+    @PostConstruct
+    public void init() {
+        servicesMap.clear();  // reset the Map
 
-        if (log.isTraceEnabled()) {
-            final String username = usernameFinder.findUsername(req);
-            log.trace("Processing invoke() for user ''" + username + "' refresh=" + refresh);
+        // Load the services provided explicitly
+        for (INotificationService s : embeddedServices) {
+            if (servicesMap.containsKey(s.getName())) {
+                // This is a configuration error
+                final String msg = "Notification services names must be unique;  duplicate detected for name:  " + s.getName();
+                throw new IllegalArgumentException(msg);
+            }
+            servicesMap.put(s.getName(), s);
+            logger.info("Added configured Notification Service:  {}", s.getName());
         }
+
+        // Discover services provided by implementors (TODO: we should move everything to discovery)
+        final Map<String,AbstractJdbcNotificationService> discoverableServices =
+                BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext,
+                        AbstractJdbcNotificationService.class);
+        for (AbstractJdbcNotificationService s : discoverableServices.values()) {
+            servicesMap.put(s.getName(), s);
+            logger.info("Added discovered Notification Service:  {}", s.getName());
+        }
+    }
+
+    @Override
+    public void invoke(ActionRequest req, ActionResponse res, boolean refresh) {
+
+        logger.trace("Processing invoke() for user '{}' refresh={}",
+                usernameFinder.findUsername(req), refresh);
 
         if (refresh) {
             // Make certain we have a cache MISS on next fetch()
@@ -88,7 +117,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
     }
 
     @Override
-    public void collect(final EventRequest req, final EventResponse res) {
+    public void collect(EventRequest req, EventResponse res) {
 
         for (INotificationService service : servicesMap.values()) {
             service.collect(req, res);
@@ -97,33 +126,30 @@ public final class CacheNotificationService extends AbstractNotificationService 
     }
 
     @Override
-    public NotificationResponse fetch(final PortletRequest req) {
+    public NotificationResponse fetch(PortletRequest req) {
 
         final String username = usernameFinder.findUsername(req);
-        if (log.isDebugEnabled()) {
-            log.debug("Notifications requested for user='" + username + "' and windowId=" + req.getWindowID());
-        }
+        logger.debug("Notifications requested for user='{}' and windowId={}", username, req.getWindowID());
 
-        CacheTuple tuple = null;  // Existing or new?
+        CacheTuple tuple;  // Existing or new?
         final String cacheKey = createServiceUserWindowSpecificCacheKey(req);
         final Element m = cache.get(cacheKey);
         if (m != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Cache HIT for user='" + username 
-                        + "' and windowId=" + req.getWindowID());
-            }
-            // We have a cached element, but it could be 
+            logger.debug("Cache HIT for user='{}' and windowId={}", username, req.getWindowID());
+
+            // We have a cached element, but it could be
             // PARTIALLY invalid; make sure it's fresh
             tuple = (CacheTuple) m.getObjectValue();
-            Map<String,NotificationResponse> iterable = 
-                    new HashMap<String,NotificationResponse>(tuple.getResponses());  // Can't iterate & modify the same collection
+            final Map<String,NotificationResponse> iterable =
+                    new HashMap<>(tuple.getResponses());  // Can't iterate & modify the same collection
             for (Map.Entry<String,NotificationResponse> entry : iterable.entrySet()) {
-                INotificationService service = servicesMap.get(entry.getKey());
+                final INotificationService service = servicesMap.get(entry.getKey());
                 if (service == null) {
                     // This is perplexing -- should not happen
-                    log.warn("Unmatched NotificationResponse in CacheTuple;  service.name()='" 
-                                    + entry.getKey() + "' and user='" + username + "'");
+                    logger.warn("Unmatched NotificationResponse in CacheTuple;  " +
+                            "service.name()='{}' and user='{}'", entry.getKey(), username);
                     tuple.getResponses().remove(entry.getKey());
+                    continue;
                 }
                 // Refresh if needed
                 if (!service.isValid(req, entry.getValue())) {
@@ -132,10 +158,8 @@ public final class CacheNotificationService extends AbstractNotificationService 
                 }
             }
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Cache MISS for user='" + username 
-                        + "' and windowId=" + req.getWindowID());
-            }
+            logger.debug("Cache MISS for user='{}' and windowId={}", username, req.getWindowID());
+
             // For whatever reason we can't pull from cache;  we need to hit
             // the underlying data sources, then cache what we receive
             tuple = new CacheTuple();
@@ -160,13 +184,13 @@ public final class CacheNotificationService extends AbstractNotificationService 
      * Implementation
      */
 
-    private final NotificationResponse getResponseFromService(final PortletRequest req, final INotificationService service) {
-        NotificationResponse rslt = null;
+    private NotificationResponse getResponseFromService(PortletRequest req, INotificationService service) {
+        NotificationResponse rslt;
         try {
             rslt = service.fetch(req);
         } catch (Exception e) {
-            String msg = "Failed to invoke the specified service:  " + service.getName();
-            log.error(msg, e);
+            final String msg = "Failed to invoke the specified service:  " + service.getName();
+            logger.error(msg, e);
             rslt = prepareErrorResponse(getName(), msg);
         }
         return rslt;
@@ -179,7 +203,7 @@ public final class CacheNotificationService extends AbstractNotificationService 
     private static final class CacheTuple {
 
         // Instance members
-        private final Map<String,NotificationResponse> responses = new HashMap<String,NotificationResponse>();
+        private final Map<String,NotificationResponse> responses = new HashMap<>();
 
         public Map<String,NotificationResponse> getResponses() {
             return this.responses;

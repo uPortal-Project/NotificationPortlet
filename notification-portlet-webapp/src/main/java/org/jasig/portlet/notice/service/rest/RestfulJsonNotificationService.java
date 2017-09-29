@@ -50,7 +50,6 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
 
     public static final String SERVICE_URLS_PREFERENCE = "RestfulJsonNotificationService.serviceUrls";
 
-    private final NotificationResponse EMPTY_RESPONSE = new NotificationResponse();
     private final ResponseExtractor<NotificationResponse> responseExtractor = new ResponseExtractorImpl();
 
     // For HTTP Basic AuthN
@@ -96,7 +95,7 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
     @Override
     public NotificationResponse fetch(PortletRequest req) {
         
-        NotificationResponse rslt = EMPTY_RESPONSE;  // default is empty
+        NotificationResponse rslt = NotificationResponse.EMPTY_RESPONSE;  // default is empty
         
         final PortletPreferences prefs = req.getPreferences();
         final Map<String,String> params = createParameters(req);
