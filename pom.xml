@@ -25,16 +25,16 @@
         <filters.file>src/main/filters/notifications.properties</filters.file>
         <hibernate.version>4.2.15.Final</hibernate.version>
         <hsql.version>2.3.3</hsql.version>
-        <jackson.version>2.7.3</jackson.version>
+        <jackson.version>2.9.2</jackson.version>
         <junit.version>4.11</junit.version>
-        <logbackVersion>1.1.7</logbackVersion>
+        <logbackVersion>1.2.3</logbackVersion>
         <resource-server.version>1.0.43</resource-server.version>
-        <slf4jVersion>1.7.21</slf4jVersion>
-        <spring.version>3.2.12.RELEASE</spring.version>
-        <spring-security.version>3.2.5.RELEASE</spring-security.version>
+        <slf4jVersion>1.7.25</slf4jVersion>
+        <spring.version>3.2.18.RELEASE</spring.version>
+        <spring-security.version>3.2.10.RELEASE</spring-security.version>
         <dozer.version>5.5.1</dozer.version>
-        <groovy.version>2.4.6</groovy.version>
-        <uportal-libs.version>5.0.0-M4</uportal-libs.version>
+        <groovy.version>2.4.12</groovy.version>
+        <uportal-libs.version>5.0.0</uportal-libs.version>
 
         <!-- The JDBC Driver used by the portlet -->
         <jdbc.groupId>org.hsqldb</jdbc.groupId>
