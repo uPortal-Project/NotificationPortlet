@@ -182,7 +182,7 @@ public class NotificationLifecycleController {
 
     }
 
-    @ActionMapping
+    @ActionMapping("invokeActionUrlTemplate")
     public void invokeUserAction(final ActionRequest req, final ActionResponse res,
             @RequestParam("notificationId") final String notificationId,
             @RequestParam("actionId") final String actionId) throws IOException {
