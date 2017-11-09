@@ -28,9 +28,7 @@
     <portlet:param name="uuid" value="${uuid}"/>
     <portlet:param name="action" value="invokeNotificationService"/>
 </portlet:actionURL>
-<portlet:actionURL var="invokeActionUrlTemplate" escapeXml="false">
-    <portlet:param name="notificationId" value="NOTIFICATIONID"/>
-    <portlet:param name="actionId" value="ACTIONID"/>
+<portlet:actionURL name="invokeActionUrlTemplate" var="invokeActionUrlTemplate" escapeXml="false">
 </portlet:actionURL>
 
 <%--
