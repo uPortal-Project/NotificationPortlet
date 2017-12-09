@@ -1,5 +1,6 @@
 # Apereo Notification Portlet
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.jasig.portlet.notification/notification-portlet-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.jasig.portlet.notification/notification-portlet-parent)
 [![Linux Build Status](https://travis-ci.org/Jasig/NotificationPortlet.svg?branch=master)](https://travis-ci.org/Jasig/NotificationPortlet)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/we2hk9cv24f47oao/branch/master?svg=true)](https://ci.appveyor.com/project/ChristianMurphy/notificationportlet/branch/master)
 
@@ -85,7 +86,7 @@ portlet preferences to _exclude_ some notices from appearing in the display:
 
 ### [Modal Notifications][]
 
-The `modal` display strategy presents notices in a Bootstrap modal dialog.  If the notice 
+The `modal` display strategy presents notices in a Bootstrap modal dialog.  If the notice
 defines actions, they will be rendered as buttons at the bottom of the dialog;  any button
 will dismiss the dialog, as well as invoke the spe,cified action server-side.  Notices that
 do not define actions will offer a 'close' (x) option in the upper-right corner of the dialog.  
