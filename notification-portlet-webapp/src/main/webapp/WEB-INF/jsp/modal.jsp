@@ -31,65 +31,55 @@
 <portlet:actionURL name="invokeActionUrlTemplate" var="invokeActionUrlTemplate" escapeXml="false">
 </portlet:actionURL>
 
-<%--
-
-NOTE: the modal.jsp display strategy is based on Bootstrap, which should not be loaded on the page
-more that once.  This display strategy *requires* usePortalJSLibs=true (which is both the
-recommended and more common approach).
-
---%>
-
-<script src="<c:url value="/scripts/modal-notice.js"/>" type="text/javascript"></script>
-
-<style>
-/* Prevent the dialog from becoming longer than some displays, which would make it difficult to use. */
-#${n} .modal-body {
-    max-height: 40rem;
-    overflow-y: scroll;
-}
-</style>
-
-<%-- HTML Fragment --%>
-
-<div id="${n}" class="modal fade" role="dialog" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content np-content">
-            <div class="modal-header">
-                <!-- Default method of closing the  dialog, in case the notice doesn't define one -->
-                <button type="button" class="close np-close" data-dismiss="modal" aria-label="Close" style="display: none;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h2 class="np-title text-center" role="heading"></h2>
-            </div>
-            <div class="modal-body" role="main">
-                <!-- Use an HTML from in case the body of the notice contains form fields -->
-                <form method="POST" class="np-action-form">
-                    <p class="np-body"></p>
-                    <a class="np-link" href=""></a>
-                    <ul class="np-actions list-inline text-center">
-                        <!-- Template HTML for actions defined on the notice -->
-                        <li class="np-action-template hidden">
-                            <a class="btn" href="javascript:void(0);"></a>
-                        </li>
-                    </ul>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 <script type="text/javascript">
-(function($) {
-
-    $(function() {
-        var container = $("#${n}");
-
-        upmodal_notice.launch($, container, {
-            invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
-            invokeActionUrlTemplate: '${invokeActionUrlTemplate}',
-            getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>'
-        });
-
-    });
-
-})(up.jQuery);
+    var invokeNotificationServiceUrl = "${invokeActionUrlTemplate}";
+    var invokeActionUrl = "<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>";
 </script>
+
+
+<script src="<c:url value="/scripts/vue.min.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/scripts/vue-resource@1.3.4"/>" type="text/javascript"></script>
+
+<link href="<c:url value="/css/modal.css"/>" rel="stylesheet" type="text/css" />
+<link href="<c:url value="/css/modal-override.css"/>" rel="stylesheet" type="text/css" />
+
+<script type="text/x-template" id="modal-template">
+  <transition name="modal">
+    <div class="notification-modal-mask" tabindex="-1">
+      <div :id="id" class="notification-modal-wrapper" role="alertdialog" aria-label="dialog-description">
+        <div class="notification-modal-content" tabindex="0" role="document">
+          <div class="notification-modal-header">
+            <slot name="header">
+				<button type="button" class="close np-close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+            </slot>
+          </div>
+          <div class="notification-modal-body">
+            <slot name="body">This notification has no content</slot>
+            <slot name="link"></slot>
+          </div>
+          <div class="notification-modal-footer">
+            <slot name="actions"></slot>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</script>
+
+<!-- app -->
+<div id="app">
+    <modal :id="id" v-for="(item, index) in items" v-if="item.show" @close="gotoNext(index)">
+		<h2 v-if="item.title" slot="header">{{ item.title }}</h2>
+		<div v-if="item.body" slot="body" id="dialog-description">{{ item.body }}</div>
+        <div v-if="item.linkText" slot="link"><a :href="item.url">{{ item.linkText }}</a></div>
+		<ul v-if="item.availableActions" slot="actions" class="np-actions list-inline text-center">
+			<li v-for="action in item.availableActions">
+                <button class="notification-flat" v-on:click="submit(item.id, action.id, index)">{{ action.label }}</button>
+			</li>
+		</ul>
+	</modal>
+</div>
+
+<script src="<c:url value="/scripts/modal.js"/>" type="text/javascript"></script>
