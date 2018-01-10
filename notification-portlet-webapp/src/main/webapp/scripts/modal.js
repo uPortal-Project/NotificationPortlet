@@ -55,13 +55,13 @@ new Vue({
         })
         .join("&")
       this.$http
-        .post(invokeNotificationServiceUrl, formBody, {
+        .post(invokeActionUrl, formBody, {
           credentials: "include",
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
         .then(
           function(response) {
-            this.gotoNext(index + 1)
+            this.gotoNext(index)
           },
           function(response) {
             console.log("Problem posting request")
@@ -103,7 +103,7 @@ new Vue({
       this.bodyOverflow = body.style.overflow
 
       this.$http.post(invokeNotificationServiceUrl)
-      this.$http.post(invokeActionUrl).then(function(response) {
+      this.$http.post(getNotifications).then(function(response) {
         this.items.pop()
         for (i = 0; i < response.data.feed.length; i++) {
           var item = response.data.feed[i]
