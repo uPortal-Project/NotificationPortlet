@@ -38,8 +38,8 @@
 </script>
 
 
-<script src="<c:url value="/scripts/vue.min.js"/>" type="text/javascript"></script>
-<script src="<c:url value="/scripts/vue-resource@1.3.4"/>" type="text/javascript"></script>
+<script src="<c:url value="/webjars/vue/2.5.9/dist/vue.min.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/webjars/vue-resource/1.3.4/dist/vue-resource.min.js"/>" type="text/javascript"></script>
 
 <link href="<c:url value="/css/modal.css"/>" rel="stylesheet" type="text/css" />
 <link href="<c:url value="/css/modal-override.css"/>" rel="stylesheet" type="text/css" />
