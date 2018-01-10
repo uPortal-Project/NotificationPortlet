@@ -32,8 +32,9 @@
 </portlet:actionURL>
 
 <script type="text/javascript">
-    var invokeNotificationServiceUrl = "${invokeActionUrlTemplate}";
-    var invokeActionUrl = "<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>";
+    var invokeNotificationServiceUrl = "${invokeNotificationServiceUrl}";
+    var invokeActionUrl = "${invokeActionUrlTemplate}";
+    var getNotifications = "<portlet:resourceURL id="GET-NOTIFICATIONS-UNCATEGORIZED"/>";
 </script>
 
 
