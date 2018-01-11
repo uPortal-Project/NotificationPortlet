@@ -70,7 +70,7 @@
 </script>
 
 <!-- app -->
-<div id="app">
+<div id="notifications-vue-app">
     <modal :id="id" v-for="(item, index) in items" v-if="item.show" @close="gotoNext(index)">
 		<h2 v-if="item.title" slot="header">{{ item.title }}</h2>
 		<div v-if="item.body" slot="body" id="dialog-description">{{ item.body }}</div>
