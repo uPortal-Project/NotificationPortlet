@@ -89,6 +89,7 @@ new Vue({
       }
     },
     keyUpListener: function(e) {
+      //27 is the ESCAPE key keyCode
       if (!e.keyCode || e.keyCode === 27) {
         this.gotoNext(e.currentTarget.index)
       }
