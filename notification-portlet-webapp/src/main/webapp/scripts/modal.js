@@ -7,7 +7,7 @@ Vue.component("modal", {
 
 // start app
 new Vue({
-  el: "#app",
+  el: "#notifications-vue-app",
   data: {
     items: [{ show: false }],
     id: "",
