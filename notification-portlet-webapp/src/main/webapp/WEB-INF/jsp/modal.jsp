@@ -51,7 +51,7 @@
         <div class="notification-modal-content" tabindex="0" role="document">
           <div class="notification-modal-header">
             <slot name="header">
-				<button type="button" class="close np-close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close np-close" data-dismiss="modal" aria-label="Close">
                     <span>&times;</span>
                 </button>
             </slot>
@@ -74,10 +74,10 @@
     <modal :id="id" v-for="(item, index) in items" v-if="item.show" @close="gotoNext(index)">
 		<h2 v-if="item.title" slot="header">{{ item.title }}</h2>
 		<div v-if="item.body" slot="body" id="dialog-description">{{ item.body }}</div>
-        <div v-if="item.linkText" slot="link"><a :href="item.url">{{ item.linkText }}</a></div>
+		<div v-if="item.linkText" slot="link"><a :href="item.url">{{ item.linkText }}</a></div>
 		<ul v-if="item.availableActions" slot="actions" class="np-actions list-inline text-center">
 			<li v-for="action in item.availableActions">
-                <button class="notification-flat" v-on:click="submit(item.id, action.id, index)">{{ action.label }}</button>
+				<button class="notification-flat" v-on:click="submit(item.id, action.id, index)">{{ action.label }}</button>
 			</li>
 		</ul>
 	</modal>
