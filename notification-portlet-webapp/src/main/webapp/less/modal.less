@@ -5,7 +5,6 @@
   box-sizing: border-box;
   align-items: center;
   line-height: 1em;
-  font-family: Arimo;
   font-weight: 500;
   border-radius: 2px;
   text-transform: uppercase;
@@ -41,7 +40,7 @@
 
 .notification-modal-container {
   width: 300px;
-  margin: 0px auto;
+  margin: 0 auto;
   padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;
@@ -80,15 +79,13 @@
 }
 
 .notification-modal-content {
-  webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  background-color: #ffff;
+  background-color: rgba(255, 255, 255, 1);
   border: 1px solid;
   position: relative;
 }
 
 .notification-modal-enter .notification-modal-container,
 .notification-modal-leave-active .notification-modal-container {
-  -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
