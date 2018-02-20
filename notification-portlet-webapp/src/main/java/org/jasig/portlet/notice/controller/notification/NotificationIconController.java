@@ -44,7 +44,7 @@ public final class NotificationIconController {
     private static final String ICON_PREFERENCE = "NotificationIconController.faIcon";
     private static final String ICON_DEFAULT = "fa-bell";
     private static final String ACTIVE_COLOR_PREFERENCE = "NotificationIconController.activeColor";
-    private static final String ACTIVE_COLOR_DEFAULT = "#d9534f";
+    private static final String ACTIVE_COLOR_DEFAULT = "#d50000";
     private static final String URL_PREFERENCE = "NotificationIconController.url";
     private static final String URL_DEFAULT = "/uPortal/p/notification";
     private static final String VIEW_NAME = "icon";
