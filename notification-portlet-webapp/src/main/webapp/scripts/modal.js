@@ -28,7 +28,7 @@ new Vue({
         this.id = "notification" + index + 2
         let that = this
         setTimeout(function() {
-          that.ada(index + 1)
+          that.attachListeners(index + 1)
         }, 250)
       } else {
         if (this.lastActive) {
@@ -68,7 +68,7 @@ new Vue({
           }
         )
     },
-    ada: function(index) {
+    attachListeners: function(index) {
       const modal = document.getElementById(this.id)
       let doc = modal && modal.ownerDocument
       if (doc !== null && doc !== undefined) {
@@ -115,7 +115,7 @@ new Vue({
           this.id = "notification1"
           this.items[0].show = true
           setTimeout(function() {
-            that.ada(0)
+            that.attachListeners(0)
             for (let x = 0; x < body.childElementCount; x++) {
               body.children[x].setAttribute("aria-hidden", "true")
             }
