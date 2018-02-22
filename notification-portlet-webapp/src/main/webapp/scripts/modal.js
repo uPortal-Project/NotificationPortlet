@@ -106,11 +106,10 @@ new Vue({
       this.$http.post(invokeNotificationServiceUrl)
       this.$http.post(getNotifications).then(function(response) {
         this.items.pop()
-        for (let i = 0; i < response.data.feed.length; i++) {
-          let item = response.data.feed[i]
+        this.items = response.data.feed.map(function(item) {
           item.show = false
-          this.items.push(item)
-        }
+          return item
+        })
         if (this.items.length >= 1) {
           this.id = "notification1"
           this.items[0].show = true
