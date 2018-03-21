@@ -1,18 +1,58 @@
-Vue.component("modal", {
-  template: "#modal-template",
+Vue.component('modal', {
   props: {
-    id: String
-  }
+    id: {
+      type: String,
+      default: 'notification',
+    },
+  },
+  template: '#modal-template',
 });
 
 // start app
 new Vue({
-  el: "#notifications-vue-app",
+  el: '#notifications-vue-app',
   data: {
-    items: [{ show: false }],
-    id: "",
+    items: [{show: false}],
+    id: '',
     lastActive: null,
-    bodyOverflow: null
+    bodyOverflow: null,
+  },
+  mounted: function() {
+    this.$nextTick(function() {
+      let that = this;
+      let body = document.getElementsByTagName('body')[0];
+
+      this.lastActive = document.activeElement;
+      this.bodyOverflow = body.style.overflow;
+
+      this.$http
+        .post(invokeNotificationServiceUrl)
+        .catch((err) => console.error(err));
+      this.$http
+        .post(getNotifications)
+        .then((response) => {
+          this.items.pop();
+          this.items = response.data.feed.map(function(item) {
+            item.show = false;
+            return item;
+          });
+          if (this.items.length >= 1) {
+            this.id = 'notification1';
+            this.items[0].show = true;
+            setTimeout(() => {
+              that.attachListeners(0);
+              for (let x = 0; x < body.childElementCount; x++) {
+                body.children[x].setAttribute('aria-hidden', 'true');
+              }
+              body.style.overflow = 'hidden';
+              document.getElementById('notification1').focus();
+            }, 250);
+          }
+
+          return;
+        })
+        .catch((err) => console.error(err));
+    });
   },
   methods: {
     gotoNext: function(index) {
@@ -20,12 +60,12 @@ new Vue({
 
       const modal = document.getElementById(this.id);
       let doc = modal && modal.ownerDocument;
-      doc.removeEventListener("focus", this.focusListener, true);
-      doc.removeEventListener("keyup", this.keyUpListener);
+      doc.removeEventListener('focus', this.focusListener, true);
+      doc.removeEventListener('keyup', this.keyUpListener);
 
       if (this.items[index + 1] !== undefined) {
         this.items[index + 1].show = true;
-        this.id = "notification" + index + 2;
+        this.id = 'notification' + index + 2;
         let that = this;
         setTimeout(function() {
           that.attachListeners(index + 1);
@@ -35,9 +75,9 @@ new Vue({
           this.lastActive.focus();
         }
 
-        let body = document.getElementsByTagName("body")[0];
+        let body = document.getElementsByTagName('body')[0];
         for (let x = 0; x < body.childElementCount; x++) {
-          body.children[x].removeAttribute("aria-hidden");
+          body.children[x].removeAttribute('aria-hidden');
         }
         body.style.overflow = this.bodyOverflow;
       }
@@ -45,24 +85,22 @@ new Vue({
     submit: function(notificationId, actionId, index) {
       const formData = {
         notificationId: notificationId,
-        actionId: actionId
+        actionId: actionId,
       };
       const formBody = Object.keys(formData)
         .map(
-          key =>
-            encodeURIComponent(key) + "=" + encodeURIComponent(formData[key])
+          (key) =>
+            encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])
         )
-        .join("&");
+        .join('&');
       this.$http
         .post(invokeActionUrl, formBody, {
-          credentials: "include",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+          credentials: 'include',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         })
-        .then(function(response) {
-          this.gotoNext(index);
-        })
+        .then((response) => this.gotoNext(index))
         .catch(function(response) {
-          console.log("Problem posting request");
+          console.log('Problem posting request');
         });
     },
     attachListeners: function(index) {
@@ -70,8 +108,8 @@ new Vue({
       let doc = modal && modal.ownerDocument;
       if (doc !== null && doc !== undefined) {
         doc.index = index;
-        doc.addEventListener("focus", this.focusListener, true);
-        doc.addEventListener("keyup", this.keyUpListener);
+        doc.addEventListener('focus', this.focusListener, true);
+        doc.addEventListener('keyup', this.keyUpListener);
       }
     },
     focusListener: function() {
@@ -86,44 +124,9 @@ new Vue({
       }
     },
     keyUpListener: function(e) {
-      if (!e.key || e.key === "Escape") {
+      if (!e.key || e.key === 'Escape') {
         this.gotoNext(e.currentTarget.index);
       }
-    }
+    },
   },
-  mounted: function() {
-    this.$nextTick(function() {
-      let that = this;
-      let body = document.getElementsByTagName("body")[0];
-
-      this.lastActive = document.activeElement;
-      this.bodyOverflow = body.style.overflow;
-
-      this.$http
-        .post(invokeNotificationServiceUrl)
-        .catch(err => console.error(err));
-      this.$http
-        .post(getNotifications)
-        .then(function(response) {
-          this.items.pop();
-          this.items = response.data.feed.map(function(item) {
-            item.show = false;
-            return item;
-          });
-          if (this.items.length >= 1) {
-            this.id = "notification1";
-            this.items[0].show = true;
-            setTimeout(function() {
-              that.attachListeners(0);
-              for (let x = 0; x < body.childElementCount; x++) {
-                body.children[x].setAttribute("aria-hidden", "true");
-              }
-              body.style.overflow = "hidden";
-              document.getElementById("notification1").focus();
-            }, 250);
-          }
-        })
-        .catch(err => console.error(err));
-    });
-  }
 });
