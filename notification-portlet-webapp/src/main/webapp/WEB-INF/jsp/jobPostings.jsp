@@ -30,7 +30,7 @@
 </portlet:actionURL>
 
 <%--
- Favorites URL 
+ Favorites URL
     - replace notificationid with jobId
     - replace actionId with favorite/unfavorite
 --%>
@@ -73,7 +73,7 @@
     // If bootstrap JS global variable was not defined, set it to the jQuery that has bootstrap attached to.
     portlets.bootstrapjQuery = portlets.bootstrapjQuery || (up.jQuery().carousel ? up.jQuery : portlets["${n}"].jQuery);
 </script>
-<script src='<c:url value="/scripts/job-postings.js"/>'></script>
+<script src='<c:url value="/dist/job-postings.js"/>'></script>
 
 <div class="job-postings bootstrap-styles" id="${n}">
     <div id="loading" class="container-fluid">
@@ -161,7 +161,7 @@
                     </form>
                 </div>
             </div>
-            
+
             <!-- Error output -->
             <div class="row">
                 <div class="col-sm-12">
@@ -219,7 +219,7 @@
     {{
         };
     }}
-    
+
 </script>
 <script type="text/template" id="${n}tmpl_categories">
     {{ for (i=0;i<categories.length;i++) { }}
@@ -338,7 +338,7 @@
             {{ } }}
         </div>
     </div>
-            
+
 </div>
 </script>
 

@@ -2,9 +2,11 @@
   "private": true,
   "scripts": {
     "format": "prettier-eslint --write \"src/**/*.js\"",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "minify": "minify src/main/webapp/scripts -d src/main/webapp/dist"
   },
-  "dependencies": {
+  "devDependencies": {
+    "babel-minify": "^0.3.0",
     "eslint": "^4.19.0",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-compat": "^2.2.0",
@@ -44,5 +46,7 @@
       "no-invalid-this": "off"
     }
   },
-  "browserslist": ["last 1 versions"]
+  "browserslist": [
+    "last 1 versions"
+  ]
 }

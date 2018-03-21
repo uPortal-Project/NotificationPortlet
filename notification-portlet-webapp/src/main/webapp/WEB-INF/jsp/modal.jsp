@@ -83,4 +83,4 @@
 	</modal>
 </div>
 
-<script src="<c:url value="/scripts/modal.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/dist/modal.js"/>" type="text/javascript"></script>
