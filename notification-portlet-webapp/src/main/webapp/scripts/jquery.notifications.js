@@ -23,60 +23,61 @@
 //  Email: jlichner@unicon.net
 //
 
-var notificationsPortletView = notificationsPortletView || function ($, rootSelector, _, opts) {
+var notificationsPortletView =
+  notificationsPortletView ||
+  function($, rootSelector, _, opts) {
+    // Underscore's templating syntax
+    let templateSettings = {
+      interpolate: /\{\{(.+?)\}\}/g, // {{ variable }}
+      evaluate: /\{%(.+?)%\}/g, // {% expression %}
+    };
 
-  // Underscore's templating syntax
-  var templateSettings = {
-    interpolate : /\{\{(.+?)\}\}/g, // {{ variable }}
-    evaluate    : /\{%(.+?)%\}/g    // {% expression %}
-  };
-
-    var rootjQueryObj = $(rootSelector);
+    let rootjQueryObj = $(rootSelector);
 
     // Cache existing DOM elements
-    var portlet         = rootjQueryObj.find(".notification-portlet-wrapper"),
-        outerContainer  = rootjQueryObj,
-        links           = rootjQueryObj.find(".notification-portlet a"),
-        errorContainer  = rootjQueryObj.find(".notification-error-container"),
-        loading         = rootjQueryObj.find(".notification-loading"),
-        notifications   = rootjQueryObj.find(".notification-container"),
-        detailView      = rootjQueryObj.find(".notification-detail-wrapper"),
-        detailContainer = rootjQueryObj.find(".notification-detail-container"),
-        actionsContainer = rootjQueryObj.find(".notification-actions"),
-        refreshButton   = rootjQueryObj.find(".notification-refresh a"),
-        filterOptions   = rootjQueryObj.find(".notification-options"),
-        todayFilter     = filterOptions.find(".today"),
-        allFilter       = filterOptions.find(".all");
+    let portlet = rootjQueryObj.find('.notification-portlet-wrapper'),
+      outerContainer = rootjQueryObj,
+      links = rootjQueryObj.find('.notification-portlet a'),
+      errorContainer = rootjQueryObj.find('.notification-error-container'),
+      loading = rootjQueryObj.find('.notification-loading'),
+      notifications = rootjQueryObj.find('.notification-container'),
+      detailView = rootjQueryObj.find('.notification-detail-wrapper'),
+      detailContainer = rootjQueryObj.find('.notification-detail-container'),
+      actionsContainer = rootjQueryObj.find('.notification-actions'),
+      refreshButton = rootjQueryObj.find('.notification-refresh a'),
+      filterOptions = rootjQueryObj.find('.notification-options'),
+      todayFilter = filterOptions.find('.today'),
+      allFilter = filterOptions.find('.all');
 
     // Notification gets cached in the AJAX callback but is created here for scope
-    var notification;
+    let notification;
 
     // Store the filter state (notifications that are currently being displayed), defaults to today
-    var filterState = {"days": 1};
+    let filterState = {days: 1};
 
-    var actionMap = {};
+    let actionMap = {};
 
-    var registerAction = function(id, actions) {
-        actionMap[id] = actions;
+    let registerAction = function(id, actions) {
+      actionMap[id] = actions;
     };
 
-    var getActions = function(id) {
-        return actionMap[id] || [];
+    let getActions = function(id) {
+      return actionMap[id] || [];
     };
 
-    var getDateFormat = function(date) {
-      var currentDate = new Date(date);
-      var year = currentDate.getFullYear();
-      var month = currentDate.getMonth() + 1;
-      var day =  currentDate.getDate();
-      var formatDate = month + '/' + day + '/' + year;
+    let getDateFormat = function(date) {
+      let currentDate = new Date(date);
+      let year = currentDate.getFullYear();
+      let month = currentDate.getMonth() + 1;
+      let day = currentDate.getDate();
+      let formatDate = month + '/' + day + '/' + year;
 
       return formatDate;
     };
 
-    var isPastDue = function(date) {
-      var pastDue = false;
-      var overDue = new Date(date);
+    let isPastDue = function(date) {
+      let pastDue = false;
+      let overDue = new Date(date);
       if (overDue < new Date()) {
         pastDue = true;
       }
@@ -85,26 +86,24 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
     };
 
     var getNotifications = function(params, doRefresh) {
-
       // First 'prime-the-pump' with an ActionURL
       $.ajax({
         type: 'POST',
-        data: { refresh: doRefresh },
+        data: {refresh: doRefresh},
         url: opts.invokeNotificationServiceUrl,
-        async: false
+        async: false,
       });
 
       // Now fetch the notifications with a ResourceURL
       $.ajax({
-        url      : opts.getNotificationsUrl,
-        type     : 'POST',
-        dataType : 'json',
-        data     : params,
+        url: opts.getNotificationsUrl,
+        type: 'POST',
+        dataType: 'json',
+        data: params,
 
-        beforeSend: function () {
-
+        beforeSend: function() {
           // Hide detail view
-          if ( detailView.is(":visible") ) {
+          if (detailView.is(':visible')) {
             detailView.hide();
             notifications.show();
           }
@@ -114,22 +113,22 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           loading.show();
 
           // Unbind click events
-          links.unbind("click");
-          filterOptions.find("a").unbind("click");
+          links.unbind('click');
+          filterOptions.find('a').unbind('click');
 
           // Clear out notifications and errors
-          notifications.html(" ");
-          errorContainer.html(" ");
+          notifications.html(' ');
+          errorContainer.html(' ');
         },
 
-        success: function (data) {
-          var notificationResponse = data.notificationResponse;
+        success: function(data) {
+          let notificationResponse = data.notificationResponse;
 
           // Build notifications
           buildNotifications(notificationResponse);
 
           // Once notifications have been injected into the DOM we cache the notification element...
-          notification = outerContainer.find(" .notifications a");
+          notification = outerContainer.find(' .notifications a');
 
           // ...and bind our events
           bindEvent.accordion(notificationResponse);
@@ -143,20 +142,20 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
 
           // Loading div is displayed by default.  Hide it after the AJAX call completes and display notifications..
           loading.hide();
-          portlet.fadeIn("fast");
-          filterOptions.fadeIn("fast");
+          portlet.fadeIn('fast');
+          filterOptions.fadeIn('fast');
         },
 
-        error: function () {
-            rootjQueryObj.html(" ").text("Request for data failed.");
-        }
+        error: function() {
+          rootjQueryObj.html(' ').text('Request for data failed.');
+        },
       });
 
-    // Build notifications using underscore.js template method
-    var buildNotifications = function(notificationResponse) {
-
-      // HTML string compiled with underscore.js
-      var html = '\
+      // Build notifications using underscore.js template method
+      var buildNotifications = function(notificationResponse) {
+        // HTML string compiled with underscore.js
+        let html =
+          '\
         {% if (_.isUndefined(data.categories) || _.isEmpty(data.categories)) { %} \
           <div class="no-notifications-container"> \
             <h3>You have 0 notifications.</h3> \
@@ -187,7 +186,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
                           } \
                       } %} \
                     <li class="{{ states }}"> \
-                      <a href="{{ \"javascript://\" }}" \
+                      <a href="{{ "javascript://" }}" \
                          {% if (entry.url) { %} \
                          data-url="{{ entry.url }}" \
                          {% } %} \
@@ -223,52 +222,51 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           {% }); %} \
         {% } %} \
       ';
-      var data = _.extend({}, notificationResponse, {
-        registerAction: registerAction,
-        isPastDue: isPastDue,
-        getDateFormat: getDateFormat
-      });
-      var compiled = _.template(html, data, {
+        let data = _.extend({}, notificationResponse, {
+          registerAction: registerAction,
+          isPastDue: isPastDue,
+          getDateFormat: getDateFormat,
+        });
+        let compiled = _.template(html, data, {
           variable: 'data',
-          interpolate : templateSettings.interpolate,
-          evaluate : templateSettings.evaluate
-      });
+          interpolate: templateSettings.interpolate,
+          evaluate: templateSettings.evaluate,
+        });
 
-      // Inject compiled markup into notifications container div
-      notifications.html(" ").prepend(compiled);
-    };
+        // Inject compiled markup into notifications container div
+        notifications.html(' ').prepend(compiled);
+      };
 
-    // Bind events object helps keep events together 
-    var bindEvent = {
-
-      // Accordion via plugin
-      accordion: function (data) {
-        if (!data.categories || data.categories.length === 1 ) {
-          portlet.removeClass("accordion");
-          notifications.children().show();
-        } else {
+      // Bind events object helps keep events together
+      var bindEvent = {
+        // Accordion via plugin
+        accordion: function(data) {
+          if (!data.categories || data.categories.length === 1) {
+            portlet.removeClass('accordion');
+            notifications.children().show();
+          } else {
             notificationsAccordion($, notifications);
-          portlet.addClass("accordion");
-        }
-      },
+            portlet.addClass('accordion');
+          }
+        },
 
-      // View detail page
-      viewDetail: function () {
-        notification.click(function () {
+        // View detail page
+        viewDetail: function() {
+          notification.click(function() {
+            // Notification detail is retrieved from 'data-'
+            // attributes and stored in a notification object
+            let notification = {
+              body: $(this).data('body'),
+              title: $(this).data('title'),
+              source: $(this).data('source'),
+              link: $(this).data('url'),
+              lnkTxt: $(this).data('linkText'),
+              ddate: $(this).data('duedate'),
+              id: $(this).data('id'),
+            };
 
-          // Notification detail is retrieved from 'data-' 
-          // attributes and stored in a notification object
-          var notification = {
-            body   : $(this).data("body"),
-            title  : $(this).data("title"),
-            source : $(this).data("source"),
-            link   : $(this).data("url"),
-            lnkTxt : $(this).data("linkText"),
-            ddate  : $(this).data("duedate"),
-            id     : $(this).data("id")
-          };
-
-          var html = '\
+            let html =
+              '\
           <h3>{{ title }}</h3> \
           {% if (body) { %} \
             <div>{{ unescape(body) }}</div> \
@@ -300,135 +298,146 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           </div> \
           ';
 
-          var data = _.extend({}, notification, {
-            isPastDue: isPastDue,
-            getDateFormat: getDateFormat
-          });
+            let data = _.extend({}, notification, {
+              isPastDue: isPastDue,
+              getDateFormat: getDateFormat,
+            });
 
-          var compiled = _.template(html, data, {
-            interpolate : templateSettings.interpolate,
-            evaluate : templateSettings.evaluate
-          });
+            let compiled = _.template(html, data, {
+              interpolate: templateSettings.interpolate,
+              evaluate: templateSettings.evaluate,
+            });
 
-          var actionsTemplate = [
+            let actionsTemplate = [
               '{% _.each(actions, function(action) { %}',
-                  '<a href="{{ getActionUrl(notificationId, action) }}" class="button">{{ action.label }}</a>',
-              '{% }); %}'
-          ].join('');
-          var actions = getActions(notification.id);
-          var getActionUrl = function(notificationId, action) {
-              var url = opts.invokeActionUrlTemplate
-                        .replace('NOTIFICATIONID', notificationId)
-                        .replace('ACTIONID', action.id);
+              '<a href="{{ getActionUrl(notificationId, action) }}" class="button">{{ action.label }}</a>',
+              '{% }); %}',
+            ].join('');
+            let actions = getActions(notification.id);
+            let getActionUrl = function(notificationId, action) {
+              let url = opts.invokeActionUrlTemplate
+                .replace('NOTIFICATIONID', notificationId)
+                .replace('ACTIONID', action.id);
               return url;
-          };
-          var templateData = {
+            };
+            let templateData = {
               notificationId: notification.id,
               actions: actions,
-              getActionUrl: getActionUrl
-          };
-          var actionsHtml = _.template(actionsTemplate, templateData, templateSettings);
+              getActionUrl: getActionUrl,
+            };
+            let actionsHtml = _.template(
+              actionsTemplate,
+              templateData,
+              templateSettings
+            );
 
-          $.each([notifications, errorContainer], function () {
-            $(this).hide(
-              "slide", 200, function () {
-                detailContainer.html(" ").append(compiled);
+            $.each([notifications, errorContainer], function() {
+              $(this).hide('slide', 200, function() {
+                detailContainer.html(' ').append(compiled);
                 bindEvent.goBack();
-                actionsContainer.html("").html(actionsHtml);
+                actionsContainer.html('').html(actionsHtml);
                 detailView.show();
               });
+            });
+
+            return false;
+          });
+        },
+
+        // Go back to all notifications
+        goBack: function() {
+          backButton = rootjQueryObj.find('.notification-back-button');
+          backButton
+            .click(function() {
+              detailView.hide('slide', {direction: 'right'}, 200, function() {
+                notifications.show();
+                errorContainer.show();
+              });
+
+              return false;
+            })
+            .hover(
+              function() {
+                $(this).addClass('hover');
+              },
+              function() {
+                $(this).removeClass('hover');
+              }
+            );
+        },
+
+        refresh: function() {
+          refreshButton.click(function() {
+            getNotifications(filterState, 'true');
+            return false;
+          });
+        },
+
+        filterOptions: function(data) {
+          todayFilter.click(function() {
+            filter($(this), {days: 1});
+            return false;
           });
 
+          allFilter.click(function() {
+            filter($(this));
+            return false;
+          });
+        },
+      };
+
+      // Filter notifications by passing params via ajax ie {"days":1} is today, also stores and returns filterState
+      var filter = function(link, params) {
+        filterState = params || {};
+        if (link.hasClass('active')) {
           return false;
-        });
-      },
+        } else {
+          getNotifications(filterState);
+          filterOptions.find('a').removeClass('active');
+          link.addClass('active');
+        }
+        return filterState;
+      };
 
-      // Go back to all notifications
-      goBack: function () {
-        backButton = rootjQueryObj.find(".notification-back-button");
-        backButton.click(function () {
-          detailView.hide(
-            "slide", {direction: "right"}, 200, function () {
-              notifications.show();
-              errorContainer.show();
-            }
-          )
-
-          return false;
-        })
-        .hover(
-          function () { $(this).addClass('hover'); },
-          function () { $(this).removeClass('hover') }
-        );
-      },
-
-      refresh: function () {
-        refreshButton.click(function () {
-          getNotifications(filterState, 'true');
-          return false;
-        });
-      },
-
-      filterOptions: function (data) {
-        todayFilter.click(function () {
-          filter($(this), {"days":1});
-          return false;
-        });
-
-        allFilter.click(function () {
-          filter($(this));
-          return false;
-        });
-      }
-    };
-
-    // Filter notifications by passing params via ajax ie {"days":1} is today, also stores and returns filterState
-    var filter = function(link, params) {
-      filterState = params || {};
-      if ( link.hasClass("active") ) {
-        return false;
-      } else {
-        getNotifications(filterState);
-        filterOptions.find("a").removeClass("active");
-        link.addClass("active");
-      }
-      return filterState;
-    };
-
-    // Errors (broken feeds)
-    var errorHandling = function(data) {
-      if ( data.errors ) {
-        var html = '\
+      // Errors (broken feeds)
+      var errorHandling = function(data) {
+        if (data.errors) {
+          let html =
+            '\
           {% _.each(errors, function(error) { %} \
             <div class="alert alert-danger alert-dismissible" role="alert" errorkey="{{ error.key }}"> \
               {{ error.source }}: {{ error.error }} \
               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
             </div> \
           {% }); %} \
-        ';  
-        var compile = _.template(html, data, {
-            interpolate : templateSettings.interpolate,
-            evaluate : templateSettings.evaluate
-        });
-
-        errorContainer.show().append(compile);
-        errorContainer.find(".remove").click(function () {
-         var thisErrorContainer = $(this).parent();
-         thisErrorContainer.fadeOut("fast", function () {
-            var settings = [];
-            $.ajax({
-              url: (opts.hideErrorUrl).replace("ERRORKEY", thisErrorContainer.attr("errorkey")),
-              type: 'POST', 
-              success: function() { return false; }
-            });
+        ';
+          let compile = _.template(html, data, {
+            interpolate: templateSettings.interpolate,
+            evaluate: templateSettings.evaluate,
           });
-          return false;
-        }); 
-      }
+
+          errorContainer.show().append(compile);
+          errorContainer.find('.remove').click(function() {
+            let thisErrorContainer = $(this).parent();
+            thisErrorContainer.fadeOut('fast', function() {
+              let settings = [];
+              $.ajax({
+                url: opts.hideErrorUrl.replace(
+                  'ERRORKEY',
+                  thisErrorContainer.attr('errorkey')
+                ),
+                type: 'POST',
+                success: function() {
+                  return false;
+                },
+              });
+            });
+            return false;
+          });
+        }
+      };
     };
+
+    // Load notifications
+    getNotifications(filterState);
   };
-
-  // Load notifications
-  getNotifications(filterState);
-
-};
