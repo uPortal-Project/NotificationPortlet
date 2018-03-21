@@ -1,4 +1,13 @@
-/.settings
-/.project
-/.classpath
-/target
+# folders
+/node
+.settings
+.project
+.classpath
+target
+node_modules
+dist
+
+# files
+yarn.lock
+package-lock.json
+yarn-error.log

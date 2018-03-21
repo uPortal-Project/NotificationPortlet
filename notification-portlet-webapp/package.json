@@ -1,0 +1,52 @@
+{
+  "private": true,
+  "scripts": {
+    "format": "prettier-eslint --write \"src/**/*.js\"",
+    "lint": "eslint src",
+    "minify": "minify src/main/webapp/scripts -d src/main/webapp/dist"
+  },
+  "devDependencies": {
+    "babel-minify": "^0.3.0",
+    "eslint": "^4.19.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-compat": "^2.2.0",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-vue": "^4.3.0",
+    "prettier-eslint-cli": "^4.7.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "parserOptions": {
+      "ecmaVersion": 2015
+    },
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "globals": {
+      "Vue": true,
+      "invokeNotificationServiceUrl": true,
+      "invokeActionUrl": true,
+      "getNotifications": true
+    },
+    "plugins": [
+      "compat",
+      "promise",
+      "vue"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "google",
+      "plugin:vue/recommended",
+      "plugin:promise/recommended"
+    ],
+    "rules": {
+      "compat/compat": "error",
+      "no-console": "off",
+      "no-invalid-this": "off"
+    }
+  },
+  "browserslist": [
+    "last 1 versions"
+  ]
+}

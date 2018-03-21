@@ -24,9 +24,9 @@
     <css>css/accordion.css</css>
 
     <js included="plain">scripts/jquery.accordion.js</js>
-    <js included="aggregated">scripts/jquery.accordion.min.js</js>
+    <js included="aggregated">dist/jquery.accordion.js</js>
 
     <js included="plain">scripts/jquery.notifications.js</js>
-    <js included="aggregated">scripts/jquery.notifications.min.js</js>
+    <js included="aggregated">dist/jquery.notifications.js</js>
 
 </resources>

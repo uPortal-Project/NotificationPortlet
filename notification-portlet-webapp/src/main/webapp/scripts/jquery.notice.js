@@ -24,22 +24,20 @@
 var upnotice = upnotice || {};
 
 if (!upnotice.init) {
-
   upnotice.init = true;
 
   (function() {
-
-    var defaults = {
+    let defaults = {
       selectors: {
-        template:        '.template',
-        title:           '.title',
-        body:            '.body',
-        link:            '.link',
-        actions:         '.notification-actions',
-        actionTemplate:  '.action-template',
-        summaryTemplate: '.summary-template'
+        template: '.template',
+        title: '.title',
+        body: '.body',
+        link: '.link',
+        actions: '.notification-actions',
+        actionTemplate: '.action-template',
+        summaryTemplate: '.summary-template',
       },
-      readyCallback: function() {}
+      readyCallback: function() {},
     };
 
     // First 'prime-the-pump' with an ActionURL
@@ -50,71 +48,73 @@ if (!upnotice.init) {
         async: false,
         success: function() {
           fetchNotices($, settings, callback);
-        }
+        },
       });
     }
 
     // Then fetch the notifications with a ResourceURL
     function fetchNotices($, settings, callback) {
       $.ajax({
-        url      : settings.getNotificationsUrl,
-        type     : 'POST',
-        dataType : 'json',
-        success: function (data) {
+        url: settings.getNotificationsUrl,
+        type: 'POST',
+        dataType: 'json',
+        success: function(data) {
           feed = data.feed;
           callback(feed);
         },
-        error: function () {
-          container.html(" ").text("AJAX failed. ~ THE END ~");
-        }
+        error: function() {
+          container.html(' ').text('AJAX failed. ~ THE END ~');
+        },
       });
-
     }
 
-    upnotice.show = function ($, container, options) {
+    upnotice.show = function($, container, options) {
+      let settings = $.extend({}, defaults, options);
+      let template = container.find(settings.selectors.template);
+      let summaryTemplate = container.find(settings.selectors.summaryTemplate);
 
-      var settings = $.extend({}, defaults, options);
-      var template = container.find(settings.selectors.template);
-      var summaryTemplate = container.find(settings.selectors.summaryTemplate);
+      let drawActions = function(actionsContainer, alert) {
+        let availableActions = alert.availableActions;
+        let actionTemplate = actionsContainer.find(
+          settings.selectors.actionTemplate
+        );
 
-      var drawActions = function(actionsContainer, alert) {
+        for (let i = 0; i < availableActions.length; i++) {
+          let action = availableActions[i];
 
-          var availableActions = alert.availableActions;
-          var actionTemplate = actionsContainer.find(settings.selectors.actionTemplate);
+          let actionUrl = settings.invokeActionUrlTemplate
+            .replace('NOTIFICATIONID', alert.id)
+            .replace('ACTIONID', action.id);
 
-          for (var i=0; i < availableActions.length; i++) {
-              var action = availableActions[i];
+          let actionElement = actionTemplate.clone();
+          actionElement.removeClass('action-template');
+          actionElement.toggleClass('hidden');
+          actionElement
+            .find('a')
+            .attr('href', actionUrl)
+            .html(action.label + ' ');
+          actionElement.appendTo(actionsContainer);
+        }
 
-              var actionUrl = settings.invokeActionUrlTemplate
-                      .replace('NOTIFICATIONID', alert.id)
-                      .replace('ACTIONID', action.id);
+        actionsContainer.toggleClass('hidden');
+      };
 
-              var actionElement = actionTemplate.clone();
-              actionElement.removeClass('action-template');
-              actionElement.toggleClass('hidden');
-              actionElement.find('a').attr('href', actionUrl).html(action.label + " ");
-              actionElement.appendTo(actionsContainer);
-          }
-
-          actionsContainer.toggleClass('hidden');
-
-      }
-
-      var drawNotices = function(feed) {
-
+      let drawNotices = function(feed) {
         // Do we have any notices to show?
         if (feed && feed.length != 0) {
-
           // Iterate the notices
-          var len = feed.length;
-          if (settings.numberToDisplay != undefined && settings.numberToDisplay < feed.length) {
-              len = settings.numberToDisplay;
+          let len = feed.length;
+          if (
+            settings.numberToDisplay != undefined &&
+            settings.numberToDisplay < feed.length
+          ) {
+            len = settings.numberToDisplay;
           }
-          for (var i=0; i < len; i++) {
-            var alert = feed[i];
+          for (let i = 0; i < len; i++) {
+            let alert = feed[i];
 
             // Prepare an element
-            var element = template.clone();
+            let element = template.clone();
             element.removeClass('template');
             element.toggleClass('hidden');
 
@@ -124,49 +124,47 @@ if (!upnotice.init) {
               element.find(settings.selectors.body).html(alert.body);
             }
             if (alert.url) {
-              var linkText = alert.linkText || alert.url;
-              element.find(settings.selectors.link).attr('href', alert.url).html(linkText);
+              let linkText = alert.linkText || alert.url;
+              element
+                .find(settings.selectors.link)
+                .attr('href', alert.url)
+                .html(linkText);
             }
 
             // Are actions available?
             if (alert.availableActions && alert.availableActions.length != 0) {
-                var actionsContainer = element.find(settings.selectors.actions);
-                if (actionsContainer) {
-                    drawActions(actionsContainer, alert);
-                }
+              let actionsContainer = element.find(settings.selectors.actions);
+              if (actionsContainer) {
+                drawActions(actionsContainer, alert);
+              }
             }
 
             element.appendTo(template.parent());
           }
-          
+
           // is there a summary section?
-          if(summaryTemplate) {
-              var showing = summaryTemplate.find('.showing');
-              showing.text(len);
-              
-              var total = summaryTemplate.find('.total');
-              total.text(feed.length);
+          if (summaryTemplate) {
+            let showing = summaryTemplate.find('.showing');
+            showing.text(len);
+
+            let total = summaryTemplate.find('.total');
+            total.text(feed.length);
           }
 
           // Invoke the specified callback function, if any
           settings.readyCallback();
 
           container.slideDown('slow');
-
         }
-
-      }
+      };
 
       // Invoke notifications
       initNotices($, settings, drawNotices);
+    };
 
-    }
-
-    upnotice.pullFeed = function ($, options, callback) {
-        var settings = $.extend({}, defaults, options);
-        initNotices($, settings, callback);
-    }
-
+    upnotice.pullFeed = function($, options, callback) {
+      let settings = $.extend({}, defaults, options);
+      initNotices($, settings, callback);
+    };
   })();
-
 }

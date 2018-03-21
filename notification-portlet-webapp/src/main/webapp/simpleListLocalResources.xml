@@ -23,6 +23,6 @@
     <css>styles/simple-list.css</css>
 
     <js included="plain">scripts/jquery.notice.js</js>
-    <js included="aggregated">scripts/jquery.notice.min.js</js>
+    <js included="aggregated">dist/jquery.notice.js</js>
 
 </resources>
