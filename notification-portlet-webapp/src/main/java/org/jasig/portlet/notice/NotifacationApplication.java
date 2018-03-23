@@ -21,9 +21,6 @@ package org.jasig.portlet.notice;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScan.Filter;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
@@ -34,9 +31,6 @@ import org.springframework.context.annotation.PropertySources;
 		@PropertySource(value = "file://${portal.home}/notification.properties", ignoreResourceNotFound = true)
 })
 @EnableEncryptableProperties
-@ComponentScan(excludeFilters = { // Exclude Servlet sub-context scanned separately
-		@Filter(type = FilterType.REGEX, pattern="org\\.jasig\\.portlet\\.notice\\.controller\\.rest.*")
-})
 @ImportResource("classpath:/context/*.xml") // Legacy, XML-based beans
 public class NotifacationApplication {
 

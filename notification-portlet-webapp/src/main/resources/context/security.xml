@@ -30,10 +30,10 @@
     <global-method-security pre-post-annotations="enabled"/>
     <http use-expressions="true">
         <!-- may eventually want to move to more fine-grained permissions -->
-        <intercept-url pattern="/**" method="GET" access="@restApiSecurityService.isEnabled() and (hasRole('ROLE_REST_READ') or hasRole('ROLE_REST_WRITE'))"/>
-        <intercept-url pattern="/**" method="POST" access="@restApiSecurityService.isEnabled() and hasRole('ROLE_REST_WRITE')"/>
-        <intercept-url pattern="/**" method="DELETE" access="denyAll"/>
-        <intercept-url pattern="/**" method="PUT" access="denyAll"/>
+        <intercept-url pattern="/api/**" method="GET" access="@restApiSecurityService.isEnabled() and (hasRole('ROLE_REST_READ') or hasRole('ROLE_REST_WRITE'))"/>
+        <intercept-url pattern="/api/**" method="POST" access="@restApiSecurityService.isEnabled() and hasRole('ROLE_REST_WRITE')"/>
+        <intercept-url pattern="/api/**" method="DELETE" access="denyAll"/>
+        <intercept-url pattern="/api/**" method="PUT" access="denyAll"/>
 
         <http-basic/>
     </http>
