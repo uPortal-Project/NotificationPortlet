@@ -4,7 +4,8 @@
   "private": true,
   "dependencies": {
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "reactive-elements": "^0.7.0"
   },
   "devDependencies": {
     "eslint-config-google": "^0.9.1",
@@ -30,6 +31,9 @@
     "singleQuote": true
   },
   "eslintConfig": {
-    "extends": "google"
+    "extends": [
+      "react-app",
+      "google"
+    ]
   }
 }
