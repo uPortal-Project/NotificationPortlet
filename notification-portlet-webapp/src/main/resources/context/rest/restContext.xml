@@ -31,13 +31,5 @@
 
     <mvc:annotation-driven/>
 
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" lazy-init="false">
-        <property name="locations">
-            <list>
-                <value>classpath:configuration.properties</value>
-            </list>
-        </property>
-    </bean>
-
     <context:component-scan base-package="org.jasig.portlet.notice.controller.rest"/>
 </beans>

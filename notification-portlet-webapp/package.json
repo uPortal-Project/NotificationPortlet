@@ -1,0 +1,12 @@
+{
+  "name": "notification-portlet-webapp",
+  "private": true,
+  "scripts": {
+    "compile-less": "lessc",
+    "minify-css": "cleancss"
+  },
+  "devDependencies": {
+    "clean-css-cli": "^4.1.11",
+    "less": "^2.7.2"
+  }
+}

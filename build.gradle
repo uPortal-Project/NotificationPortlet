@@ -1,0 +1,13 @@
+description = "Notifications iinfrastucture for Apereo uPortal"
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    sourceCompatibility = 1.8
+}

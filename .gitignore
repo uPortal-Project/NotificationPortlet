@@ -9,3 +9,7 @@ target/
 *.CSS
 bin/
 .idea/
+
+### Gradle ###
+.gradle
+/build/

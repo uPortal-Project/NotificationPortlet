@@ -1,0 +1,10 @@
+description = "Simple data model for Notifications used in integrations"
+
+dependencies {
+    compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    compile "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compile "commons-lang:commons-lang:${commonsLangVersion}"
+    compile "org.slf4j:slf4j-api:${slf4jVersion}"
+    compileOnly "${portletApiDependency}"
+}
