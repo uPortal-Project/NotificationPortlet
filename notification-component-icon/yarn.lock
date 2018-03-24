@@ -3593,6 +3593,10 @@ husky@^0.14.3:
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
 
+i18n-js@>=1.0.0:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.0.3.tgz#f537b2bd1e2801eee4f4728a17189ef0991c0270"
+
 iconv-lite@0.4.19, iconv-lite@^0.4.17, iconv-lite@~0.4.13:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
@@ -6317,6 +6321,13 @@ react-dom@^16.2.0:
 react-error-overlay@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-4.0.0.tgz#d198408a85b4070937a98667f500c832f86bd5d4"
+
+react-i18n@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/react-i18n/-/react-i18n-0.0.6.tgz#d38c402ae33a26926f0e494ff772c87d1d027812"
+  dependencies:
+    i18n-js ">=1.0.0"
+    object-assign "^4.0.1"
 
 react-popper@^0.8.3:
   version "0.8.3"

@@ -8,6 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.0.18",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-i18n": "^0.0.6",
     "reactive-elements": "^0.7.0",
     "reactstrap": "^5.0.0"
   },

@@ -34,24 +34,27 @@ class NotificationIcon extends Component {
     });
   };
 
-  renderNotifications = () =>
-    this.state.notifications.length < 1 ? (
-      <DropdownItem className="up-notification--menu-item" disabled>
-        congrats no notifications
-      </DropdownItem>
-    ) : (
-      this.state.notifications.map(({url, message, isRead}) => (
-        <DropdownItem
-          tag="a"
-          className={
-            'up-notification--menu-item ' + (isRead ? 'read' : 'unread')
-          }
-          href={url}
-        >
-          {message}
+  renderNotifications = () => {
+    // empty notifications
+    if (this.state.notifications.length < 1) {
+      return (
+        <DropdownItem className="up-notification--menu-item" disabled>
+          congrats no notifications
         </DropdownItem>
-      ))
-    );
+      );
+    }
+
+    // one or more notifications
+    return this.state.notifications.map(({url, message, isRead}) => (
+      <DropdownItem
+        tag="a"
+        className={'up-notification--menu-item ' + (isRead ? 'read' : 'unread')}
+        href={url}
+      >
+        {message}
+      </DropdownItem>
+    ));
+  };
 
   render = () => (
     <Dropdown
@@ -63,11 +66,14 @@ class NotificationIcon extends Component {
         <span className="sr-only">notifications</span>
         <FontAwesomeIcon icon="bell" />
       </DropdownToggle>
+
       <DropdownMenu className="up-notification--menu">
         <DropdownItem className="up-notification--menu-header" header>
           Notifications
         </DropdownItem>
+
         {this.renderNotifications()}
+
         <DropdownItem
           className="up-notification--menu-footer"
           tag="a"
