@@ -1,5 +1,10 @@
-import './index.css';
-import App from './App';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+import NotificationIcon from './NotificationIcon';
 import 'reactive-elements';
 
-document.registerReact('notification-icon', App);
+// register icons
+import fontawesome from '@fortawesome/fontawesome';
+import faBell from '@fortawesome/fontawesome-free-solid/faBell';
+fontawesome.library.add(faBell);
+
+document.registerReact('notification-icon', NotificationIcon);
