@@ -6,6 +6,7 @@ import {
   DropdownItem,
 } from 'reactstrap';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import {translate} from 'react-i18next';
 
 class NotificationIcon extends Component {
   constructor(props) {
@@ -62,35 +63,42 @@ class NotificationIcon extends Component {
 
   componentWillMount = this.fetchNotifications;
 
-  render = () => (
-    <Dropdown
-      isOpen={this.state.dropdownOpen}
-      toggle={this.toggle}
-      className="up-notification"
-    >
-      <DropdownToggle onClick={this.toggle} className="up-notification--toggle">
-        <span className="sr-only">notifications</span>
-        <FontAwesomeIcon icon="bell" />
-      </DropdownToggle>
+  render = () => {
+    const {t} = this.props;
 
-      <DropdownMenu className="up-notification--menu">
-        <DropdownItem className="up-notification--menu-header" header>
-          Notifications
-        </DropdownItem>
-
-        {this.renderNotifications()}
-
-        <DropdownItem
-          className="up-notification--menu-footer"
-          tag="a"
-          href="/p/notifications"
-          header
+    return (
+      <Dropdown
+        isOpen={this.state.dropdownOpen}
+        toggle={this.toggle}
+        className="up-notification"
+      >
+        <DropdownToggle
+          onClick={this.toggle}
+          className="up-notification--toggle"
         >
-          see all notifications
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
-  );
+          <span className="sr-only">{t('Notifications')}</span>
+          <FontAwesomeIcon icon="bell" />
+        </DropdownToggle>
+
+        <DropdownMenu className="up-notification--menu">
+          <DropdownItem className="up-notification--menu-header" header>
+            {t('notifications')}
+          </DropdownItem>
+
+          {this.renderNotifications()}
+
+          <DropdownItem
+            className="up-notification--menu-footer"
+            tag="a"
+            href="/p/notifications"
+            header
+          >
+            {t('see-all-notifications')}
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    );
+  };
 }
 
-export default NotificationIcon;
+export default translate('translations')(NotificationIcon);

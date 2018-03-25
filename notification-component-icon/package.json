@@ -6,9 +6,12 @@
     "@fortawesome/fontawesome": "^1.1.4",
     "@fortawesome/fontawesome-free-solid": "^5.0.8",
     "@fortawesome/react-fontawesome": "^0.0.18",
+    "i18next": "^10.6.0",
+    "i18next-browser-languagedetector": "^2.1.0",
+    "i18next-xhr-backend": "^1.5.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-i18n": "^0.0.6",
+    "react-i18next": "^7.5.1",
     "reactive-elements": "^0.7.0",
     "reactstrap": "^5.0.0"
   },
