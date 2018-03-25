@@ -1,0 +1,12 @@
+[
+  {
+    "url": "https://example.com/register",
+    "message": "time to register for finals",
+    "isRead": false
+  },
+  {
+    "url": "https://example.com/game",
+    "message": "get tickets to the big game",
+    "isRead": true
+  }
+]

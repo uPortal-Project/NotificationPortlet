@@ -39,6 +39,10 @@
     "extends": [
       "react-app",
       "google"
-    ]
+    ],
+    "rules": {
+      "no-invalid-this": "off",
+      "require-jsdoc": "off"
+    }
   }
 }

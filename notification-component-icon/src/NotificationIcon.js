@@ -13,20 +13,23 @@ class NotificationIcon extends Component {
 
     this.state = {
       dropdownOpen: false,
-      notifications: [
-        {
-          url: 'https://example.com/register',
-          message: 'time to register for finals',
-          isRead: false,
-        },
-        {
-          url: 'https://example.com/game',
-          message: 'get tickets to the big game',
-          isRead: true,
-        },
-      ],
+      notifications: [],
     };
   }
+
+  fetchNotifications = async () => {
+    try {
+      const response = await fetch('sample-notifications.json');
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      const notifications = await response.json();
+      this.setState({notifications});
+    } catch (err) {
+      // TODO: add an error view
+      console.error(err);
+    }
+  };
 
   toggle = () => {
     this.setState({
@@ -47,6 +50,7 @@ class NotificationIcon extends Component {
     // one or more notifications
     return this.state.notifications.map(({url, message, isRead}) => (
       <DropdownItem
+        key={message}
         tag="a"
         className={'up-notification--menu-item ' + (isRead ? 'read' : 'unread')}
         href={url}
@@ -55,6 +59,8 @@ class NotificationIcon extends Component {
       </DropdownItem>
     ));
   };
+
+  componentWillMount = this.fetchNotifications;
 
   render = () => (
     <Dropdown
