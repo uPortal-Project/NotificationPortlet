@@ -1,0 +1,140 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.10.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    id "com.moowork.node" version "1.2.0"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'war'
+
+configurations {
+    providedRuntime
+}
+
+dependencies {
+
+    /*
+     * Notification API
+     */
+    compile project(':notification-portlet-api')
+
+    /*
+     * Standard Dependencies
+     */
+    compile "com.google.guava:guava:${guavaVersion}"
+    compile "com.jayway.jsonpath:json-path:${jsonPathVersion}"
+    compile "commons-codec:commons-codec:${commonsCodecVersion}"
+    compile "commons-dbcp:commons-dbcp:${commonsDbcpVersion}"
+    compile "org.apache.httpcomponents:httpclient:${httpcomponentsVersion}"
+    compile "javax.servlet:jstl:${jstlVersion}"
+    compile "joda-time:joda-time:${jodaTimeVersion}"
+    compile "net.sf.dozer:dozer:${dozerVersion}"
+    compile "net.sf.dozer:dozer-spring:${dozerVersion}"
+    compile("net.sf.ehcache:ehcache:${ehcacheVersion}")
+    compile "org.apache.commons:commons-lang3:${commonsLang3Version}"
+    compile "org.codehaus.janino:janino:${janinoVersion}"
+    compile "org.hibernate:hibernate-core:${hibernateVersion}"
+    compile("org.hibernate:hibernate-ehcache:${hibernateVersion}") {
+        exclude group: 'net.sf.ehcache', module: 'ehcache-core'
+    }
+    compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
+    compile "org.jasig.resourceserver:resource-server-utils:${resourceServerVersion}"
+    compile "org.springframework:spring-jdbc:${springVersion}"
+    compile "org.springframework:spring-orm:${springVersion}"
+    compile "org.springframework:spring-tx:${springVersion}"
+    compile "org.springframework:spring-webmvc-portlet:${springVersion}"
+    compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
+    compile "org.springframework.security:spring-security-core:${springSecurityVersion}"
+    compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+    compile "rome:rome:${romeVersion}"
+
+    /*
+     * Spring Boot
+     */
+    compile("com.github.ulisesbocchio:jasypt-spring-boot-starter:${jasyptSpringBootVersion}")
+    compile('org.springframework.boot:spring-boot-starter-cache')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+
+    /*
+     * Portlet API
+     *
+     * Needs to be present (and unused) when the project is run independantly;  needs to be absent
+     * (but used) when the project is run inside Tomcat.
+     */
+    compileOnly "${portletApiDependency}"
+    providedRuntime "${portletApiDependency}"
+
+    /*
+     * JDBC Driver JAR(s)
+     *
+     * These tend to be adopter-specific.  Use an overlay process (e.g. uPortal-start) to include
+     * these with your project.  Nevertheless, we will provide the current uPortal HSQLDB driver to
+     * the embedded Tomcat (Spring Boot) for when the project is started with bootRun.
+     */
+    providedRuntime "org.hsqldb:hsqldb:${hsqldbVersion}"
+
+}
+
+node {
+    version = nodejsVersion
+    download = true
+}
+
+war {
+    from("${buildDir}/css") {
+        into('css')
+    }
+}
+
+project.tasks.getByName('npm_run_minify-css').dependsOn 'npm_install'
+project.tasks.getByName('npm_run_compile-less').dependsOn 'npm_install'
+war.dependsOn 'npm_run_compile-less'
+project.tasks.getByName('npm_run_minify-css').dependsOn 'npm_run_compile-less'
+war.dependsOn 'npm_run_minify-css'
+
+uploadArchives{
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'notification-portlet-webapp'
+                packaging 'war'
+                // optionally artifactId can be defined here
+                description 'SR-286 (Portlet 2.0) portlet to display important notices from campus systems'
+                url 'https://github.com/Jasig/NotificationPortlet'
+
+                scm {
+                    connection 'scm:git@github.com:Jasig/NotificationPortlet.git'
+                    url 'https://github.com/Jasig/NotificationPortlet'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        organization 'uPortal Developers'
+                        organizationUrl 'https://github.com/Jasig/uPortal/graphs/contributors'
+                    }
+                }
+            }
+        }
+    }
+}

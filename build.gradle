@@ -1,0 +1,92 @@
+plugins {
+    id 'net.researchgate.release' version '2.6.0'
+    id "com.github.hierynomus.license" version "0.14.0" apply false
+}
+
+apply plugin: 'java'
+
+description = "Notifications iinfrastucture for Apereo uPortal"
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+    apply plugin: 'license'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        testCompileOnly 'junit:junit:4.12'
+        testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.1.0'
+    }
+
+    license {
+        header = rootProject.file('docs/short-license-header.txt')
+        strictCheck = true
+        mapping {
+            java = 'SLASHSTAR_STYLE'
+        }
+        exclude "**/*.json"
+    }
+
+    sourceCompatibility = 1.8
+
+    /* Release Management
+     *
+     * Based on Sonatype's guide for publishing w/ Gradle:  http://central.sonatype.org/pages/gradle.html
+     */
+    ext {
+        publishingUsername = project.hasProperty('ossrhUsername') ? project.getProperty('ossrhUsername') : ""
+        publishingPassword = project.hasProperty('ossrhPassword') ? project.getProperty('ossrhPassword') : ""
+    }
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier 'sources'
+        from sourceSets.main.allSource
+    }
+    tasks.withType(Javadoc) {
+        // FIXME: Fix errors rather than supressing them
+        failOnError = false
+    }
+    tasks.withType(Jar) {
+        from(project.projectDir) {
+            include "${rootDir}/LICENSE"
+            into 'META-INF'
+        }
+    }
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+    signing {
+        required { gradle.taskGraph.hasTask('uploadArchives') }
+        sign configurations.archives
+    }
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: publishingUsername, password: publishingPassword)
+                }
+            }
+        }
+    }
+    release {
+        tagTemplate = 'v${version}' // Looks like it should be a GString, but not necessary
+        git {
+            requireBranch = ''
+        }
+    }
+    afterReleaseBuild.dependsOn uploadArchives
+}

@@ -10,6 +10,4 @@ matrix:
     - os: osx
       osx_image: xcode8.3
 
-script:
-  - mvn test --batch-mode
-  - mvn checkstyle:check --batch-mode --fail-never
+script: ./gradlew check

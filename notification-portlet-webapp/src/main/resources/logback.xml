@@ -42,9 +42,15 @@
   <jmxConfigurator />
 
   <!-- 
-   | Specify a local property that sets up the logging directory
+   | Specify a local property that sets up the logging directory.  The default value is suitable for
+   | running in the project with bootRun;  when running in Tomcat, write to the logs/directory.
    +-->
-  <property scope="local" name="LOG_DIR" value="${notification.webapp.root}/../../logs" />
+  <property scope="local" name="LOG_DIR" value="build/logs" />
+  <if condition='isDefined("catalina.home")'>
+    <then>
+      <property scope="local" name="LOG_DIR" value="${catalina.home}/logs"/>
+    </then>
+  </if>
 
   <!--
    | Setup a file based logger that rolls
@@ -55,7 +61,7 @@
     <!-- 
      | Name of the current log file
      +-->
-    <File>${LOG_DIR}/${CONTEXT_NAME}.log</File>
+    <File>${LOG_DIR}/notification.log</File>
     
     <!-- 
      | Log message pattern configuration
@@ -74,7 +80,7 @@
      | http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy
      +-->
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${LOG_DIR}/${CONTEXT_NAME}.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+      <fileNamePattern>${LOG_DIR}/notification.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
       <maxHistory>28</maxHistory>
     </rollingPolicy>
   </appender>

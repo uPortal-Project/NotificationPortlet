@@ -29,7 +29,7 @@
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <init-param>
             <name>contextConfigLocation</name>
-            <value>/WEB-INF/context/portlet/notification.xml</value>
+            <value>classpath:/context/portlet/notification.xml</value>
         </init-param>
         <supports>
             <mime-type>text/html</mime-type>
@@ -207,7 +207,7 @@
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <init-param>
             <name>contextConfigLocation</name>
-            <value>/WEB-INF/context/portlet/emergency-alert.xml</value>
+            <value>classpath:/context/portlet/emergency-alert.xml</value>
         </init-param>
         <supports>
             <mime-type>text/html</mime-type>
@@ -334,7 +334,7 @@
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <init-param>
             <name>contextConfigLocation</name>
-            <value>/WEB-INF/context/portlet/emergency-alert-admin.xml</value>
+            <value>classpath:/context/portlet/emergency-alert-admin.xml</value>
         </init-param>
         <supports>
             <mime-type>text/html</mime-type>
@@ -361,7 +361,7 @@
         <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
         <init-param>
             <name>contextConfigLocation</name>
-            <value>/WEB-INF/context/portlet/notification-icon.xml</value>
+            <value>classpath:/context/portlet/notification-icon.xml</value>
         </init-param>
         <supports>
             <mime-type>text/html</mime-type>

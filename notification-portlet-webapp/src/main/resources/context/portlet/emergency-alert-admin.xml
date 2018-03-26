@@ -28,8 +28,6 @@
     <!-- main portlet annotation -->
     <context:annotation-config/>
 
-    <bean parent="propertyConfigurer"/>
-
     <!-- Controller beans -->
     <bean class="org.jasig.portlet.notice.controller.emergency.EmergencyAlertAdminController" />
 
