@@ -105,3 +105,36 @@ project.tasks.getByName('npm_run_compile-less').dependsOn 'npm_install'
 war.dependsOn 'npm_run_compile-less'
 project.tasks.getByName('npm_run_minify-css').dependsOn 'npm_run_compile-less'
 war.dependsOn 'npm_run_minify-css'
+
+uploadArchives{
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'notification-portlet-webapp'
+                packaging 'war'
+                // optionally artifactId can be defined here
+                description 'SR-286 (Portlet 2.0) portlet to display important notices from campus systems'
+                url 'https://github.com/Jasig/NotificationPortlet'
+
+                scm {
+                    connection 'scm:git@github.com:Jasig/NotificationPortlet.git'
+                    url 'https://github.com/Jasig/NotificationPortlet'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        organization 'uPortal Developers'
+                        organizationUrl 'https://github.com/Jasig/uPortal/graphs/contributors'
+                    }
+                }
+            }
+        }
+    }
+}
