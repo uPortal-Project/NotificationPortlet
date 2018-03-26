@@ -89,24 +89,12 @@ dependencies {
 
 }
 
-/*
- * LESS Compilation
- */
-List<String> lessFiles = new FileNameFinder().getFileNames("${projectDir}/src/main/webapp/less", '*.less')
-lessFiles.eachWithIndex { filePath, index ->
-    String fileName = filePath.substring(filePath.lastIndexOf(File.separator) + 1) // Strip the path
-    task "compileLess${index}"(type: NpmTask) {
-        args = ['run', 'compile-less', "${projectDir}/src/main/webapp/less/${fileName}", "${buildDir}/css/${fileName.replace('.less', '.css')}"]
-    }
-//    task "minifyCss${index}"(type: NodeTask, dependsOn: "compileLess${index}") {
-//        args = ['run', 'minify-css', "${buildDir}/css/${fileName.replace('.less', '.css')}", '-o', "${buildDir}/css/${fileName.replace('.less', '.man.css')}"]
-//    }
-}
 war {
-    dependsOn {
-        tasks.findAll { task -> task.name.startsWith('compileLess') }
-    }
     from("${buildDir}/css") {
         into('css')
     }
 }
+
+war.dependsOn 'npm_run_compile-less'
+project.tasks.getByName('npm_run_minify-css').dependsOn 'npm_run_compile-less'
+war.dependsOn 'npm_run_minify-css'
