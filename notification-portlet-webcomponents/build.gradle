@@ -9,3 +9,5 @@ node {
 }
 
 install.dependsOn('yarn')
+install.dependsOn('yarn_build')
+project.tasks.getByName('yarn_build').dependsOn 'yarn'

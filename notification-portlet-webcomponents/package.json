@@ -1,4 +1,12 @@
 {
   "private": true,
-  "workspaces": ["notification-component-icon"]
+  "scripts": {
+    "build": "lerna run build"
+  },
+  "workspaces": [
+    "notification-component-icon"
+  ],
+  "devDependencies": {
+    "lerna": "^2.9.0"
+  }
 }
