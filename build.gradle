@@ -5,7 +5,7 @@ plugins {
 
 apply plugin: 'java'
 
-description = "Notifications iinfrastucture for Apereo uPortal"
+description = "Notifications infrastucture for Apereo uPortal"
 
 subprojects {
     apply plugin: 'java'

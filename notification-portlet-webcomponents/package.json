@@ -1,0 +1,4 @@
+{
+  "private": true,
+  "workspaces": ["notification-component-icon"]
+}
