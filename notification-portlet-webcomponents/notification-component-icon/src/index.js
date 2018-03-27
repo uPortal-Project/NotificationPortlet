@@ -1,4 +1,3 @@
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import NotificationIcon from './NotificationIcon';
 import 'reactive-elements';
 

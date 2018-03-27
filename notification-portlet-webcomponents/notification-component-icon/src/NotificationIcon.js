@@ -39,11 +39,13 @@ class NotificationIcon extends Component {
   };
 
   renderNotifications = () => {
+    const {t} = this.props;
+
     // empty notifications
     if (this.state.notifications.length < 1) {
       return (
         <DropdownItem className="up-notification--menu-item" disabled>
-          congrats no notifications
+          {t('notifications-all-read')}
         </DropdownItem>
       );
     }

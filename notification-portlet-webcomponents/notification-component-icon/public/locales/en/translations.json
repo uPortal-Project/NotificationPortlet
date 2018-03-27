@@ -1,4 +1,5 @@
 {
   "notifications": "Notifications",
-  "see-all-notifications": "See all notifications"
+  "notifications-see-all": "See all notifications",
+  "notifications-all-read": "All notifications have been read"
 }
