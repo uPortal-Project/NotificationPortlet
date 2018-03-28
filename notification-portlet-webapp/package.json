@@ -2,8 +2,8 @@
   "name": "notification-portlet-webapp",
   "private": true,
   "scripts": {
-    "compile-less": "lessc src/main/webapp/less/accordion.less src/main/webapp/less/accordion.css && lessc src/main/webapp/less/job-postings.less src/main/webapp/less/job-postings.css",
-    "minify-css": "cleancss -o src/main/webapp/less/accordion.min.css src/main/webapp/less/accordion.css && cleancss -o src/main/webapp/less/job-postings.min.css src/main/webapp/less/job-postings.css"
+    "compile-less": "lessc src/main/webapp/less/accordion.less src/main/webapp/css/accordion.css && lessc src/main/webapp/less/job-postings.less src/main/webapp/css/job-postings.css",
+    "minify-css": "cleancss -o src/main/webapp/css/accordion.min.css src/main/webapp/css/accordion.css && cleancss -o src/main/webapp/css/job-postings.min.css src/main/webapp/css/job-postings.css"
   },
   "devDependencies": {
     "clean-css-cli": "^4.1.11",
