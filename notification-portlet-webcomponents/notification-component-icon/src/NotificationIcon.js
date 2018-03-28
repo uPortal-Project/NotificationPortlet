@@ -63,7 +63,7 @@ class NotificationIcon extends Component {
     ));
   };
 
-  componentWillMount = this.fetchNotifications;
+  componentDidMount = this.fetchNotifications;
 
   render = () => {
     const {t} = this.props;
