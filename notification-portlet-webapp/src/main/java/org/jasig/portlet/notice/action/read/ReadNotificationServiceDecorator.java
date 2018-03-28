@@ -40,8 +40,14 @@ import org.jasig.portlet.notice.NotificationAttribute;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.service.AbstractNotificationServiceDecorator;
 
-public class ReadNotificationServiceDecorator implements INotificationService {
+/**
+ * Adds the ability to mark a notification as 'READ.'
+ *
+ * @deprecated The entire notion of Portlet API-based decorators is deprecated
+ */
+public class ReadNotificationServiceDecorator extends AbstractNotificationServiceDecorator {
 
     public static final String READ_ENABLED_PREFERENCE = "ReadNotificationServiceDecorator.enabled";
     public static final String DEFAULT_READ_BEHAVIOR = "false";  // The feature is disabled by default

@@ -34,6 +34,7 @@ import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.service.AbstractNotificationServiceDecorator;
 import org.jasig.portlet.notice.util.PortletXmlRoleService;
 import org.jasig.portlet.notice.util.UsernameFinder;
 import org.slf4j.Logger;
@@ -45,8 +46,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * For example, 'show only notices of priority 1' or 'show only notices in the Library category'.
  *
  * @since 3.1
+ * @deprecated The entire notion of Portlet API-based decorators is deprecated
  */
-public class FilteringNotificationServiceDecorator implements INotificationService  {
+public class FilteringNotificationServiceDecorator extends AbstractNotificationServiceDecorator {
 
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
     private static final String PORTLET_XML_ROLE_SERVICE_ATTRIBUTE =

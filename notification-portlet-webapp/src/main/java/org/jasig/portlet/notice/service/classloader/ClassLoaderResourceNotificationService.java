@@ -22,19 +22,25 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.service.AbstractNotificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * This is a simple service provider that reads notifications from one or more 
@@ -46,8 +52,16 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
 
     public static final String LOCATIONS_PREFERENCE = "ClassLoaderResourceNotificationService.locations";
 
+    /**
+     * Classpath locations defined in an external file, in the post-Portlet API style.
+     * Comma-separated list.
+     */
+    @Value("${ClassLoaderResourceNotificationService.locations:}")
+    private String locationsProperty;
+
+    private List<String> locationsList = Collections.emptyList();
     private final ObjectMapper mapper = new ObjectMapper();
-    private final Log log = LogFactory.getLog(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Cache cache;
 
@@ -56,37 +70,19 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
         this.cache = cache;
     }
 
+    @PostConstruct
+    public void init() {
+        if (!StringUtils.isEmpty(locationsProperty)) {
+            locationsList =
+                    Collections.unmodifiableList(Arrays.asList(locationsProperty.split(",")));
+        }
+    }
+
     @Override
     public NotificationResponse fetch(PortletRequest req) {
         
-        final ArrayList<String> locations = getLocations(req);
-        if (locations.isEmpty()) {
-            return NotificationResponse.EMPTY_RESPONSE;
-        }
-
-        NotificationResponse rslt = null;
-
-        final Element m = cache.get(locations);
-        if (m != null) {
-            // ## CACHE HIT ##
-            if (log.isDebugEnabled()) {
-                log.debug("Locations cache HIT for collection:  " + locations);
-            }
-            rslt = (NotificationResponse) m.getObjectValue();
-        } else {
-            // ## CACHE MISS ##
-            if (log.isDebugEnabled()) {
-                log.debug("Locations cache MISS for collection:  " + locations);
-            }
-            rslt = new NotificationResponse();
-            for (String loc : locations) {
-                final NotificationResponse response = readFromFile(loc); 
-                rslt = rslt.combine(response);
-            }
-            cache.put(new Element(locations, rslt));
-        }
-        
-        return rslt;
+        final List<String> locations = getLocations(req);
+        return fetchFromClasspath(locations);
 
     }
 
@@ -100,17 +96,51 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
         return false;
     }
 
+    @Override
+    public NotificationResponse fetch(HttpServletRequest request) {
+        return fetchFromClasspath(locationsList);
+    }
+
     /*
      * Implementation
      */
-    
+
+    public NotificationResponse fetchFromClasspath(List<String> locations) {
+
+        if (locations.isEmpty()) {
+            return NotificationResponse.EMPTY_RESPONSE;
+        }
+
+        NotificationResponse rslt;
+
+        final Element m = cache.get(locations);
+        if (m != null) {
+            // ## CACHE HIT ##
+            logger.debug("Locations cache HIT for collection:  {}", locations);
+            rslt = (NotificationResponse) m.getObjectValue();
+        } else {
+            // ## CACHE MISS ##
+            logger.debug("Locations cache MISS for collection:  {}", locations);
+            rslt = new NotificationResponse();
+            for (String loc : locations) {
+                final NotificationResponse response = readFromFile(loc);
+                rslt = rslt.combine(response);
+            }
+            cache.put(new Element(locations, rslt));
+        }
+
+        return rslt;
+
+    }
+
     /**
      * Returns a specific List impl (ArrayList) because it implements Serializable.
      */
+    @Deprecated
     protected ArrayList<String> getLocations(PortletRequest req) {
         final PortletPreferences prefs = req.getPreferences();
         final String[] locations = prefs.getValues(LOCATIONS_PREFERENCE, new String[0]);
-        final ArrayList<String> rslt = new ArrayList<String>(Arrays.asList(locations));
+        final ArrayList<String> rslt = new ArrayList<>(Arrays.asList(locations));
         return rslt;
     }
 
@@ -122,7 +152,9 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
      */
     private NotificationResponse readFromFile(String filename) {
         
-        NotificationResponse rslt = null;
+        NotificationResponse rslt;
+
+        logger.debug("Preparing to read from file:  {}", filename);
 
         URL location = getClass().getClassLoader().getResource(filename);
         if (location != null) {
@@ -130,8 +162,8 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
                 File f = new File(location.toURI());
                 rslt =  mapper.readValue(f, NotificationResponse.class);
             } catch (Exception e) {
-                String msg = "Failed to read the data file:  " + location;
-                log.error(msg, e);
+                String msg = "Failed to read the data file:  {}" + location;
+                logger.error(msg, e);
                 rslt = prepareErrorResponse(getName(), msg);
             }
         } else {

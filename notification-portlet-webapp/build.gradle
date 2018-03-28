@@ -55,9 +55,6 @@ dependencies {
     compile "org.springframework:spring-orm:${springVersion}"
     compile "org.springframework:spring-tx:${springVersion}"
     compile "org.springframework:spring-webmvc-portlet:${springVersion}"
-    compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
-    compile "org.springframework.security:spring-security-core:${springSecurityVersion}"
-    compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
     compile "rome:rome:${romeVersion}"
 
     /*
@@ -65,6 +62,7 @@ dependencies {
      */
     compile("com.github.ulisesbocchio:jasypt-spring-boot-starter:${jasyptSpringBootVersion}")
     compile('org.springframework.boot:spring-boot-starter-cache')
+    compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-web')
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
     testCompile('org.springframework.boot:spring-boot-starter-test')
