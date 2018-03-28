@@ -13,7 +13,7 @@ class NotificationIcon extends Component {
     super(props);
 
     this.state = {
-      dropdownOpen: false,
+      isDropdownOpen: false,
       notifications: [],
     };
   }
@@ -34,15 +34,30 @@ class NotificationIcon extends Component {
 
   toggle = () => {
     this.setState({
-      dropdownOpen: !this.state.dropdownOpen,
+      isDropdownOpen: !this.state.isDropdownOpen,
     });
+  };
+
+  renderNotificationCount = () => {
+    const {t} = this.props;
+    const {notifications} = this.state;
+
+    const count = notifications.filter(({isRead}) => !isRead).length;
+
+    return (
+      <span className="up-notification--notification-count">
+        {count}
+        <span className="sr-only">{t('notification-count', {count})}</span>
+      </span>
+    );
   };
 
   renderNotifications = () => {
     const {t} = this.props;
+    const {notifications} = this.state;
 
     // empty notifications
-    if (this.state.notifications.length < 1) {
+    if (notifications.length < 1) {
       return (
         <DropdownItem className="up-notification--menu-item" disabled>
           {t('notifications-all-read')}
@@ -51,7 +66,7 @@ class NotificationIcon extends Component {
     }
 
     // one or more notifications
-    return this.state.notifications.map(({url, message, isRead}) => (
+    return notifications.map(({url, message, isRead}) => (
       <DropdownItem
         key={message}
         tag="a"
@@ -67,10 +82,11 @@ class NotificationIcon extends Component {
 
   render = () => {
     const {t} = this.props;
+    const {isDropdownOpen} = this.state;
 
     return (
       <Dropdown
-        isOpen={this.state.dropdownOpen}
+        isOpen={isDropdownOpen}
         toggle={this.toggle}
         className="up-notification"
       >
@@ -78,8 +94,8 @@ class NotificationIcon extends Component {
           onClick={this.toggle}
           className="up-notification--toggle"
         >
-          <span className="sr-only">{t('Notifications')}</span>
           <FontAwesomeIcon icon="bell" />
+          {this.renderNotificationCount()}
         </DropdownToggle>
 
         <DropdownMenu className="up-notification--menu">

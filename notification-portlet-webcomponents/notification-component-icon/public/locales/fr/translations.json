@@ -1,5 +1,7 @@
 {
   "notifications": "Notifications",
   "notifications-see-all": "Afficher toutes les notifications",
-  "notifications-all-read": "Toutes les notifications ont été lues"
+  "notifications-all-read": "Toutes les notifications ont été lues",
+  "notification-count": "notification non lue",
+  "notification-count_plural": "notifications non lues"
 }
