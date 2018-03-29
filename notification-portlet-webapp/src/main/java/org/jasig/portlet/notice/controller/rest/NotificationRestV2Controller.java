@@ -19,15 +19,16 @@
 package org.jasig.portlet.notice.controller.rest;
 
 import org.jasig.portlet.notice.INotificationRepository;
-import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.util.NotificationResponseFlattener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * New REST API for the Notification project suitable for next-generation content objects.  This
@@ -45,9 +46,15 @@ public class NotificationRestV2Controller {
     @Autowired
     private INotificationRepository repository;
 
+    @Autowired
+    private NotificationResponseFlattener notificationResponseFlattener;
+
     @RequestMapping(value = "/notifications", method = RequestMethod.GET)
-    public NotificationResponse fetchNotifications(HttpServletRequest request) {
-        return repository.fetch(request);
+    public List<NotificationEntry> fetchNotifications(HttpServletRequest request) {
+        final NotificationResponse response = repository.fetch(request);
+        List<NotificationEntry> rslt = notificationResponseFlattener.flatten(response);
+        // TODO:  Need sorting!
+        return rslt;
     }
 
 }
