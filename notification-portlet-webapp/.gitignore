@@ -6,3 +6,4 @@
 /target
 
 *.css
+*.min.js

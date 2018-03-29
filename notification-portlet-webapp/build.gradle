@@ -102,9 +102,10 @@ war {
 
 project.tasks.getByName('npm_run_minify-css').dependsOn 'npm_install'
 project.tasks.getByName('npm_run_compile-less').dependsOn 'npm_install'
-war.dependsOn 'npm_run_compile-less'
+project.tasks.getByName('npm_run_compile-js').dependsOn 'npm_install'
 project.tasks.getByName('npm_run_minify-css').dependsOn 'npm_run_compile-less'
 war.dependsOn 'npm_run_minify-css'
+war.dependsOn 'npm_run_minify-js'
 
 uploadArchives{
     repositories {
