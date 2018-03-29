@@ -26,6 +26,8 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +91,11 @@ public class ReadAction extends NotificationAction {
     }
 
     @Override
+    public void invoke(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("TODO:  Implement!");
+    }
+
+    @Override
     public int hashCode(){
         return new HashCodeBuilder(17, 31).
                 append(super.getId()).
@@ -118,7 +125,7 @@ public class ReadAction extends NotificationAction {
      */
 
     /* package-private */ Set<String> getReadNotices(final PortletRequest req) {
-        final HashSet<String> rslt = new HashSet<String>();
+        final HashSet<String> rslt = new HashSet<>();
         final PortletPreferences prefs = req.getPreferences();
         final String[] ids = prefs.getValues(READ_NOTIFICATION_IDS_PREFERENCE, new String[0]);
         for (int i=0; i < ids.length; i++) {

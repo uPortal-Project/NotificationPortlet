@@ -23,6 +23,8 @@ import java.io.Serializable;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -31,9 +33,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
- * Represents a behavior that a user may invoke on a notification.  The 
- * possibilities are open-ended, but some examples include Hide, Mark as done, 
- * and Favorite.  Concrete service impls must provide the business logic to 
+ * Represents a behavior that a user may invoke on a notification.  The
+ * possibilities are open-ended, but some examples include Hide, Mark as done,
+ * and Favorite.  Concrete service impls must provide the business logic to
  * perform the action, as well as implement the invoke method.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -76,13 +78,21 @@ public abstract class NotificationAction implements Serializable, Cloneable {
 
     /**
      * Perform this action on the notification to which it is attached.
+     *
+     * @deprecated Prefer interactions that are not based on the Portlet API
      */
-	public abstract void invoke(ActionRequest req, ActionResponse res) throws IOException;
-	
+    @Deprecated
+    public abstract void invoke(ActionRequest req, ActionResponse res) throws IOException;
+
+    /**
+     * Perform this action on the notification to which it is attached.
+     */
+    public abstract void invoke(HttpServletRequest request, HttpServletResponse response);
+
     /**
      * Implements deep-copy clone.
-     * 
-     * @throws CloneNotSupportedException Not really, but it's on the method 
+     *
+     * @throws CloneNotSupportedException Not really, but it's on the method
      * signature we're overriding.
      */
     @Override
@@ -94,8 +104,8 @@ public abstract class NotificationAction implements Serializable, Cloneable {
         // Adjust to satisfy deep-copy strategy
 
         /*
-         * NB:  We don't need to deep-copy the target because the target of an 
-         * action is always set as an action becomes attached to an entry -- 
+         * NB:  We don't need to deep-copy the target because the target of an
+         * action is always set as an action becomes attached to an entry --
          * which happens in this case as the owning entry gets cloned.
          */
 

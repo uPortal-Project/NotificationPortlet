@@ -19,16 +19,25 @@
 package org.jasig.portlet.notice.controller.rest;
 
 import org.jasig.portlet.notice.INotificationRepository;
+import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.util.NotificationResponseFlattener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * New REST API for the Notification project suitable for next-generation content objects.  This
@@ -49,12 +58,55 @@ public class NotificationRestV2Controller {
     @Autowired
     private NotificationResponseFlattener notificationResponseFlattener;
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @RequestMapping(value = "/notifications", method = RequestMethod.GET)
     public List<NotificationEntry> fetchNotifications(HttpServletRequest request) {
         final NotificationResponse response = repository.fetch(request);
         List<NotificationEntry> rslt = notificationResponseFlattener.flatten(response);
         // TODO:  Need sorting!
         return rslt;
+    }
+
+    @RequestMapping(value = "/action/{action}/{notificationId}", method = RequestMethod.POST)
+    public Map<String,Object> invokeAction(HttpServletRequest request, HttpServletResponse response,
+                            @RequestParam("actionId") String actionId,
+                            @PathVariable("notificationId") String notificationId) {
+
+        // Obtain the collection
+        final NotificationResponse notifications = repository.fetch(request);
+
+        // Find the relevant action
+        NotificationAction target = null;
+        final NotificationEntry entry = notifications.findNotificationEntryById(notificationId);
+        if (entry != null) {
+            for (NotificationAction a : entry.getAvailableActions()) {
+                if (actionId.equals(a.getId())) {
+                    target = a;
+                    break;
+                }
+            }
+        } else {
+            logger.warn("Notification not found for notificationId='{}'", notificationId);
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return null;
+        }
+
+        // We must have a target to proceed
+        if (target != null) {
+            target.invoke(request, response);
+            // It's reasonable to assume we need to purge
+            // caches for this user after invoking his action
+            repository.refresh(request, response);
+        } else {
+            logger.warn("Target action not found for notificationId='{}' and actionId='{}'",
+                    notificationId, actionId);
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return null;
+        }
+
+        return Collections.singletonMap("success", true);
+
     }
 
 }

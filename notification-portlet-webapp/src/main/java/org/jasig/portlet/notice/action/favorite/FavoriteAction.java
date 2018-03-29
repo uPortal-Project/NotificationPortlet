@@ -26,6 +26,8 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
@@ -81,6 +83,11 @@ public class FavoriteAction extends NotificationAction {
             favoriteNotices.add(notificationId);
         }
         setFavoriteNotices(req, favoriteNotices);
+    }
+
+    @Override
+    public void invoke(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("TODO:  Implement!");
     }
 
     @Override
