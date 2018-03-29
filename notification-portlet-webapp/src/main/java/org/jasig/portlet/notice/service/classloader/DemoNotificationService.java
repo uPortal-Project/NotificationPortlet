@@ -21,13 +21,17 @@ package org.jasig.portlet.notice.service.classloader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jasig.portlet.notice.NotificationAttribute;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
@@ -38,6 +42,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * This is a simple demo service provider that reads notifications from a file.  
@@ -54,9 +59,27 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
     private static final int MAX_DAY_DELTA = 14;
     private static final int BLUE_SHIFT = -7;
 
+    /**
+     * Classpath locations defined in an external file, in the post-Portlet API style.
+     * Comma-separated list.
+     */
+    @Value("${DemoNotificationService.locations:}")
+    private String locationsProperty;
+
+    private List<String> locationsList = Collections.emptyList();
+
     private boolean active = true;  // Default
     private final Logger log = LoggerFactory.getLogger(getClass());
-    
+
+    @PostConstruct
+    @Override
+    public void init() {
+        if (!StringUtils.isEmpty(locationsProperty)) {
+            locationsList =
+                    Collections.unmodifiableList(Arrays.asList(locationsProperty.split(",")));
+        }
+    }
+
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -110,12 +133,17 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
     /*
      * Implementation
      */
-    
+
+    @Override
+    protected List<String> getLocations(HttpServletRequest req) {
+        return locationsList;
+    }
+
     @Override
     protected ArrayList<String> getLocations(PortletRequest req) {
         final PortletPreferences prefs = req.getPreferences();
         final String[] locations = prefs.getValues(LOCATIONS_PREFERENCE, new String[0]);
-        return new ArrayList<String>(Arrays.asList(locations));
+        return new ArrayList<>(Arrays.asList(locations));
     }
 
     private Date generateRandomDueDate() {

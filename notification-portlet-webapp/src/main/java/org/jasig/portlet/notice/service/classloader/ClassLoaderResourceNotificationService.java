@@ -98,7 +98,8 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
 
     @Override
     public NotificationResponse fetch(HttpServletRequest request) {
-        return fetchFromClasspath(locationsList);
+        final List<String> locations = getLocations(request);
+        return fetchFromClasspath(locations);
     }
 
     /*
@@ -133,15 +134,19 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
 
     }
 
-    /**
-     * Returns a specific List impl (ArrayList) because it implements Serializable.
-     */
     @Deprecated
-    protected ArrayList<String> getLocations(PortletRequest req) {
+    protected List<String> getLocations(PortletRequest req) {
         final PortletPreferences prefs = req.getPreferences();
         final String[] locations = prefs.getValues(LOCATIONS_PREFERENCE, new String[0]);
         final ArrayList<String> rslt = new ArrayList<>(Arrays.asList(locations));
         return rslt;
+    }
+
+    /**
+     * Access to the list of locations is wrapped in a method so that subclasses can override it.
+     */
+    protected List<String> getLocations(HttpServletRequest req) {
+        return locationsList;
     }
 
     /**
