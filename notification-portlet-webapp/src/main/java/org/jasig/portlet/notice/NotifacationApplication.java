@@ -18,19 +18,11 @@
  */
 package org.jasig.portlet.notice;
 
-import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 
 @SpringBootApplication
-@PropertySources({
-		@PropertySource(value = "file://${portal.home}/global.properties", ignoreResourceNotFound = true),
-		@PropertySource(value = "file://${portal.home}/notification.properties", ignoreResourceNotFound = true)
-})
-@EnableEncryptableProperties
 @ImportResource("classpath:/context/*.xml") // Legacy, XML-based beans
 public class NotifacationApplication {
 
