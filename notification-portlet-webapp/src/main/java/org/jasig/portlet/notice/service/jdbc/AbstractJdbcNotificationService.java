@@ -27,6 +27,8 @@ import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import net.sf.ehcache.Cache;
@@ -150,6 +152,11 @@ public abstract class AbstractJdbcNotificationService extends AbstractNotificati
 
         return rslt;
 
+    }
+
+    @Override
+    public void refresh(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("Apparently we need an implementation");
     }
 
     /**

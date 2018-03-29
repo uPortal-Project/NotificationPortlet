@@ -28,6 +28,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface INotificationServiceFilter extends Comparable<INotificationServiceFilter> {
 
+    /**
+     * Sorting is based on this property, using natural order.  Filters with a lower order value
+     * come before those with a higher order value.
+     */
+    int getOrder();
+
     NotificationResponse doFilter(HttpServletRequest request, INotificationServiceFilterChain chain);
 
 }

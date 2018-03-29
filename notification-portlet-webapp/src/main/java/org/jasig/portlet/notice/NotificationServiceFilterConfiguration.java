@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -74,6 +75,14 @@ public class NotificationServiceFilterConfiguration {
             logger.info("Found the following INotificationService beans:  {}", services);
             this.services = services;
 
+        }
+
+        @Override
+        public void refresh(HttpServletRequest request, HttpServletResponse response) {
+            for (INotificationService service : services) {
+                logger.debug("Refreshing INotificationService bean '{}'", service.getName());
+                service.refresh(request, response);
+            }
         }
 
         @Override

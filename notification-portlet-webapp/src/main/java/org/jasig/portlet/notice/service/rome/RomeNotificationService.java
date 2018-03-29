@@ -31,6 +31,8 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
@@ -137,7 +139,12 @@ public final class RomeNotificationService extends AbstractNotificationService {
         return rslt;
 
     }
-    
+
+    @Override
+    public void refresh(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("TODO:  Implement!");
+    }
+
     /*
      * Implementation
      */

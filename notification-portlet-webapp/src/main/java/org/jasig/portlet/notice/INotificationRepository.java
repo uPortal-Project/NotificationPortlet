@@ -19,6 +19,7 @@
 package org.jasig.portlet.notice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Entry point (in the post-Portlet API world) for fetching notifications from data sources.
@@ -26,6 +27,14 @@ import javax.servlet.http.HttpServletRequest;
  * @since 4.0
  */
 public interface INotificationRepository {
+
+    /**
+     * Drop cached data;  obtain from remote data sources on next fetch.
+     *
+     * @param request The REST request
+     * @param response The REST response
+     */
+    void refresh(HttpServletRequest request, HttpServletResponse response);
 
     /**
      * Provide the current collection of Notifications information for the specified user.

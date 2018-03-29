@@ -22,6 +22,7 @@ import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Abstract base class for concrete {@link INotificationService} beans that are decorators.  The
@@ -36,6 +37,11 @@ public abstract class AbstractNotificationServiceDecorator implements INotificat
 
     @Override
     public NotificationResponse fetch(HttpServletRequest request) {
+        throw new UnsupportedOperationException("Decorator service implementations work only in portlets");
+    }
+
+    @Override
+    public void refresh(HttpServletRequest request, HttpServletResponse response) {
         throw new UnsupportedOperationException("Decorator service implementations work only in portlets");
     }
 

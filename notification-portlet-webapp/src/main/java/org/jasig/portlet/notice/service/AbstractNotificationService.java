@@ -26,6 +26,7 @@ import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationError;
@@ -87,6 +88,9 @@ public abstract class AbstractNotificationService implements INotificationServic
                 "doesn't override fetch(HttpServletRequest)");
         return NotificationResponse.EMPTY_RESPONSE;
     }
+
+    @Override
+    public void refresh(HttpServletRequest request, HttpServletResponse response) { /* no-op */ }
 
     /*
      * Implementation

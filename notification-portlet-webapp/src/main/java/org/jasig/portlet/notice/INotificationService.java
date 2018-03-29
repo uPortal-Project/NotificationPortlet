@@ -24,6 +24,7 @@ import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * This is the central interface of the Notifications API.  It is used to
@@ -94,6 +95,15 @@ public interface INotificationService {
      */
     @Deprecated
     boolean isValid(PortletRequest req, NotificationResponse previousResponse);
+
+    /**
+     * Drop cached data;  obtain from remote data sources on next fetch.
+     *
+     * @param request The REST request
+     * @param response The REST response
+     * @since 4.0
+     */
+    void refresh(HttpServletRequest request, HttpServletResponse response);
 
     /**
      * Provide the current collection of Notifications information for the specified user.

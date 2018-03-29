@@ -89,11 +89,11 @@ public class ReadNotificationServiceDecorator extends AbstractNotificationServic
         NotificationResponse rslt = sourceResponse.cloneIfNotCloned();
 
         final Set<String> readNotificationIds = ReadAction.READ.getReadNotices(req);
-        Set<String> potentiallyMissingIds = new HashSet<String>(readNotificationIds);
+        Set<String> potentiallyMissingIds = new HashSet<>(readNotificationIds);
 
         NotificationAttribute readAttribute = new NotificationAttribute();
         readAttribute.setName(READ_ATTRIBUTE_NAME);
-        readAttribute.setValues(new ArrayList<String>(Arrays.asList((new Boolean(true)).toString())));
+        readAttribute.setValues(new ArrayList<>(Arrays.asList((new Boolean(true)).toString())));
         
         // Add and implement the read behavior with our copy
         for (NotificationCategory category : rslt.getCategories()) {
@@ -113,13 +113,13 @@ public class ReadNotificationServiceDecorator extends AbstractNotificationServic
                     // missing set.
                     if (readNotificationIds.contains(entry.getId())) {
                         
-                        List<NotificationAttribute> attributes = new ArrayList<NotificationAttribute>(entry.getAttributes());
+                        List<NotificationAttribute> attributes = new ArrayList<>(entry.getAttributes());
                         attributes.add(readAttribute);
                         entry.setAttributes(attributes);
                         potentiallyMissingIds.remove(entry.getId());
                     }
                     if (!currentList.contains(ReadAction.READ)) {
-                        final List<NotificationAction> replacementList = new ArrayList<NotificationAction>(currentList);
+                        final List<NotificationAction> replacementList = new ArrayList<>(currentList);
                         boolean isMarkedRead = entry.getAttributes().contains(readAttribute);
                         replacementList.add(!isMarkedRead ?
                                 ReadAction.createReadInstance() : ReadAction.createUnReadInstance());
