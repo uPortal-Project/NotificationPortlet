@@ -9,14 +9,10 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {translate} from 'react-i18next';
 
 class NotificationIcon extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isDropdownOpen: false,
-      notifications: [],
-    };
-  }
+  state = {
+    isDropdownOpen: false,
+    notifications: [],
+  };
 
   fetchNotifications = async () => {
     try {
