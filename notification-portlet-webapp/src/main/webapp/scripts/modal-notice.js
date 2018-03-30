@@ -59,7 +59,6 @@ var upmodal_notice = upmodal_notice || {};
             var fetchNotices = function(settings, callback) {
                 $.ajax({
                     url: settings.getNotificationsUrl,
-                    type: 'POST',
                     dataType: 'json',
                     success: function(data) {
                         var feed = data.feed;
