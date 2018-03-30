@@ -87,7 +87,7 @@ public abstract class NotificationAction implements Serializable, Cloneable {
     /**
      * Perform this action on the notification to which it is attached.
      */
-    public abstract void invoke(HttpServletRequest request, HttpServletResponse response);
+    public abstract void invoke(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
     /**
      * Implements deep-copy clone.

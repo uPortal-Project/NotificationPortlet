@@ -27,6 +27,7 @@ import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.NotificationState;
+import org.jasig.portlet.notice.action.read.MarkAsReadAndRedirectAction;
 import org.jasig.portlet.notice.action.read.ReadAction;
 import org.jasig.portlet.notice.rest.EventDTO;
 import org.jasig.portlet.notice.util.IJpaServices;
@@ -50,6 +51,8 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
     public static final String READ_ATTRIBUTE_NAME = "READ";
     public static final NotificationAttribute READ_ATTRIBUTE =
             new NotificationAttribute(READ_ATTRIBUTE_NAME, Boolean.TRUE.toString());
+    public static final NotificationAttribute UNREAD_ATTRIBUTE =
+            new NotificationAttribute(READ_ATTRIBUTE_NAME, Boolean.FALSE.toString());
 
     @Autowired
     private UsernameFinder usernameFinder;
@@ -86,13 +89,11 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
                  */
                 final String username = usernameFinder.findUsername(request);
                 final List<EventDTO> history = jpaServices.getHistory(entry, username);
+                final List<NotificationAttribute> attributes = new ArrayList<>(entry.getAttributes());
                 final boolean isRead = history.stream()
                         .anyMatch(event -> NotificationState.READ.equals(event.getState()));
-                if (isRead) {
-                    final List<NotificationAttribute> attributes = new ArrayList<>(entry.getAttributes());
-                    attributes.add(READ_ATTRIBUTE);
-                    entry.setAttributes(attributes);
-                }
+                attributes.add(isRead ? READ_ATTRIBUTE : UNREAD_ATTRIBUTE);
+                entry.setAttributes(attributes);
 
                 /*
                  * Decorate with READ behavior, but only if the entry does not have a ReadAction
@@ -103,9 +104,7 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
                         .anyMatch(action -> ReadAction.class.isInstance(action));
                 if (!hasReadActionAlready) {
                     final List<NotificationAction> replacementList = new ArrayList<>(currentActions);
-                    boolean isMarkedRead = entry.getAttributes().contains(READ_ATTRIBUTE);
-                    replacementList.add(!isMarkedRead ?
-                            ReadAction.createReadInstance() : ReadAction.createUnReadInstance());
+                    replacementList.add(new MarkAsReadAndRedirectAction());
                     entry.setAvailableActions(replacementList);
                 }
             }

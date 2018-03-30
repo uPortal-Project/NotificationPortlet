@@ -23,6 +23,7 @@ import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.util.NotificationResponseFlattener;
+import org.jasig.portlet.notice.util.UsernameFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,9 @@ public class NotificationRestV2Controller {
 
     @Autowired
     private NotificationResponseFlattener notificationResponseFlattener;
+
+    @Autowired
+    private UsernameFinder usernameFinder;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -94,7 +99,15 @@ public class NotificationRestV2Controller {
 
         // We must have a target to proceed
         if (target != null) {
-            target.invoke(request, response);
+            try {
+                target.invoke(request, response);
+            } catch (IOException e) {
+                final String username = usernameFinder.findUsername(request);
+                logger.error("Failed to invoke action '{}' on entry '{}' for user '{}'",
+                        target.getLabel(), entry.getId(), username, e);
+                response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                return null;
+            }
             // It's reasonable to assume we need to purge
             // caches for this user after invoking his action
             repository.refresh(request, response);

@@ -20,6 +20,7 @@ package org.jasig.portlet.notice.action.read;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.portlet.ActionRequest;
@@ -29,6 +30,11 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jasig.portlet.notice.NotificationState;
+import org.jasig.portlet.notice.rest.EventDTO;
+import org.jasig.portlet.notice.util.JpaServices;
+import org.jasig.portlet.notice.util.SpringContext;
+import org.jasig.portlet.notice.util.UsernameFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -91,8 +97,16 @@ public class ReadAction extends NotificationAction {
     }
 
     @Override
-    public void invoke(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("TODO:  Implement!");
+    public void invoke(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final NotificationEntry entry = getTarget();
+        final String username =
+                ((UsernameFinder) SpringContext.getApplicationContext().getBean("usernameFinder"))
+                        .findUsername(request);
+        if (!isRead(entry, username)) {
+            // NB:  Currently there is no way to un-apply the READ state
+            final JpaServices jpaServices = (JpaServices) SpringContext.getApplicationContext().getBean("jpaServices");
+            jpaServices.applyState(entry, username, NotificationState.READ);
+        }
     }
 
     @Override
@@ -144,4 +158,26 @@ public class ReadAction extends NotificationAction {
             throw new RuntimeException(e);
         }
     }
+
+    protected boolean isRead(NotificationEntry entry, String username) {
+
+        final JpaServices jpaServices = (JpaServices) SpringContext.getApplicationContext().getBean("jpaServices");
+        final List<EventDTO> history = jpaServices.getHistory(entry, username);
+
+        boolean rslt = false;  // default (clearly)
+
+        // Review the history...
+        for (EventDTO event : history) {
+            if (NotificationState.READ.equals(event.getState())) {
+                logger.debug("Found a READ event:  {}", event);
+                rslt = true;
+                // NB:  Currently there is no way to un-apply the READ state
+                break;
+            }
+        }
+
+        return rslt;
+
+    }
+
 }
