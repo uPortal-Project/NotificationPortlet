@@ -98,13 +98,26 @@ war {
     from("${buildDir}/css") {
         into('css')
     }
+    from("${buildDir}/scripts") {
+        into('scripts')
+    }
 }
 
-project.tasks.getByName('npm_run_minify-css').dependsOn 'npm_install'
-project.tasks.getByName('npm_run_compile-less').dependsOn 'npm_install'
-war.dependsOn 'npm_run_compile-less'
+task createCssAndJsOutputDirs(dependsOn: 'npm_install') {
+    doLast {
+        mkdir "${buildDir}/css"
+        mkdir "${buildDir}/scripts"
+    }
+}
+
+// Handle CSS
+project.tasks.getByName('npm_run_compile-less').dependsOn createCssAndJsOutputDirs
 project.tasks.getByName('npm_run_minify-css').dependsOn 'npm_run_compile-less'
 war.dependsOn 'npm_run_minify-css'
+
+// Handle JS
+project.tasks.getByName('npm_run_compile-js').dependsOn createCssAndJsOutputDirs
+war.dependsOn 'npm_run_minify-js'
 
 uploadArchives{
     repositories {
