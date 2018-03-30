@@ -242,6 +242,12 @@ public class NotificationResponse implements Serializable, Cloneable {
         errors.addAll(newErrors);
     }
 
+    /**
+     * Best guess as to the reason this method exists: beans that produce fresh
+     * {@link NotificationResponse} objects (without cloning them) may safely cache them.  They need
+     * not fear that another bean will transform their copy.  Beans that do clone them, however, can
+     * safely operate on a clone.
+     */
     public NotificationResponse cloneIfNotCloned() {
         try {
             return isCloned() ? this : (NotificationResponse) this.clone();

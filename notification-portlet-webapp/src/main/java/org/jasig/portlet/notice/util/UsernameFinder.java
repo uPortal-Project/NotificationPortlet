@@ -19,6 +19,7 @@
 package org.jasig.portlet.notice.util;
 
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,11 +28,25 @@ import org.springframework.stereotype.Component;
 public final class UsernameFinder {
 
     @Value("${UsernameFinder.unauthenticatedUsername}")
-    private String unauthenticatedUsername = "guest"; 
+    private String unauthenticatedUsername = "guest";
 
+    /**
+     * @deprecated Prefer interactions that are not based on the Portlet API
+     */
+    @Deprecated
     public String findUsername(PortletRequest req) {
         return req.getRemoteUser() != null
                 ? req.getRemoteUser()
+                : unauthenticatedUsername;
+    }
+
+    /**
+     * @since 4.0
+     */
+    public String findUsername(HttpServletRequest request) {
+        // TODO:  Does not work!  Implement proper security.
+        return request.getRemoteUser() != null
+                ? request.getRemoteUser()
                 : unauthenticatedUsername;
     }
 

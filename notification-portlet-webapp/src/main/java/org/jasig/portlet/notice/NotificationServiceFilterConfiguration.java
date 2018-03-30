@@ -18,6 +18,7 @@
  */
 package org.jasig.portlet.notice;
 
+import org.jasig.portlet.notice.util.UsernameFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class NotificationServiceFilterConfiguration {
     @Autowired
     private Set<INotificationService> services;
 
+    @Autowired
+    private UsernameFinder usernameFinder;
+
     private static final Logger logger = LoggerFactory.getLogger(NotificationServiceFilterConfiguration.class);
 
     @Bean("notificationRepository")
@@ -61,8 +65,9 @@ public class NotificationServiceFilterConfiguration {
 
         private final List<INotificationServiceFilter> sortedFilters;
         private final Set<INotificationService> services;
+        private final UsernameFinder usernameFinder;
 
-        /* package-private */ NotificationRepositoryImpl(List<INotificationServiceFilter> filters, Set<INotificationService> services) {
+        /* package-private */ NotificationRepositoryImpl(List<INotificationServiceFilter> filters, Set<INotificationService> services, UsernameFinder usernameFinder) {
 
             // Prep the filters collection
             List<INotificationServiceFilter> filtersCopy = new ArrayList<>(filters);
@@ -74,6 +79,9 @@ public class NotificationServiceFilterConfiguration {
             // Services
             logger.info("Found the following INotificationService beans:  {}", services);
             this.services = services;
+
+            // Etc.
+            this.usernameFinder = usernameFinder;
 
         }
 
@@ -87,6 +95,9 @@ public class NotificationServiceFilterConfiguration {
 
         @Override
         public NotificationResponse fetch(HttpServletRequest request) {
+
+            final String username = usernameFinder.findUsername(request);
+            logger.debug("Fetching notifications on behalf of user '{}'", username);
 
             /*
              * The end of the line:  the INotificationServiceFilterChain that wraps the collection
