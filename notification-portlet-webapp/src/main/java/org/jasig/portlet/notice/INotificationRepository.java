@@ -29,7 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 public interface INotificationRepository {
 
     /**
-     * Drop cached data;  obtain from remote data sources on next fetch.
+     * Reset all {@link INotificationService} and {@link INotificationServiceFilter} instances that
+     * implement {@link IRefreshable}.
      *
      * @param request The REST request
      * @param response The REST response

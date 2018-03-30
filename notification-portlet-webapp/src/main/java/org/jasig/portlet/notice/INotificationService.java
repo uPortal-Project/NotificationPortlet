@@ -97,15 +97,6 @@ public interface INotificationService {
     boolean isValid(PortletRequest req, NotificationResponse previousResponse);
 
     /**
-     * Drop cached data;  obtain from remote data sources on next fetch.
-     *
-     * @param request The REST request
-     * @param response The REST response
-     * @since 4.0
-     */
-    void refresh(HttpServletRequest request, HttpServletResponse response);
-
-    /**
      * Provide the current collection of Notifications information for the specified user.
      *
      * @param request The REST request

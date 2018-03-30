@@ -16,28 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jasig.portlet.notice.service;
-
-import org.jasig.portlet.notice.INotificationService;
-import org.jasig.portlet.notice.NotificationResponse;
+package org.jasig.portlet.notice;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Abstract base class for concrete {@link INotificationService} beans that are decorators.  The
- * functions historically performed by decorators are being moved.  This class implements methods
- * for the post-Portlet API model by throwing an exception.
+ * Implementing this interface in a concreete {@link INotificationService} or
+ * {@link INotificationServiceFilter} class indicates that the bean manages some sort of state
+ * (usually a cache) that may need to be updated when (1) the user takes some sort of action, or (2)
+ * the user manually requests a refresh.
  *
  * @since 4.0
- * @deprecated The entire notion of Portlet API-based decorators is deprecated
  */
-@Deprecated
-public abstract class AbstractNotificationServiceDecorator implements INotificationService {
+public interface IRefreshable {
 
-    @Override
-    public NotificationResponse fetch(HttpServletRequest request) {
-        throw new UnsupportedOperationException("Decorator service implementations work only in portlets");
-    }
+    /**
+     * Drop cached data;  obtain from remote data sources on next fetch.
+     *
+     * @param request The REST request
+     * @param response The REST response
+     * @since 4.0
+     */
+    void refresh(HttpServletRequest request, HttpServletResponse response);
 
 }

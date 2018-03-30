@@ -89,9 +89,6 @@ public abstract class AbstractNotificationService implements INotificationServic
         return NotificationResponse.EMPTY_RESPONSE;
     }
 
-    @Override
-    public void refresh(HttpServletRequest request, HttpServletResponse response) { /* no-op */ }
-
     /*
      * Implementation
      */

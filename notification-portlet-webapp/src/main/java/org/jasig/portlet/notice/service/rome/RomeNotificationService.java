@@ -140,11 +140,6 @@ public final class RomeNotificationService extends AbstractNotificationService {
 
     }
 
-    @Override
-    public void refresh(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("TODO:  Implement!");
-    }
-
     /*
      * Implementation
      */

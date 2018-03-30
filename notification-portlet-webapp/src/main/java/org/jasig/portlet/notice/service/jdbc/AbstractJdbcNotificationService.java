@@ -154,11 +154,6 @@ public abstract class AbstractJdbcNotificationService extends AbstractNotificati
 
     }
 
-    @Override
-    public void refresh(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Apparently we need an implementation");
-    }
-
     /**
      * Subclasses <em>may</em> override this method to provide a custom {@link SqlParameterSource}.
      */

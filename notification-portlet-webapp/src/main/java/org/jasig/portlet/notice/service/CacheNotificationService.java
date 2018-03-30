@@ -203,11 +203,6 @@ public final class CacheNotificationService extends AbstractNotificationService 
 
     }
 
-    @Override
-    public void refresh(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Apparently we need an implementation");
-    }
-
     /*
      * Implementation
      */

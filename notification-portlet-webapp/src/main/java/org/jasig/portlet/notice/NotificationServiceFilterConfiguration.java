@@ -54,7 +54,7 @@ public class NotificationServiceFilterConfiguration {
 
     @Bean("notificationRepository")
     public INotificationRepository notificationRepository() {
-        return new NotificationRepositoryImpl(filters, services);
+        return new NotificationRepositoryImpl(filters, services, usernameFinder);
     }
 
     /*
@@ -88,8 +88,16 @@ public class NotificationServiceFilterConfiguration {
         @Override
         public void refresh(HttpServletRequest request, HttpServletResponse response) {
             for (INotificationService service : services) {
-                logger.debug("Refreshing INotificationService bean '{}'", service.getName());
-                service.refresh(request, response);
+                if (IRefreshable.class.isInstance(service)) {
+                    logger.debug("Refreshing INotificationService bean '{}'", service.getName());
+                    ((IRefreshable) service).refresh(request, response);
+                }
+            }
+            for (INotificationServiceFilter filter : sortedFilters) {
+                if (IRefreshable.class.isInstance(filter)) {
+                    logger.debug("Refreshing INotificationServiceFilter bean '{}'", filter);
+                    ((IRefreshable) filter).refresh(request, response);
+                }
             }
         }
 
