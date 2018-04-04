@@ -21,7 +21,12 @@ package org.jasig.portlet.notice.util;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apereo.portal.soffit.security.SoffitApiUserDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component("usernameFinder")
@@ -29,6 +34,8 @@ public final class UsernameFinder {
 
     @Value("${UsernameFinder.unauthenticatedUsername}")
     private String unauthenticatedUsername = "guest";
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * @deprecated Prefer interactions that are not based on the Portlet API
@@ -44,10 +51,25 @@ public final class UsernameFinder {
      * @since 4.0
      */
     public String findUsername(HttpServletRequest request) {
-        // TODO:  Does not work!  Implement proper security.
-        return request.getRemoteUser() != null
-                ? request.getRemoteUser()
-                : unauthenticatedUsername;
+
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        logger.trace("Processing the following Authentication object:  {}", authentication);
+
+        String rslt = null;
+        if (authentication != null && SoffitApiUserDetails.class.isInstance(authentication.getDetails())) {
+            SoffitApiUserDetails userDetails = (SoffitApiUserDetails) authentication.getDetails();
+            rslt = userDetails.getUsername();
+        }
+
+        logger.debug("Found username '{}' based on the contents of the SecurityContextHolder", rslt);
+
+        // Identification based on Spring Security is required to access Servlet-based APIs
+        if (rslt == null) {
+            throw new SecurityException("User not identified");
+        }
+
+        return rslt;
+
     }
 
     public boolean isAuthenticated(PortletRequest req) {

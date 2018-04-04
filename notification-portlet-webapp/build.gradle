@@ -52,6 +52,7 @@ dependencies {
     }
     compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
     compile "org.jasig.resourceserver:resource-server-utils:${resourceServerVersion}"
+    compile("org.jasig.portal:uPortal-soffit-renderer:${uPortalVersion}")
     compile "org.jasig.portal:uPortal-spring:${uPortalVersion}"
     compile "org.jasypt:jasypt-spring31:${jasyptVersion}"
     compile "org.springframework:spring-jdbc:${springVersion}"

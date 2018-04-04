@@ -16,8 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jasig.portlet.notice;
+package org.jasig.portlet.notice.filter;
 
+import org.jasig.portlet.notice.INotificationRepository;
+import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.INotificationServiceFilter;
+import org.jasig.portlet.notice.INotificationServiceFilterChain;
+import org.jasig.portlet.notice.IRefreshable;
+import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.util.UsernameFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

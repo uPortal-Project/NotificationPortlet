@@ -85,7 +85,7 @@ public abstract class AbstractNotificationService implements INotificationServic
     @Override
     public NotificationResponse fetch(HttpServletRequest request) {
         logger.warn("Notification service '{}' was invoked by the portlet-agnostic API, but it" +
-                "doesn't override fetch(HttpServletRequest)");
+                "doesn't override fetch(HttpServletRequest)", getName());
         return NotificationResponse.EMPTY_RESPONSE;
     }
 
