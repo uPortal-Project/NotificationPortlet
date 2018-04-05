@@ -21,7 +21,6 @@ package org.jasig.portlet.notice.util;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apereo.portal.soffit.security.SoffitApiUserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,11 +54,7 @@ public final class UsernameFinder {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         logger.trace("Processing the following Authentication object:  {}", authentication);
 
-        String rslt = null;
-        if (authentication != null && SoffitApiUserDetails.class.isInstance(authentication.getDetails())) {
-            SoffitApiUserDetails userDetails = (SoffitApiUserDetails) authentication.getDetails();
-            rslt = userDetails.getUsername();
-        }
+        final String rslt = (String) authentication.getPrincipal();
 
         logger.debug("Found username '{}' based on the contents of the SecurityContextHolder", rslt);
 
