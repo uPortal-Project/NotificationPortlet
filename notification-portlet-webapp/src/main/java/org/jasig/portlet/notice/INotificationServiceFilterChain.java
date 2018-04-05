@@ -18,16 +18,14 @@
  */
 package org.jasig.portlet.notice;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ImportResource;
+/**
+ * Filters use the filter chain to invoke the next filter in the chain, or (if the calling filter is
+ * the last filter in the chain) to invoke the data source(s).
+ *
+ * @since 4.0
+ */
+public interface INotificationServiceFilterChain {
 
-@SpringBootApplication
-@ImportResource("classpath:/context/*.xml") // Legacy, XML-based beans
-public class NotifacationApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(NotifacationApplication.class, args);
-	}
+    NotificationResponse doFilter();
 
 }

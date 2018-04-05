@@ -18,16 +18,22 @@
  */
 package org.jasig.portlet.notice;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ImportResource;
+import javax.servlet.http.HttpServletRequest;
 
-@SpringBootApplication
-@ImportResource("classpath:/context/*.xml") // Legacy, XML-based beans
-public class NotifacationApplication {
+/**
+ * Concrete implementations of this interface support operations like hide, favorite, filter by
+ * priority, etc.
+ *
+ * @since 4.0
+ */
+public interface INotificationServiceFilter extends Comparable<INotificationServiceFilter> {
 
-	public static void main(String[] args) {
-		SpringApplication.run(NotifacationApplication.class, args);
-	}
+    /**
+     * Sorting is based on this property, using natural order.  Filters with a lower order value
+     * come before those with a higher order value.
+     */
+    int getOrder();
+
+    NotificationResponse doFilter(HttpServletRequest request, INotificationServiceFilterChain chain);
 
 }

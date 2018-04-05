@@ -25,17 +25,23 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationError;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.util.UsernameFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 public abstract class AbstractNotificationService implements INotificationService {
 
     private String name;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public String getName() {
@@ -68,6 +74,19 @@ public abstract class AbstractNotificationService implements INotificationServic
     @Override
     public boolean isValid(final PortletRequest req, final NotificationResponse previousResponse) {
         return true;
+    }
+
+    /**
+     * Returns an empty collection and logs the event.  All concrete implementations of
+     * {@link INotificationService} should override this method.  The log entries this method
+     * produces are an indication that the service subclass is not ready for the post-Portlet API
+     * world.
+     */
+    @Override
+    public NotificationResponse fetch(HttpServletRequest request) {
+        logger.warn("Notification service '{}' was invoked by the portlet-agnostic API, but it" +
+                "doesn't override fetch(HttpServletRequest)", getName());
+        return NotificationResponse.EMPTY_RESPONSE;
     }
 
     /*

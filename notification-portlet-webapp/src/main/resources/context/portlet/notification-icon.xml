@@ -47,13 +47,41 @@
         <property name="name" value="notificationCacheNoticationService"/>
         <property name="embeddedServices">
             <list>
-                <ref bean="classLoaderResourceNotificationService" />
-                <ref bean="romeNotificationService" />
-                <ref bean="restfulJsonNotificationService"/>
-                <ref bean="portletEventNotificationService" />
-                <ref bean="jpaNotificationService" />
-                <ref bean="demoNotifications" />
-                <ref bean="sspNotifications"/>
+                <bean class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+                    <property name="enclosedNotificationService">
+                        <ref bean="classLoaderResourceNotificationService" />
+                    </property>
+                </bean>
+                <bean class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+                    <property name="enclosedNotificationService">
+                        <ref bean="romeNotificationService" />
+                    </property>
+                </bean>
+                <bean class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+                    <property name="enclosedNotificationService">
+                        <ref bean="restfulJsonNotificationService"/>
+                    </property>
+                </bean>
+                <bean class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+                    <property name="enclosedNotificationService">
+                        <ref bean="portletEventNotificationService" />
+                    </property>
+                </bean>
+                <bean class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+                    <property name="enclosedNotificationService">
+                        <ref bean="jpaNotificationService" />
+                    </property>
+                </bean>
+                <bean class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+                    <property name="enclosedNotificationService">
+                        <ref bean="demoNotifications" />
+                    </property>
+                </bean>
+                <bean class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+                    <property name="enclosedNotificationService">
+                        <ref bean="sspNotifications"/>
+                    </property>
+                </bean>
             </list>
         </property>
     </bean>

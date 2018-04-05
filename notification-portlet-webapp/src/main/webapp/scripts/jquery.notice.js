@@ -58,7 +58,6 @@ if (!upnotice.init) {
     function fetchNotices($, settings, callback) {
       $.ajax({
         url      : settings.getNotificationsUrl,
-        type     : 'POST',
         dataType : 'json',
         success: function (data) {
           feed = data.feed;

@@ -18,16 +18,26 @@
  */
 package org.jasig.portlet.notice;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ImportResource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-@SpringBootApplication
-@ImportResource("classpath:/context/*.xml") // Legacy, XML-based beans
-public class NotifacationApplication {
+/**
+ * Implementing this interface in a concreete {@link INotificationService} or
+ * {@link INotificationServiceFilter} class indicates that the bean manages some sort of state
+ * (usually a cache) that may need to be updated when (1) the user takes some sort of action, or (2)
+ * the user manually requests a refresh.
+ *
+ * @since 4.0
+ */
+public interface IRefreshable {
 
-	public static void main(String[] args) {
-		SpringApplication.run(NotifacationApplication.class, args);
-	}
+    /**
+     * Drop cached data;  obtain from remote data sources on next fetch.
+     *
+     * @param request The REST request
+     * @param response The REST response
+     * @since 4.0
+     */
+    void refresh(HttpServletRequest request, HttpServletResponse response);
 
 }

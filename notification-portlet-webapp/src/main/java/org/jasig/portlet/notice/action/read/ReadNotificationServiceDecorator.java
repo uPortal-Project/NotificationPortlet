@@ -40,8 +40,14 @@ import org.jasig.portlet.notice.NotificationAttribute;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.service.AbstractNotificationServiceDecorator;
 
-public class ReadNotificationServiceDecorator implements INotificationService {
+/**
+ * Adds the ability to mark a notification as 'READ.'
+ *
+ * @deprecated The entire notion of Portlet API-based decorators is deprecated
+ */
+public class ReadNotificationServiceDecorator extends AbstractNotificationServiceDecorator {
 
     public static final String READ_ENABLED_PREFERENCE = "ReadNotificationServiceDecorator.enabled";
     public static final String DEFAULT_READ_BEHAVIOR = "false";  // The feature is disabled by default
@@ -83,11 +89,11 @@ public class ReadNotificationServiceDecorator implements INotificationService {
         NotificationResponse rslt = sourceResponse.cloneIfNotCloned();
 
         final Set<String> readNotificationIds = ReadAction.READ.getReadNotices(req);
-        Set<String> potentiallyMissingIds = new HashSet<String>(readNotificationIds);
+        Set<String> potentiallyMissingIds = new HashSet<>(readNotificationIds);
 
         NotificationAttribute readAttribute = new NotificationAttribute();
         readAttribute.setName(READ_ATTRIBUTE_NAME);
-        readAttribute.setValues(new ArrayList<String>(Arrays.asList((new Boolean(true)).toString())));
+        readAttribute.setValues(new ArrayList<>(Arrays.asList((new Boolean(true)).toString())));
         
         // Add and implement the read behavior with our copy
         for (NotificationCategory category : rslt.getCategories()) {
@@ -107,13 +113,13 @@ public class ReadNotificationServiceDecorator implements INotificationService {
                     // missing set.
                     if (readNotificationIds.contains(entry.getId())) {
                         
-                        List<NotificationAttribute> attributes = new ArrayList<NotificationAttribute>(entry.getAttributes());
+                        List<NotificationAttribute> attributes = new ArrayList<>(entry.getAttributes());
                         attributes.add(readAttribute);
                         entry.setAttributes(attributes);
                         potentiallyMissingIds.remove(entry.getId());
                     }
                     if (!currentList.contains(ReadAction.READ)) {
-                        final List<NotificationAction> replacementList = new ArrayList<NotificationAction>(currentList);
+                        final List<NotificationAction> replacementList = new ArrayList<>(currentList);
                         boolean isMarkedRead = entry.getAttributes().contains(readAttribute);
                         replacementList.add(!isMarkedRead ?
                                 ReadAction.createReadInstance() : ReadAction.createUnReadInstance());

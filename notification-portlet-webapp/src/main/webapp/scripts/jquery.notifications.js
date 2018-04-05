@@ -97,7 +97,6 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
       // Now fetch the notifications with a ResourceURL
       $.ajax({
         url      : opts.getNotificationsUrl,
-        type     : 'POST',
         dataType : 'json',
         data     : params,
 

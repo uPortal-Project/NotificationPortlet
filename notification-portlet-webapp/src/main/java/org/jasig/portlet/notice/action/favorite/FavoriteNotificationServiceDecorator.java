@@ -42,6 +42,7 @@ import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.NotificationState;
+import org.jasig.portlet.notice.service.AbstractNotificationServiceDecorator;
 
 /**
  * This class can be used to add a "favorite" or "snooze" feature to notifications 
@@ -49,8 +50,9 @@ import org.jasig.portlet.notice.NotificationState;
  * (effectively permanent).
  * 
  * @author James Wennmacher jwennmacher@unicon.net
+ * @deprecated The entire notion of Portlet API-based decorators is deprecated
  */
-public class FavoriteNotificationServiceDecorator implements INotificationService {
+public class FavoriteNotificationServiceDecorator extends AbstractNotificationServiceDecorator {
 
     public static final String FAVORITE_ENABLED_PREFERENCE = "FavoriteNotificationServiceDecorator.enabled";
     public static final String DEFAULT_FAVORITE_BEHAVIOR = "false";  // The feature is disabled by default
