@@ -11,12 +11,44 @@ import {translate} from 'react-i18next';
 class NotificationIcon extends Component {
   state = {
     isDropdownOpen: false,
-    notifications: [],
+    bearerToken: null,
+    notifications: []
   };
+
+  fetchBearerToken = async () => {
+    try {
+      // TODO: allow override of hard-coded URI
+      const response = await fetch('/uPortal/api/v5-1/userinfo', {
+        credentials: 'same-origin'
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      const bearerToken = await response.text();
+      this.setState({bearerToken});
+      setTimeout(function() {
+        this.setState({bearerToken: null});
+      }, /* 3 min */ 180000); // TODO:  configurable?  retry?
+    } catch (err) {
+      // TODO: add an error view
+      console.error(err);
+    }
+
+  }
 
   fetchNotifications = async () => {
     try {
-      const response = await fetch('sample-notifications.json');
+      if (!this.state.bearerToken) {
+        await this.fetchBearerToken();
+      }
+      // TODO: allow override of hard-coded URI
+      const response = await fetch('/NotificationPortlet/api/v2/notifications', {
+        credentials: 'same-origin',
+        headers: {
+          'Authorization': 'Bearer ' + this.state.bearerToken,
+          'content-type': 'application/jwt'
+        }
+      });
       if (!response.ok) {
         throw new Error(response.statusText);
       }
