@@ -27,7 +27,7 @@ class NotificationIcon extends Component {
 
   state = {
     isDropdownOpen: false,
-    bearerToken: 'test', // TODO set to null
+    bearerToken: null,
     notifications: [],
   };
 
@@ -49,6 +49,8 @@ class NotificationIcon extends Component {
       setTimeout(function() {
         this.setState({bearerToken: null});
       }, tokenTimeoutMs);
+
+      return bearerToken;
     } catch (err) {
       // TODO: add an error view
       console.error(err);
@@ -56,12 +58,12 @@ class NotificationIcon extends Component {
   };
 
   fetchNotifications = async () => {
-    const {bearerToken} = this.state;
+    let {bearerToken} = this.state;
     const {notificationApiUrl, debug} = this.props;
 
     try {
       if (!bearerToken && !debug) {
-        await this.fetchBearerToken();
+        bearerToken = await this.fetchBearerToken();
       }
       const response = await fetch(notificationApiUrl, {
         credentials: 'same-origin',
