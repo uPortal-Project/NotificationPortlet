@@ -126,7 +126,9 @@ class NotificationIcon extends Component {
       <DropdownItem
         key={body}
         tag="a"
-        className={'up-notification--menu-item ' + (isRead ? 'read' : 'unread')}
+        className={
+          'up-notification--menu-item ' + (isRead ? 'up-read' : 'up-unread')
+        }
         href={url}
       >
         {body}
