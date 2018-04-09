@@ -2,6 +2,15 @@
 # yarn lockfile v1
 
 
+"@alienfast/i18next-loader@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@alienfast/i18next-loader/-/i18next-loader-1.0.15.tgz#cf99db02eaad914bb7faa57a0ee513c3d09548f6"
+  dependencies:
+    glob-all "^3.1.0"
+    js-yaml "^3.11.0"
+    loader-utils "^1.1.0"
+    lodash "^4.17.5"
+
 "@babel/code-frame@^7.0.0-beta.35":
   version "7.0.0-beta.44"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.44.tgz#2a02643368de80916162be70865c97774f3adbd9"
@@ -3481,6 +3490,13 @@ gitconfiglocal@^1.0.0:
   dependencies:
     ini "^1.3.2"
 
+glob-all@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/glob-all/-/glob-all-3.1.0.tgz#8913ddfb5ee1ac7812656241b03d5217c64b02ab"
+  dependencies:
+    glob "^7.0.5"
+    yargs "~1.2.6"
+
 glob-base@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/glob-base/-/glob-base-0.3.0.tgz#dbb164f6221b1c0b1ccf82aea328b497df0ea3c4"
@@ -3914,10 +3930,6 @@ husky@^0.14.3:
 i18next-browser-languagedetector@^2.1.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-2.2.0.tgz#5f41abe61964a56dce70102ab31c3ed5d5866edc"
-
-i18next-xhr-backend@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-1.5.1.tgz#50282610780c6a696d880dfa7f4ac1d01e8c3ad5"
 
 i18next@^11.1.1:
   version "11.1.1"
@@ -4791,7 +4803,7 @@ js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
 
-js-yaml@^3.4.3, js-yaml@^3.7.0, js-yaml@^3.9.0, js-yaml@^3.9.1:
+js-yaml@^3.11.0, js-yaml@^3.4.3, js-yaml@^3.7.0, js-yaml@^3.9.0, js-yaml@^3.9.1:
   version "3.11.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.11.0.tgz#597c1a8bd57152f26d622ce4117851a51f5ebaef"
   dependencies:
@@ -8776,6 +8788,12 @@ yargs@^8.0.2:
     which-module "^2.0.0"
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
+
+yargs@~1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-1.2.6.tgz#9c7b4a82fd5d595b2bf17ab6dcc43135432fe34b"
+  dependencies:
+    minimist "^0.1.0"
 
 yargs@~3.10.0:
   version "3.10.0"

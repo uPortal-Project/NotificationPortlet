@@ -186,4 +186,4 @@ class NotificationIcon extends Component {
   };
 }
 
-export default translate('translations')(reactTimeout(NotificationIcon));
+export default translate('notification-icon')(reactTimeout(NotificationIcon));

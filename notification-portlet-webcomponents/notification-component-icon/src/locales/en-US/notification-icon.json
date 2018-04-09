@@ -1,0 +1,9 @@
+{
+  "notification-icon": {
+    "notifications": "Notifications",
+    "notifications-see-all": "See all notifications",
+    "notifications-all-read": "All notifications have been read",
+    "notification-count": "unread notification",
+    "notification-count_plural": "unread notifications"
+  }
+}

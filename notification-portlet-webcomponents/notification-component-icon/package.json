@@ -8,7 +8,6 @@
     "@fortawesome/react-fontawesome": "^0.0.18",
     "i18next": "^11.1.1",
     "i18next-browser-languagedetector": "^2.1.0",
-    "i18next-xhr-backend": "^1.5.1",
     "lerna": "^2.9.0",
     "prop-types": "^15.6.1",
     "react": "^16.3.0",
@@ -19,6 +18,7 @@
     "reactstrap": "^5.0.0"
   },
   "devDependencies": {
+    "@alienfast/i18next-loader": "^1.0.15",
     "eslint-config-google": "^0.9.1",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.0",
