@@ -7,52 +7,74 @@ import {
 } from 'reactstrap';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {translate} from 'react-i18next';
+import reactTimeout from 'react-timeout';
+import PropTypes from 'prop-types';
 
 class NotificationIcon extends Component {
+  static propTypes = {
+    userInfoApiUrl: PropTypes.string,
+    tokenTimeoutMs: PropTypes.number,
+    notificationApiUrl: PropTypes.string,
+    debug: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    userInfoApiUrl: '/uPortal/api/v5-1/userinfo',
+    tokenTimeoutMs: 180000, // 3 minutes
+    notificationApiUrl: '/NotificationPortlet/api/v2/notifications',
+    debug: false,
+  };
+
   state = {
     isDropdownOpen: false,
-    bearerToken: null,
-    notifications: []
+    bearerToken: 'test', // TODO set to null
+    notifications: [],
   };
 
   fetchBearerToken = async () => {
+    const {setTimeout, userInfoApiUrl, tokenTimeoutMs} = this.props;
+
     try {
-      // TODO: allow override of hard-coded URI
-      const response = await fetch('/uPortal/api/v5-1/userinfo', {
-        credentials: 'same-origin'
+      const response = await fetch(userInfoApiUrl, {
+        credentials: 'same-origin',
       });
       if (!response.ok) {
         throw new Error(response.statusText);
       }
       const bearerToken = await response.text();
+
       this.setState({bearerToken});
+
+      // clear token after timeout has passed
       setTimeout(function() {
         this.setState({bearerToken: null});
-      }, /* 3 min */ 180000); // TODO:  configurable?  retry?
+      }, tokenTimeoutMs);
     } catch (err) {
       // TODO: add an error view
       console.error(err);
     }
-
-  }
+  };
 
   fetchNotifications = async () => {
+    const {bearerToken} = this.state;
+    const {notificationApiUrl, debug} = this.props;
+
     try {
-      if (!this.state.bearerToken) {
+      if (!bearerToken && !debug) {
         await this.fetchBearerToken();
       }
-      // TODO: allow override of hard-coded URI
-      const response = await fetch('/NotificationPortlet/api/v2/notifications', {
+      const response = await fetch(notificationApiUrl, {
         credentials: 'same-origin',
         headers: {
-          'Authorization': 'Bearer ' + this.state.bearerToken,
-          'content-type': 'application/jwt'
-        }
+          'Authorization': 'Bearer ' + bearerToken,
+          'content-type': 'application/jwt',
+        },
       });
       if (!response.ok) {
         throw new Error(response.statusText);
       }
       const notifications = await response.json();
+
       this.setState({notifications});
     } catch (err) {
       // TODO: add an error view
@@ -61,8 +83,14 @@ class NotificationIcon extends Component {
   };
 
   toggle = () => {
-    this.setState({
-      isDropdownOpen: !this.state.isDropdownOpen,
+    this.setState(({isDropdownOpen}) => {
+      // TODO: determine why debounce is needed
+      // debounce toggle
+      if (isDropdownOpen === this.state.isDropdownOpen) {
+        return {
+          isDropdownOpen: !isDropdownOpen,
+        };
+      }
     });
   };
 
@@ -94,14 +122,14 @@ class NotificationIcon extends Component {
     }
 
     // one or more notifications
-    return notifications.map(({url, message, isRead}) => (
+    return notifications.map(({url, body, isRead}) => (
       <DropdownItem
-        key={message}
+        key={body}
         tag="a"
         className={'up-notification--menu-item ' + (isRead ? 'read' : 'unread')}
         href={url}
       >
-        {message}
+        {body}
       </DropdownItem>
     ));
   };
@@ -139,7 +167,7 @@ class NotificationIcon extends Component {
             href="/p/notifications"
             header
           >
-            {t('see-all-notifications')}
+            {t('notifications-see-all')}
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
@@ -147,4 +175,4 @@ class NotificationIcon extends Component {
   };
 }
 
-export default translate('translations')(NotificationIcon);
+export default translate('translations')(reactTimeout(NotificationIcon));
