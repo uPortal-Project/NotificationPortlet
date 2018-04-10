@@ -95,6 +95,21 @@ node {
     download = true
 }
 
+task copyWebComponentsJs(type: Copy, dependsOn: ':notification-portlet-webcomponents:yarn_build') {
+    from("${rootProject.projectDir}/notification-portlet-webcomponents") {
+        include "*/build/static/js/*.js"
+        exclude "node_modules/**"
+        eachFile { details ->
+            logger.lifecycle("Adding web component to war file:  ${details}")
+            String[] tokens = details.path.split(File.separator)
+            details.path = "${tokens[0]}.js"
+        }
+    }
+    into "${buildDir}/scripts"
+    includeEmptyDirs = false
+}
+war.dependsOn copyWebComponentsJs
+
 war {
     from("${buildDir}/css") {
         into('css')

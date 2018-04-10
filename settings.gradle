@@ -2,3 +2,4 @@ rootProject.name = 'notification-portlet-parent'
 
 include 'notification-portlet-api'
 include 'notification-portlet-webapp'
+include 'notification-portlet-webcomponents'
