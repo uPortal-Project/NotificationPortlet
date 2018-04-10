@@ -15,6 +15,7 @@ class NotificationIcon extends Component {
     userInfoApiUrl: PropTypes.string,
     tokenTimeoutMs: PropTypes.number,
     notificationApiUrl: PropTypes.string,
+    seeAllNotificationsUrl: PropTypes.string,
     debug: PropTypes.bool,
   };
 
@@ -22,6 +23,7 @@ class NotificationIcon extends Component {
     userInfoApiUrl: '/uPortal/api/v5-1/userinfo',
     tokenTimeoutMs: 180000, // 3 minutes
     notificationApiUrl: '/NotificationPortlet/api/v2/notifications',
+    seeAllNotificationsUrl: '/uPortal/p/notification',
     debug: false,
   };
 
@@ -141,8 +143,13 @@ class NotificationIcon extends Component {
   componentDidMount = this.fetchNotifications;
 
   render = () => {
-    const {t} = this.props;
-    const {isDropdownOpen} = this.state;
+    const {t, seeAllNotificationsUrl} = this.props;
+    const {notifications, isDropdownOpen} = this.state;
+
+    const dropdownClasses = ['up-notification--toggle'];
+    if (notifications.length !== 0) {
+        dropdownClasses.push('up-active');
+    }
 
     return (
       <Dropdown
@@ -152,7 +159,7 @@ class NotificationIcon extends Component {
       >
         <DropdownToggle
           onClick={this.toggle}
-          className="up-notification--toggle"
+          className={dropdownClasses}
         >
           <FontAwesomeIcon icon="bell" />
           {this.renderNotificationCount()}
@@ -168,7 +175,7 @@ class NotificationIcon extends Component {
           <DropdownItem
             className="up-notification--menu-footer"
             tag="a"
-            href="/p/notifications"
+            href={seeAllNotificationsUrl}
             header
           >
             {t('notifications-see-all')}
