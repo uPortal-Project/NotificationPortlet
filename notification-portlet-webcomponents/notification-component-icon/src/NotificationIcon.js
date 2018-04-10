@@ -9,6 +9,32 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {translate} from 'react-i18next';
 import reactTimeout from 'react-timeout';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+const StyledDropdown = styled(Dropdown)``;
+const StyledDropdownMenu = styled(DropdownMenu)``;
+const StyledDropdownToggle = styled(DropdownToggle)`
+  &.up-notification--toggle {
+    background-color: inherit;
+  }
+
+  &.up-notification--toggle.up-active {
+    background-color: #d50000;
+  }
+`;
+const StyledDropdownItem = styled(DropdownItem)`
+  &.up-notification--menu-item {
+    border-bottom: 1px solid gray;
+  }
+
+  &.up-notification--menu-header {
+    border-bottom: 2px solid gray;
+  }
+
+  &.up-unread {
+    background-color: lightgray;
+  }
+`;
 
 class NotificationIcon extends Component {
   static propTypes = {
@@ -119,15 +145,15 @@ class NotificationIcon extends Component {
     // empty notifications
     if (notifications.length < 1) {
       return (
-        <DropdownItem className="up-notification--menu-item" disabled>
+        <StyledDropdownItem className="up-notification--menu-item" disabled>
           {t('notifications-all-read')}
-        </DropdownItem>
+        </StyledDropdownItem>
       );
     }
 
     // one or more notifications
     return notifications.map(({url, body, isRead}) => (
-      <DropdownItem
+      <StyledDropdownItem
         key={body}
         tag="a"
         className={
@@ -136,7 +162,7 @@ class NotificationIcon extends Component {
         href={url}
       >
         {body}
-      </DropdownItem>
+      </StyledDropdownItem>
     ));
   };
 
@@ -148,40 +174,36 @@ class NotificationIcon extends Component {
 
     const dropdownClasses = ['up-notification--toggle'];
     if (notifications.length !== 0) {
-        dropdownClasses.push('up-active');
+      dropdownClasses.push('up-active');
     }
 
     return (
-      <Dropdown
+      <StyledDropdown
         isOpen={isDropdownOpen}
         toggle={this.toggle}
         className="up-notification"
       >
-        <DropdownToggle
-          onClick={this.toggle}
-          className={dropdownClasses}
-        >
+        <StyledDropdownToggle onClick={this.toggle} className={dropdownClasses}>
           <FontAwesomeIcon icon="bell" />
           {this.renderNotificationCount()}
-        </DropdownToggle>
+        </StyledDropdownToggle>
 
-        <DropdownMenu className="up-notification--menu">
-          <DropdownItem className="up-notification--menu-header" header>
+        <StyledDropdownMenu className="up-notification--menu">
+          <StyledDropdownItem className="up-notification--menu-header" header>
             {t('notifications')}
-          </DropdownItem>
+          </StyledDropdownItem>
 
           {this.renderNotifications()}
 
-          <DropdownItem
+          <StyledDropdownItem
             className="up-notification--menu-footer"
             tag="a"
             href={seeAllNotificationsUrl}
-            header
           >
             {t('notifications-see-all')}
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
+          </StyledDropdownItem>
+        </StyledDropdownMenu>
+      </StyledDropdown>
     );
   };
 }
