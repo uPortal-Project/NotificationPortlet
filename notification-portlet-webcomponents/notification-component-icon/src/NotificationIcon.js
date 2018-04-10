@@ -209,6 +209,7 @@ class NotificationIcon extends Component {
       >
         <StyledDropdownToggle onClick={this.toggle} className={dropdownClasses}>
           <FontAwesomeIcon icon="bell" />
+          &nbsp;
           {this.renderNotificationCount()}
         </StyledDropdownToggle>
 
