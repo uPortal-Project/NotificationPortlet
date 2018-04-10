@@ -21,6 +21,11 @@ const StyledDropdownMenu = styled(DropdownMenu)`
   }
 `;
 const StyledDropdownToggle = styled(DropdownToggle)`
+  &:hover,
+  &:focus {
+    color: white;
+  }
+
   &.up-notification--toggle {
     background-color: inherit;
   }
@@ -191,9 +196,9 @@ class NotificationIcon extends Component {
     const {t, seeAllNotificationsUrl} = this.props;
     const {notifications, isDropdownOpen} = this.state;
 
-    const dropdownClasses = ['up-notification--toggle'];
+    let dropdownClasses = 'up-notification--toggle';
     if (notifications.length !== 0) {
-      dropdownClasses.push('up-active');
+      dropdownClasses += ' up-active';
     }
 
     return (
