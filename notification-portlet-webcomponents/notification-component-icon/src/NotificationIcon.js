@@ -11,6 +11,7 @@ import reactTimeout from 'react-timeout';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import get from 'lodash/get';
+import find from 'lodash/find';
 
 const StyledDropdown = styled(Dropdown)``;
 const StyledDropdownMenu = styled(DropdownMenu)`
@@ -175,19 +176,33 @@ class NotificationIcon extends Component {
     }
 
     // one or more notifications
-    return notifications.map(({url, id, body, title, attributes}) => (
-      <StyledDropdownItem
-        key={id || body}
-        tag="a"
-        className={
-          'up-notification--menu-item ' +
-          (Boolean(get(attributes, 'READ.0', false)) ? 'up-read' : 'up-unread')
+    return notifications.map(
+      ({url, id, body, title, attributes, availableActions}) => {
+        let href = url;
+        const action = find(availableActions, {
+          id: 'MarkAsReadAndRedirectAction',
+        });
+
+        if (action) {
+          href = `/NotificationPortlet/api/v2/action/MarkAsReadAndRedirectAction/${id}`;
         }
-        href={url}
-      >
-        {title}
-      </StyledDropdownItem>
-    ));
+        return (
+          <StyledDropdownItem
+            key={id || body}
+            tag="a"
+            className={
+              'up-notification--menu-item ' +
+              (Boolean(get(attributes, 'READ.0', false))
+                ? 'up-read'
+                : 'up-unread')
+            }
+            href={href}
+          >
+            {title}
+          </StyledDropdownItem>
+        );
+      }
+    );
   };
 
   componentDidMount = this.fetchNotifications;
