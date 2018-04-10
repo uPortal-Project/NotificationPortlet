@@ -10,9 +10,16 @@ import {translate} from 'react-i18next';
 import reactTimeout from 'react-timeout';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import get from 'lodash/get';
 
 const StyledDropdown = styled(Dropdown)``;
-const StyledDropdownMenu = styled(DropdownMenu)``;
+const StyledDropdownMenu = styled(DropdownMenu)`
+  & {
+    // NOTE: overload portal styles
+    transform: translate3d(0, 32px, 0) !important;
+    z-index: 1002 !important;
+  }
+`;
 const StyledDropdownToggle = styled(DropdownToggle)`
   &.up-notification--toggle {
     background-color: inherit;
@@ -23,6 +30,15 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 `;
 const StyledDropdownItem = styled(DropdownItem)`
+  & {
+    // NOTE: overload portal styles
+    width: 100%;
+    clear: both;
+    padding: 0.25rem 1.5rem;
+    display: block;
+    color: black !important;
+  }
+
   &.up-notification--menu-item {
     border-bottom: 1px solid gray;
   }
@@ -128,7 +144,9 @@ class NotificationIcon extends Component {
     const {t} = this.props;
     const {notifications} = this.state;
 
-    const count = notifications.filter(({isRead}) => !isRead).length;
+    const count = notifications.filter(({attributes}) =>
+      Boolean(get(attributes, 'READ.0', false))
+    ).length;
 
     return (
       <span className="up-notification--notification-count">
@@ -152,16 +170,17 @@ class NotificationIcon extends Component {
     }
 
     // one or more notifications
-    return notifications.map(({url, body, isRead}) => (
+    return notifications.map(({url, id, body, title, attributes}) => (
       <StyledDropdownItem
-        key={body}
+        key={id || body}
         tag="a"
         className={
-          'up-notification--menu-item ' + (isRead ? 'up-read' : 'up-unread')
+          'up-notification--menu-item ' +
+          (Boolean(get(attributes, 'READ.0', false)) ? 'up-read' : 'up-unread')
         }
         href={url}
       >
-        {body}
+        {title}
       </StyledDropdownItem>
     ));
   };
