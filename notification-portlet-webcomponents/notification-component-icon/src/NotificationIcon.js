@@ -30,7 +30,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 
   &.up-notification--toggle {
-    background-color: inherit;
+    background-color: gray;
   }
 
   &.up-notification--toggle.up-active {
@@ -52,11 +52,16 @@ const StyledDropdownItem = styled(DropdownItem)`
   }
 
   &.up-notification--menu-header {
+    font-weight: bold;
     border-bottom: 2px solid gray;
   }
 
+  &.up-notification--menu-footer {
+    font-style: italic;
+  }
+
   &.up-unread {
-    background-color: lightgray;
+    background-color: aliceblue;
   }
 `;
 
@@ -128,13 +133,8 @@ class NotificationIcon extends Component {
     form.submit();
   };
 
-  renderNotificationCount = () => {
+  renderNotificationCount = (unreadCount) => {
     const {t} = this.props;
-    const {notifications} = this.state;
-
-    const unreadCount = notifications.filter(
-      ({attributes}) => !JSON.parse(get(attributes, 'READ.0', 'true'))
-    ).length;
 
     return (
       <span className="up-notification--notification-count">
@@ -200,8 +200,12 @@ class NotificationIcon extends Component {
     const {t, seeAllNotificationsUrl} = this.props;
     const {notifications, isDropdownOpen} = this.state;
 
+    const unreadCount = notifications.filter(
+      ({attributes}) => !JSON.parse(get(attributes, 'READ.0', 'true'))
+    ).length;
+
     let dropdownClasses = 'up-notification--toggle';
-    if (notifications.length !== 0) {
+    if (unreadCount !== 0) {
       dropdownClasses += ' up-active';
     }
 
@@ -214,7 +218,7 @@ class NotificationIcon extends Component {
         <StyledDropdownToggle onClick={this.toggle} className={dropdownClasses}>
           <FontAwesomeIcon icon="bell" />
           &nbsp;
-          {this.renderNotificationCount()}
+          {this.renderNotificationCount(unreadCount)}
         </StyledDropdownToggle>
 
         <StyledDropdownMenu className="up-notification--menu">
