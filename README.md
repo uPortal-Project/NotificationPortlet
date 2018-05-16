@@ -49,14 +49,89 @@ hibernate.connection.password=ENC(9ffpQXJi/EPih9o+Xshm5g==)
 
 Specify the encryption key using the `UP_JASYPT_KEY` environment variable.
 
-### Publication Data
+### Notification Web Components
+
+This project provides UI components for [Apereo uPortal][] that are modern [Web Components][].
+These components are intended to replace the previous generation of components for uPortal based on
+Java Portlets (see below).
+
+The Web Components work differently from the earlier components.  They do not interact with data
+sources through the Portlet API, but rather through a collection of REST APIs.  Unlike portlets,
+configuration of data sources for the REST API is global:  it applies equally to all components that
+work with them.
+
+#### Data Sources for the Notifications REST API (Web Components)
+
+The following data sources are available for use with the REST APIs and the Web Components that work
+with them.  According to convention, the configuration for these APIs and data sources goes in a
+`notification.properties` file within `portal.home`.
+
+##### ClassLoaderResourceNotificationService
+
+This data source reads notifications from one or more files in the Java classpath in the standard
+Notification JSON format.  Use the following property to specify the location(s) of JSON files in
+the classpath.
+
+Example:
+
+```properties
+ClassLoaderResourceNotificationService.locations=demo/demoNotificationResponse.json,demo/demoNotificationResponse2.json
+```
+
+##### DemoNotificationService
+
+The `DemoNotificationService` is a specialization of the `ClassLoaderResourceNotificationService`
+designed for demonstrations.  Use the following property to specify the location(s) of JSON files in
+the classpath.
+
+Example:
+
+```properties
+DemoNotificationService.locations=demo/demoNotificationResponse.json,demo/demoNotificationResponse2.json
+```
+
+##### RestfulJsonNotificationService
+
+This data source reads notifications from one or more remote URLs in the standard Notification JSON
+format.  Use the following property to specify the URLs to read.
+
+```properties
+RestfulJsonNotificationService.serviceUrls=https://my.university.edu/notifications
+```
+
+##### RomeNotificationService
+
+This data source converts RSS into notifications.  It reads from one or more feeds.  Use the
+following property to specify feed URLs.
+
+```properties
+RomeNotificationService.feedUrls=https://my.university.edu/announcements/rss
+```
+
+### Java Portlet-Based UI Components
+
+As it's name implies, this project was originally developed as a collection of Java Portlet
+(JSR-286) technology user interface components.  This project is evolving away from portlets -- and
+toward UI widgets based on [Web Components][] -- but the portlet-based components are still
+available.
+
+The following UI components in this project are portlet-based:
+
+  - `notification`
+  - `notification-icon` (though there is a replacement based on Web Components)
+  - `emergency-alert`
+  - `emergency-alert-admin`
+
+The following subsections cover configuration of portlet-based UI components.
+
+#### Publication Data
 
 Besides Java properties, some configuration settings are managed as data in the _Portlet Publication
 Record_ (the `portlet-definition.xml` file in uPortal).  These settings are defined on a per-
 publication basis, so you can have several publications of the same portlet with each of them
 configured differently.
 
-#### Filtering
+##### Filtering
 
 You can filter the notices that come from data sources in the publication record.  Use the following
 portlet preferences to _exclude_ some notices from appearing in the display:
@@ -84,7 +159,7 @@ portlet preferences to _exclude_ some notices from appearing in the display:
   </tr>
 </table>
 
-### [Modal Notifications][]
+#### [Modal Notifications][]
 
 The `modal` display strategy presents notices in a Bootstrap modal dialog.  If the notice
 defines actions, they will be rendered as buttons at the bottom of the dialog;  any button
@@ -97,4 +172,6 @@ accessing the portal.
 [legacy documentation in the external wiki]: https://wiki.jasig.org/pages/viewpage.action?pageId=47875986
 [README file for uPortal-Start]: https://github.com/Jasig/uPortal-start/blob/master/README.md
 [Jasypt CLI Tools]: http://www.jasypt.org/cli.html
+[Apereo uPortal]: https://github.com/jasig/uPortal
+[Web Components]: https://www.webcomponents.org/
 [Modal Notifications]: notification-portlet-webapp/docs/modal.md

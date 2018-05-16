@@ -73,9 +73,9 @@ public class NotificationRestV2Controller {
         return rslt;
     }
 
-    @RequestMapping(value = "/action/{action}/{notificationId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/action/{actionId}/{notificationId}", method = RequestMethod.POST)
     public Map<String,Object> invokeAction(HttpServletRequest request, HttpServletResponse response,
-                            @RequestParam("actionId") String actionId,
+                            @PathVariable("actionId") String actionId,
                             @PathVariable("notificationId") String notificationId) {
 
         // Obtain the collection

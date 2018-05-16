@@ -165,6 +165,7 @@
     <bean id="usernameParameterEvaluator" class="org.jasig.portlet.notice.service.rest.UserAttributeParameterEvaluator">
         <property name="token" value="username"/>
         <property name="userAttributeKey" value="user.login.id"/>
+        <property name="claimName" value="sub"/>
     </bean>
 
     <!-- PortletEvent:  Use 'NotificationLifecycleController.doEvents' preference to turn on event processing for a portlet definition -->

@@ -49,6 +49,7 @@ public abstract class NotificationAction implements Serializable, Cloneable {
     private NotificationEntry target;
     private String id = getClass().getSimpleName();
     private String label;
+    private String apiUrl;
 
     public final String getClazz() {
         return getClass().getName();
@@ -74,6 +75,28 @@ public abstract class NotificationAction implements Serializable, Cloneable {
 
     public final void setLabel(String label) {
         this.label = label;
+    }
+
+    @JsonIgnore
+    public final NotificationEntry getTarget() {
+        return target;
+    }
+
+    /**
+     * Complete URL (ncluding CSRF token, if appropriate) that can be used to invoke this action
+     * through the <code>NotificationRestV2Controller</code>.
+     */
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
+    /**
+     * Sets the URL for invoking this action through the <code>NotificationRestV2Controller</code>.
+     * <em>This field should not be provided by the data source</em> (i.e. Notification Service).
+     * It must be set by the API layer.
+     */
+    public void setApiUrl(String apiUrl) {
+        this.apiUrl = apiUrl;
     }
 
     /**
@@ -119,11 +142,6 @@ public abstract class NotificationAction implements Serializable, Cloneable {
 
     /* package-private */ void setTarget(NotificationEntry target) {
         this.target = target;
-    }
-
-    @JsonIgnore
-    protected final NotificationEntry getTarget() {
-        return target;
     }
 
 }

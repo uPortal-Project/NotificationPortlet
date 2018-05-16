@@ -20,17 +20,16 @@ package org.jasig.portlet.notice.service.rest;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import javax.annotation.PostConstruct;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.jasig.portlet.notice.NotificationError;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.service.AbstractNotificationService;
@@ -39,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
@@ -48,7 +48,7 @@ import org.springframework.web.client.RestTemplate;
 
 public final class RestfulJsonNotificationService extends AbstractNotificationService {
 
-    public static final String SERVICE_URLS_PREFERENCE = "RestfulJsonNotificationService.serviceUrls";
+    private static final String SERVICE_URLS_PREFERENCE = "RestfulJsonNotificationService.serviceUrls";
 
     private final ResponseExtractor<NotificationResponse> responseExtractor = new ResponseExtractorImpl();
 
@@ -58,6 +58,16 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
 
     private Map<String,IParameterEvaluator> urlParameters;
     private RestTemplate restTemplate;
+
+    /**
+     * Service URLs defined in an external file, in the post-Portlet API style.
+     * Comma-separated list.
+     */
+    @Value("${RestfulJsonNotificationService.serviceUrls:}")
+    private String serviceUrlsProperty;
+
+    private List<String> serviceUrlsList = Collections.emptyList();
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -82,7 +92,7 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
     @Autowired
     public void setUrlParameterEvaluators(Set<IParameterEvaluator> evaluators) {
         final Map<String,IParameterEvaluator> map = new HashMap<>();
-        evaluators.stream().forEach( evaluator -> map.put(evaluator.getToken(), evaluator));
+        evaluators.forEach(evaluator -> map.put(evaluator.getToken(), evaluator));
         urlParameters = Collections.unmodifiableMap(map);
         logger.info("Found the following IParameterEvaluator beans:  {}", urlParameters);
     }
@@ -92,39 +102,84 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
         this.restTemplate = restTemplate;
     }
 
+    @PostConstruct
+    public void init() {
+        if (!StringUtils.isEmpty(serviceUrlsProperty)) {
+            serviceUrlsList =
+                    Collections.unmodifiableList(Arrays.asList(serviceUrlsProperty.split(",")));
+        }
+    }
+
     @Override
     public NotificationResponse fetch(PortletRequest req) {
-        
-        NotificationResponse rslt = NotificationResponse.EMPTY_RESPONSE;  // default is empty
-        
-        final PortletPreferences prefs = req.getPreferences();
-        final Map<String,String> params = createParameters(req);
-        final RequestCallback requestCallback = new RequestCallbackImpl(req);
 
-        final String[] serviceUrls = prefs.getValues(SERVICE_URLS_PREFERENCE, new String[0]);
+        return fetchFromServiceUrls(
+                getServiceUrls(req),
+                new RequestCallbackImpl(req),
+                usernameFinder.findUsername(req),
+                createParameters(req)
+        );
+
+    }
+
+    @Override
+    public NotificationResponse fetch(HttpServletRequest req) {
+
+        return fetchFromServiceUrls(
+                getServiceUrls(),
+                new RequestCallbackImpl(req),
+                usernameFinder.findUsername(req),
+                createParameters(req)
+        );
+
+    }
+
+    /*
+     * Implementation
+     */
+
+    @Deprecated
+    private List<String> getServiceUrls(PortletRequest req) {
+        final PortletPreferences prefs = req.getPreferences();
+        final String[] urls = prefs.getValues(SERVICE_URLS_PREFERENCE, new String[0]);
+        return new ArrayList<>(Arrays.asList(urls));
+    }
+
+    /**
+     * Access to the list of locations is wrapped in a method so that subclasses can override it.
+     */
+    private List<String> getServiceUrls() {
+        return serviceUrlsList;
+    }
+
+    private NotificationResponse fetchFromServiceUrls(List<String> serviceUrls,
+            RequestCallback requestCallback, String username, Map<String,String> params) {
+
+        NotificationResponse rslt = NotificationResponse.EMPTY_RESPONSE;  // default is empty
+
         for (final String url : serviceUrls) {
             logger.debug("Invoking uri '{}' with the following parameters:  {}", url, params);
             try {
                 final NotificationResponse response = restTemplate.execute(
-                        url, HttpMethod.GET, 
+                        url, HttpMethod.GET,
                         requestCallback, responseExtractor, params);
                 rslt = rslt.combine(response);
             } catch (Exception e) {
-                final String msg = "Failed to invoke the following service at '" 
-                        + url + "' for user " + usernameFinder.findUsername(req);
+                final String msg = "Failed to invoke the following service at '"
+                        + url + "' for user " + username;
                 logger.error(msg, e);
                 rslt = prepareErrorResponse(getName(), "Service Unavailable");
             }
         }
-        
+
         return rslt;
 
     }
-    
-    /*
-     * Implementation
+
+    /**
+     * @deprecated Prefer interactions that are not based on the Portlet API
      */
-    
+    @Deprecated
     private Map<String,String> createParameters(PortletRequest req) {
         final Map<String,String> rslt = new HashMap<>();
         for(final Map.Entry<String,IParameterEvaluator> y : urlParameters.entrySet()) {
@@ -134,24 +189,45 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
         }
         return rslt;
     }
-    
+
+    private Map<String,String> createParameters(HttpServletRequest req) {
+        final Map<String,String> rslt = new HashMap<>();
+        for(final Map.Entry<String,IParameterEvaluator> y : urlParameters.entrySet()) {
+            final String key = y.getKey();
+            final String value = urlParameters.get(key).evaluate(req);
+            rslt.put(key, value);
+        }
+        return rslt;
+    }
+
     /*
      * Nested Types
      */
     
     private /* non-static */ final class RequestCallbackImpl implements RequestCallback {
         
-        private final PortletRequest portletReq;
-        
-        public RequestCallbackImpl(PortletRequest portletReq) {
-            this.portletReq = portletReq;
+        private final Object request;
+
+        public RequestCallbackImpl(Object request) {
+            this.request = request;
         }
 
         @Override
         public void doWithRequest(ClientHttpRequest httpReq) {
 
-            final String username = usernameEvaluator.evaluate(portletReq);
-            final String password = passwordEvaluator.evaluate(portletReq);
+            String username;
+            String password;
+            if (PortletRequest.class.isInstance(request)) {
+                final PortletRequest portletReq = (PortletRequest) request;
+                username = usernameEvaluator.evaluate(portletReq);
+                password = passwordEvaluator.evaluate(portletReq);
+            } else if (HttpServletRequest.class.isInstance(request)) {
+                final HttpServletRequest httpr = (HttpServletRequest) request;
+                username = usernameEvaluator.evaluate(httpr);
+                password = passwordEvaluator.evaluate(httpr);
+            } else {
+                throw new IllegalStateException("The request is neither a PortletRequest nor an HttpServletRequest");
+            }
 
             // Perform BASIC AuthN if credentials are provided
             if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {

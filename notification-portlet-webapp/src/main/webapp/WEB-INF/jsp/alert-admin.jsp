@@ -25,14 +25,10 @@
 
     <p class="lead bg-warning"><spring:message code="alertAdmin.text"/> <strong><spring:message code="alertAdmin.${value}"/></strong></p>
     
-    <ul>
-        <li style="list-style: none;">
-            <a class="btn btn-primary btn-lg" href="<portlet:actionURL/>">
-                <spring:message code="alertAdmin.button.${value}"/>
-            </a>
-        </li>
-    </ul>
-    
+    <form action="<portlet:actionURL/>" method="POST">
+        <input type="submit" class="btn btn-primary btn-lg" value="<spring:message code="alertAdmin.button.${value}"/>" />
+    </form>
+
     <p><spring:message code="alertAdmin.note"/></p>
 </div>
 

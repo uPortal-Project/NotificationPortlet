@@ -119,4 +119,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return filterRegistrationBean;
     }
 
+    @Bean("soffitSignatureKey")
+    public String signatureKey() {
+        return signatureKey;
+    }
 }
