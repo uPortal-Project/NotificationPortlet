@@ -26,7 +26,7 @@
     "husky": "^0.14.3",
     "lint-staged": "^7.0.0",
     "prettier-eslint-cli": "^4.7.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "2.0.0-next.66cc7a90"
   },
   "scripts": {
     "precommit": "lint-staged",
@@ -36,22 +36,17 @@
     "eject": "react-scripts eject"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css}": [
-      "prettier-eslint --write",
-      "git add"
-    ]
+    "src/**/*.{js,jsx,json,css}": ["prettier-eslint --write", "git add"]
   },
   "prettier": {
     "singleQuote": true
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "google"
-    ],
+    "extends": ["react-app", "google"],
     "rules": {
       "no-invalid-this": "off",
       "require-jsdoc": "off"
     }
-  }
+  },
+  "browserslist": [">1%", "Firefox ESR", "not dead"]
 }
