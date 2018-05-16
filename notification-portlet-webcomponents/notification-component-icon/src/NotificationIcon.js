@@ -198,7 +198,7 @@ class NotificationIcon extends Component {
           onClick = this.doPost(action.apiUrl);
           href = 'javascript:void(0)';
         }
-        // TODO: POST
+
         return (
           <StyledDropdownItem
             key={id || body}
