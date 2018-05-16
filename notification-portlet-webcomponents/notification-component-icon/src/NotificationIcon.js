@@ -153,14 +153,14 @@ class NotificationIcon extends Component {
     form.style.display = 'none';
     document.body.appendChild(form);
     form.submit();
-  }
+  };
 
   renderNotificationCount = () => {
     const {t} = this.props;
     const {notifications} = this.state;
 
-    const count = notifications.filter(({attributes}) =>
-      Boolean(get(attributes, 'READ.0', false))
+    const count = notifications.filter(
+      ({attributes}) => !JSON.parse(get(attributes, 'READ.0', false))
     ).length;
 
     return (
