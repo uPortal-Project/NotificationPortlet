@@ -150,14 +150,16 @@ class NotificationIcon extends Component {
     const {t} = this.props;
     const {notifications} = this.state;
 
-    const count = notifications.filter(({attributes}) =>
-      Boolean(get(attributes, 'READ.0', false))
+    const unreadCount = notifications.filter(
+      ({attributes}) => !Boolean(get(attributes, 'READ.0', false))
     ).length;
 
     return (
       <span className="up-notification--notification-count">
-        {count || ''}
-        <span className="sr-only">{t('notification-count', {count})}</span>
+        {unreadCount || ''}
+        <span className="sr-only">
+          {t('notification-count', {unreadCount})}
+        </span>
       </span>
     );
   };
