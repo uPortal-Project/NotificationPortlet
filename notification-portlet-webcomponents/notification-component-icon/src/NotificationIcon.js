@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import 'document-register-element';
 import oidc from '@uportal/open-id-connect';
 import {
   Dropdown,
@@ -47,15 +48,22 @@ const StyledDropdownItem = styled(DropdownItem)`
   }
 
   &.up-notification--menu-item {
-    border-bottom: 1px solid gray;
+    border-bottom: 0.25px solid lightsteelblue;
   }
 
   &.up-notification--menu-header {
-    border-bottom: 2px solid gray;
+    font-weight: bold;
+    border-bottom: 2px solid lightsteelblue;
+    padding-bottom: 8px;
+  }
+
+  &.up-notification--menu-footer {
+    margin-top: 8px;
+    font-style: italic;
   }
 
   &.up-unread {
-    background-color: lightgray;
+    background-color: aliceblue;
   }
 `;
 
@@ -127,18 +135,15 @@ class NotificationIcon extends Component {
     form.submit();
   };
 
-  renderNotificationCount = () => {
+  renderNotificationCount = (unreadCount) => {
     const {t} = this.props;
-    const {notifications} = this.state;
-
-    const count = notifications.filter(
-      ({attributes}) => !JSON.parse(get(attributes, 'READ.0', false))
-    ).length;
 
     return (
       <span className="up-notification--notification-count">
-        {count || ''}
-        <span className="sr-only">{t('notification-count', {count})}</span>
+        {unreadCount || ''}
+        <span className="sr-only">
+          {t('notification-count', {unreadCount})}
+        </span>
       </span>
     );
   };
@@ -177,7 +182,7 @@ class NotificationIcon extends Component {
             tag="a"
             className={
               'up-notification--menu-item ' +
-              (Boolean(get(attributes, 'READ.0', false))
+              (JSON.parse(get(attributes, 'READ.0', 'true'))
                 ? 'up-read'
                 : 'up-unread')
             }
@@ -197,8 +202,12 @@ class NotificationIcon extends Component {
     const {t, seeAllNotificationsUrl} = this.props;
     const {notifications, isDropdownOpen} = this.state;
 
+    const unreadCount = notifications.filter(
+      ({attributes}) => !JSON.parse(get(attributes, 'READ.0', 'true'))
+    ).length;
+
     let dropdownClasses = 'up-notification--toggle';
-    if (notifications.length !== 0) {
+    if (unreadCount !== 0) {
       dropdownClasses += ' up-active';
     }
 
@@ -211,7 +220,7 @@ class NotificationIcon extends Component {
         <StyledDropdownToggle onClick={this.toggle} className={dropdownClasses}>
           <FontAwesomeIcon icon="bell" />
           &nbsp;
-          {this.renderNotificationCount()}
+          {this.renderNotificationCount(unreadCount)}
         </StyledDropdownToggle>
 
         <StyledDropdownMenu className="up-notification--menu">
