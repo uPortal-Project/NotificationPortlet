@@ -30,7 +30,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   }
 
   &.up-notification--toggle {
-    background-color: gray;
+    background-color: inherit;
   }
 
   &.up-notification--toggle.up-active {
@@ -48,15 +48,17 @@ const StyledDropdownItem = styled(DropdownItem)`
   }
 
   &.up-notification--menu-item {
-    border-bottom: 1px solid gray;
+    border-bottom: 0.25px solid lightsteelblue;
   }
 
   &.up-notification--menu-header {
     font-weight: bold;
-    border-bottom: 2px solid gray;
+    border-bottom: 2px solid lightsteelblue;
+    padding-bottom: 8px;
   }
 
   &.up-notification--menu-footer {
+    margin-top: 8px;
     font-style: italic;
   }
 
