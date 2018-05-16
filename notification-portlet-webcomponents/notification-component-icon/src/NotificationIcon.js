@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import 'document-register-element';
 import oidc from '@uportal/open-id-connect';
 import {
   Dropdown,
@@ -138,7 +139,9 @@ class NotificationIcon extends Component {
     return (
       <span className="up-notification--notification-count">
         {unreadCount || ''}
-        <span className="sr-only">{t('notification-count', {unreadCount})}</span>
+        <span className="sr-only">
+          {t('notification-count', {unreadCount})}
+        </span>
       </span>
     );
   };

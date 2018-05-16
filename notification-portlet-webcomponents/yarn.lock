@@ -2899,7 +2899,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-class@^15.5.2, create-react-class@^15.6.0:
+create-react-class@^15.5.2:
   version "15.6.3"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
   dependencies:
@@ -3367,9 +3367,11 @@ doctrine@^2.0.2, doctrine@^2.1.0:
   dependencies:
     esutils "^2.0.2"
 
-document-register-element@^0.5.0:
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/document-register-element/-/document-register-element-0.5.4.tgz#df6b57fbb8e141123e5f61acf382d6bb78c02bce"
+document-register-element@^1.7.2, document-register-element@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/document-register-element/-/document-register-element-1.8.1.tgz#db841ece6cba28e6e538ac8e815413b59e86047e"
+  dependencies:
+    lightercollective "^0.0.0"
 
 dom-converter@~0.1:
   version "0.1.4"
@@ -6178,6 +6180,10 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+lightercollective@^0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/lightercollective/-/lightercollective-0.0.0.tgz#5b85f6755b78c1f94db590e479f954cbfeeb0409"
+
 lint-staged@^7.0.0:
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-7.0.4.tgz#1aa7f27427e4c4c85d4d6524ac98aac10cbaf1b8"
@@ -7915,7 +7921,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1:
+prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:
@@ -8089,15 +8095,6 @@ react-dev-utils@6.0.0-next.66cc7a90:
     strip-ansi "4.0.0"
     text-table "0.2.0"
 
-react-dom@^15.2.0:
-  version "15.6.2"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.2.tgz#41cfadf693b757faf2708443a1d1fd5a02bef730"
-  dependencies:
-    fbjs "^0.8.9"
-    loose-envify "^1.1.0"
-    object-assign "^4.1.0"
-    prop-types "^15.5.10"
-
 react-dom@^16.3.0:
   version "16.3.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.3.1.tgz#6a3c90a4fb62f915bdbcf6204422d93a7d4ca573"
@@ -8199,16 +8196,6 @@ react-transition-group@^2.2.1:
     prop-types "^15.5.8"
     warning "^3.0.0"
 
-react@^15.2.0:
-  version "15.6.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
-  dependencies:
-    create-react-class "^15.6.0"
-    fbjs "^0.8.9"
-    loose-envify "^1.1.0"
-    object-assign "^4.1.0"
-    prop-types "^15.5.10"
-
 react@^16.3.0:
   version "16.3.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.3.1.tgz#4a2da433d471251c69b6033ada30e2ed1202cfd8"
@@ -8218,13 +8205,11 @@ react@^16.3.0:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
-reactive-elements@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/reactive-elements/-/reactive-elements-0.7.0.tgz#2e9ad1318993385ce521f553f2fa306b4a4f6dec"
+reactive-elements@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/reactive-elements/-/reactive-elements-0.9.0.tgz#da2c9b01a3a43ef6969b2c418ca047c95d8018a0"
   dependencies:
-    document-register-element "^0.5.0"
-    react "^15.2.0"
-    react-dom "^15.2.0"
+    document-register-element "^1.7.2"
 
 reactstrap@^5.0.0:
   version "5.0.0"
