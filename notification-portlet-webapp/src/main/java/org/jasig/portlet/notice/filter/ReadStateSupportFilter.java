@@ -32,6 +32,8 @@ import org.jasig.portlet.notice.action.read.ReadAction;
 import org.jasig.portlet.notice.rest.EventDTO;
 import org.jasig.portlet.notice.util.IJpaServices;
 import org.jasig.portlet.notice.util.UsernameFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -59,6 +61,8 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
 
     @Autowired
     private IJpaServices jpaServices;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public ReadStateSupportFilter() {
         super(AbstractNotificationServiceFilter.ORDER_NORMAL);
@@ -89,6 +93,10 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
                  */
                 final String username = usernameFinder.findUsername(request);
                 final List<EventDTO> history = jpaServices.getHistory(entry, username);
+
+                logger.trace("Found the following history for username='{}' and entryId='{}': {}",
+                        username, entry.getId(), history);
+
                 final List<NotificationAttribute> attributes = new ArrayList<>(entry.getAttributes());
                 final boolean isRead = history.stream()
                         .anyMatch(event -> NotificationState.READ.equals(event.getState()));
@@ -96,16 +104,18 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
                 entry.setAttributes(attributes);
 
                 /*
-                 * Decorate with READ behavior, but only if the entry does not have a ReadAction
-                 * already
+                 * Decorate with READ behavior, but only if (1) the entry is unread and (2) the
+                 * entry does not have a ReadAction already
                  */
-                final List<NotificationAction> currentActions = entry.getAvailableActions();
-                boolean hasReadActionAlready = currentActions.stream()
-                        .anyMatch(action -> ReadAction.class.isInstance(action));
-                if (!hasReadActionAlready) {
-                    final List<NotificationAction> replacementList = new ArrayList<>(currentActions);
-                    replacementList.add(new MarkAsReadAndRedirectAction());
-                    entry.setAvailableActions(replacementList);
+                if (!isRead) {
+                    final List<NotificationAction> currentActions = entry.getAvailableActions();
+                    boolean hasReadActionAlready = currentActions.stream()
+                            .anyMatch(action -> ReadAction.class.isInstance(action));
+                    if (!hasReadActionAlready) {
+                        final List<NotificationAction> replacementList = new ArrayList<>(currentActions);
+                        replacementList.add(new MarkAsReadAndRedirectAction());
+                        entry.setAvailableActions(replacementList);
+                    }
                 }
             }
         }

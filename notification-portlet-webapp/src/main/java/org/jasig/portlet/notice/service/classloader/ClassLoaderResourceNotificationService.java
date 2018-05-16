@@ -106,7 +106,7 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
      * Implementation
      */
 
-    public NotificationResponse fetchFromClasspath(List<String> locations) {
+    private NotificationResponse fetchFromClasspath(List<String> locations) {
 
         if (locations.isEmpty()) {
             return NotificationResponse.EMPTY_RESPONSE;

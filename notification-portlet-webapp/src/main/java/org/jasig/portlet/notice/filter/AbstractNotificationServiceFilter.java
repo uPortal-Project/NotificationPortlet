@@ -29,15 +29,16 @@ import org.jasig.portlet.notice.INotificationServiceFilter;
 public abstract class AbstractNotificationServiceFilter implements INotificationServiceFilter {
 
     /*
-     * Helper constants for ordering;  based on prime numbers
+     * Helper constants for ordering;  filters take effect in the reverse of the eorder in which
+     * they are invoked.
      */
-    public static final int ORDER_FIRST = Integer.MIN_VALUE;
-    public static final int ORDER_VERY_EARLY = -100;
-    public static final int ORDER_EARLY = -10;
+    public static final int ORDER_FIRST = Integer.MAX_VALUE;
+    public static final int ORDER_VERY_EARLY = 100;
+    public static final int ORDER_EARLY = 10;
     public static final int ORDER_NORMAL = 0;
-    public static final int ORDER_LATE = 10;
-    public static final int ORDER_VERY_LATE = 100;
-    public static final int ORDER_LAST = Integer.MAX_VALUE;
+    public static final int ORDER_LATE = -10;
+    public static final int ORDER_VERY_LATE = -100;
+    public static final int ORDER_LAST = Integer.MIN_VALUE;
 
     private final int order;
 

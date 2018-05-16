@@ -19,17 +19,30 @@
 package org.jasig.portlet.notice.service.rest;
 
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
-public class PortletRequestAttributeParameterEvaluator extends AbstractParameterEvaluator {
+/**
+ * Concrete implementation of {@link IParameterEvaluator} based on request attributes.  Works with
+ * both <code>PortletRequest</code> (though deprecated) and <code>HttpServletRequest</code>.
+ *
+ * @since 4.0
+ */
+public class RequestAttributeParameterEvaluator extends AbstractParameterEvaluator {
     protected String attributeKey;
 
     public void setAttributeKey(String attributeKey) {
         this.attributeKey = attributeKey;
     }
 
-    public String evaluate(PortletRequest request) {
-        Object o = request.getAttribute(attributeKey);
+    @Override
+    public String evaluate(PortletRequest req) {
+        Object o = req.getAttribute(attributeKey);
         return o == null ? null : o.toString();
     }
 
+    @Override
+    public String evaluate(HttpServletRequest req) {
+        Object o = req.getAttribute(attributeKey);
+        return o == null ? null : o.toString();
+    }
 }

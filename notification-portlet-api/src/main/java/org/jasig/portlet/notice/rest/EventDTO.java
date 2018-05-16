@@ -18,6 +18,7 @@
  */
 package org.jasig.portlet.notice.rest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jasig.portlet.notice.NotificationState;
 
@@ -31,6 +32,7 @@ import java.sql.Timestamp;
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EventDTO implements Serializable {
+
     private static final long serialVersionUid = 1l;
 
     private long id;
@@ -77,4 +79,16 @@ public class EventDTO implements Serializable {
     public void setState(NotificationState state) {
         this.state = state;
     }
+
+    @JsonIgnore
+    @Override
+    public String toString() {
+        return "EventDTO{" +
+                "id=" + id +
+                ", timestamp=" + timestamp +
+                ", username='" + username + '\'' +
+                ", state=" + state +
+                '}';
+    }
+
 }

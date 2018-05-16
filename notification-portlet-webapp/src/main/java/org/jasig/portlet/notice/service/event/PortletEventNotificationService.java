@@ -28,22 +28,31 @@ import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.jasig.portlet.notice.INotificationService;
 import org.jasig.portlet.notice.NotificationConstants;
 import org.jasig.portlet.notice.NotificationQuery;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.NotificationResult;
 import org.jasig.portlet.notice.controller.NotificationLifecycleController;
 import org.jasig.portlet.notice.service.AbstractNotificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Concrete {@link INotificationService} class that gathers notifications from other portlets based
+ * on portlet events.
+ *
+ * @deprecated Prefer interactions that are not based on the Portlet API
+ */
+@Deprecated
 public final class PortletEventNotificationService extends AbstractNotificationService {
 
-    private final Log log = LogFactory.getLog(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private Cache cache;
 
     @Resource(name="PortletEventNotificationService.responseCache")
@@ -80,8 +89,8 @@ public final class PortletEventNotificationService extends AbstractNotificationS
             }
 
             if (sendRequestEvent) {
-                if (log.isDebugEnabled()) {
-                    log.debug("REQUESTING Notifications events for user='"
+                if (logger.isDebugEnabled()) {
+                    logger.debug("REQUESTING Notifications events for user='"
                                         + usernameFinder.findUsername(req)
                                         + "' and windowId=" + req.getWindowID());
                 }
@@ -98,8 +107,8 @@ public final class PortletEventNotificationService extends AbstractNotificationS
     @Override
     public void collect(final EventRequest req, final EventResponse res) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("RECEIVING Notifications events for user='"
+        if (logger.isDebugEnabled()) {
+            logger.debug("RECEIVING Notifications events for user='"
                                 + usernameFinder.findUsername(req)
                                 + "' and windowId=" + req.getWindowID());
         }
@@ -140,6 +149,19 @@ public final class PortletEventNotificationService extends AbstractNotificationS
 
         return rslt;
 
+    }
+
+    /**
+     * This {@link INotificationService} is fundamentally about Java Portlets, and there is nothing
+     * it can offer to this overload of <code>fetch</code>.
+     *
+     * @since 4.0
+     */
+    @Override
+    public NotificationResponse fetch(HttpServletRequest request) {
+        logger.trace("{} invoked for user '{}', but there is nothing to do",
+                getClass().getSimpleName(), usernameFinder.findUsername(request));
+        return NotificationResponse.EMPTY_RESPONSE;
     }
 
 }

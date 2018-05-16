@@ -146,6 +146,15 @@ class NotificationIcon extends Component {
     });
   };
 
+  doPost = (url) => () => {
+    let form = document.createElement('form');
+    form.action = url;
+    form.method = 'POST';
+    form.style.display = 'none';
+    document.body.appendChild(form);
+    form.submit();
+  }
+
   renderNotificationCount = () => {
     const {t} = this.props;
     const {notifications} = this.state;
@@ -178,14 +187,18 @@ class NotificationIcon extends Component {
     // one or more notifications
     return notifications.map(
       ({url, id, body, title, attributes, availableActions}) => {
+        let onClick = undefined;
         let href = url;
+
+        // Is this link based on MarkAsReadAndRedirectAction?
         const action = find(availableActions, {
           id: 'MarkAsReadAndRedirectAction',
         });
-
         if (action) {
-          href = `/NotificationPortlet/api/v2/action/MarkAsReadAndRedirectAction/${id}`;
+          onClick = this.doPost(action.apiUrl);
+          href = 'javascript:void(0)';
         }
+        // TODO: POST
         return (
           <StyledDropdownItem
             key={id || body}
@@ -196,6 +209,7 @@ class NotificationIcon extends Component {
                 ? 'up-read'
                 : 'up-unread')
             }
+            onClick={onClick}
             href={href}
           >
             {title}
