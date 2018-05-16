@@ -131,14 +131,14 @@ class NotificationIcon extends Component {
     const {t} = this.props;
     const {notifications} = this.state;
 
-    const count = notifications.filter(
-      ({attributes}) => !JSON.parse(get(attributes, 'READ.0', false))
+    const unreadCount = notifications.filter(
+      ({attributes}) => !JSON.parse(get(attributes, 'READ.0', 'true'))
     ).length;
 
     return (
       <span className="up-notification--notification-count">
-        {count || ''}
-        <span className="sr-only">{t('notification-count', {count})}</span>
+        {unreadCount || ''}
+        <span className="sr-only">{t('notification-count', {unreadCount})}</span>
       </span>
     );
   };
@@ -177,7 +177,7 @@ class NotificationIcon extends Component {
             tag="a"
             className={
               'up-notification--menu-item ' +
-              (Boolean(get(attributes, 'READ.0', false))
+              (JSON.parse(get(attributes, 'READ.0', 'true'))
                 ? 'up-read'
                 : 'up-unread')
             }
