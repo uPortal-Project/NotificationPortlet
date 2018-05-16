@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import oidc from '@uportal/open-id-connect';
 import {
   Dropdown,
   DropdownMenu,
@@ -77,48 +78,19 @@ class NotificationIcon extends Component {
 
   state = {
     isDropdownOpen: false,
-    bearerToken: null,
     notifications: [],
   };
 
-  fetchBearerToken = async () => {
-    const {setTimeout, userInfoApiUrl, tokenTimeoutMs} = this.props;
-
-    try {
-      const response = await fetch(userInfoApiUrl, {
-        credentials: 'same-origin',
-      });
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const bearerToken = await response.text();
-
-      this.setState({bearerToken});
-
-      // clear token after timeout has passed
-      setTimeout(function() {
-        this.setState({bearerToken: null});
-      }, tokenTimeoutMs);
-
-      return bearerToken;
-    } catch (err) {
-      // TODO: add an error view
-      console.error(err);
-    }
-  };
-
   fetchNotifications = async () => {
-    let {bearerToken} = this.state;
-    const {notificationApiUrl, debug} = this.props;
+    const {notificationApiUrl, tokenTimeoutMs, debug} = this.props;
 
     try {
-      if (!bearerToken && !debug) {
-        bearerToken = await this.fetchBearerToken();
-      }
       const response = await fetch(notificationApiUrl, {
         credentials: 'same-origin',
         headers: {
-          'Authorization': 'Bearer ' + bearerToken,
+          'Authorization': debug
+            ? null // don't worry about token in debug mode
+            : 'Bearer ' + (await oidc({timeout: tokenTimeoutMs})).encoded,
           'content-type': 'application/jwt',
         },
       });
