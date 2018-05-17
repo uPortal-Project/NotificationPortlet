@@ -6,4 +6,4 @@ install:
   - ./gradlew --version
 build_script: false
 test_script:
-  - ./gradlew check
+  - ./gradlew check -u -S --no-daemon --no-parallel
