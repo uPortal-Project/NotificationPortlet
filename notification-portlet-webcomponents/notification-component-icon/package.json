@@ -6,7 +6,7 @@
     "@fortawesome/fontawesome": "^1.1.4",
     "@fortawesome/fontawesome-free-solid": "^5.0.8",
     "@fortawesome/react-fontawesome": "^0.0.20",
-    "@uportal/open-id-connect": "^0.0.7",
+    "@uportal/open-id-connect": "^0.0.8",
     "document-register-element": "^1.8.1",
     "i18next": "^11.1.1",
     "i18next-browser-languagedetector": "^2.1.0",
