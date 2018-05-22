@@ -120,9 +120,9 @@ public class NotificationServiceFilterConfiguration {
             INotificationServiceFilterChain chain = () -> {
                 NotificationResponse rslt = new NotificationResponse();
                 for (INotificationService service : services) {
-                    logger.debug("Processing INotificationService bean '{}'", service.getName());
                     NotificationResponse response = service.fetch(request);
                     rslt = rslt.combine(response);
+                    logger.debug("Processed INotificationService bean '{}';  size={}", service.getName(), rslt.size());
                 }
                 return rslt;
             };
@@ -157,8 +157,9 @@ public class NotificationServiceFilterConfiguration {
 
         @Override
         public NotificationResponse doFilter() {
-            logger.debug("Processing INotificationServiceFilter bean:  {}", filter);
-            return filter.doFilter(request, nextLink);
+            final NotificationResponse rslt = filter.doFilter(request, nextLink);
+            logger.debug("Processing INotificationServiceFilter bean '{}';  size={}", filter, rslt.size());
+            return rslt;
         }
     }
 

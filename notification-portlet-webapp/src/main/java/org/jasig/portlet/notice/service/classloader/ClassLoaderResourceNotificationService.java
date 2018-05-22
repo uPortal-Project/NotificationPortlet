@@ -117,16 +117,16 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
         final Element m = cache.get(locations);
         if (m != null) {
             // ## CACHE HIT ##
-            logger.debug("Locations cache HIT for collection:  {}", locations);
             rslt = (NotificationResponse) m.getObjectValue();
+            logger.debug("Locations cache HIT for collection {};  size={}", locations, rslt.size());
         } else {
             // ## CACHE MISS ##
-            logger.debug("Locations cache MISS for collection:  {}", locations);
             rslt = new NotificationResponse();
             for (String loc : locations) {
                 final NotificationResponse response = readFromFile(loc);
                 rslt = rslt.combine(response);
             }
+            logger.debug("Locations cache MISS for collection {};  size={}", locations, rslt.size());
             cache.put(new Element(locations, rslt));
         }
 
