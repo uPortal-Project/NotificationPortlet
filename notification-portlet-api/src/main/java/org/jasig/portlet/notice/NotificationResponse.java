@@ -175,9 +175,10 @@ public class NotificationResponse implements Serializable, Cloneable {
     @JsonIgnore
     @XmlTransient
     public int size() {
-        final MutableInt rslt = new MutableInt(0);
-        categories.forEach(category -> rslt.add(category.getEntries().size()));
-        return rslt.toInteger();
+        return categories.stream()
+                .map(NotificationCategory::getEntries)
+                .mapToInt(List::size)
+                .sum();
     }
 
     @Override
