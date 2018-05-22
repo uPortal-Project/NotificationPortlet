@@ -79,6 +79,32 @@ subprojects {
                 repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                     authentication(userName: publishingUsername, password: publishingPassword)
                 }
+
+                pom.project {
+                    name 'NotificationPortlet'
+                    description 'Content objects for displaying important notices from campus ' +
+                            'systems in uPortal based on Web Components and JSR-286 (Portlet 2.0)'
+                    url 'https://github.com/Jasig/NotificationPortlet'
+
+                    scm {
+                        connection 'scm:git:git://github.com/Jasig/NotificationPortlet.git'
+                        url 'https://github.com/Jasig/NotificationPortlet'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The Apache License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            organization 'NotificationPortlet Developers'
+                            organizationUrl 'https://github.com/Jasig/NotificationPortlet/graphs/contributors'
+                        }
+                    }
+                }
             }
         }
     }
