@@ -49,9 +49,9 @@ import org.springframework.beans.factory.annotation.Value;
  * It provides a <code>setActive(boolean)</code> method (default is true) for 
  * toggling it on and off at runtime.
  */
-public final class DemoNotificationService extends ClassLoaderResourceNotificationService {
+public class DemoNotificationService extends ClassLoaderResourceNotificationService {
     
-    public static final String LOCATIONS_PREFERENCE = "DemoNotificationService.locations";
+    private static final String LOCATIONS_PREFERENCE = "DemoNotificationService.locations";
 
     private static final DateTimeFormatter DATE_PARSER = DateTimeFormat.forPattern("MM/dd/YYYY");
 
@@ -99,29 +99,27 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
             rslt = super.fetch(req);
 
             // A dash of post-processing to make the demo data more relevant.
+            updateNotificationResponse(rslt);
 
-            // Calculate days adjustment factor for all student jobs date values.  Use number of days from from
-            // 05/15/2014 to the current date.
-            int jobDaysAdjustment = (int) new Duration(new LocalDate(2014, 5, 15).toDateTimeAtStartOfDay(),
-                    new LocalDate().toDateTimeAtStartOfDay()).getStandardDays();
-            
-            for (NotificationCategory nc : rslt.getCategories()) {
-                for (NotificationEntry y : nc.getEntries()) {
+        } else {
+            log.debug("Sending an empty response because we are INACTIVE");
+        }
 
-                    // Make all the due dates at or near today
-                    if (y.getDueDate() != null) {
-                        // Just manipulate the ones that actually have 
-                        // a due date;  leave the others blank
-                        y.setDueDate(generateRandomDueDate());
-                    }
+        return rslt;
+    }
 
-                    // For student jobs demo data, set relevant postDate, dateClosed, and startDate values based on
-                    // current data.
-                    updateDateAttributeIfPresent(y.getAttributes(), "postDate", jobDaysAdjustment);
-                    updateDateAttributeIfPresent(y.getAttributes(), "dateClosed", jobDaysAdjustment);
-                    updateDateAttributeIfPresent(y.getAttributes(), "startDate", jobDaysAdjustment);
-                }
-            }
+    @Override
+    public NotificationResponse fetch(HttpServletRequest req) {
+
+        NotificationResponse rslt = NotificationResponse.EMPTY_RESPONSE;  // default
+
+        // Are we active?
+        if (active) {
+            log.debug("Sending a non-empty response because we are ACTIVE");
+            rslt = super.fetch(req);
+
+            // A dash of post-processing to make the demo data more relevant.
+            updateNotificationResponse(rslt);
 
         } else {
             log.debug("Sending an empty response because we are INACTIVE");
@@ -146,6 +144,31 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
         return new ArrayList<>(Arrays.asList(locations));
     }
 
+    private void updateNotificationResponse(NotificationResponse response) {
+        // Calculate days adjustment factor for all student jobs date values.  Use number of days from from
+        // 05/15/2014 to the current date.
+        int jobDaysAdjustment = (int) new Duration(new LocalDate(2014, 5, 15).toDateTimeAtStartOfDay(),
+                new LocalDate().toDateTimeAtStartOfDay()).getStandardDays();
+
+        for (NotificationCategory nc : response.getCategories()) {
+            for (NotificationEntry y : nc.getEntries()) {
+
+                // Make all the due dates at or near today
+                if (y.getDueDate() != null) {
+                    // Just manipulate the ones that actually have
+                    // a due date;  leave the others blank
+                    y.setDueDate(generateRandomDueDate());
+                }
+
+                // For student jobs demo data, set relevant postDate, dateClosed, and startDate values based on
+                // current data.
+                updateDateAttributeIfPresent(y.getAttributes(), "postDate", jobDaysAdjustment);
+                updateDateAttributeIfPresent(y.getAttributes(), "dateClosed", jobDaysAdjustment);
+                updateDateAttributeIfPresent(y.getAttributes(), "startDate", jobDaysAdjustment);
+            }
+        }
+    }
+
     private Date generateRandomDueDate() {
         int randomDelta = MIN_DAY_DELTA 
                 + (int)(Math.random() * ((MAX_DAY_DELTA - MIN_DAY_DELTA) + 1))
@@ -163,8 +186,7 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
                 if (attr.getValues().size() == 1) {
                     // Allow parse errors to throw exception and stop the data file processing
                     LocalDate date = DATE_PARSER.parseLocalDate(attr.getValues().get(0));
-                    attr.setValues(Arrays.asList(new String[]
-                            { DATE_PARSER.print(date.plusDays(addDays).toDateTimeAtStartOfDay())}));
+                    attr.setValues(Collections.singletonList(DATE_PARSER.print(date.plusDays(addDays).toDateTimeAtStartOfDay())));
                 } else if (attr.getValues().size() > 1) {
                     log.warn("Sample data for Notification Attribute {} has {} values; considering only 1st value",
                             attr.getName(), attr.getValues().size());
@@ -172,7 +194,7 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
                     log.warn("Sample data for Notification Attribute {} has no values");
                 }
                 String value = attr.getValues().size() > 0 ? attr.getValues().get(0) : "";
-                attr.setValues(Arrays.asList(new String[] {value}));
+                attr.setValues(Collections.singletonList(value));
             }
         }
     }

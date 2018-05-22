@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.commons.lang.mutable.MutableInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -166,6 +167,17 @@ public class NotificationResponse implements Serializable, Cloneable {
         }
         rslt.setErrors(filteredErrors);
         return rslt;
+    }
+
+    /**
+     * Provides the total number of notifications contained in the response.
+     */
+    @JsonIgnore
+    @XmlTransient
+    public int size() {
+        final MutableInt rslt = new MutableInt(0);
+        categories.forEach(category -> rslt.add(category.getEntries().size()));
+        return rslt.toInteger();
     }
 
     @Override

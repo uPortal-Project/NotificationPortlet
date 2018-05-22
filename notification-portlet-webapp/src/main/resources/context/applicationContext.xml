@@ -189,7 +189,7 @@
         <property name="name" value="demoNotifications"/>
         <property name="active" value="true"/>
     </bean>
-    <bean id="demoEmergencyAlerts" class="org.jasig.portlet.notice.service.classloader.DemoNotificationService">
+    <bean id="demoEmergencyAlerts" class="org.jasig.portlet.notice.service.classloader.LegacyEmergencyAlertsDemoNotifictionService">
         <property name="name" value="demoEmergencyAlerts"/>
         <property name="active" value="false"/> <!-- The emergency alerts demo can be activated by the EmergencyAlertAdminController. -->
     </bean>
