@@ -14,3 +14,4 @@ bin/
 .gradle
 /build/
 .gradletasknamecache
+package-lock.json
