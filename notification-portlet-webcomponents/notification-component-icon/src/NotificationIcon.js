@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import 'document-register-element';
 import oidc from '@uportal/open-id-connect';
-import {
-  Dropdown,
-  DropdownMenu,
-  DropdownToggle,
-  DropdownItem,
-} from 'reactstrap';
+import Dropdown from 'reactstrap/lib/Dropdown';
+import DropdownMenu from 'reactstrap/lib/DropdownMenu';
+import DropdownToggle from 'reactstrap/lib/DropdownToggle';
+import DropdownItem from 'reactstrap/lib/DropdownItem';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import {translate} from 'react-i18next';
 import reactTimeout from 'react-timeout';
