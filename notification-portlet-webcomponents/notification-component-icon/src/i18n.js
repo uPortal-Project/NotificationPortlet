@@ -2,7 +2,7 @@ import i18n from 'i18next';
 // eslint-disable-next-line
 import resources from '@alienfast/i18next-loader!./locales/index.js';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import {reactI18nextModule} from 'react-i18next';
+import {reactI18nextModule} from 'react-i18next/dist/es/context';
 
 i18n
   .use(LanguageDetector)
