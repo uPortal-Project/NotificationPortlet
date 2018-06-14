@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import 'document-register-element';
-import oidc from '@uportal/open-id-connect/src/open-id-connect';
+import oidc from '@uportal/open-id-connect';
 import Dropdown from 'reactstrap/lib/Dropdown';
 import DropdownMenu from 'reactstrap/lib/DropdownMenu';
 import DropdownToggle from 'reactstrap/lib/DropdownToggle';
