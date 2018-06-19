@@ -24,41 +24,12 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
     <display-name>Notification Portlet</display-name>
-    <description>JSR-286 (Portlet 2.0) portlet to display important notices from campus systems.</description>
+    <description>JSR-286 (Portlet 2.0) portlet to display important notices from campus systems</description>
 
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/context/*.xml</param-value>
-    </context-param>
-    <context-param>
-        <param-name>webAppRootKey</param-name>
-        <param-value>notification.webapp.root</param-value>
-    </context-param>
-
-    <!-- Must be the first listener so the webAppRootKey gets set for logback -->
-    <listener>
-        <listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
-    </listener>
     <!-- Needed to remove JMX registration and allow for classloader GC -->
     <listener>
         <listener-class>ch.qos.logback.classic.selector.servlet.ContextDetachingSCL</listener-class>
     </listener>
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-
-    <filter>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-        <init-param>
-            <param-name>contextAttribute</param-name>
-            <param-value>org.springframework.web.servlet.FrameworkServlet.CONTEXT.RESTServlet</param-value>
-        </init-param>
-    </filter>
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/api/*</url-pattern>
-    </filter-mapping>
 
     <servlet>
         <servlet-name>ViewRendererServlet</servlet-name>
@@ -66,27 +37,9 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-    <servlet>
-        <servlet-name>RESTServlet</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>
-                /WEB-INF/context/rest/restContext.xml
-                /WEB-INF/context/rest/security.xml
-            </param-value>
-        </init-param>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>ViewRendererServlet</servlet-name>
         <url-pattern>/WEB-INF/servlet/view</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>RESTServlet</servlet-name>
-        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

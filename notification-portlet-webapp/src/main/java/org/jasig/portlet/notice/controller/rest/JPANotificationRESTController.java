@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -53,14 +53,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller
 @RequestMapping(JPANotificationRESTController.REQUEST_ROOT)
 public class JPANotificationRESTController {
-    private Logger log = LoggerFactory.getLogger(getClass());
-    static final String REQUEST_ROOT = "/v1/notifications";
-    private static final String API_ROOT = "/api";
 
+    public static final String REQUEST_ROOT = "/api/v1/notifications";
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IJpaNotificationRESTService restService;
-
 
     /**
      * Get the list of notifications.  Supports optional (and recommended!) paging
@@ -77,7 +76,6 @@ public class JPANotificationRESTController {
 
         return restService.getNotifications(page, pageSize);
     }
-
 
     /**
      * Create a notification.
@@ -98,7 +96,6 @@ public class JPANotificationRESTController {
 
         return persisted;
     }
-
 
     /**
      * Get 1 notification by id.
@@ -121,7 +118,6 @@ public class JPANotificationRESTController {
         return notification;
     }
 
-
     /**
      * Get the set of addressees for a notification.
      *
@@ -133,7 +129,6 @@ public class JPANotificationRESTController {
     public Set<AddresseeDTO> getAddressees(@PathVariable("notificationId") long id) {
         return restService.getAddressees(id);
     }
-
 
     /**
      * Create a new addressee for a notification.
@@ -162,7 +157,6 @@ public class JPANotificationRESTController {
         return dto;
     }
 
-
     /**
      * Get a specific addressee
      *
@@ -185,7 +179,6 @@ public class JPANotificationRESTController {
         return dto;
     }
 
-
     /**
      * Get the list of events for a notification.
      *
@@ -197,7 +190,6 @@ public class JPANotificationRESTController {
     public List<EventDTO> getEventsByNotification(@PathVariable("notificationId") long id) {
         return restService.getEventsByNotification(id);
     }
-
 
     /**
      * Get a specific event.
@@ -219,7 +211,6 @@ public class JPANotificationRESTController {
 
         return event;
     }
-
 
     /**
      * Create a new event.
@@ -248,7 +239,6 @@ public class JPANotificationRESTController {
         return dto;
     }
 
-
     /**
      * Build the URL for a specific notification.
      *
@@ -257,7 +247,7 @@ public class JPANotificationRESTController {
      * @return the URL to hit that specific id
      */
     private String getSingleNotificationRESTUrl(HttpServletRequest request, long id) {
-        String path = request.getContextPath() + API_ROOT + REQUEST_ROOT + id;
+        String path = request.getContextPath() + REQUEST_ROOT + id;
         try {
             URL url = new URL(request.getScheme(), request.getServerName(), request.getServerPort(), path);
             return url.toExternalForm();

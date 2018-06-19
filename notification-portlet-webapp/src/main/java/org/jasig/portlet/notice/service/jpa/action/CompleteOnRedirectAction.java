@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -23,6 +23,9 @@ import java.util.Date;
 import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationState;
@@ -70,4 +73,10 @@ public class CompleteOnRedirectAction extends NotificationAction {
 
         res.sendRedirect(entry.getUrl());
     }
+
+    @Override
+    public void invoke(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("TODO:  Implement!");
+    }
+
 }

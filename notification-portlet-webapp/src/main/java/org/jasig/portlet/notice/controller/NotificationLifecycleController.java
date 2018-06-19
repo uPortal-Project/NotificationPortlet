@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -44,6 +44,7 @@ import org.jasig.portlet.notice.NotificationConstants;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.NotificationResult;
+import org.jasig.portlet.notice.util.NotificationResponseFlattener;
 import org.jasig.portlet.notice.util.UsernameFinder;
 import org.jasig.portlet.notice.util.sort.Sorting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,9 @@ public class NotificationLifecycleController {
     @Autowired
     private UsernameFinder usernameFinder;
 
+    @Autowired
+    private NotificationResponseFlattener notificationResponseFlattener;
+
     @Resource(name="rootNotificationService")
     private INotificationService notificationService;
 
@@ -95,51 +99,23 @@ public class NotificationLifecycleController {
         log.debug("Invoking getNotifications for user:  " + usernameFinder.findUsername(req));
 
         // Get the notifications and any data retrieval errors
-        NotificationResponse notifications = notificationService.fetch(req);
+        final NotificationResponse notifications = notificationService.fetch(req);
         if (notifications == null) {
             String msg = "Notifications have not been loaded for user:  " + usernameFinder.findUsername(req);
             throw new IllegalStateException(msg);
         }
 
-        // We will be modifying the entries to add the category since it will not be represented in the uncategorized list, so create a
-        // copy of the data if it is not already cloned.
-        notifications = notifications.cloneIfNotCloned();
-
-        // Combine all categories into one list and create a category list.  The category list will include categories that have no elements so
-        // it can be used for a consistent filtering interface if the data source provides a full list.  (This is helpful for an interface such as
-        // student jobs where you always want the user to see a consistent list of all the categories for a category filter).
-        List<NotificationEntry> allEntries = new ArrayList<NotificationEntry>();
-        final Set<String> categoryList = new HashSet<String>();
-        for (final NotificationCategory notificationCategory : notifications.getCategories()) {
-            categoryList.add(notificationCategory.getTitle());
-            addAndCategorizeEntries(allEntries, notificationCategory);
-        }
+        // Flatten the collection
+        List<NotificationEntry> allEntries = notificationResponseFlattener.flatten(notifications);
 
         // Apply specified sorting (if any)...
         allEntries = Sorting.sort(req, allEntries);
 
-        final Map<String,Object> model = new HashMap<String,Object>();
+        final Map<String,Object> model = new HashMap<>();
         model.put("feed", allEntries);
-        model.put("categories", categoryList);
         model.put("errors", notifications.getErrors());
         return new ModelAndView("json", model);
 
-    }
-
-    /**
-     * Add all entries from the notification category to the <code>allEntries</code> list after adding an attribute 'category' that contains
-     * the category.  That allows UIs that want the convenience of an uncategorized list, such as dataTables, to obtain the data in a simple
-     * format that requires no additional processing but maintains the knowledge of the category of the entries.
-     * @param allEntries List of all entries
-     * @param notificationCategory <code>NotificationCategory</code> to add its entries to the <code>allEntries</code> list
-     */
-    private void addAndCategorizeEntries(List<NotificationEntry> allEntries, NotificationCategory notificationCategory) {
-        for (NotificationEntry entry : notificationCategory.getEntries()) {
-            List<NotificationAttribute> attrs = new ArrayList<NotificationAttribute>(entry.getAttributes());
-            attrs.add(new NotificationAttribute("category", notificationCategory.getTitle()));
-            entry.setAttributes(attrs);
-            allEntries.add(entry);
-        }
     }
 
     @ActionMapping(params="action=invokeNotificationService")

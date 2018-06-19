@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -19,20 +19,52 @@
 package org.jasig.portlet.notice.util;
 
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component("usernameFinder")
 public final class UsernameFinder {
 
     @Value("${UsernameFinder.unauthenticatedUsername}")
-    private String unauthenticatedUsername = "guest"; 
+    private String unauthenticatedUsername = "guest";
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+     * @deprecated Prefer interactions that are not based on the Portlet API
+     */
+    @Deprecated
     public String findUsername(PortletRequest req) {
         return req.getRemoteUser() != null
                 ? req.getRemoteUser()
                 : unauthenticatedUsername;
+    }
+
+    /**
+     * @since 4.0
+     */
+    public String findUsername(HttpServletRequest request) {
+
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        logger.trace("Processing the following Authentication object:  {}", authentication);
+
+        final String rslt = (String) authentication.getPrincipal();
+
+        logger.debug("Found username '{}' based on the contents of the SecurityContextHolder", rslt);
+
+        // Identification based on Spring Security is required to access Servlet-based APIs
+        if (rslt == null) {
+            throw new SecurityException("User not identified");
+        }
+
+        return rslt;
+
     }
 
     public boolean isAuthenticated(PortletRequest req) {

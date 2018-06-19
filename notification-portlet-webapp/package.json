@@ -1,0 +1,14 @@
+{
+  "name": "notification-portlet-webapp",
+  "private": true,
+  "scripts": {
+    "compile-less": "lessc src/main/webapp/less/accordion.less build/css/accordion.css && lessc src/main/webapp/less/job-postings.less build/css/job-postings.css",
+    "minify-css": "cleancss -o build/css/accordion.min.css build/css/accordion.css && cleancss -o build/css/job-postings.min.css build/css/job-postings.css",
+    "minify-js": "uglifyjs-folder src/main/webapp/scripts --output build/scripts --each"
+  },
+  "devDependencies": {
+    "clean-css-cli": "^4.1.11",
+    "less": "^2.7.2",
+    "uglifyjs-folder": "^1.5.0"
+  }
+}

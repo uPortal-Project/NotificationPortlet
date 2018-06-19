@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -21,30 +21,28 @@ package org.jasig.portlet.notice.service.rome;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.jasig.portlet.notice.NotificationAttribute;
 import org.jasig.portlet.notice.NotificationCategory;
-import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationError;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.service.AbstractNotificationService;
 import org.jasig.portlet.notice.util.UsernameFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sun.syndication.feed.synd.SyndContent;
@@ -52,31 +50,49 @@ import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
+import org.springframework.beans.factory.annotation.Value;
 
 public final class RomeNotificationService extends AbstractNotificationService {
 
-    public static final String URLS_PREFERENCE = "RomeNotificationService.urls";
+    private static final String URLS_PREFERENCE = "RomeNotificationService.urls";
 
     private static final Object NO_FURTHER_INFORMATION = "No further information is available.";
     private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT);
+
+    /**
+     * Service URLs defined in an external file, in the post-Portlet API style.
+     * Comma-separated list.
+     */
+    @Value("${RomeNotificationService.feedUrls:}")
+    private String feedUrlsProperty;
+
+    private List<String> feedUrlsList = Collections.emptyList();
 
     private Cache cache;
 
     @Autowired
     private UsernameFinder usernameFinder;
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Resource(name="RomeNotificationService.feedCache")
     public void setCache(Cache cache) {
         this.cache = cache;
     }
 
-    private final Log log = LogFactory.getLog(getClass());
+    @PostConstruct
+    public void init() {
+        if (!StringUtils.isEmpty(feedUrlsProperty)) {
+            feedUrlsList =
+                    Collections.unmodifiableList(Arrays.asList(feedUrlsProperty.split(",")));
+        }
+    }
 
     @Override
     public void invoke(final ActionRequest req, final ActionResponse res, final boolean refresh) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Performing RomeNotificationService.invoke() for user='" 
+        if (logger.isDebugEnabled()) {
+            logger.debug("Performing RomeNotificationService.invoke() for user='"
                                     + usernameFinder.findUsername(req) 
                                     + "' refresh=" + refresh);
         }
@@ -94,30 +110,49 @@ public final class RomeNotificationService extends AbstractNotificationService {
     @Override
     public NotificationResponse fetch(final PortletRequest req) {
         
-        final List<NotificationCategory> categories = new ArrayList<NotificationCategory>();
-        final List<NotificationError> errors = new ArrayList<NotificationError>();
-
         final PortletPreferences prefs = req.getPreferences();
-        final String[] urls = prefs.getValues(URLS_PREFERENCE, new String[0]);
-        for (String item : urls) {
-            
+        final String[] feedUrls = prefs.getValues(URLS_PREFERENCE, new String[0]);
+        final String username = usernameFinder.findUsername(req);
+        return doFetch(Arrays.asList(feedUrls), username);
+
+    }
+
+    @Override
+    public NotificationResponse fetch(HttpServletRequest req) {
+
+        final String username = usernameFinder.findUsername(req);
+        return doFetch(feedUrlsList, username);
+
+    }
+
+    /*
+     * Implementation
+     */
+
+    private NotificationResponse doFetch(List<String> feedUrls, String username) {
+
+        final List<NotificationCategory> categories = new ArrayList<>();
+        final List<NotificationError> errors = new ArrayList<>();
+
+        for (String item : feedUrls) {
+
             // It's okay to pull a response from cache, if we have one, since refresh happens in invoke()
             final Element m = cache.get(item);
             if (m != null) {
                 // ## CACHE HIT ##
-                if (log.isDebugEnabled()) {
-                    log.debug("Feed cache HIT for url:  " + item);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Feed cache HIT for url:  " + item);
                 }
                 final NotificationCategory category = (NotificationCategory) m.getObjectValue();
                 categories.add(category);
             } else {
                 // ## CACHE MISS ##
-                if (log.isDebugEnabled()) {
-                    log.debug("Feed cache MISS for url:  " + item);
-                    log.debug("Checking the following feed URL for notifications for user '" 
-                            + usernameFinder.findUsername(req) + "' -- " + item);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Feed cache MISS for url:  " + item);
+                    logger.debug("Checking the following feed URL for notifications for user '"
+                            + username + "' -- " + item);
                 }
-                final NotificationCategory category = fetchFromSource(item);
+                final NotificationCategory category = fetchFromSourceUrl(item);
                 if (category != null) {
                     cache.put(new Element(item, category));
                     categories.add(category);
@@ -137,12 +172,8 @@ public final class RomeNotificationService extends AbstractNotificationService {
         return rslt;
 
     }
-    
-    /*
-     * Implementation
-     */
-    
-    private NotificationCategory fetchFromSource(final String url) {
+
+    private NotificationCategory fetchFromSourceUrl(final String url) {
         
         NotificationCategory rslt = null;  // default
         
@@ -158,14 +189,14 @@ public final class RomeNotificationService extends AbstractNotificationService {
             rslt = new NotificationCategory();
             rslt.setTitle(feed.getTitle());
             
-            final List<TimestampNotificationEntry> entries = new ArrayList<TimestampNotificationEntry>();
+            final List<TimestampNotificationEntry> entries = new ArrayList<>();
             
             @SuppressWarnings("unchecked")
             final List<SyndEntry> list = feed.getEntries(); 
             for (SyndEntry y : list) {
                 
-                if (log.isTraceEnabled()) {
-                    log.trace("Processing SyndEntry:  \n" + y.toString());
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Processing SyndEntry:  \n" + y.toString());
                 }
                 
                 final long timestamp = y.getPublishedDate().getTime();
@@ -201,7 +232,7 @@ public final class RomeNotificationService extends AbstractNotificationService {
                 entry.setBody(body.toString());
 
                 // Attributes -- TODO:  These labels should be internationalized in messages.properties
-                final List<NotificationAttribute> attributes = new ArrayList<NotificationAttribute>();
+                final List<NotificationAttribute> attributes = new ArrayList<>();
                 final String author = y.getAuthor();
                 if (StringUtils.isNotBlank(author)) {
                     attributes.add(new NotificationAttribute("Author", author));
@@ -224,18 +255,18 @@ public final class RomeNotificationService extends AbstractNotificationService {
             Collections.sort(entries);
             Collections.reverse(entries);
             
-            rslt.setEntries(new ArrayList<NotificationEntry>(entries));
+            rslt.setEntries(new ArrayList<>(entries));
 
         } catch (Exception e) {
             final String msg = "Unable to read the specified feed:  " + url;
-            log.error(msg, e);
+            logger.error(msg, e);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException ioe) {
                     final String msg = "Unable to close the XmlReader";
-                    log.error(msg, ioe);
+                    logger.error(msg, ioe);
                 }
             }
         }

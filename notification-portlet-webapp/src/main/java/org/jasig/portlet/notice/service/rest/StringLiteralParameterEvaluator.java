@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -19,7 +19,13 @@
 package org.jasig.portlet.notice.service.rest;
 
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Concrete implementation of {@link IParameterEvaluator} based on a string literal.
+ *
+ * @since 3.1
+ */
 public class StringLiteralParameterEvaluator extends AbstractParameterEvaluator {
     private String value;
 
@@ -27,7 +33,13 @@ public class StringLiteralParameterEvaluator extends AbstractParameterEvaluator 
         this.value = value;
     }
 
+    @Override
     public String evaluate(PortletRequest request) {
+        return value;
+    }
+
+    @Override
+    public String evaluate(HttpServletRequest req) {
         return value;
     }
 }

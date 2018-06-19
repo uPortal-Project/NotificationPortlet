@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -26,6 +26,8 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.jasig.portlet.notice.NotificationAction;
@@ -82,6 +84,11 @@ public class HideAction extends NotificationAction {
             unhide(entry, req);
         }
 
+    }
+
+    @Override
+    public void invoke(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("TODO:  Implement!");
     }
 
     @Override

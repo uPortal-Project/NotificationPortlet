@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -33,6 +33,7 @@ import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.service.AbstractNotificationServiceDecorator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +43,9 @@ import org.slf4j.LoggerFactory;
  * (effectively permanent).
  * 
  * @author awills
+ * @deprecated The entire notion of Portlet API-based decorators is deprecated
  */
-public class HideNotificationServiceDecorator implements INotificationService {
+public class HideNotificationServiceDecorator extends AbstractNotificationServiceDecorator {
 
     public static final String HIDE_DURATION_HOURS_PREFERENCE = "HideNotificationServiceDecorator.hideDurationHours";
     public static final long HIDE_DURATION_NONE = -1L;  // The feature is disabled by default

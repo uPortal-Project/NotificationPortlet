@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -23,6 +23,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * This is the central interface of the Notifications API.  It is used to
@@ -47,7 +49,9 @@ public interface INotificationService {
      * @param req The current ActionRequest
      * @param res The current ActionResponse
      * @param refresh If true, the service should expire any cached data
+     * @deprecated Prefer interactions that are not based on the Portlet API
      */
+    @Deprecated
     void invoke(ActionRequest req, ActionResponse res, boolean refresh);
 
     /**
@@ -58,16 +62,20 @@ public interface INotificationService {
      * 
      * @param req The current EventRequest
      * @param res The current EventResponse
+     * @deprecated Prefer interactions that are not based on the Portlet API
      */
+    @Deprecated
     void collect(EventRequest req, EventResponse res);
 
     /**
-     * Provide the current collection of Notifications information for the user 
+     * Provide the current collection of Notifications information for the user
      * represented by the <code>PortletRequest</code>.
      *
      * @param req The <code>PortletRequest</code>
      * @return A collection of notifications and/or errors
+     * @deprecated Prefer interactions that are not based on the Portlet API
      */
+    @Deprecated
     NotificationResponse fetch(PortletRequest req);
 
     /**
@@ -83,7 +91,18 @@ public interface INotificationService {
      * point
      * @return <code>true</code> if the earlier response is still acceptable for 
      * the present
+     * @deprecated Prefer interactions that are not based on the Portlet API
      */
+    @Deprecated
     boolean isValid(PortletRequest req, NotificationResponse previousResponse);
+
+    /**
+     * Provide the current collection of Notifications information for the specified user.
+     *
+     * @param request The REST request
+     * @return An abstraction representing the user's categorized notifications
+     * @since 4.0
+     */
+    NotificationResponse fetch(HttpServletRequest request);
 
 }

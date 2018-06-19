@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -19,7 +19,13 @@
 package org.jasig.portlet.notice.service.rest;
 
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Beans that implement this interface process replacement tokens in (primarily) urls.
+ *
+ * @since 3.1
+ */
 public interface IParameterEvaluator {
 
     /**
@@ -28,7 +34,6 @@ public interface IParameterEvaluator {
      * context based on the key they specify.
      *
      * @return The token this evaluator replaces
-     * @since 3.1
      */
     String getToken();
 
@@ -38,7 +43,19 @@ public interface IParameterEvaluator {
      * 
      * @param req The current, active PortletRequest
      * @return A valid value or <code>null</code>
+     * @deprecated Prefer interactions that are not based on the Portlet API
      */
+    @Deprecated
     String evaluate(PortletRequest req);
+
+    /**
+     * Provides a value for the configured parameter, or <code>null</code> if
+     * none is available.
+     *
+     * @param req The current, active <code>HttpServletRequest</code>
+     * @return A valid value or <code>null</code>
+     * @since 4.0
+     */
+    String evaluate(HttpServletRequest req);
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -168,6 +168,18 @@ public class NotificationResponse implements Serializable, Cloneable {
         return rslt;
     }
 
+    /**
+     * Provides the total number of notifications contained in the response.
+     */
+    @JsonIgnore
+    @XmlTransient
+    public int size() {
+        return categories.stream()
+                .map(NotificationCategory::getEntries)
+                .mapToInt(List::size)
+                .sum();
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -242,6 +254,12 @@ public class NotificationResponse implements Serializable, Cloneable {
         errors.addAll(newErrors);
     }
 
+    /**
+     * Best guess as to the reason this method exists: beans that produce fresh
+     * {@link NotificationResponse} objects (without cloning them) may safely cache them.  They need
+     * not fear that another bean will transform their copy.  Beans that do clone them, however, can
+     * safely operate on a clone.
+     */
     public NotificationResponse cloneIfNotCloned() {
         try {
             return isCloned() ? this : (NotificationResponse) this.clone();

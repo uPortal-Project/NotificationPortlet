@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -21,13 +21,17 @@ package org.jasig.portlet.notice.service.classloader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jasig.portlet.notice.NotificationAttribute;
 import org.jasig.portlet.notice.NotificationCategory;
 import org.jasig.portlet.notice.NotificationEntry;
@@ -38,15 +42,16 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * This is a simple demo service provider that reads notifications from a file.  
  * It provides a <code>setActive(boolean)</code> method (default is true) for 
  * toggling it on and off at runtime.
  */
-public final class DemoNotificationService extends ClassLoaderResourceNotificationService {
+public class DemoNotificationService extends ClassLoaderResourceNotificationService {
     
-    public static final String LOCATIONS_PREFERENCE = "DemoNotificationService.locations";
+    private static final String LOCATIONS_PREFERENCE = "DemoNotificationService.locations";
 
     private static final DateTimeFormatter DATE_PARSER = DateTimeFormat.forPattern("MM/dd/YYYY");
 
@@ -54,9 +59,27 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
     private static final int MAX_DAY_DELTA = 14;
     private static final int BLUE_SHIFT = -7;
 
+    /**
+     * Classpath locations defined in an external file, in the post-Portlet API style.
+     * Comma-separated list.
+     */
+    @Value("${DemoNotificationService.locations:}")
+    private String locationsProperty;
+
+    private List<String> locationsList = Collections.emptyList();
+
     private boolean active = true;  // Default
     private final Logger log = LoggerFactory.getLogger(getClass());
-    
+
+    @PostConstruct
+    @Override
+    public void init() {
+        if (!StringUtils.isEmpty(locationsProperty)) {
+            locationsList =
+                    Collections.unmodifiableList(Arrays.asList(locationsProperty.split(",")));
+        }
+    }
+
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -76,29 +99,27 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
             rslt = super.fetch(req);
 
             // A dash of post-processing to make the demo data more relevant.
+            updateNotificationResponse(rslt);
 
-            // Calculate days adjustment factor for all student jobs date values.  Use number of days from from
-            // 05/15/2014 to the current date.
-            int jobDaysAdjustment = (int) new Duration(new LocalDate(2014, 5, 15).toDateTimeAtStartOfDay(),
-                    new LocalDate().toDateTimeAtStartOfDay()).getStandardDays();
-            
-            for (NotificationCategory nc : rslt.getCategories()) {
-                for (NotificationEntry y : nc.getEntries()) {
+        } else {
+            log.debug("Sending an empty response because we are INACTIVE");
+        }
 
-                    // Make all the due dates at or near today
-                    if (y.getDueDate() != null) {
-                        // Just manipulate the ones that actually have 
-                        // a due date;  leave the others blank
-                        y.setDueDate(generateRandomDueDate());
-                    }
+        return rslt;
+    }
 
-                    // For student jobs demo data, set relevant postDate, dateClosed, and startDate values based on
-                    // current data.
-                    updateDateAttributeIfPresent(y.getAttributes(), "postDate", jobDaysAdjustment);
-                    updateDateAttributeIfPresent(y.getAttributes(), "dateClosed", jobDaysAdjustment);
-                    updateDateAttributeIfPresent(y.getAttributes(), "startDate", jobDaysAdjustment);
-                }
-            }
+    @Override
+    public NotificationResponse fetch(HttpServletRequest req) {
+
+        NotificationResponse rslt = NotificationResponse.EMPTY_RESPONSE;  // default
+
+        // Are we active?
+        if (active) {
+            log.debug("Sending a non-empty response because we are ACTIVE");
+            rslt = super.fetch(req);
+
+            // A dash of post-processing to make the demo data more relevant.
+            updateNotificationResponse(rslt);
 
         } else {
             log.debug("Sending an empty response because we are INACTIVE");
@@ -110,12 +131,42 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
     /*
      * Implementation
      */
-    
+
+    @Override
+    protected List<String> getLocations(HttpServletRequest req) {
+        return locationsList;
+    }
+
     @Override
     protected ArrayList<String> getLocations(PortletRequest req) {
         final PortletPreferences prefs = req.getPreferences();
         final String[] locations = prefs.getValues(LOCATIONS_PREFERENCE, new String[0]);
-        return new ArrayList<String>(Arrays.asList(locations));
+        return new ArrayList<>(Arrays.asList(locations));
+    }
+
+    private void updateNotificationResponse(NotificationResponse response) {
+        // Calculate days adjustment factor for all student jobs date values.  Use number of days from from
+        // 05/15/2014 to the current date.
+        int jobDaysAdjustment = (int) new Duration(new LocalDate(2014, 5, 15).toDateTimeAtStartOfDay(),
+                new LocalDate().toDateTimeAtStartOfDay()).getStandardDays();
+
+        for (NotificationCategory nc : response.getCategories()) {
+            for (NotificationEntry y : nc.getEntries()) {
+
+                // Make all the due dates at or near today
+                if (y.getDueDate() != null) {
+                    // Just manipulate the ones that actually have
+                    // a due date;  leave the others blank
+                    y.setDueDate(generateRandomDueDate());
+                }
+
+                // For student jobs demo data, set relevant postDate, dateClosed, and startDate values based on
+                // current data.
+                updateDateAttributeIfPresent(y.getAttributes(), "postDate", jobDaysAdjustment);
+                updateDateAttributeIfPresent(y.getAttributes(), "dateClosed", jobDaysAdjustment);
+                updateDateAttributeIfPresent(y.getAttributes(), "startDate", jobDaysAdjustment);
+            }
+        }
     }
 
     private Date generateRandomDueDate() {
@@ -135,8 +186,7 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
                 if (attr.getValues().size() == 1) {
                     // Allow parse errors to throw exception and stop the data file processing
                     LocalDate date = DATE_PARSER.parseLocalDate(attr.getValues().get(0));
-                    attr.setValues(Arrays.asList(new String[]
-                            { DATE_PARSER.print(date.plusDays(addDays).toDateTimeAtStartOfDay())}));
+                    attr.setValues(Collections.singletonList(DATE_PARSER.print(date.plusDays(addDays).toDateTimeAtStartOfDay())));
                 } else if (attr.getValues().size() > 1) {
                     log.warn("Sample data for Notification Attribute {} has {} values; considering only 1st value",
                             attr.getName(), attr.getValues().size());
@@ -144,7 +194,7 @@ public final class DemoNotificationService extends ClassLoaderResourceNotificati
                     log.warn("Sample data for Notification Attribute {} has no values");
                 }
                 String value = attr.getValues().size() > 0 ? attr.getValues().get(0) : "";
-                attr.setValues(Arrays.asList(new String[] {value}));
+                attr.setValues(Collections.singletonList(value));
             }
         }
     }

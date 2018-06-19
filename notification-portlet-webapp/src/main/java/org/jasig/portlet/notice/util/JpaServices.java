@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationState;
 import org.jasig.portlet.notice.action.hide.HideNotificationServiceDecorator;
@@ -77,7 +78,8 @@ public class JpaServices implements IJpaServices {
      * Is the {@link NotificationEntry} object owned by the JPA service?
      */
     public boolean contains(NotificationEntry entry) {
-        return entry.getId().startsWith(JpaNotificationService.ID_PREFIX);
+        return StringUtils.isNotBlank(entry.getId())
+                && entry.getId().startsWith(JpaNotificationService.ID_PREFIX);
     }
 
     /**

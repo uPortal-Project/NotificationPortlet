@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to Apereo under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
@@ -34,7 +34,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 @RequestMapping("VIEW")
 public final class EmergencyAlertAdminController {
 
-    @Resource(name="demoEmergencyAlertsInnerBean")
+    @Resource(name="demoEmergencyAlerts")
     private DemoNotificationService notificationService;  // Reference the concrete class b/c we need the extra methods
     
     /*
