@@ -95,7 +95,7 @@ node {
     download = true
 }
 
-task copyWebComponentsJs(type: Copy, dependsOn: ':notification-portlet-webcomponents:yarn_build') {
+task copyWebComponentsJs(type: Copy, dependsOn: ':notification-portlet-webcomponents:npm_run_build') {
     from("${rootProject.projectDir}/notification-portlet-webcomponents") {
         include "*/build/static/js/*.js"
         exclude "node_modules/**"
@@ -119,7 +119,7 @@ war {
     }
 }
 
-task createCssAndJsOutputDirs(dependsOn: 'npm_install') {
+task createCssAndJsOutputDirs(dependsOn: 'npmInstall') {
     doLast {
         mkdir "${buildDir}/css"
         mkdir "${buildDir}/scripts"

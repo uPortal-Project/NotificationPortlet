@@ -43,7 +43,7 @@
             <property name="hibernate.use_sql_comments" value="true"/>
              -->
             
-            <property name="hibernate.generate_statistics" value="true" />
+            <property name="hibernate.generate_statistics" value="false" />
             <property name="hibernate.max_fetch_depth" value="3" />
             <property name="hibernate.default_batch_fetch_size" value="4" />
             <property name="hibernate.jdbc.batch_size" value="25" />

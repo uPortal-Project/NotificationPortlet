@@ -1,5 +1,5 @@
 {
-  "name": "notification-component-icon",
+  "name": "@uportal/notification-icon",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@alienfast/i18next-loader": "^1.0.15",
-    "eslint": "4.19.0",
+    "eslint": "4.15.0",
     "eslint-config-google": "^0.9.1",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.2",
@@ -38,17 +38,27 @@
     "eject": "react-scripts eject"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css}": ["prettier-eslint --write", "git add"]
+    "src/**/*.{js,jsx,json,css}": [
+      "prettier-eslint --write",
+      "git add"
+    ]
   },
   "prettier": {
     "singleQuote": true
   },
   "eslintConfig": {
-    "extends": ["react-app", "google"],
+    "extends": [
+      "react-app",
+      "google"
+    ],
     "rules": {
       "no-invalid-this": "off",
       "require-jsdoc": "off"
     }
   },
-  "browserslist": [">1%", "Firefox ESR", "not dead"]
+  "browserslist": [
+    ">1%",
+    "Firefox ESR",
+    "not dead"
+  ]
 }
