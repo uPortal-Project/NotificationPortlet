@@ -3,9 +3,6 @@
   "scripts": {
     "build": "lerna run build"
   },
-  "workspaces": [
-    "notification-component-icon"
-  ],
   "devDependencies": {
     "lerna": "^3.0.0-beta.21"
   }

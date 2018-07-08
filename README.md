@@ -161,12 +161,16 @@ portlet preferences to _exclude_ some notices from appearing in the display:
 
 #### [Modal Notifications][]
 
-The `modal` display strategy presents notices in a Bootstrap modal dialog.  If the notice
+The `modal` display strategy presents notices in a modal dialog.  If the notice 
 defines actions, they will be rendered as buttons at the bottom of the dialog;  any button
-will dismiss the dialog, as well as invoke the spe,cified action server-side.  Notices that
+will dismiss the dialog, as well as invoke the specified action server-side.  Notices that
 do not define actions will offer a 'close' (x) option in the upper-right corner of the dialog.  
-This feature could be used for a Terms of Service pop-up that must be accepted before
-accessing the portal.
+This option will not invoke any specified server-side action. This feature could be used for a
+Terms of Service pop-up that must be accepted before accessing the portal.
+
+If you want to control the color of the modal you can override the CSS properties by adding
+a file named `modal-override.css` in `{uportal-portlets-overlay|overlays}/NotificationPortlet/src/main/webapp/css`
+inside your instance of uPortal.
 
 [Sponsored Portlet]: https://wiki.jasig.org/display/PLT/Jasig+Sponsored+Portlets
 [legacy documentation in the external wiki]: https://wiki.jasig.org/pages/viewpage.action?pageId=47875986
