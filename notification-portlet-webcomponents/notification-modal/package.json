@@ -56,5 +56,10 @@
       "vue-cli-service lint",
       "git add"
     ]
+  },
+  "babel": {
+    "presets": [
+      "@vue/app"
+    ]
   }
 }
