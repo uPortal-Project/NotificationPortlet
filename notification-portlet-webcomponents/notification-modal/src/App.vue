@@ -1,5 +1,5 @@
 <template>
-  <NotificationModal msg="Welcome to Your Vue.js App"/>
+  <NotificationModal userInfoApiUrl="http://localhost:8080/uPortal/api/v5-1/userinfo" notificationApiUrl="http://localhost:8080/NotificationPortlet/api/v2/notifications" />
 </template>
 
 <script>

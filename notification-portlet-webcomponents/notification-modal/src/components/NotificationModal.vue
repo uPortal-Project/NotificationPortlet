@@ -6,19 +6,77 @@
 
 <script>
 import bModal from "bootstrap-vue/es/components/modal/modal";
+import oidc from "@uportal/open-id-connect/esm/open-id-connect";
+import { get } from "axios";
 
 export default {
   name: "NotificationModal",
+
   props: {
-    msg: String
+    debug: {
+      type: Boolean,
+      default: false
+    },
+    userInfoApiUrl: {
+      type: String,
+      default: "/uPortal/api/v5-1/userinfo"
+    },
+    notificationApiUrl: {
+      type: String,
+      default: "/NotificationPortlet/api/v2/notifications"
+    },
+    filter: {
+      type: String,
+      default: ""
+    }
   },
+
   components: {
     "b-modal": bModal
   },
+
   data() {
     return {
-      modalShow: true
+      notifications: []
     };
+  },
+
+  methods: {
+    async fetchNotifications() {
+      // read props
+      const { debug, filter, notificationApiUrl, userInfoApiUrl } = this;
+
+      try {
+        // get user token, skipped in debug mode
+        const { encoded: token } = debug
+          ? { encoded: null }
+          : await oidc({ userInfoApiUrl });
+
+        // gather notifications
+        const { data: notifications } = await get(notificationApiUrl + filter, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "content-type": "application/jwt"
+          }
+        });
+
+        this.notifications = notifications;
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+      }
+    }
+  },
+
+  created() {
+    return this.fetchNotifications();
+  },
+
+  computed: {
+    modalShow() {
+      return this.notifications.length > 0;
+    }
   }
 };
 </script>
