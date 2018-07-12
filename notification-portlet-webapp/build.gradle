@@ -119,7 +119,7 @@ war {
     }
 }
 
-task createCssAndJsOutputDirs(dependsOn: 'npm_install') {
+task createCssAndJsOutputDirs(dependsOn: 'npm_ci') {
     doLast {
         mkdir "${buildDir}/css"
         mkdir "${buildDir}/scripts"
