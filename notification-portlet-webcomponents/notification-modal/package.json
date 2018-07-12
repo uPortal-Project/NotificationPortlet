@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target wc --name notification-modal  --dest build",
+    "build": "vue-cli-service build --target wc --name notification-modal --dest build/static/js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

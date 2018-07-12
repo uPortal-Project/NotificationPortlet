@@ -1,12 +1,7 @@
-plugins {
-    id "com.moowork.node" version "1.2.0"
+subprojects {
+    task buildWebComponent {}
 }
 
-node {
-    version = nodejsVersion
-    download = true
+task buildAllComponents {
+    dependsOn subprojects.collect { it.tasks.getByName('buildWebComponent') }
 }
-
-project.tasks.getByName('npm_run_bootstrap').dependsOn 'npm_ci'
-project.tasks.getByName('npm_run_build').dependsOn 'npm_run_bootstrap'
-install.dependsOn('npm_run_build')
