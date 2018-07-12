@@ -1,5 +1,5 @@
 <template>
-  <NotificationModal userInfoApiUrl="http://localhost:8080/uPortal/api/v5-1/userinfo" notificationApiUrl="http://localhost:8080/NotificationPortlet/api/v2/notifications" />
+  <NotificationModal debug notificationApiUrl="http://localhost:8080/sample-notifications.json" />
 </template>
 
 <script>

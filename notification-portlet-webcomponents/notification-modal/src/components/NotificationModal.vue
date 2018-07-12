@@ -1,6 +1,12 @@
 <template>
-  <b-modal v-model="modalShow">
-    <p>Hello from modal!</p>
+  <b-modal
+    v-model="modalShow"
+    :title="currentNotification.title"
+    no-close-on-backdrop
+    no-close-on-esc
+    ok-only
+    @ok="handleOk">
+    {{ currentNotification.body }}
   </b-modal>
 </template>
 
@@ -66,6 +72,13 @@ export default {
         // eslint-disable-next-line no-console
         console.error(err);
       }
+    },
+
+    handleOk(evt) {
+      if (this.notifications.length > 1) {
+        evt.preventDefault();
+        this.notifications.shift();
+      }
     }
   },
 
@@ -76,6 +89,13 @@ export default {
   computed: {
     modalShow() {
       return this.notifications.length > 0;
+    },
+    currentNotification() {
+      if (this.notifications.length < 0) {
+        return {};
+      }
+
+      return this.notifications[0];
     }
   }
 };
