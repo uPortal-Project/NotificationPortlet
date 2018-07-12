@@ -14,7 +14,12 @@ bin/
 .gradle
 /build/
 .gradletasknamecache
-package-lock.json
+
+# yarn
+yarn.lock
+
+# distro
+dist/
 
 # local env files
 .env.local

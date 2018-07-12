@@ -8,13 +8,13 @@ See the [top level README](../README.md)
 
 ```bash
 # install dependencies
-yarn
+npm install
 
 # start demo server
-yarn start
+npm start
 
 #  run lint checks and unit tests
-yarn test
+npm test
 ```
 
 ## Create React App Guide
