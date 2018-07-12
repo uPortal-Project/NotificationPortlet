@@ -10,7 +10,8 @@
     :hide-footer=!hasActions
     @hide="handleClose">
 
-    {{ currentNotification.body }}
+    <!-- body content can contain html -->
+    <span v-html="currentNotification.body" />
 
     <!-- The footer only displays when there are availible actions to render -->
     <div slot="modal-footer">
