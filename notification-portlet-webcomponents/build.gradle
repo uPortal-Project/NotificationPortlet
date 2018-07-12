@@ -8,5 +8,4 @@ node {
 }
 
 install.dependsOn('npm_run_build')
-project.tasks.getByName('npm_run_bootstrap').dependsOn 'npmInstall'
-project.tasks.getByName('npm_run_build').dependsOn 'npm_run_bootstrap'
+project.tasks.getByName('npm_run_build').dependsOn 'npm_ci'
