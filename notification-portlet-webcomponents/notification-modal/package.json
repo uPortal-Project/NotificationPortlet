@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target wc --name notification-modal --dest build/static/js",
+    "build": "vue-cli-service build --target wc --name notification-modal --dest build/static/js 'src/components/NotificationModal.vue'",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -45,7 +45,7 @@
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not ie <= 8"
+    "not ie < 11"
   ],
   "gitHooks": {
     "pre-commit": "lint-staged"
