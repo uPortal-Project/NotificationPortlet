@@ -109,6 +109,7 @@ export default {
     }
   },
 
+  // go to url provided by notification when it is clicked
   handleAction(actionUrl) {
     return () => (window.location = actionUrl);
   },
