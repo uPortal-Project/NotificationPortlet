@@ -18,7 +18,7 @@
         variant="primary"
         v-for="action in currentNotification.availableActions"
         :key="action.id"
-        @click="handleClose">
+        @click="handleAction(action.apiUrl)">
 
         {{ action.label }}
       </b-button>
@@ -107,6 +107,10 @@ export default {
       // @see currentNotification - for how next notification will display
       this.notifications.shift();
     }
+  },
+
+  handleAction(actionUrl) {
+    return () => (window.location = actionUrl);
   },
 
   // entrypoint
