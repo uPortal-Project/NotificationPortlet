@@ -95,7 +95,7 @@ node {
     download = true
 }
 
-task copyWebComponentsJs(type: Copy, dependsOn: ':notification-portlet-webcomponents:npm_run_build') {
+task copyWebComponentsJs(type: Copy, dependsOn: ':notification-portlet-webcomponents:buildAllComponents' ) {
     from("${rootProject.projectDir}/notification-portlet-webcomponents") {
         include "*/build/static/js/*.js"
         exclude "node_modules/**"
