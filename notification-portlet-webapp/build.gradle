@@ -95,6 +95,18 @@ node {
     download = true
 }
 
+/*
+ * This task produces a .jar archive from this module, which is in addition to the primary .war
+ * archive.  Adopters who with to extend the project may need this additional archive.
+ */
+task classesJar(type: Jar) {
+    from sourceSets.main.output
+    classifier 'jar'
+}
+artifacts {
+  archives classesJar
+}
+
 task copyWebComponentsJs(type: Copy, dependsOn: ':notification-portlet-webcomponents:yarn_build') {
     from("${rootProject.projectDir}/notification-portlet-webcomponents") {
         include "*/build/static/js/*.js"
