@@ -10,8 +10,9 @@
     :hide-footer=!hasActions
     @hide="handleClose">
 
-    <!-- body content can contain html -->
-    <form :id="'notification-action-' + _uid" method="POST" :action=actionUrl>
+    <!-- content may contain form inputs that can be sent with action -->
+    <form ref="notificationForm" method="POST">
+      <!-- body content can contain html -->
       <span v-html="currentNotification.body" />
     </form>
 
@@ -66,9 +67,7 @@ export default {
   data() {
     return {
       // list of notifications to display
-      notifications: [],
-      // action url destination
-      actionUrl: ""
+      notifications: []
     };
   },
 
@@ -118,13 +117,8 @@ export default {
     // go to action url
     handleAction(actionUrl) {
       // set action url on form
-      this.actionUrl = actionUrl;
-
-      // wait for form to be updated with correct action
-      this.$nextTick(() =>
-        // submit form
-        document.getElementById("notification-action-" + this._uid).submit()
-      );
+      this.$refs.notificationForm.action = actionUrl;
+      this.$refs.notificationForm.submit();
     }
   },
 
@@ -144,7 +138,7 @@ export default {
     // the template reads values directly from current notification
     // @see handleClose - for to how notifications are cleared
     currentNotification() {
-      if (this.notifications.length < 0) {
+      if (this.notifications.length < 1) {
         return {};
       }
 
