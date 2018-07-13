@@ -11,7 +11,7 @@
     @hide="handleClose">
 
     <!-- body content can contain html -->
-    <form id="notification-action-form" method="POST" :action=actionUrl>
+    <form :id="'notification-action-' + _uid" method="POST" :action=actionUrl>
       <span v-html="currentNotification.body" />
     </form>
 
@@ -21,8 +21,6 @@
         variant="primary"
         v-for="action in currentNotification.availableActions"
         :key="action.id"
-        type="submit"
-        for="notification-action-form"
         @click="handleAction(action.apiUrl)"
         >
 
@@ -117,8 +115,16 @@ export default {
       this.notifications.shift();
     },
 
+    // go to action url
     handleAction(actionUrl) {
+      // set action url on form
       this.actionUrl = actionUrl;
+
+      // wait for form to be updated with correct action
+      this.$nextTick(() =>
+        // submit form
+        document.getElementById("notification-action-" + this._uid).submit()
+      );
     }
   },
 
