@@ -30,7 +30,8 @@
       {
         "id": "MarkAsReadAndRedirectAction",
         "label": "MARK AS READ AND REDIRECT",
-        "clazz": "org.jasig.portlet.notice.action.read.MarkAsReadAndRedirectAction"
+        "clazz": "org.jasig.portlet.notice.action.read.MarkAsReadAndRedirectAction",
+        "apiUrl": "https://example.com"
       }
     ]
   },
@@ -75,7 +76,8 @@
       {
         "id": "MarkAsReadAndRedirectAction",
         "label": "MARK AS READ AND REDIRECT",
-        "clazz": "org.jasig.portlet.notice.action.read.MarkAsReadAndRedirectAction"
+        "clazz": "org.jasig.portlet.notice.action.read.MarkAsReadAndRedirectAction",
+        "apiUrl": "https://example.com"
       }
     ]
   },

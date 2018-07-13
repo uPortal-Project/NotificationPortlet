@@ -11,7 +11,9 @@
     @hide="handleClose">
 
     <!-- body content can contain html -->
-    <span v-html="currentNotification.body" />
+    <form id="notification-action-form" method="POST" :action=actionUrl>
+      <span v-html="currentNotification.body" />
+    </form>
 
     <!-- The footer only displays when there are availible actions to render -->
     <div slot="modal-footer">
@@ -19,9 +21,12 @@
         variant="primary"
         v-for="action in currentNotification.availableActions"
         :key="action.id"
-        :href="action.apiUrl">
+        type="submit"
+        for="notification-action-form"
+        @click="handleAction(action.apiUrl)"
+        >
 
-        {{ action.label }}
+          {{ action.label }}
       </b-button>
     </div>
   </b-modal>
@@ -62,7 +67,10 @@ export default {
 
   data() {
     return {
-      notifications: []
+      // list of notifications to display
+      notifications: [],
+      // action url destination
+      actionUrl: ""
     };
   },
 
@@ -107,6 +115,10 @@ export default {
       // this will automatically move to the next notification
       // @see currentNotification - for how next notification will display
       this.notifications.shift();
+    },
+
+    handleAction(actionUrl) {
+      this.actionUrl = actionUrl;
     }
   },
 
