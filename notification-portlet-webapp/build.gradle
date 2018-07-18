@@ -107,7 +107,7 @@ artifacts {
   archives classesJar
 }
 
-task copyWebComponentsJs(type: Copy, dependsOn: ':notification-portlet-webcomponents:yarn_build') {
+task copyWebComponentsJs(type: Copy, dependsOn: ':notification-portlet-webcomponents:buildAllComponents' ) {
     from("${rootProject.projectDir}/notification-portlet-webcomponents") {
         include "*/build/static/js/*.js"
         exclude "node_modules/**"
@@ -131,7 +131,7 @@ war {
     }
 }
 
-task createCssAndJsOutputDirs(dependsOn: 'npm_install') {
+task createCssAndJsOutputDirs(dependsOn: 'npm_ci') {
     doLast {
         mkdir "${buildDir}/css"
         mkdir "${buildDir}/scripts"

@@ -1,13 +1,7 @@
-plugins {
-    id "com.moowork.node" version "1.2.0"
+subprojects {
+    task buildWebComponent {}
 }
 
-node {
-    version = nodejsVersion
-    yarnVersion = yarnVersion
-    download = true
+task buildAllComponents {
+    dependsOn subprojects.collect { it.tasks.getByName('buildWebComponent') }
 }
-
-install.dependsOn('yarn')
-install.dependsOn('yarn_build')
-project.tasks.getByName('yarn_build').dependsOn 'yarn'
