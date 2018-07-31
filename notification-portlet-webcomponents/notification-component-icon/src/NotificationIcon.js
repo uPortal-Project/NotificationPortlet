@@ -171,6 +171,8 @@ class NotificationIcon extends Component {
         });
         if (action) {
           onClick = this.doPost(action.apiUrl);
+          // TODO: Find another way to avoid a page refresh
+          // eslint-disable-next-line no-script-url
           href = 'javascript:void(0)';
         }
 
