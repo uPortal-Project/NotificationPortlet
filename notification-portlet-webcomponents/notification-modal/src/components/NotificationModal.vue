@@ -2,6 +2,7 @@
   <!-- escape key, clicking the background, and the close button are all availible
     unless there are availible actions, which requires a user to click buttons to continue -->
   <b-modal
+    class="notification-modal-wrapper"
     v-model="modalShow"
     :title=currentNotification.title
     :hide-header-close=hasActions
@@ -157,15 +158,24 @@ export default {
 };
 </script>
 
-<style lang="scss">
-// core bootstrap framework
-@import "../../node_modules/bootstrap/scss/functions.scss";
-@import "../../node_modules/bootstrap/scss/variables.scss";
-@import "../../node_modules/bootstrap/scss/mixins.scss";
-// bootstrap styles needed by page
-@import "../../node_modules/bootstrap/scss/utilities.scss";
-@import "../../node_modules/bootstrap/scss/type.scss";
-@import "../../node_modules/bootstrap/scss/buttons.scss";
-@import "../../node_modules/bootstrap/scss/close.scss";
-@import "../../node_modules/bootstrap/scss/modal.scss";
+<style lang="scss" scoped>
+// HACK: needed to scope styles for browsers that do not have shadow dom support
+.notification-modal-wrapper /deep/ {
+  // core bootstrap framework
+  @import "../../node_modules/bootstrap/scss/functions.scss";
+  @import "../../node_modules/bootstrap/scss/variables.scss";
+  @import "../../node_modules/bootstrap/scss/mixins.scss";
+  // bootstrap styles needed by page
+  @import "../../node_modules/bootstrap/scss/utilities.scss";
+  @import "../../node_modules/bootstrap/scss/type.scss";
+  @import "../../node_modules/bootstrap/scss/buttons.scss";
+  @import "../../node_modules/bootstrap/scss/close.scss";
+  @import "../../node_modules/bootstrap/scss/modal.scss";
+
+  // HACK: override bootstrap 3 fade selector when shadow dom is off
+  // if this isn't set, bootstrap 3 makes the modal completely transparent
+  .fade {
+    opacity: 1;
+  }
+}
 </style>
