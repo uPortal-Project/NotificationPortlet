@@ -177,5 +177,10 @@ export default {
   .fade {
     opacity: 1;
   }
+
+  // Position the modal dialog slightly lower b/c (by default) it rides too high on Firefox
+  .modal-content {
+    top: 4rem;
+  }
 }
 </style>
