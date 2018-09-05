@@ -1,19 +1,27 @@
 <template>
   <div class="notification-banner">
     <b-alert v-for="(notification, index) in notifications" :key="index" varient="info" show>
-      <h3>
-        <i class="fas fa-info"></i>
+      <h4>
+        <font-awesome-icon icon="info" />
         {{notification.title}}
-      </h3>
+      </h4>
       <span v-html="notification.body" />
     </b-alert>
   </div>
 </template>
 
 <script>
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faInfo } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import bAlert from "bootstrap-vue/es/components/alert/alert";
 import oidc from "@uportal/open-id-connect/esm/open-id-connect";
 import { get } from "axios";
+
+library.add(faInfo);
 
 export default {
   name: 'NotificationBanner',
@@ -34,7 +42,8 @@ export default {
   },
 
   components: {
-    "b-alert": bAlert
+    "b-alert": bAlert,
+    "font-awesome-icon": FontAwesomeIcon
   },
 
   data() {
@@ -84,5 +93,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.notification-banner {
+  margin: 0 1rem;
+  text-align: left;
+}
 </style>
