@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <NotificationBanner msg="Welcome to Your Vue.js App"/>
+    <NotificationBanner debug="true" notificationApiUrl="sample-notifications.json" />
   </div>
 </template>
 
