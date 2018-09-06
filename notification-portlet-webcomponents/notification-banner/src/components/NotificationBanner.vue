@@ -35,6 +35,10 @@ export default {
     notificationApiUrl: {
       type: String,
       default: "/NotificationPortlet/api/v2/notifications"
+    },
+    filter: {
+      type: String,
+      default: ""
     }
   },
 
@@ -53,7 +57,7 @@ export default {
   methods: {
     async fetchNotifications() {
       // read props
-      const { debug, notificationApiUrl, userInfoApiUrl } = this;
+      const { debug, notificationApiUrl, filter, userInfoApiUrl } = this;
 
       try {
         // Obtain an OIDC Id Token, except in debug mode
@@ -63,7 +67,8 @@ export default {
 
 
         // gather notifications
-        const { data: notifications } = await get(notificationApiUrl, {
+        const querystring = filter ? '?' + filter : '';
+        const { data: notifications } = await get(notificationApiUrl + querystring, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${token}`,
@@ -99,7 +104,13 @@ export default {
   @import "../../node_modules/bootstrap/scss/alert.scss";
 
   // custom styles
-  margin: 0 1rem;
+  margin: 1rem;
   text-align: left;
+}
+
+.notification-banner svg {
+  height: 2rem;
+  position: relative;
+  top: .1rem;
 }
 </style>
