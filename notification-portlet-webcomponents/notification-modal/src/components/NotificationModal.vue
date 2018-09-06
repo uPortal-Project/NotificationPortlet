@@ -84,13 +84,17 @@ export default {
           : await oidc({ userInfoApiUrl });
 
         // gather notifications
-        const { data: notifications } = await get(notificationApiUrl + filter, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "content-type": "application/jwt"
+        const querystring = filter ? "?" + filter : "";
+        const { data: notifications } = await get(
+          notificationApiUrl + querystring,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "content-type": "application/jwt"
+            }
           }
-        });
+        );
 
         // store notifications to state
         // @see modalShow - for logic determining if notification should be shown

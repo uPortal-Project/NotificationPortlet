@@ -4,5 +4,6 @@ include 'notification-portlet-api'
 include 'notification-portlet-webapp'
 
 include 'notification-portlet-webcomponents'
+include 'notification-portlet-webcomponents:notification-banner'
 include 'notification-portlet-webcomponents:notification-component-icon'
 include 'notification-portlet-webcomponents:notification-modal'
