@@ -61,16 +61,13 @@ public class PriorityNotificationServiceFilter extends AbstractNotificationServi
 
                 final int priority = entry.getPriority();
 
-                // Entries w/o a priority are always removed
-                if (priority == NotificationEntry.PRIORITY_UNSPECIFIED) {
-                    return false;
-                }
-
                 if (minPriority != null && priority > minPriority) {
                     return false;
                 }
 
-                if (maxPriority != null && priority < maxPriority) {
+                if (priority != NotificationEntry.PRIORITY_UNSPECIFIED
+                        && maxPriority != null && priority < maxPriority) {
+                    // Notifications with PRIORITY_UNSPECIFIED are not filtered-out by maxPriority.
                     return false;
                 }
 

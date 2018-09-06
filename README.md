@@ -108,6 +108,60 @@ following property to specify feed URLs.
 RomeNotificationService.feedUrls=https://my.university.edu/announcements/rss
 ```
 
+##### JDBC (RDBMS) Notification Services
+
+This module includes data sources that allow you to pull notifications from relational databases
+using custom SQL queries.
+
+Using the `AnyRowResourceContentJdbcNotificationService` you can define a notification using JSON in
+the classpath and assign it to users when a cutom SQL query returns at least one row.  You can
+parameterize the query with user attributes and other inputs.
+
+Additional JDBC data sources normally extend from `AbstractJdbcNotificationService`.
+
+#### Filtering the Notifications REST API (Web Components)
+
+You can filter the contents of the Notifications REST API using query string parameters.  Some
+filtering options are available now, and others are being added periodically.
+
+Web Components in the Notification project typically support a `filter` property (HTML attribute)
+that allows you to specify filtering options without knowing or editing the `notificationApiUrl`
+property.
+
+Example:
+
+```
+<script src="https://unpkg.com/vue@2.5.16"></script>
+<script type="text/javascript" src="/NotificationPortlet/scripts/notification-modal.js"></script>
+<notification-modal filter="minPriority=1"></notification-modal>
+```
+
+##### `minPriority`
+
+Use the `minPriority` query string parameter to filter out notifications that either (1) have no
+priority value assigned or (2) are lower in priority than the value specified.  **Remember that
+priority 1 is the highest priority**, so `minPriority=2` means notifications with priority value 1
+or 2.
+
+Example:
+
+```
+/NotificationPortlet/api/v2/notifications?minPriority=2
+```
+
+##### `maxPriority`
+
+Use the `maxPriority` query string parameter to filter out notifications that are higher in priority
+than the value specified.  **Remember that priority 1 is the highest priority**, so `maxPriority=3`
+means notifications with priority value 3-5 (assuming 1-5 is the normal range) or no priority value
+assigned.
+
+Example:
+
+```
+/NotificationPortlet/api/v2/notifications?maxPriority=3
+```
+
 ### Java Portlet-Based UI Components
 
 As it's name implies, this project was originally developed as a collection of Java Portlet
@@ -131,7 +185,7 @@ Record_ (the `portlet-definition.xml` file in uPortal).  These settings are defi
 publication basis, so you can have several publications of the same portlet with each of them
 configured differently.
 
-##### Filtering
+##### Filtering in Portlet-Based Display Strategies
 
 You can filter the notices that come from data sources in the publication record.  Use the following
 portlet preferences to _exclude_ some notices from appearing in the display:
