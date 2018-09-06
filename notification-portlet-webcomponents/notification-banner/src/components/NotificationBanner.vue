@@ -11,9 +11,6 @@
 </template>
 
 <script>
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faInfo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -92,9 +89,18 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
 .notification-banner {
   margin: 0 1rem;
   text-align: left;
+}
+
+.notification-banner /deep/ {
+  // core bootstrap framework
+  @import "../../node_modules/bootstrap/scss/functions.scss";
+  @import "../../node_modules/bootstrap/scss/variables.scss";
+  @import "../../node_modules/bootstrap/scss/mixins.scss";
+  // bootstrap styles needed by page
+  @import "../../node_modules/bootstrap/scss/alert.scss";
 }
 </style>
