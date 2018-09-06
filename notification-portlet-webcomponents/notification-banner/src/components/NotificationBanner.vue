@@ -91,16 +91,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .notification-banner {
-  margin: 0 1rem;
-  text-align: left;
-}
-
-.notification-banner /deep/ {
   // core bootstrap framework
   @import "../../node_modules/bootstrap/scss/functions.scss";
   @import "../../node_modules/bootstrap/scss/variables.scss";
   @import "../../node_modules/bootstrap/scss/mixins.scss";
   // bootstrap styles needed by page
   @import "../../node_modules/bootstrap/scss/alert.scss";
+
+  // custom styles
+  margin: 0 1rem;
+  text-align: left;
 }
 </style>
