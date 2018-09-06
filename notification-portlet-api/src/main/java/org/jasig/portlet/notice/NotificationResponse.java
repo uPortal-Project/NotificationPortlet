@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -166,6 +168,28 @@ public class NotificationResponse implements Serializable, Cloneable {
         }
         rslt.setErrors(filteredErrors);
         return rslt;
+    }
+
+    /**
+     * Return a <b>new instance</b> of {@link NotificationResponse} containing only
+     * {@link NotificationEntry} objects within this response that match the specified
+     * <code>Predicate</code>.  The category structure is preserved.  Empty categories are removed.
+     */
+    public NotificationResponse filter(Predicate<NotificationEntry> predicate) {
+
+        final List<NotificationCategory> filteredCategories = categories.stream()
+                .map(category -> {
+                    final List<NotificationEntry> filteredEntries = category.getEntries().stream()
+                            .filter(predicate)
+                            .collect(Collectors.toList());
+                    return filteredEntries.size() > 0
+                            ? new NotificationCategory(category.getTitle(), filteredEntries)
+                            : null;
+                })
+                .filter(value -> value != null)
+                .collect(Collectors.toList());
+        return new NotificationResponse(filteredCategories, getErrors());
+
     }
 
     /**
