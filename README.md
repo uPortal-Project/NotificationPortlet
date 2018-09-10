@@ -211,6 +211,14 @@ portlet preferences to _exclude_ some notices from appearing in the display:
       to be subject to filtering.
     </td>
   </tr>
+  <tr>
+    <td>FilteringNotificationServiceDecorator.titleRegex</td>
+    <td>Regular expression that matches the entire title</td>
+  </tr>
+  <tr>
+    <td>FilteringNotificationServiceDecorator.bodyRegex</td>
+    <td>Regular expression that matches the entire body</td>
+  </tr>
 </table>
 
 #### [Modal Notifications][]
