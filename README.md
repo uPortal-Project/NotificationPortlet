@@ -10,6 +10,12 @@ This is a [Sponsored Portlet][] in the uPortal project.
 
 See also the [legacy documentation in the external wiki][].
 
+### Oracle Configuration
+
+Oracle requires COMPATIBLE set to 12.2 due to log DDL names.
+
+See [Oracle Object Names][].
+
 ### Java Properties
 
 Some configuration settings for the Notification portlet are managed in Java properties files that
@@ -229,3 +235,4 @@ accessing the portal.
 [Apereo uPortal]: https://github.com/jasig/uPortal
 [Web Components]: https://www.webcomponents.org/
 [Modal Notifications]: notification-portlet-webapp/docs/modal.md
+[Oracle Object Names]: https://docs.oracle.com/en/database/oracle/oracle-database/12.2/sqlrf/Database-Object-Names-and-Qualifiers.html#GUID-75337742-67FD-4EC0-985F-741C93D918DA
