@@ -109,6 +109,38 @@ public class FilteringNotificationServiceDecorator extends AbstractNotificationS
                 }
                 return Collections.emptySet();
             }
+        },
+
+        TITLE_REGEX {
+            private static final String PREFERENCE_NAME = "FilteringNotificationServiceDecorator.titleRegex";
+
+            @Override
+            Set<INotificationFilter> fromPortletRequest(PortletRequest req) {
+                final String[] preferenceValues = req.getPreferences().getValues(PREFERENCE_NAME, EMPTY_STRING_ARRAY);
+                if (preferenceValues.length != 0) {
+                    // We only support the first value...
+                    final String regex = preferenceValues[0];
+                    return Collections.singleton(new TitleTextNotificationFilter(regex));
+                } else {
+                    return Collections.emptySet();
+                }
+            }
+        },
+
+        BODY_REGEX {
+            private static final String PREFERENCE_NAME = "FilteringNotificationServiceDecorator.bodyRegex";
+
+            @Override
+            Set<INotificationFilter> fromPortletRequest(PortletRequest req) {
+                final String[] preferenceValues = req.getPreferences().getValues(PREFERENCE_NAME, EMPTY_STRING_ARRAY);
+                if (preferenceValues.length != 0) {
+                    // We only support the first value...
+                    final String regex = preferenceValues[0];
+                    return Collections.singleton(new BodyTextNotificationFilter(regex));
+                } else {
+                    return Collections.emptySet();
+                }
+            }
         };
 
         abstract Set<INotificationFilter> fromPortletRequest(PortletRequest req);
