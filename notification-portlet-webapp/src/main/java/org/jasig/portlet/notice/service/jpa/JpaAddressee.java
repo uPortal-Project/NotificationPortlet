@@ -18,8 +18,6 @@
  */
 package org.jasig.portlet.notice.service.jpa;
 
-import org.jasig.portlet.notice.rest.RecipientType;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +33,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.jasig.portlet.notice.rest.RecipientType;
 
 /**
  * Represents a named addressee for a notification.  There are two types of
@@ -69,6 +69,7 @@ import javax.persistence.Table;
     private RecipientType type;
 
     @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name="ADDRESSEE_ID")
     private Set<JpaRecipient> recipients = new HashSet<JpaRecipient>();
 
     public long getId() {

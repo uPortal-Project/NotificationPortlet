@@ -30,6 +30,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -78,12 +79,15 @@ import javax.persistence.Table;
     private String body;
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinColumn(name = "ENTRY_ID")
     private Set<JpaAttribute> attributes = new HashSet<>();
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinColumn(name = "ENTRY_ID")
     private Set<JpaAction> actions = new HashSet<>();
 
     @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "ENTRY_ID")
     private Set<JpaAddressee> addressees = new HashSet<>();
 
     public long getId() {
