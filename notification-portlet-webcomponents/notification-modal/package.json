@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target wc --name notification-modal --dest build/static/js 'src/components/NotificationModal.vue'",
-    "postbuild": "babel build/static/js/notification-modal.js -o build/static/js/notification-modal.ie11.js",
+    "prebuild": "babel node_modules/@vue/web-component-wrapper/dist/vue-wc-wrapper.js -o node_modules/@vue/web-component-wrapper/dist/vue-wc-wrapper.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -17,7 +17,6 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.1",
-    "@babel/plugin-transform-arrow-functions": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@vue/cli-plugin-babel": "3.0.0-rc.12",
     "@vue/cli-plugin-eslint": "3.0.0-rc.12",
