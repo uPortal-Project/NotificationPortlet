@@ -10,12 +10,6 @@ This is a [Sponsored Portlet][] in the uPortal project.
 
 See also the [legacy documentation in the external wiki][].
 
-### Oracle Configuration
-
-Oracle requires COMPATIBLE set to 12.2 due to log DDL names.
-
-See [Oracle Object Names][].
-
 ### Java Properties
 
 Some configuration settings for the Notification portlet are managed in Java properties files that
