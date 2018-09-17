@@ -5,21 +5,21 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import {reactI18nextModule} from 'react-i18next/dist/es/context';
 
 i18n
-  .use(LanguageDetector)
-  .use(reactI18nextModule)
-  .init({
-    fallbackLng: 'en',
+    .use(LanguageDetector)
+    .use(reactI18nextModule)
+    .init({
+      fallbackLng: 'en',
 
-    // have a common namespace used around the full app
-    ns: ['notification-icon'],
-    defaultNS: 'notification-icon',
+      // have a common namespace used around the full app
+      ns: ['notification-icon'],
+      defaultNS: 'notification-icon',
 
-    debug: true,
+      debug: true,
 
-    react: {
-      wait: true,
-    },
-    resources,
-  });
+      react: {
+        wait: true,
+      },
+      resources,
+    });
 
 export default i18n;
