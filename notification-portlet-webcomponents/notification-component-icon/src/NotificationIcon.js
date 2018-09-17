@@ -5,7 +5,7 @@ import Dropdown from 'reactstrap/lib/Dropdown';
 import DropdownMenu from 'reactstrap/lib/DropdownMenu';
 import DropdownToggle from 'reactstrap/lib/DropdownToggle';
 import DropdownItem from 'reactstrap/lib/DropdownItem';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import translate from 'react-i18next/dist/es/translate';
 import reactTimeout from 'react-timeout';
 import PropTypes from 'prop-types';
@@ -161,38 +161,38 @@ class NotificationIcon extends Component {
 
     // one or more notifications
     return notifications.map(
-      ({url, id, body, title, attributes, availableActions}) => {
-        let onClick = undefined;
-        let href = url;
+        ({url, id, body, title, attributes, availableActions}) => {
+          let onClick = undefined;
+          let href = url;
 
-        // Is this link based on MarkAsReadAndRedirectAction?
-        const action = find(availableActions, {
-          id: 'MarkAsReadAndRedirectAction',
-        });
-        if (action) {
-          onClick = this.doPost(action.apiUrl);
-          // TODO: Find another way to avoid a page refresh
-          // eslint-disable-next-line no-script-url
-          href = 'javascript:void(0)';
-        }
+          // Is this link based on MarkAsReadAndRedirectAction?
+          const action = find(availableActions, {
+            id: 'MarkAsReadAndRedirectAction',
+          });
+          if (action) {
+            onClick = this.doPost(action.apiUrl);
+            // TODO: Find another way to avoid a page refresh
+            // eslint-disable-next-line no-script-url
+            href = 'javascript:void(0)';
+          }
 
-        return (
-          <StyledDropdownItem
-            key={id || body}
-            tag="a"
-            className={
-              'up-notification--menu-item ' +
+          return (
+            <StyledDropdownItem
+              key={id || body}
+              tag="a"
+              className={
+                'up-notification--menu-item ' +
               (JSON.parse(get(attributes, 'READ.0', 'true'))
                 ? 'up-read'
                 : 'up-unread')
-            }
-            onClick={onClick}
-            href={href}
-          >
-            {title}
-          </StyledDropdownItem>
-        );
-      }
+              }
+              onClick={onClick}
+              href={href}
+            >
+              {title}
+            </StyledDropdownItem>
+          );
+        }
     );
   };
 
@@ -203,7 +203,7 @@ class NotificationIcon extends Component {
     const {notifications, isDropdownOpen} = this.state;
 
     const unreadCount = notifications.filter(
-      ({attributes}) => !JSON.parse(get(attributes, 'READ.0', 'true'))
+        ({attributes}) => !JSON.parse(get(attributes, 'READ.0', 'true'))
     ).length;
 
     let dropdownClasses = 'up-notification--toggle';
