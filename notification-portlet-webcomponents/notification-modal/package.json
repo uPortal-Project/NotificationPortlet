@@ -17,6 +17,7 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.1",
+    "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@vue/cli-plugin-babel": "3.0.0-rc.12",
     "@vue/cli-plugin-eslint": "3.0.0-rc.12",
