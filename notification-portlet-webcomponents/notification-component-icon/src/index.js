@@ -5,8 +5,8 @@ import 'reactive-elements';
 import './i18n';
 
 // register icons
-import fontawesome from '@fortawesome/fontawesome';
-import faBell from '@fortawesome/fontawesome-free-solid/faBell';
-fontawesome.library.add(faBell);
+import {library} from '@fortawesome/fontawesome-svg-core';
+import {faBell} from '@fortawesome/free-solid-svg-icons/faBell';
+library.add(faBell);
 
 document.registerReact('notification-icon', NotificationIcon);

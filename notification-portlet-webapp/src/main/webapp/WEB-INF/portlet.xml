@@ -170,6 +170,12 @@
                 <name>FilteringNotificationServiceDecorator.requiredRole</name>
                 <value>false</value>
             </preference>
+            <preference>
+                <name>FilteringNotificationServiceDecorator.titleRegex</name>
+            </preference>
+            <preference>
+                <name>FilteringNotificationServiceDecorator.bodyRegex</name>
+            </preference>
 
             <!-- If true, notifications will piggyback on the portal's JavaScript library (jQuery).
                  Currently as of 2017/09/07, setting this preference to 'true' doesn't work;  there

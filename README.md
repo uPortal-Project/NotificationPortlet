@@ -211,6 +211,14 @@ portlet preferences to _exclude_ some notices from appearing in the display:
       to be subject to filtering.
     </td>
   </tr>
+  <tr>
+    <td>FilteringNotificationServiceDecorator.titleRegex</td>
+    <td>Regular expression that matches the entire title</td>
+  </tr>
+  <tr>
+    <td>FilteringNotificationServiceDecorator.bodyRegex</td>
+    <td>Regular expression that matches the entire body</td>
+  </tr>
 </table>
 
 #### [Modal Notifications][]
@@ -229,3 +237,4 @@ accessing the portal.
 [Apereo uPortal]: https://github.com/jasig/uPortal
 [Web Components]: https://www.webcomponents.org/
 [Modal Notifications]: notification-portlet-webapp/docs/modal.md
+[Oracle Object Names]: https://docs.oracle.com/en/database/oracle/oracle-database/12.2/sqlrf/Database-Object-Names-and-Qualifiers.html#GUID-75337742-67FD-4EC0-985F-741C93D918DA
