@@ -37,8 +37,6 @@ import bModal from "bootstrap-vue/es/components/modal/modal";
 import bButton from "bootstrap-vue/es/components/button/button";
 import oidc from "@uportal/open-id-connect/esm/open-id-connect";
 import { get } from "axios";
-// eslint-disable-next-line
-import regeneratorRuntime from 'regenerator-runtime';
 
 export default {
   name: "NotificationModal",
