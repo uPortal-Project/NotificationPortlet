@@ -18,28 +18,33 @@
  */
 package org.jasig.portlet.notice.controller.rest;
 
+import org.apereo.portal.soffit.Headers;
 import org.jasig.portlet.notice.INotificationRepository;
 import org.jasig.portlet.notice.NotificationAction;
 import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.filter.ApiUrlSupportFilter;
 import org.jasig.portlet.notice.util.NotificationResponseFlattener;
 import org.jasig.portlet.notice.util.UsernameFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * New REST API for the Notification project suitable for next-generation content objects.  This
@@ -78,8 +83,15 @@ public class NotificationRestV2Controller {
                             @PathVariable("actionId") String actionId,
                             @PathVariable("notificationId") String notificationId) {
 
+        /*
+         * NOTE:  The request may be coming from a <form> submission, and (therefore) may not have
+         * an Authorization header.  Check for an _authorization parameter.  (The function that
+         * builds URLs for invoking this handler method bakes them into the query string.)
+         */
+        final HttpServletRequest decoratedRequest = decorateWithAuthorizationIfPresent(request);
+
         // Obtain the collection
-        final NotificationResponse notifications = repository.fetch(request);
+        final NotificationResponse notifications = repository.fetch(decoratedRequest);
 
         // Find the relevant action
         NotificationAction target = null;
@@ -100,9 +112,9 @@ public class NotificationRestV2Controller {
         // We must have a target to proceed
         if (target != null) {
             try {
-                target.invoke(request, response);
+                target.invoke(decoratedRequest, response);
             } catch (IOException e) {
-                final String username = usernameFinder.findUsername(request);
+                final String username = usernameFinder.findUsername(decoratedRequest);
                 logger.error("Failed to invoke action '{}' on entry '{}' for user '{}'",
                         target.getLabel(), entry.getId(), username, e);
                 response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -110,7 +122,7 @@ public class NotificationRestV2Controller {
             }
             // It's reasonable to assume we need to purge
             // caches for this user after invoking his action
-            repository.refresh(request, response);
+            repository.refresh(decoratedRequest, response);
         } else {
             logger.warn("Target action not found for notificationId='{}' and actionId='{}'",
                     notificationId, actionId);
@@ -120,6 +132,43 @@ public class NotificationRestV2Controller {
 
         return Collections.singletonMap("success", true);
 
+    }
+
+    private HttpServletRequest decorateWithAuthorizationIfPresent(HttpServletRequest request) {
+        return new HttpServletRequestWrapper(request) {
+            @Override
+            public String getHeader(String name) {
+                if (HttpHeaders.AUTHORIZATION.equalsIgnoreCase(name)
+                        && request.getParameterMap().containsKey(ApiUrlSupportFilter.AUTHORIZATION_PARAMETER_NAME)) {
+                    return Headers.BEARER_TOKEN_PREFIX + request.getParameter(ApiUrlSupportFilter.AUTHORIZATION_PARAMETER_NAME);
+                } else {
+                    return super.getHeader(name);
+                }
+            }
+
+            @Override
+            public Enumeration<String> getHeaders(String name) {
+                if (HttpHeaders.AUTHORIZATION.equalsIgnoreCase(name)
+                        && request.getParameterMap().containsKey(ApiUrlSupportFilter.AUTHORIZATION_PARAMETER_NAME)) {
+                    return Collections.enumeration(
+                            Collections.singletonList(Headers.BEARER_TOKEN_PREFIX + request.getParameter(ApiUrlSupportFilter.AUTHORIZATION_PARAMETER_NAME))
+                    );
+                } else {
+                    return super.getHeaders(name);
+                }
+            }
+
+            @Override
+            public Enumeration<String> getHeaderNames() {
+                if (request.getParameterMap().containsKey(ApiUrlSupportFilter.AUTHORIZATION_PARAMETER_NAME)) {
+                    final Vector<String> vector = new Vector<>(Collections.list(getHeaderNames()));
+                    vector.add(HttpHeaders.AUTHORIZATION);
+                    return vector.elements();
+                } else {
+                    return super.getHeaderNames();
+                }
+            }
+        };
     }
 
 }

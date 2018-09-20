@@ -19,7 +19,9 @@
 package org.jasig.portlet.notice.filter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apereo.portal.soffit.Headers;
 import org.jasig.portlet.notice.*;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +38,8 @@ import java.util.stream.Collectors;
 @Component
 public class ApiUrlSupportFilter extends AbstractNotificationServiceFilter {
 
+    public static final String AUTHORIZATION_PARAMETER_NAME = "_authorization";
+
     /**
      * The format strings are as follows:
      * <ul>
@@ -45,7 +49,8 @@ public class ApiUrlSupportFilter extends AbstractNotificationServiceFilter {
      *   <li>Spring CSRF token</li>
      * </ul>
      */
-    private static final String REST_API_URL_FORMAT = "%s/api/v2/action/%s/%s?_csrf=%s";
+    private static final String REST_API_URL_FORMAT =
+            "%s/api/v2/action/%s/%s?_csrf=%s&" + AUTHORIZATION_PARAMETER_NAME + "=%s";
 
     /**
      * This {@link INotificationServiceFilter} must do its work late in the chain because filters
@@ -68,7 +73,7 @@ public class ApiUrlSupportFilter extends AbstractNotificationServiceFilter {
             for (NotificationEntry entry : category.getEntries()) {
 
                 final List<NotificationAction> actions = entry.getAvailableActions().stream()
-                        .map(action -> {
+                        .peek(action -> {
                             if (StringUtils.isNotBlank(action.getId())
                                     && action.getTarget() != null
                                     && StringUtils.isNotBlank(action.getTarget().getId())) {
@@ -83,10 +88,10 @@ public class ApiUrlSupportFilter extends AbstractNotificationServiceFilter {
                                         urlBase,
                                         action.getId(),
                                         action.getTarget().getId(),
-                                        csrf != null ? csrf.getToken() : null);
+                                        csrf != null ? csrf.getToken() : null,
+                                        getBearerToken(request));
                                 action.setApiUrl(apiUrl);
                             }
-                            return action;
                         })
                         .collect(Collectors.toList());
                 entry.setAvailableActions(actions);
@@ -97,6 +102,17 @@ public class ApiUrlSupportFilter extends AbstractNotificationServiceFilter {
 
         return rslt;
 
+    }
+
+    private String getBearerToken(HttpServletRequest request) {
+        String rslt = ""; // default
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.isNotBlank(authHeader)) {                       // Authorization header is present?
+            if (authHeader.startsWith(Headers.BEARER_TOKEN_PREFIX)) {   // Authorization header is a Bearer token?
+                rslt = authHeader.substring(Headers.BEARER_TOKEN_PREFIX.length());
+            }
+        }
+        return rslt;
     }
 
 }
