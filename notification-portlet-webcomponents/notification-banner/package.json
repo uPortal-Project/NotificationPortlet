@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target wc --name notification-banner --dest build/static/js 'src/components/NotificationBanner.vue'",
+    "prebuild": "babel node_modules/@vue/web-component-wrapper/dist/vue-wc-wrapper.js -o node_modules/@vue/web-component-wrapper/dist/vue-wc-wrapper.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -14,12 +15,17 @@
     "@uportal/open-id-connect": "^1.12.0",
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.0-rc.11",
+    "regenerator-runtime": "^0.12.1",
     "vue": "^2.5.17"
   },
   "devDependencies": {
+    "@babel/cli": "^7.1.0",
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
     "@vue/cli-plugin-babel": "^3.0.3",
     "@vue/cli-plugin-eslint": "^3.0.3",
     "@vue/cli-service": "^3.0.3",
+    "babel-plugin-transform-custom-element-classes": "^0.1.0",
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.5.17"
