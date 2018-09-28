@@ -2,7 +2,7 @@
 
 The `modal` display strategy presents notices in a Bootstrap modal dialog.  If the notice 
 defines actions, they will be rendered as buttons at the bottom of the dialog;  any button
-will dismiss the dialog, as well as invoke the spe,cified action server-side.  Notices that
+will dismiss the dialog, as well as invoke the specified action server-side.  Notices that
 do not define actions will offer a 'close' (x) option in the upper-right corner of the dialog.  
 This feature could be used for a Terms of Service pop-up that must be accepted before
 accessing the portal.
@@ -26,8 +26,9 @@ The important part is that the notice file is in the classpath.
 ### Portlet Definition
 
 Next create a portlet definition file for the modal notice. In this example we will use
-`tos.portlet-definition.xml`. Copy `notification.portlet-definition.xml` to `tos.portlet-definition.xml`
-in `data/quickstart/portlet-definition`. Edit the file as follows:
+`tos.portlet-definition.xml`. Browse to `data/quickstart/portlet-definition` and make a copy
+of `notification.portlet-definition.xml` named `tos.portlet-definition.xml` in the same
+folder. Edit the file as follows:
 
 1. Change the title, name, fname and description in the
 new file to "Terms of Service" or "ToS" as appropriate
@@ -41,7 +42,7 @@ new file to "Terms of Service" or "ToS" as appropriate
     * simply remove second Demo value
 5. Add portlet preference for the duration until the ToS should appear again
     * name is `HideNotificationServiceDecorator.hideDurationHours`
-    * value is `8760 for a year`
+    * value is `8760` for a year
 
 ### Layout Fragment
 
