@@ -212,33 +212,42 @@ class NotificationIcon extends Component {
     }
 
     return (
-      <StyledDropdown
-        isOpen={isDropdownOpen}
-        toggle={this.toggle}
-        className="up-notification"
-      >
-        <StyledDropdownToggle onClick={this.toggle} className={dropdownClasses}>
-          <FontAwesomeIcon icon="bell" />
-          &nbsp;
-          {this.renderNotificationCount(unreadCount)}
-        </StyledDropdownToggle>
-
-        <StyledDropdownMenu className="up-notification--menu">
-          <StyledDropdownItem className="up-notification--menu-header" header>
-            {t('notifications')}
-          </StyledDropdownItem>
-
-          {this.renderNotifications()}
-
-          <StyledDropdownItem
-            className="up-notification--menu-footer"
-            tag="a"
-            href={seeAllNotificationsUrl}
+      <React.Fragment>
+        <link
+          rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+        />
+        <StyledDropdown
+          isOpen={isDropdownOpen}
+          toggle={this.toggle}
+          className="up-notification"
+        >
+          <StyledDropdownToggle
+            onClick={this.toggle}
+            className={dropdownClasses}
           >
-            {t('notifications-see-all')}
-          </StyledDropdownItem>
-        </StyledDropdownMenu>
-      </StyledDropdown>
+            <FontAwesomeIcon icon="bell" />
+            &nbsp;
+            {this.renderNotificationCount(unreadCount)}
+          </StyledDropdownToggle>
+
+          <StyledDropdownMenu className="up-notification--menu">
+            <StyledDropdownItem className="up-notification--menu-header" header>
+              {t('notifications')}
+            </StyledDropdownItem>
+
+            {this.renderNotifications()}
+
+            <StyledDropdownItem
+              className="up-notification--menu-footer"
+              tag="a"
+              href={seeAllNotificationsUrl}
+            >
+              {t('notifications-see-all')}
+            </StyledDropdownItem>
+          </StyledDropdownMenu>
+        </StyledDropdown>
+      </React.Fragment>
     );
   };
 }
