@@ -51,6 +51,7 @@ import java.util.List;
 public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
 
     public static final String READ_ATTRIBUTE_NAME = "READ";
+    public static final String READ_PARAMETER_NAME = "read";
     public static final NotificationAttribute READ_ATTRIBUTE =
             new NotificationAttribute(READ_ATTRIBUTE_NAME, Boolean.TRUE.toString());
     public static final NotificationAttribute UNREAD_ATTRIBUTE =
@@ -72,6 +73,8 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
     public NotificationResponse doFilter(HttpServletRequest request, INotificationServiceFilterChain chain) {
 
         final NotificationResponse response = chain.doFilter();
+
+        final String readFilterParameter = request.getParameter(READ_PARAMETER_NAME);
 
         final NotificationResponse rslt = response.cloneIfNotCloned();
 
@@ -120,8 +123,20 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
             }
         }
 
+        if (StringUtils.isNotBlank(readFilterParameter)) {
+            boolean readFilterValue = Boolean.parseBoolean(readFilterParameter);
+
+            return rslt.filter(
+                    entry -> {
+                        boolean isRead =
+                                entry.getAttributes()
+                                        .stream()
+                                        .anyMatch(attribute -> attribute.equals(READ_ATTRIBUTE));
+
+                        return isRead == readFilterValue;
+                    });
+        }
+
         return rslt;
-
     }
-
 }
