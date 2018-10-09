@@ -96,21 +96,14 @@ export default {
           }
         );
 
-        var unreadNotifications = [];
-
-        for (var i = 0; i < notifications.length; i++) {
-          var notification = notifications[i];
-
-          if (
-            notification.attributes &&
-            notification.attributes["READ"] &&
-            notification.attributes["READ"][0] === "true"
-          ) {
-            continue;
-          }
-
-          unreadNotifications.push(notification);
-        }
+        const unreadNotifications = notifications.filter(
+          n =>
+            !(
+              n.attributes &&
+              n.attributes.READ &&
+              n.attributes.READ[0] === "true"
+            )
+        );
 
         // store notifications to state
         // @see modalShow - for logic determining if notification should be shown
