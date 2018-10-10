@@ -15,7 +15,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faInfo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import bAlert from "bootstrap-vue/es/components/alert/alert";
-import oidc from "@uportal/open-id-connect/esm/open-id-connect";
+import oidc from "@uportal/open-id-connect";
 import { get } from "axios";
 
 library.add(faInfo);
