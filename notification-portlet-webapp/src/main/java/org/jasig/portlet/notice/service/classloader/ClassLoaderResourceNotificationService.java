@@ -167,7 +167,7 @@ public class ClassLoaderResourceNotificationService extends AbstractNotification
                 File f = new File(location.toURI());
                 rslt =  mapper.readValue(f, NotificationResponse.class);
             } catch (Exception e) {
-                String msg = "Failed to read the data file:  {}" + location;
+                String msg = "Failed to read the data file:  " + location;
                 logger.error(msg, e);
                 rslt = prepareErrorResponse(getName(), msg);
             }
