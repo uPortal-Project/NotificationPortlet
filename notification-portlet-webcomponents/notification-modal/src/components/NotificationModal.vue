@@ -96,10 +96,19 @@ export default {
           }
         );
 
+        const unreadNotifications = notifications.filter(
+          n =>
+            !(
+              n.attributes &&
+              n.attributes.READ &&
+              n.attributes.READ[0] === "true"
+            )
+        );
+
         // store notifications to state
         // @see watch.notifications - for logic determining if notification should be shown
         // @see currentNotification - for logic rendering a modal
-        this.notifications = notifications;
+        this.notifications = unreadNotifications;
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error(err);
