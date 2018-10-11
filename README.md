@@ -162,6 +162,18 @@ Example:
 /NotificationPortlet/api/v2/notifications?maxPriority=3
 ```
 
+##### `read`
+
+Use the `read` query parameter to filter out notifications that have been marked read. A value of `true` will return
+notifications that have been read while a value of `false` will return unread notifications. The absense of this
+parameter will return all notifications regardless of their `READ` attribute value.
+
+Example:
+
+```
+/NotificationPortlet/api/v2/notifications?read=false
+```
+
 ### Java Portlet-Based UI Components
 
 As it's name implies, this project was originally developed as a collection of Java Portlet
