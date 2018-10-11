@@ -1,5 +1,5 @@
 <template>
-  <NotificationModal debug notificationApiUrl="http://localhost:8080/sample-notifications.json" />
+  <notification-modal debug notification-api-url="./sample-notifications.json"></notification-modal>
 </template>
 
 <script>
