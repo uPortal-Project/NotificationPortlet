@@ -1,12 +1,12 @@
-module.exports = function (api) {
+module.exports = function(api) {
   api.cache.never();
   return {
     plugins: ["babel-plugin-transform-custom-element-classes"],
     presets: [
       [
-        "@babel/preset-env",
+        "@vue/babel-preset-app",
         {
-          useBuiltIns: 'usage'
+          useBuiltIns: false
         }
       ]
     ]
