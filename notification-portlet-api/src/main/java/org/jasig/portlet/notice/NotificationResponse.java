@@ -18,10 +18,14 @@
  */
 package org.jasig.portlet.notice;
 
+import static java.util.stream.Collectors.partitioningBy;
+import static java.util.stream.Collectors.toMap;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -64,8 +68,8 @@ public class NotificationResponse implements Serializable, Cloneable {
     @XmlTransient
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private List<NotificationCategory> categories;
-    private List<NotificationError> errors;
+    private List<NotificationCategory> categories = new ArrayList<>();
+    private List<NotificationError> errors = new ArrayList<>();
 
     /**
      * Field indicating the response is a cloned defensive copy and can be
@@ -76,18 +80,15 @@ public class NotificationResponse implements Serializable, Cloneable {
     @XmlTransient
     private boolean cloned = false;
 
-    public NotificationResponse() {
-        categories = new ArrayList<>();
-        errors = new ArrayList<>();
-    }
+    public NotificationResponse() {}
 
     public NotificationResponse(NotificationResponse response) {
         this(response.getCategories(), response.getErrors());
     }
 
     public NotificationResponse(List<NotificationCategory> categories, List<NotificationError> errors) {
-        this.categories = new ArrayList<>(categories);  // defensive copy
-        this.errors = new ArrayList<>(errors);  // defensive copy
+        this.setCategories(categories);
+        this.setErrors(errors);
     }
 
     public List<NotificationCategory> getCategories() {
@@ -95,7 +96,14 @@ public class NotificationResponse implements Serializable, Cloneable {
     }
 
     public void setCategories(List<NotificationCategory> categories) {
-        this.categories = new ArrayList<>(categories);  // defensive copy
+        this.categories.clear();
+        if (categories != null) {
+            this.categories.addAll(
+                    categories.stream()
+                            .map(NotificationCategory::cloneNoExceptions)
+                            .collect(Collectors.toList())
+            );
+        }
     }
 
     public List<NotificationError> getErrors() {
@@ -103,7 +111,8 @@ public class NotificationResponse implements Serializable, Cloneable {
     }
 
     public void setErrors(List<NotificationError> errors) {
-        this.errors = new ArrayList<>(errors); // defensive copy
+        this.errors.clear();
+        addErrors(errors);
     }
 
     /**
@@ -166,7 +175,7 @@ public class NotificationResponse implements Serializable, Cloneable {
                 filteredErrors.add(r);
             }
         }
-        rslt.setErrors(filteredErrors);
+        rslt.setErrors(filteredErrors); // deep copy
         return rslt;
     }
 
@@ -188,7 +197,7 @@ public class NotificationResponse implements Serializable, Cloneable {
                 })
                 .filter(value -> value != null)
                 .collect(Collectors.toList());
-        return new NotificationResponse(filteredCategories, getErrors());
+        return new NotificationResponse(filteredCategories, getErrors()); // deep copy
 
     }
 
@@ -255,27 +264,38 @@ public class NotificationResponse implements Serializable, Cloneable {
      * @param newCategories collection of new categories and their entries.
      */
     private void addCategories(List<NotificationCategory> newCategories) {
-
-        //check if an existing category (by the same title) already exists
-        //if so, add the new categories entries to the existing category
-        for(NotificationCategory newCategory : newCategories) {
-            boolean found = false;
-
-            for(NotificationCategory myCategory : categories) {
-                if(myCategory.getTitle().toLowerCase().equals(newCategory.getTitle().toLowerCase())){
-                    found = true;
-                    myCategory.addEntries(newCategory.getEntries());
-                }
-            }
-
-            if(!found) {
-                categories.add(newCategory);
-            }
+        if (newCategories == null) {
+            return;
         }
+
+        // Start with a deep copy of the method parameter to simplify remaining logic
+        newCategories = newCategories.parallelStream().map(NotificationCategory::cloneNoExceptions).collect(Collectors.toList());
+
+        // Create a map of current categories by title for processing
+        Map<String, NotificationCategory> catsByName =
+                this.categories.parallelStream().collect(toMap(c -> c.getTitle().toLowerCase(), c -> c));
+
+        // Split new categories between those that match an existing category and those that are completely new
+        Map<Boolean, List<NotificationCategory>> matchingNewCats =
+                newCategories.stream()
+                        .collect(partitioningBy(c -> catsByName.containsKey(c.getTitle().toLowerCase())));
+
+        // Add new entries to existing categories
+        matchingNewCats.get(Boolean.TRUE).stream()
+                .forEachOrdered(c -> catsByName.get(c.getTitle().toLowerCase()).addEntries(c.getEntries()));
+
+        // Add new categories
+        this.categories.addAll(matchingNewCats.get(Boolean.FALSE));
     }
 
     private void addErrors(List<NotificationError> newErrors) {
-        errors.addAll(newErrors);
+        if (newErrors != null) {
+            this.errors.addAll(
+                    newErrors.stream()
+                            .map(NotificationError::cloneNoExceptions)
+                            .collect(Collectors.toList())
+            );
+        }
     }
 
     /**

@@ -96,6 +96,21 @@ public class NotificationError implements Serializable, Cloneable {
     }
 
 
+    /**
+     * Wraps deep-copy clone to handle unused exception for streaming.
+     *
+     * @return NotificationError
+     */
+    public NotificationError cloneNoExceptions() {
+        try {
+            return (NotificationError) this.clone();
+        } catch (CloneNotSupportedException e) {
+            // per comment for clone(), should not happen
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public boolean equals(Object object) {
         if(object instanceof NotificationError) {
             NotificationError temp = (NotificationError)object;
