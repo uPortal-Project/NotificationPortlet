@@ -1,5 +1,3 @@
 module.exports = {
-    transpileDependencies: [
-        '@uportal/open-id-connect'
-    ]
-}
+  transpileDependencies: ["bootstrap-vue"]
+};
