@@ -35,7 +35,7 @@
 <script>
 import bModal from "bootstrap-vue/es/components/modal/modal";
 import bButton from "bootstrap-vue/es/components/button/button";
-import oidc from "@uportal/open-id-connect/esm/open-id-connect";
+import oidc from "@uportal/open-id-connect";
 import { get } from "axios";
 
 export default {
@@ -75,26 +75,23 @@ export default {
   methods: {
     async fetchNotifications() {
       // read props
-      const { debug, filter, notificationApiUrl, userInfoApiUrl } = this;
+      const { debug, notificationApiUrl, filter, userInfoApiUrl } = this;
 
       try {
-        // get user token, skipped in debug mode
+        // Obtain an OIDC Id Token, except in debug mode
         const { encoded: token } = debug
           ? { encoded: null }
           : await oidc({ userInfoApiUrl });
 
         // gather notifications
-        const querystring = filter ? "?" + filter : "";
-        const { data: notifications } = await get(
-          notificationApiUrl + querystring,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "content-type": "application/jwt"
-            }
+        const querystring = filter ? '?' + filter : '';
+        const { data: notifications } = await get(notificationApiUrl + querystring, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "content-type": "application/jwt"
           }
-        );
+        });
 
         // store notifications to state
         // @see watch.notifications - for logic determining if notification should be shown
