@@ -3,7 +3,7 @@
     unless there are availible actions, which requires a user to click buttons to continue -->
   <b-modal
     class="notification-modal-wrapper"
-    ref="notificationModal"
+    :visible="showModal"
     :title=currentNotification.title
     :hide-header-close=hasActions
     :no-close-on-backdrop=hasActions
@@ -148,17 +148,10 @@ export default {
         this.currentNotification.availableActions &&
         this.currentNotification.availableActions.length > 0
       );
-    }
-  },
-  watch: {
-    // if there are notifications, display modal
-    // @see handleClose - for to how notifications are cleared
-    notifications(notifications) {
-      if (notifications.length > 0) {
-        this.$refs.notificationModal.show();
-      } else {
-        this.$refs.notificationModal.hide();
-      }
+    },
+
+    showModal() {
+      return this.notifications.length > 0;
     }
   }
 };
