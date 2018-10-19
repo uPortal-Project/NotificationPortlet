@@ -4,9 +4,9 @@ module.exports = function(api) {
     plugins: ["babel-plugin-transform-custom-element-classes"],
     presets: [
       [
-        "@vue/babel-preset-app",
+        "@babel/preset-env",
         {
-          useBuiltIns: false
+          useBuiltIns: 'usage'
         }
       ]
     ]
