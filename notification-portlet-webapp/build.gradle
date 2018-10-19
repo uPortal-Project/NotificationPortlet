@@ -109,12 +109,12 @@ artifacts {
 
 task copyWebComponentsJs(type: Copy, dependsOn: ':notification-portlet-webcomponents:buildAllComponents' ) {
     from("${rootProject.projectDir}/notification-portlet-webcomponents") {
-        include "*/build/static/js/*.js"
-        exclude "node_modules/**"
+        include "*/build/static/js/*"
+        exclude "**/*.html"
         eachFile { details ->
-            logger.lifecycle("Adding web component to war file:  ${details}")
-            String[] tokens = details.path.split(File.separator)
-            details.path = "${tokens[0]}.js"
+            String[] pathTokens = details.path.split(File.separator)
+            details.path = pathTokens[pathTokens.length - 1]
+            logger.lifecycle("Adding web component resource ${details} as '${details.path}'")
         }
     }
     into "${buildDir}/scripts"
