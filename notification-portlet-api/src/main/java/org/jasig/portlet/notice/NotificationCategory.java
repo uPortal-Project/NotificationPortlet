@@ -36,45 +36,45 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationCategory implements Serializable, Cloneable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String title;
-	private List<NotificationEntry> entries;
+    private String title;
+    private List<NotificationEntry> entries;
 
-	/**
-	 * Constructor.
-	 */
-	public NotificationCategory() {
-	    entries = new ArrayList<>();
-	}
+    /**
+     * Constructor.
+     */
+    public NotificationCategory() {
+        entries = new ArrayList<>();
+    }
 
-	/**
-	 * Constructor.
-	 */
-	public NotificationCategory(String title, List<NotificationEntry> entries) {
-		this.title = title;
-		this.entries = new ArrayList<>(entries);  // defensive copy
-	}
+    /**
+     * Constructor.
+     */
+    public NotificationCategory(String title, List<NotificationEntry> entries) {
+        this.title = title;
+        this.entries = new ArrayList<>(entries);  // defensive copy
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public List<NotificationEntry> getEntries() {
-		return Collections.unmodifiableList(entries);
-	}
+    public List<NotificationEntry> getEntries() {
+        return Collections.unmodifiableList(entries);
+    }
 
-	public void setEntries(List<NotificationEntry> entries) {
-		this.entries = new ArrayList<>(entries);
-	}	                            
+    public void setEntries(List<NotificationEntry> entries) {
+        this.entries = new ArrayList<>(entries);
+    }
 
-	public void addEntries(List<NotificationEntry> newEntries) {
-	    this.entries.addAll(newEntries);
-	}
+    public void addEntries(List<NotificationEntry> newEntries) {
+        this.entries.addAll(newEntries);
+    }
 
     /**
      * Implements deep-copy clone.
@@ -97,6 +97,21 @@ public class NotificationCategory implements Serializable, Cloneable {
 
         return rslt;
 
+    }
+
+    /**
+     * Wraps deep-copy clone to handle unused exception for streaming.
+     *
+     * @return NotificationCategory
+     */
+    public NotificationCategory cloneNoExceptions() {
+        try {
+            return (NotificationCategory) this.clone();
+        } catch (CloneNotSupportedException e) {
+            // per comment for clone(), should not happen
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
