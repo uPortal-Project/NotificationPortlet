@@ -1,9 +1,10 @@
 <template>
   <!-- escape key, clicking the background, and the close button are all availible
-    unless there are availible actions, which requires a user to click buttons to continue -->
+  unless there are availible actions, which requires a user to click buttons to continue -->
   <b-modal
+    lazy
     class="notification-modal-wrapper"
-    ref="notificationModal"
+    :visible="showModal"
     :title=currentNotification.title
     :hide-header-close=hasActions
     :no-close-on-backdrop=hasActions
@@ -33,10 +34,33 @@
 </template>
 
 <script>
+import ieModal from "./ieModal";
+import ieButton from "./ieButton";
 import bModal from "bootstrap-vue/es/components/modal/modal";
 import bButton from "bootstrap-vue/es/components/button/button";
 import oidc from "@uportal/open-id-connect";
 import { get } from "axios";
+
+function detectIE() {
+  const ua = window.navigator.userAgent;
+
+  const msie = ua.includes("MSIE ");
+  const trident = ua.includes("Trident/");
+  const edge = ua.includes("Edge/");
+
+  return msie || trident || edge;
+}
+
+const isIE = detectIE();
+
+/**
+ * HACK: This exists because IE/Edge get caught in an infinite event loop when
+ * they try to render bootstrap vue modal or button, this provides a feature
+ * incomplete, yet functional version that these browsers can fallback to rather
+ * than crashing
+ */
+const patchedModal = isIE ? ieModal : bModal;
+const patchedButton = isIE ? ieButton : bButton;
 
 export default {
   name: "NotificationModal",
@@ -61,8 +85,8 @@ export default {
   },
 
   components: {
-    "b-modal": bModal,
-    "b-button": bButton
+    "b-modal": patchedModal,
+    "b-button": patchedButton
   },
 
   data() {
@@ -84,14 +108,17 @@ export default {
           : await oidc({ userInfoApiUrl });
 
         // gather notifications
-        const querystring = filter ? '?' + filter : '';
-        const { data: notifications } = await get(notificationApiUrl + querystring, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "content-type": "application/jwt"
+        const querystring = filter ? "?" + filter : "";
+        const { data: notifications } = await get(
+          notificationApiUrl + querystring,
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "content-type": "application/jwt"
+            }
           }
-        });
+        );
 
         // store notifications to state
         // @see watch.notifications - for logic determining if notification should be shown
@@ -148,17 +175,10 @@ export default {
         this.currentNotification.availableActions &&
         this.currentNotification.availableActions.length > 0
       );
-    }
-  },
-  watch: {
-    // if there are notifications, display modal
-    // @see handleClose - for to how notifications are cleared
-    notifications(notifications) {
-      if (notifications.length > 0) {
-        this.$refs.notificationModal.show();
-      } else {
-        this.$refs.notificationModal.hide();
-      }
+    },
+
+    showModal() {
+      return this.notifications.length > 0;
     }
   }
 };
