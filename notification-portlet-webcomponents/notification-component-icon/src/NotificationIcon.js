@@ -137,7 +137,7 @@ class NotificationIcon extends Component {
 
     return (
       <span className="up-notification--notification-count">
-        {unreadCount || ''}
+        {unreadCount || '0'}
         <span className="sr-only">
           {t('notification-count', {unreadCount})}
         </span>
