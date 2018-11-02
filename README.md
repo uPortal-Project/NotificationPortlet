@@ -242,6 +242,13 @@ do not define actions will offer a 'close' (x) option in the upper-right corner 
 This feature could be used for a Terms of Service pop-up that must be accepted before
 accessing the portal.
 
+## Additional Documentation
+
+### Swagger Client and API Documentation
+
+The Notification portlet provides API documentation with Swagger.  You can access the Swagger client
+in your deployment at the following URI:  `/NotificationPortlet/swagger-ui.html`.
+
 [Sponsored Portlet]: https://wiki.jasig.org/display/PLT/Jasig+Sponsored+Portlets
 [legacy documentation in the external wiki]: https://wiki.jasig.org/pages/viewpage.action?pageId=47875986
 [README file for uPortal-Start]: https://github.com/Jasig/uPortal-start/blob/master/README.md
