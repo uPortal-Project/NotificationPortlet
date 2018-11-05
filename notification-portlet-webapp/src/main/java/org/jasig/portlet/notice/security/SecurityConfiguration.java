@@ -49,8 +49,19 @@ import static org.apereo.portal.soffit.service.AbstractJwtService.SIGNATURE_KEY_
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    /**
+     * String representation of the 'Portal Administrators' group in uPortal.
+     */
+    private static final String PORTAL_ADMINISTRATORS_AUTHORITY = "Portal Administrators";
+
     @Value("${" + SIGNATURE_KEY_PROPERTY + ":" + DEFAULT_SIGNATURE_KEY + "}")
     private String signatureKey;
+
+    @Value("${security.restV1ReadAuthority:" + PORTAL_ADMINISTRATORS_AUTHORITY + "}")
+    private String restV1ReadAuthority;
+
+    @Value("${security.restV1WriteAuthority:" + PORTAL_ADMINISTRATORS_AUTHORITY + "}")
+    private String restV1WriteAuthority;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -77,8 +88,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
             .addFilter(filter)
             .authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/api/v1/**").access("hasRole('REST_READ') or hasRole('REST_WRITE')")
-                .antMatchers(HttpMethod.POST,"/api/v1/**").hasRole("REST_WRITE")
+                .antMatchers(HttpMethod.GET,"/api/v1/**").access("hasAuthority('" + restV1ReadAuthority + "') or hasAuthority('" + restV1WriteAuthority + "')")
+                .antMatchers(HttpMethod.POST,"/api/v1/**").hasAuthority(restV1WriteAuthority)
                 .antMatchers(HttpMethod.DELETE,"/api/v1/**").denyAll()
                 .antMatchers(HttpMethod.PUT,"/api/v1/**").denyAll()
                 .antMatchers(HttpMethod.GET,"/api/v2/**").authenticated()
@@ -93,7 +104,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
              * the sessionId as well.
              */
             .sessionManagement()
-                .sessionFixation().none();
+                .sessionFixation().none()
+            .and()
+            /*
+             * Portlet POST requests include (Spring-based) CSRF protection managed by uPortal.
+             * REST APIs are secured by OIDC Id tokens.
+             */
+            .csrf().disable();
 
     }
 
