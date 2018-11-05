@@ -104,7 +104,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
              * the sessionId as well.
              */
             .sessionManagement()
-                .sessionFixation().none();
+                .sessionFixation().none()
+            .and()
+            /*
+             * Portlet POST requests include (Spring-based) CSRF protection managed by uPortal.
+             * REST APIs are secured by OIDC Id tokens.
+             */
+            .csrf().disable();
 
     }
 
