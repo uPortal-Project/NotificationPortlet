@@ -67,8 +67,21 @@ public final class UsernameFinder {
 
     }
 
+    /**
+     * @deprecated Prefer interactions that are not based on the Portlet API
+     */
+    @Deprecated
     public boolean isAuthenticated(PortletRequest req) {
         return !findUsername(req).equalsIgnoreCase(unauthenticatedUsername);
+    }
+
+    public boolean isAuthenticated(HttpServletRequest request) {
+
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        logger.trace("Processing the following Authentication object:  {}", authentication);
+
+        return authentication != null && authentication.isAuthenticated();
+
     }
 
 }

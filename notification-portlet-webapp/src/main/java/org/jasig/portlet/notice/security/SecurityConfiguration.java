@@ -110,7 +110,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
              * Portlet POST requests include (Spring-based) CSRF protection managed by uPortal.
              * REST APIs are secured by OIDC Id tokens.
              */
-            .csrf().disable();
+            .csrf()
+                .ignoringAntMatchers("/api/v1/**");
 
     }
 

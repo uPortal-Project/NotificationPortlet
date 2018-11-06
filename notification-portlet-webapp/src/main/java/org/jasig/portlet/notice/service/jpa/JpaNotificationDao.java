@@ -142,7 +142,7 @@ import org.springframework.transaction.annotation.Transactional;
 
         query.setParameter("username", username);
         List<JpaEntry> rslt = query.getResultList();
-        return new HashSet<JpaEntry>(rslt);
+        return new HashSet<>(rslt);
     }
 
     @Override

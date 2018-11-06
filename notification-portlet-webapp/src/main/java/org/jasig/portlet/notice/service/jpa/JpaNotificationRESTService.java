@@ -20,10 +20,12 @@ package org.jasig.portlet.notice.service.jpa;
 
 import org.apache.commons.lang3.Validate;
 import org.jasig.portlet.notice.NotificationEntry;
+import org.jasig.portlet.notice.NotificationState;
 import org.jasig.portlet.notice.rest.AddresseeDTO;
 import org.jasig.portlet.notice.rest.EntryDTO;
 import org.jasig.portlet.notice.rest.EventDTO;
 import org.jasig.portlet.notice.rest.RecipientDTO;
+import org.jasig.portlet.notice.rest.RecipientType;
 import org.jasig.portlet.notice.util.JpaServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +113,20 @@ public class JpaNotificationRESTService implements IJpaNotificationRESTService {
         logger.debug("notificationMapper produced the following JpaEntry:  {}", jpaEntry);
 
         final JpaEntry inserted = notificationDao.createOrUpdateEntry(jpaEntry);
+
+        /*
+         * Business rule:  new notifications must be ISSUED to recipients listed in the original payload.
+         */
+        inserted.getAddressees().forEach(addressee -> {
+            if (RecipientType.INDIVIDUAL.equals(addressee.getType())) {
+                addressee.getRecipients().forEach(recipient -> {
+                    final EventDTO event = new EventDTO();
+                    event.setUsername(recipient.getUsername());
+                    event.setState(NotificationState.ISSUED);
+                    createEvent(inserted.getId(), event);
+                });
+            }
+        });
 
         return notificationMapper.toEntry(inserted);
     }
