@@ -60,13 +60,13 @@ sources through the Portlet API, but rather through a collection of REST APIs.  
 configuration of data sources for the REST API is global:  it applies equally to all components that
 work with them.
 
-#### Data Sources for the Notifications REST API (Web Components)
+### Data Sources for the Notifications REST API (Web Components)
 
 The following data sources are available for use with the REST APIs and the Web Components that work
 with them.  According to convention, the configuration for these APIs and data sources goes in a
 `notification.properties` file within `portal.home`.
 
-##### ClassLoaderResourceNotificationService
+#### ClassLoaderResourceNotificationService
 
 This data source reads notifications from one or more files in the Java classpath in the standard
 Notification JSON format.  Use the following property to specify the location(s) of JSON files in
@@ -78,7 +78,7 @@ Example:
 ClassLoaderResourceNotificationService.locations=demo/demoNotificationResponse.json,demo/demoNotificationResponse2.json
 ```
 
-##### DemoNotificationService
+#### DemoNotificationService
 
 The `DemoNotificationService` is a specialization of the `ClassLoaderResourceNotificationService`
 designed for demonstrations.  Use the following property to specify the location(s) of JSON files in
@@ -90,7 +90,7 @@ Example:
 DemoNotificationService.locations=demo/demoNotificationResponse.json,demo/demoNotificationResponse2.json
 ```
 
-##### RestfulJsonNotificationService
+#### RestfulJsonNotificationService
 
 This data source reads notifications from one or more remote URLs in the standard Notification JSON
 format.  Use the following property to specify the URLs to read.
@@ -99,7 +99,7 @@ format.  Use the following property to specify the URLs to read.
 RestfulJsonNotificationService.serviceUrls=https://my.university.edu/notifications
 ```
 
-##### RomeNotificationService
+#### RomeNotificationService
 
 This data source converts RSS into notifications.  It reads from one or more feeds.  Use the
 following property to specify feed URLs.
@@ -108,7 +108,7 @@ following property to specify feed URLs.
 RomeNotificationService.feedUrls=https://my.university.edu/announcements/rss
 ```
 
-##### JDBC (RDBMS) Notification Services
+#### JDBC (RDBMS) Notification Services
 
 This module includes data sources that allow you to pull notifications from relational databases
 using custom SQL queries.
@@ -119,7 +119,53 @@ parameterize the query with user attributes and other inputs.
 
 Additional JDBC data sources normally extend from `AbstractJdbcNotificationService`.
 
-#### Filtering the Notifications REST API (Web Components)
+#### JpaNotificationService
+
+The `JpaNotificationService` is different from most other notification data sources because it is
+based on a _push_ model:  other components or systems push notifications to the Notification module
+when they become available, instead of the Notification module pulling notifications when they are
+needed (_viz_. when the user logs in).
+
+Notifications may be pushed to the `JpaNotificationService` _via_ HTTP POST to the
+`/api/v1/notifications` URI.  Only authorized users may use this API, and a valid, signed OIDC Id
+token must be presented as a `Bearer` token in the `Authorization` header of the POST request.
+
+##### Sample JSON for JpaNotificationService
+
+The `/api/v1/notifications` URI accepts JSON like the following in the request body:
+
+```
+{
+  "title": "Applications for Graduation Due",
+  "source": "Demo Service",
+  "priority": 1,
+  "url": "http:\/\/www.jasig.org",
+  "linkText": "Follow story",
+  "body": "Please submit your application to graduate in a timely manner.",
+  "actions": [
+    {
+      "clazz": "org.jasig.portlet.notice.action.read.MarkAsReadAndRedirectAction",
+      "label": "MARK AS READ AND REDIRECT"
+    }
+  ],
+  "addressees": [
+    {
+      "name": "admin only",
+      "type":  "INDIVIDUAL",
+      "recipients": [
+        {
+          "username": "admin"
+        }
+      ]
+    }
+  ]
+}
+```
+
+You can use the embedded Swagger client at ``/NotificationPortlet/swagger-ui.html` to try out the
+`JpaNotificationService` and your JSON.
+
+### Filtering the Notifications REST API (Web Components)
 
 You can filter the contents of the Notifications REST API using query string parameters.  Some
 filtering options are available now, and others are being added periodically.
@@ -136,7 +182,7 @@ Example:
 <notification-modal filter="minPriority=1"></notification-modal>
 ```
 
-##### `minPriority`
+#### `minPriority`
 
 Use the `minPriority` query string parameter to filter out notifications that either (1) have no
 priority value assigned or (2) are lower in priority than the value specified.  **Remember that
@@ -149,7 +195,7 @@ Example:
 /NotificationPortlet/api/v2/notifications?minPriority=2
 ```
 
-##### `maxPriority`
+#### `maxPriority`
 
 Use the `maxPriority` query string parameter to filter out notifications that are higher in priority
 than the value specified.  **Remember that priority 1 is the highest priority**, so `maxPriority=3`
@@ -162,7 +208,7 @@ Example:
 /NotificationPortlet/api/v2/notifications?maxPriority=3
 ```
 
-##### `read`
+#### `read`
 
 Use the `read` query parameter to filter out notifications that have been marked read. A value of `true` will return
 notifications that have been read while a value of `false` will return unread notifications. The absense of this
@@ -197,7 +243,7 @@ Record_ (the `portlet-definition.xml` file in uPortal).  These settings are defi
 publication basis, so you can have several publications of the same portlet with each of them
 configured differently.
 
-##### Filtering in Portlet-Based Display Strategies
+#### Filtering in Portlet-Based Display Strategies
 
 You can filter the notices that come from data sources in the publication record.  Use the following
 portlet preferences to _exclude_ some notices from appearing in the display:

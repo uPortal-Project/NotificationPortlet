@@ -30,6 +30,7 @@ import java.util.Set;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.jasig.portlet.notice.NotificationAction;
@@ -58,7 +59,7 @@ public class JpaNotificationService extends AbstractNotificationService {
      * This prefix helps to keep the Notification table together (in an
      * alphabetized list) and provides clarity to their origin and purpose.
      */
-    public static final String TABLENAME_PREFIX = "NOTICE_";
+    /* package-private */ static final String TABLENAME_PREFIX = "NOTICE_";
 
     public static final String ID_PREFIX = "jpa_";
 
@@ -81,8 +82,10 @@ public class JpaNotificationService extends AbstractNotificationService {
 
         PortletPreferences prefs = req.getPreferences();
 
-        // We do not perform a check for unauthenticated users (but this
-        // is an assumption that may need revisiting in the future).
+        /*
+         * We do not perform a check for unauthenticated users (though this is an assumption that
+         * may need revisiting in the future).
+         */
         if (usernameFinder.isAuthenticated(req) && Boolean.parseBoolean(prefs.getValue(PREFS_ENABLED, "false"))) {
             final String username = usernameFinder.findUsername(req);
 
@@ -99,14 +102,36 @@ public class JpaNotificationService extends AbstractNotificationService {
         return rslt;
 
     }
-	
+
+    @Override
+    public NotificationResponse fetch(HttpServletRequest request) {
+
+        NotificationResponse rslt = NotificationResponse.EMPTY_RESPONSE;  // default
+
+        /*
+         * We do not perform a check for unauthenticated users (though this is an assumption that
+         * may need revisiting in the future).
+         */
+        if (usernameFinder.isAuthenticated(request)) {
+            final String username = usernameFinder.findUsername(request);
+
+            log.debug("Fetching notifications for user:  {}", username);
+
+            final Set<JpaEntry> entries = notificationDao.getEntriesByRecipient(username);
+
+            log.debug("Found the following notifications for user '{}':  {}",
+                    username, entries.toString());
+
+            rslt = prepareResponse(entries, username);
+        }
+
+        return rslt;
+
+    }
+
     /**
      * Caller must insure that the state being set has not already been added to the entry
      * to avoid multiple events with the same state.
-     * 
-     * @param req
-     * @param entryId
-     * @param state 
      */
     public void addEntryState(PortletRequest req, String entryId, NotificationState state) {
         if (usernameFinder.isAuthenticated(req)) {
@@ -137,7 +162,7 @@ public class JpaNotificationService extends AbstractNotificationService {
 
     private NotificationResponse prepareResponse(Set<JpaEntry> entries, String username) {
 
-        Map<String,NotificationCategory> categories = new HashMap<String,NotificationCategory>();
+        Map<String,NotificationCategory> categories = new HashMap<>();
         for (JpaEntry entry : entries) {
 
             // Choose a category title
@@ -163,11 +188,10 @@ public class JpaNotificationService extends AbstractNotificationService {
         }
 
         // Create & load the response
-        final List<NotificationCategory> cList = new ArrayList<NotificationCategory>(categories.values());
+        final List<NotificationCategory> cList = new ArrayList<>(categories.values());
         final List<NotificationError> eList = Collections.emptyList();  // Anything here?
-        NotificationResponse rslt = new NotificationResponse(cList, eList);
 
-        return rslt;
+        return new NotificationResponse(cList, eList);
 
     }
 
@@ -175,8 +199,6 @@ public class JpaNotificationService extends AbstractNotificationService {
      * Creates a {@link NotificationEntry} from a {@link JpaEntry}, but will
      * return null if that process cannot be performed in a valid way.
      * 
-     * @param entry
-     * @param username
      * @return A fully-constituted {@link NotificationEntry} or null
      */
     private NotificationEntry prepareEntry(JpaEntry entry, String username) {
@@ -230,12 +252,12 @@ public class JpaNotificationService extends AbstractNotificationService {
 
         // Collections of items...
         if (!entry.getAttributes().isEmpty()) {  // Attributes
-            List<NotificationAttribute> attributes = prepareAttributes(entry.getAttributes(), username);
+            List<NotificationAttribute> attributes = prepareAttributes(entry.getAttributes());
             rslt.setAttributes(attributes);
         }
         if (!entry.getActions().isEmpty()) {  // Actions
             List<NotificationAction> actions = prepareActions(entry.getActions(),
-                                                    states.keySet(), username);
+                    username);
             rslt.setAvailableActions(actions);
         }
 
@@ -244,7 +266,7 @@ public class JpaNotificationService extends AbstractNotificationService {
     }
 
     private Map<NotificationState, Date> prepareStates(JpaEntry entry, String username) {
-        Map<NotificationState, Date> rslt = new HashMap<NotificationState, Date>();
+        Map<NotificationState, Date> rslt = new HashMap<>();
         List<JpaEvent> events = notificationDao.getEvents(entry.getId(), username);
         Collections.reverse(events);  // Process in reverse-chronological order
         for (JpaEvent e : events) {
@@ -258,8 +280,8 @@ public class JpaNotificationService extends AbstractNotificationService {
         return rslt;
     }
 
-    private List<NotificationAttribute> prepareAttributes(Set<JpaAttribute> attributes, String username) {
-        List<NotificationAttribute> rslt = new ArrayList<NotificationAttribute>();
+    private List<NotificationAttribute> prepareAttributes(Set<JpaAttribute> attributes) {
+        List<NotificationAttribute> rslt = new ArrayList<>();
         for (JpaAttribute a : attributes) {
             NotificationAttribute n = new NotificationAttribute(a.getName(), a.getValues());
             rslt.add(n);
@@ -267,10 +289,9 @@ public class JpaNotificationService extends AbstractNotificationService {
         return rslt;
     }
 
-    private List<NotificationAction> prepareActions(Set<JpaAction> actions,
-            Set<NotificationState> activeStates, String username) {
+    private List<NotificationAction> prepareActions(Set<JpaAction> actions, String username) {
 
-        List<NotificationAction> rslt = new ArrayList<NotificationAction>();
+        List<NotificationAction> rslt = new ArrayList<>();
 
         String className = null;
         try {
