@@ -20,6 +20,13 @@ const StyledDropdownMenu = styled(DropdownMenu)`
     z-index: 1002 !important;
   }
 `;
+const StyledButtonStyle = {
+  paddingRight: '1rem',
+};
+const StyledSVG = {
+  maxWidth: '10px',
+  marginRight: '5px',
+};
 const StyledDropdownToggle = styled(DropdownToggle)`
   &:hover,
   &:focus {
@@ -224,8 +231,9 @@ class NotificationIcon extends Component {
           <StyledDropdownToggle
             onClick={this.toggle}
             className={dropdownClasses}
+            style={StyledButtonStyle}
           >
-            <FontAwesomeIcon icon="bell" />
+            <FontAwesomeIcon icon="bell" style={StyledSVG} />
             &nbsp;
             {this.renderNotificationCount(unreadCount)}
           </StyledDropdownToggle>
