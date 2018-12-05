@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",
-    "build": "vue-cli-service build --name notificaiton-icon --target wc --dest build/static/js",
+    "build": "vue-cli-service build --name notification-icon --target wc --dest build/static/js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
