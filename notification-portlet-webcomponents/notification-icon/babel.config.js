@@ -1,8 +1,6 @@
 module.exports = {
   presets: [
-    '@vue/app'
+    '@babel/preset-env'
   ],
-  plugins: [
-    '@babel/plugin-proposal-optional-chaining'
-  ]
+  plugins: ['@babel/plugin-proposal-optional-chaining', ['@babel/plugin-transform-runtime', {useESModules: true}]]
 }

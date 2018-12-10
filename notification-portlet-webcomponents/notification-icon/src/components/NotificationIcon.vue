@@ -67,6 +67,7 @@ export default {
               };
           return await ky.get(notificationApiUrl, { headers }).json();
         } catch (err) {
+          // eslint-disable-next-line no-console
           console.error(err);
           return [];
         }
