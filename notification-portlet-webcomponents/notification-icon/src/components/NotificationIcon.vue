@@ -1,5 +1,5 @@
 <template>
-  <div class="notification-icon" :class="{ 'limit-width': limitWidth }">
+  <div class="notification-icon">
     <dropdown id="_uid" no-caret :variant="variant">
       <template slot="button-content">
         <font-awesome-icon icon="bell"/>
@@ -54,10 +54,6 @@ export default {
     debug: {
       type: Boolean,
       default: false
-    },
-    limitWidth: {
-      type: Boolean,
-      default: true
     }
   },
   asyncComputed: {
@@ -123,15 +119,13 @@ export default {
     top: -.25rem;
     left: .25rem;
   }
-}
+  .dropdown-menu {
+    max-width: 30rem;
 
-// for limit-width option
-.notification-icon.limit-width /deep/ .dropdown-menu {
-  max-width: 30rem;
-
-  .dropdown-item {
-    overflow: hidden;
-    text-overflow: ellipsis;
+    .dropdown-item {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 </style>
