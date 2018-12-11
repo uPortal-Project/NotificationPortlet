@@ -6,6 +6,9 @@
         <span class="unread-count">{{ unreadCount }}</span>
       </template>
       <dropdown-header>Notifications</dropdown-header>
+      <slot v-if="notifications.length < 1" name="empty">
+        <dropdown-item>no unread notifications</dropdown-item>
+      </slot>
       <notification-item
         v-for="notification in notifications"
         :key="notification.id || notification.body"
