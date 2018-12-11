@@ -1,7 +1,6 @@
-module.exports = function(api) {
-  api.cache.never();
-  return {
-    plugins: ["babel-plugin-transform-custom-element-classes"],
-    presets: [["@babel/preset-env", { useBuiltIns: 'usage' }]]
-  };
-};
+module.exports = {
+  presets: [
+    '@babel/preset-env'
+  ],
+  plugins: [['@babel/plugin-transform-runtime', {useESModules: true}]]
+}

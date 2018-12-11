@@ -1,30 +1,35 @@
 {
-  "name": "notification-banner",
+  "name": "notification-icon",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
     "prebuild": "babel node_modules/@vue/web-component-wrapper/dist/vue-wc-wrapper.js -o node_modules/@vue/web-component-wrapper/dist/vue-wc-wrapper.js",
-    "build": "vue-cli-service build --target wc --name notification-banner --dest build/static/js 'src/components/NotificationBanner.vue'",
+    "build": "vue-cli-service build --name notification-icon --target wc --dest build/static/js src/components/NotificationIcon.vue",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.6",
-    "@fortawesome/free-solid-svg-icons": "^5.4.1",
-    "@fortawesome/vue-fontawesome": "^0.1.1",
-    "@uportal/open-id-connect": "^1.14.1",
-    "axios": "^0.18.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.8",
+    "@fortawesome/free-solid-svg-icons": "^5.5.0",
+    "@fortawesome/vue-fontawesome": "^0.1.2",
+    "@uportal/open-id-connect": "^1.19.0",
     "bootstrap-vue": "^2.0.0-rc.11",
-    "vue": "2.5.20"
+    "ky": "^0.5.1",
+    "vue": "2.5.20",
+    "vue-async-computed": "^3.5.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
     "@babel/core": "^7.2.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
     "@vue/cli-plugin-babel": "^3.2.0",
     "@vue/cli-plugin-eslint": "^3.2.0",
     "@vue/cli-service": "^3.2.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.10.0",
+    "eslint-plugin-vue": "^5.0.0",
     "node-sass": "4.11.0",
     "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.5.20"
