@@ -3,7 +3,7 @@
     <dropdown id="_uid" no-caret :variant="variant">
       <template slot="button-content">
         <font-awesome-icon icon="bell"/>
-        {{ unreadCount }}
+        <span class="unread-count">{{ unreadCount }}</span>
       </template>
       <dropdown-header>Notifications</dropdown-header>
       <notification-item
@@ -107,5 +107,14 @@ export default {
   @import "../../node_modules/bootstrap/scss/reboot";
   @import "../../node_modules/bootstrap/scss/dropdown";
   @import "../../node_modules/bootstrap/scss/buttons";
+
+  svg.svg-inline--fa {
+    width: 1.25rem;
+  }
+  span.unread-count {
+    position: relative;
+    top: -.25rem;
+    left: .25rem;
+  }
 }
 </style>
