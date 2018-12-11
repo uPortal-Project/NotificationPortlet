@@ -1,5 +1,5 @@
 <template>
-  <dropdown-item :target="target" :href="url" @click="onClickAction()">{{notification.body}}</dropdown-item>
+  <dropdown-item :target="target" :class="{ read: isRead, unread: !isRead }" :href="url" @click="onClickAction()">{{notification.body}}</dropdown-item>
 </template>
 
 <script>
@@ -44,3 +44,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.unread {
+  background-color: aliceblue !important;
+}
+.read {
+  background-color: transparent !important;
+}
+</style>
