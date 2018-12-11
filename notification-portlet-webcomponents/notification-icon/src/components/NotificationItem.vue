@@ -16,6 +16,11 @@ export default {
         ({ id }) => id === "MarkAsReadAndRedirectAction"
       );
     },
+    apiUrl() {
+        let redirectAction = this.notification?.availableActions?.find?.(
+            ({ id }) => id === "MarkAsReadAndRedirectAction");
+        return redirectAction?.apiUrl;
+    },
     isRead() {
       return JSON.parse(this.notification?.attributes?.READ?.[0] || "true");
     },
@@ -26,7 +31,7 @@ export default {
       if (this.redirectAction) {
         return () => {
           let form = document.createElement("form");
-          form.action = this.notification.url;
+          form.action = this.apiUrl;
           form.method = "POST";
           form.style.display = "none";
           document.body.appendChild(form);
