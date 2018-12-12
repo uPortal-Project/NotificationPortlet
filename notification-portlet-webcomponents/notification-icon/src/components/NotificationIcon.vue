@@ -119,5 +119,13 @@ export default {
     top: -.25rem;
     left: .25rem;
   }
+  .dropdown-menu {
+    max-width: 30rem;
+
+    .dropdown-item {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
 }
 </style>
