@@ -22,6 +22,9 @@
 <script>
 import Vue from "vue";
 import AsyncComputed from "vue-async-computed";
+import ieDropdown from "./ieDropdown";
+import ieDropdownHeader from "./ieDropdownHeader";
+import ieDropdownItem from "./ieDropdownItem";
 import Dropdown from "bootstrap-vue/es/components/dropdown/dropdown";
 import DropdownHeader from "bootstrap-vue/es/components/dropdown/dropdown-header";
 import DropdownItem from "bootstrap-vue/es/components/dropdown/dropdown-item";
@@ -31,6 +34,28 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import oidc from "@uportal/open-id-connect";
 import ky from "ky";
 import NotificationItem from "./NotificationItem";
+
+function detectIE() {
+  const ua = window.navigator.userAgent;
+
+  const msie = ua.includes("MSIE ");
+  const trident = ua.includes("Trident/");
+  const edge = ua.includes("Edge/");
+
+  return msie || trident || edge;
+}
+
+const isIE = detectIE();
+
+/**
+ * HACK: This exists because IE/Edge get caught in an infinite event loop when
+ * they try to render bootstrap vue dropdown, dropdown-item, and dropdown-header, this provides a feature
+ * incomplete, yet functional version that these browsers can fallback to rather
+ * than crashing
+ */
+const patchedDropdown = isIE ? ieDropdown : Dropdown;
+const patchedDropdownHeader = isIE ? ieDropdownHeader : DropdownHeader;
+const patchedDropdownItem = isIE ? ieDropdownItem : DropdownItem;
 
 Vue.use(AsyncComputed);
 
@@ -90,11 +115,11 @@ export default {
     }
   },
   components: {
-    Dropdown,
-    DropdownHeader,
-    DropdownItem,
+    Dropdown: patchedDropdown,
+    DropdownHeader: patchedDropdownHeader,
+    DropdownItem: patchedDropdownItem,
     FontAwesomeIcon,
-    NotificationItem
+    NotificationItem,
   }
 };
 </script>
