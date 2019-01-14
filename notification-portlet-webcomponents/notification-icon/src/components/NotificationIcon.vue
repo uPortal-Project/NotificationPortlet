@@ -49,7 +49,7 @@ const isIE = detectIE();
 
 /**
  * HACK: This exists because IE/Edge get caught in an infinite event loop when
- * they try to render bootstrap vue modal or button, this provides a feature
+ * they try to render bootstrap vue dropdown, dropdown-item, and dropdown-header, this provides a feature
  * incomplete, yet functional version that these browsers can fallback to rather
  * than crashing
  */
@@ -115,9 +115,9 @@ export default {
     }
   },
   components: {
-    Dropdown : patchedDropdown,
-    DropdownHeader : patchedDropdownHeader,
-    DropdownItem : patchedDropdownItem,
+    Dropdown: patchedDropdown,
+    DropdownHeader: patchedDropdownHeader,
+    DropdownItem: patchedDropdownItem,
     FontAwesomeIcon,
     NotificationItem,
   }
