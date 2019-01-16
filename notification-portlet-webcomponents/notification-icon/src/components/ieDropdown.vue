@@ -1,11 +1,12 @@
 <template>
   <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle"
+    <button class="btn btn-secondary"
             type="button"
             id="dropdownMenuButton"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
+            :class="['btn-' + variant]"
             v-on:click="isActive = !isActive">
       <slot name="button-content"></slot>
     </button>
@@ -18,6 +19,18 @@
 <script>
 export default {
   name: "ie-dropdown",
-  data: () => ({isActive: false})
+  props: ['variant'],
+  data: () => ({
+    isActive: false,
+  })
 };
 </script>
+
+<style lang="scss" scoped>
+@media screen and (max-width: 768px) {
+  .dropdown-menu {
+    right: 0;
+    left: auto !important;
+  }
+}
+</style>
