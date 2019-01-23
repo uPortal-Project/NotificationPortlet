@@ -53,9 +53,9 @@ recommended and more common approach).
 
 <%-- HTML Fragment --%>
 
-<div id="${n}" class="modal fade" role="dialog" data-backdrop="static">
+<div id="${n}" class="modal fade" role="dialog" data-backdrop="static" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content np-content" tabindex="-1">
+        <div class="modal-content np-content">
             <div class="modal-header">
                 <!-- Default method of closing the  dialog, in case the notice doesn't define one -->
                 <button type="button" class="close np-close" data-dismiss="modal" aria-label="Close" style="display: none;">
