@@ -53,7 +53,7 @@ recommended and more common approach).
 
 <%-- HTML Fragment --%>
 
-<div id="${n}" class="modal fade" role="dialog" data-backdrop="static">
+<div id="${n}" class="modal fade" role="dialog" data-backdrop="static" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content np-content">
             <div class="modal-header">

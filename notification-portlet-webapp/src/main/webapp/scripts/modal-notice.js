@@ -160,6 +160,11 @@ var upmodal_notice = upmodal_notice || {};
                         showNextNotice(feed, index + 1);
                     });
                 }
+
+                container.on('shown.bs.modal', function(evt) {
+                    container.find('.modal-content').focus();
+                });
+
                 container.modal("show");
             }
 
