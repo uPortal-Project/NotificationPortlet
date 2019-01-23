@@ -46,7 +46,10 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
-public final class RestfulJsonNotificationService extends AbstractNotificationService {
+/**
+ * Obtains notifications as JSON from a remote URL using a Spring <code>RestTemplate</code>.
+ */
+public class RestfulJsonNotificationService extends AbstractNotificationService {
 
     private static final String SERVICE_URLS_PREFERENCE = "RestfulJsonNotificationService.serviceUrls";
 
@@ -63,7 +66,7 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
      * Service URLs defined in an external file, in the post-Portlet API style.
      * Comma-separated list.
      */
-    @Value("${RestfulJsonNotificationService.serviceUrls:}")
+    @Value("${" + SERVICE_URLS_PREFERENCE + ":}")
     private String serviceUrlsProperty;
 
     private List<String> serviceUrlsList = Collections.emptyList();
@@ -73,12 +76,10 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
     @Autowired
     private UsernameFinder usernameFinder;
 
-    @Required
     public void setUsernameEvaluator(IParameterEvaluator usernameEvaluator) {
         this.usernameEvaluator = usernameEvaluator;
     }
 
-    @Required
     public void setPasswordEvaluator(IParameterEvaluator passwordEvaluator) {
         this.passwordEvaluator = passwordEvaluator;
     }
@@ -97,7 +98,6 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
         logger.info("Found the following IParameterEvaluator beans:  {}", urlParameters);
     }
 
-    @Required
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
@@ -138,17 +138,29 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
      * Implementation
      */
 
+    /**
+     * This Notification Service provides (and uses!) a <code>protected</code> getter for it's
+     * <code>restTemplate</code> so that subclasses may override the getter and provide their own
+     * template.
+     */
+    protected RestTemplate getRestTemplate() {
+        return restTemplate;
+    }
+
+    /**
+     * The list of locations is wrapped in a protected method so that subclasses can override it.
+     */
     @Deprecated
-    private List<String> getServiceUrls(PortletRequest req) {
+    protected List<String> getServiceUrls(PortletRequest req) {
         final PortletPreferences prefs = req.getPreferences();
         final String[] urls = prefs.getValues(SERVICE_URLS_PREFERENCE, new String[0]);
         return new ArrayList<>(Arrays.asList(urls));
     }
 
     /**
-     * Access to the list of locations is wrapped in a method so that subclasses can override it.
+     * The list of locations is wrapped in a protected method so that subclasses can override it.
      */
-    private List<String> getServiceUrls() {
+    protected List<String> getServiceUrls() {
         return serviceUrlsList;
     }
 
@@ -157,10 +169,12 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
 
         NotificationResponse rslt = NotificationResponse.EMPTY_RESPONSE;  // default is empty
 
+        final RestTemplate template = getRestTemplate(); // May be overridden by subclasses
+
         for (final String url : serviceUrls) {
             logger.debug("Invoking uri '{}' with the following parameters:  {}", url, params);
             try {
-                final NotificationResponse response = restTemplate.execute(
+                final NotificationResponse response = template.execute(
                         url, HttpMethod.GET,
                         requestCallback, responseExtractor, params);
                 rslt = rslt.combine(response);
@@ -219,12 +233,12 @@ public final class RestfulJsonNotificationService extends AbstractNotificationSe
             String password;
             if (PortletRequest.class.isInstance(request)) {
                 final PortletRequest portletReq = (PortletRequest) request;
-                username = usernameEvaluator.evaluate(portletReq);
-                password = passwordEvaluator.evaluate(portletReq);
+                username = usernameEvaluator != null ? usernameEvaluator.evaluate(portletReq) : null;
+                password = passwordEvaluator != null ? passwordEvaluator.evaluate(portletReq) : null;
             } else if (HttpServletRequest.class.isInstance(request)) {
                 final HttpServletRequest httpr = (HttpServletRequest) request;
-                username = usernameEvaluator.evaluate(httpr);
-                password = passwordEvaluator.evaluate(httpr);
+                username = usernameEvaluator != null ? usernameEvaluator.evaluate(httpr) : null;
+                password = passwordEvaluator != null ? passwordEvaluator.evaluate(httpr) : null;
             } else {
                 throw new IllegalStateException("The request is neither a PortletRequest nor an HttpServletRequest");
             }

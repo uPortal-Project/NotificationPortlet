@@ -82,6 +82,8 @@ public final class CacheNotificationService extends AbstractNotificationService 
     public void init() {
         servicesMap.clear();  // reset the Map
 
+        logger.info("Configuring CacheNotificationService with name='{}'", getName());
+
         // Load the services provided explicitly
         for (INotificationService s : embeddedServices) {
             if (servicesMap.containsKey(s.getName())) {

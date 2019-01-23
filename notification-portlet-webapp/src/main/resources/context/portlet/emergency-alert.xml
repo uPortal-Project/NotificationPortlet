@@ -61,6 +61,11 @@
                 </bean>
                 <bean class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
                     <property name="enclosedNotificationService">
+                        <ref bean="oAuth2RestfulJsonNotificationService"/>
+                    </property>
+                </bean>
+                <bean class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
+                    <property name="enclosedNotificationService">
                         <ref bean="portletEventNotificationService" />
                     </property>
                 </bean>

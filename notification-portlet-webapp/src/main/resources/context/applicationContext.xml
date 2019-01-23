@@ -168,6 +168,11 @@
         <property name="claimName" value="sub"/>
     </bean>
 
+    <!-- OAuth2 RESTful JSON:  Use 'OAuth2RestfulJsonNotificationService.serviceUrls' preference to specify services -->
+    <bean id="oAuth2RestfulJsonNotificationService" class="org.jasig.portlet.notice.service.rest.OAuth2RestfulJsonNotificationService">
+        <property name="name" value="oAuth2RestfulJsonNotificationService"/>
+    </bean>
+
     <!-- PortletEvent:  Use 'NotificationLifecycleController.doEvents' preference to turn on event processing for a portlet definition -->
     <bean id="portletEventNotificationService" class="org.jasig.portlet.notice.service.event.PortletEventNotificationService">
         <property name="name" value="portletEventNotificationService"/>

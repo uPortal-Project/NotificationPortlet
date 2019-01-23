@@ -99,6 +99,24 @@ format.  Use the following property to specify the URLs to read.
 RestfulJsonNotificationService.serviceUrls=https://my.university.edu/notifications
 ```
 
+#### OAuth2RestfulJsonNotificationService
+
+The `OAuth2RestfulJsonNotificationService` is an extension of the `RestfulJsonNotificationService`.
+It similarly reads notifications from remote URLs (in the standard JSON format), but it will also
+authenticate the request with OAuth2.  Use the following property to specify the URLs to read.
+
+```properties
+OAuth2RestfulJsonNotificationService.serviceUrls=https://my.university.edu/notifications
+```
+
+In addition, you must specify your OAuth2 `clientId`, `clientSecret`, and `accessTokenUri`.
+
+```properties
+OAuth2RestfulJsonNotificationService.clientId=CHANGEME
+OAuth2RestfulJsonNotificationService.clientSecret=CHANGEME
+OAuth2RestfulJsonNotificationService.accessTokenUri=CHANGEME
+```
+
 #### RomeNotificationService
 
 This data source converts RSS into notifications.  It reads from one or more feeds.  Use the
