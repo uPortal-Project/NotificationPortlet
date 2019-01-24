@@ -144,6 +144,9 @@ var upmodal_notice = upmodal_notice || {};
                     var linkText = alert.linkText || alert.url;
                     content.find(settings.selectors.link).attr('href', alert.url).html(linkText);
                 }
+                else {
+                    content.find(settings.selectors.link).remove();
+                }
 
                 // Add the actions
                 drawActions(alert);
