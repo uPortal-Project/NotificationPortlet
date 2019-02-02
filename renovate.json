@@ -1,0 +1,13 @@
+{
+    "extends": [
+      "config:base",
+      ":rebaseStalePrs",
+      ":preserveSemverRanges",
+      ":semanticPrefixChore",
+      ":disableRateLimiting"
+    ],
+    "maven": {
+      "enabled": true
+    },
+    "renovateFork": true
+  }
