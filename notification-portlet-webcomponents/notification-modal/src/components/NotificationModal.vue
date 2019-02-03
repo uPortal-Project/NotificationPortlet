@@ -5,11 +5,11 @@
     lazy
     class="notification-modal-wrapper"
     :visible="showModal"
-    :title=currentNotification.title
-    :hide-header-close=hasActions
-    :no-close-on-backdrop=hasActions
-    :no-close-on-esc=hasActions
-    :hide-footer=!hasActions
+    :title="currentNotification.title"
+    :hide-header-close="hasActions"
+    :no-close-on-backdrop="hasActions"
+    :no-close-on-esc="hasActions"
+    :hide-footer="!hasActions"
     @hide="handleClose">
 
     <!-- content may contain form inputs that can be sent with action -->
