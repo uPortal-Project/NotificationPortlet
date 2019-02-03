@@ -152,7 +152,7 @@ token must be presented as a `Bearer` token in the `Authorization` header of the
 
 The `/api/v1/notifications` URI accepts JSON like the following in the request body:
 
-```
+```json
 {
   "title": "Applications for Graduation Due",
   "source": "Demo Service",
