@@ -3,7 +3,7 @@
     <dropdown id="_uid" no-caret :variant="variant">
       <template slot="button-content">
         <font-awesome-icon icon="bell"/>
-        <span class="unread-count">{{ unreadCount }}</span>
+        <span class="count">{{ count }}</span>
       </template>
       <dropdown-header>Notifications</dropdown-header>
       <slot v-if="notifications.length < 1" name="empty">
@@ -76,6 +76,10 @@ export default {
       type: String,
       default: "/uPortal/p/notification"
     },
+    countAllNotifications: {
+      type: Boolean,
+      default: false
+    },
     debug: {
       type: Boolean,
       default: false
@@ -105,13 +109,17 @@ export default {
     }
   },
   computed: {
-    unreadCount() {
-      return this.notifications.filter(
-        ({ attributes }) => !JSON.parse(attributes?.READ?.[0] || "true")
-      ).length;
+    count() {
+      if (this.countAllNotifications) {
+        return this.notifications.length;
+      } else {
+        return this.notifications.filter(
+          ({ attributes }) => !JSON.parse(attributes?.READ?.[0] || "true")
+        ).length;
+      }
     },
     variant() {
-      return this.unreadCount < 1 ? "default" : "danger";
+      return this.count < 2 ? "default" : "danger";
     }
   },
   components: {
@@ -139,7 +147,7 @@ export default {
   svg.svg-inline--fa {
     width: 1.25rem;
   }
-  span.unread-count {
+  span.count {
     position: relative;
     top: -.25rem;
     left: .25rem;
