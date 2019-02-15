@@ -119,7 +119,7 @@ export default {
       }
     },
     variant() {
-      return this.count < 2 ? "default" : "danger";
+      return this.count < 1 ? "default" : "danger";
     }
   },
   components: {
