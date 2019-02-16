@@ -1,5 +1,5 @@
 <template>
-  <dropdown-item :target="target" :class="{ read: isRead, unread: !isRead }" :href="url" @click="onClickAction()">{{notification.body}}</dropdown-item>
+  <dropdown-item :target="target" :class="{ read: isRead, unread: !isRead }" :href="url" @click="onClickAction()">{{notification.title}}</dropdown-item>
 </template>
 
 <script>
