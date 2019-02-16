@@ -25,5 +25,9 @@ npm run test
 npm run lint
 ```
 
+### Options
+
+- `count-all-notifications` (optional, boolean): by default the notifications icon will display a count of unread items, `true` will display a count of all (read and unread) items for the user.
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
