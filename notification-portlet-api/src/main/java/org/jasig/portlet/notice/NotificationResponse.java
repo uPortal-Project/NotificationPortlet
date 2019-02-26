@@ -22,11 +22,7 @@ import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toMap;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -48,6 +44,7 @@ import org.slf4j.LoggerFactory;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationResponse implements Serializable, Cloneable {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final long serialVersionUID = 1L;
 
@@ -198,6 +195,30 @@ public class NotificationResponse implements Serializable, Cloneable {
                 .filter(value -> value != null)
                 .collect(Collectors.toList());
         return new NotificationResponse(filteredCategories, getErrors()); // deep copy
+
+    }
+
+    /**
+     * Return a <b>new instance</b> of {@link NotificationResponse} with the
+     * {@link NotificationEntry} objects within this response sorted against a specified
+     * <code>Comparator</code>.  The category structure is preserved.
+     */
+    public NotificationResponse sort(Comparator<NotificationEntry> sorter) {
+
+        final List<NotificationCategory> newCategories = categories.stream()
+                .map(category -> {
+                    final List<NotificationEntry> sortedEntries = category.getEntries().stream()
+                            .sorted(sorter)
+                            .collect(Collectors.toList());
+                    for(NotificationEntry ne : sortedEntries) {
+                        logger.info("Notification entry found after sorting!  " + category.getTitle() + " - " + ne.getLinkText() + ", due=" + ne.getDueDate());
+                    }
+                    return sortedEntries.size() > 0
+                            ? new NotificationCategory(category.getTitle(), sortedEntries)
+                            : null;
+                })
+                .collect(Collectors.toList());
+        return new NotificationResponse(newCategories, getErrors()); // deep copy
 
     }
 
