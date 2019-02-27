@@ -18,9 +18,17 @@
  */
 package org.jasig.portlet.notice.util;
 
-import org.jasig.portlet.notice.*;
+import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.NotificationAttribute;
+import org.jasig.portlet.notice.NotificationCategory;
+import org.jasig.portlet.notice.NotificationEntry;
+import org.jasig.portlet.notice.NotificationResponse;
+import org.jasig.portlet.notice.filter.SortNotificationServiceFilter;
+import org.jasig.portlet.notice.util.sort.Sorting;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,8 +42,9 @@ import java.util.Set;
  */
 @Component
 public class NotificationResponseFlattener {
+    @Autowired private SortNotificationServiceFilter sortNotificationServiceFilter;
 
-    public List<NotificationEntry> flatten(NotificationResponse response) {
+    public List<NotificationEntry> flatten(NotificationResponse response, HttpServletRequest request) {
 
         // We will be modifying the entries to add the category since it will not be represented in the uncategorized list, so create a
         // copy of the data if it is not already cloned.
@@ -50,7 +59,9 @@ public class NotificationResponseFlattener {
             categoryList.add(notificationCategory.getTitle());
             addAndCategorizeEntries(rslt, notificationCategory);
         }
-
+        if(request != null) {
+            return Sorting.sort(request.getParameter(Sorting.REQUEST_PARAM_SORT), request.getParameter(Sorting.REQUEST_PARAM_ORDER), rslt);
+        }
         return rslt;
 
     }

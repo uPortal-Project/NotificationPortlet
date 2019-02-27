@@ -52,9 +52,19 @@ public final class Sorting {
     public static final String SORT_ORDER_PREFERENCE = "Sorting.sortOrder";
     public static final String SORT_ORDER_DEFAULT = SortOrder.ASCENDING.name();
 
-    public static NotificationResponse sort(PortletRequest req, NotificationResponse data) {
+    public static final String REQUEST_PARAM_SORT = "sort";
+    public static final String REQUEST_PARAM_ORDER = "order";
 
-        final Comparator<NotificationEntry> comparator = chooseConfiguredComparator(req);
+
+    public static NotificationResponse sort(PortletRequest req, NotificationResponse data) {
+        final PortletPreferences prefs = req.getPreferences();
+
+        return sort(prefs.getValue(SORT_STRATEGY_PREFERENCE, null), prefs.getValue(SORT_ORDER_PREFERENCE, SORT_ORDER_DEFAULT), data);
+
+    }
+
+    public static NotificationResponse sort(String sortStrategy, String sortOrder, NotificationResponse data) {
+        final Comparator<NotificationEntry> comparator = chooseConfiguredComparator(sortStrategy, sortOrder);
         if (comparator == null) {
             // No sorting;  we're done...
             return data;
@@ -73,8 +83,15 @@ public final class Sorting {
     }
 
     public static List<NotificationEntry> sort(PortletRequest req, List<NotificationEntry> entries) {
+        final PortletPreferences prefs = req.getPreferences();
 
-        final Comparator<NotificationEntry> comparator = chooseConfiguredComparator(req);
+        return sort(prefs.getValue(SORT_STRATEGY_PREFERENCE, null), prefs.getValue(SORT_ORDER_PREFERENCE, SORT_ORDER_DEFAULT), entries);
+
+    }
+
+    public static List<NotificationEntry> sort(String strategyName, String orderName, List<NotificationEntry> entries) {
+
+        final Comparator<NotificationEntry> comparator = chooseConfiguredComparator(strategyName, orderName);
         if (comparator == null) {
             // No sorting;  we're done...
             return entries;
@@ -91,24 +108,25 @@ public final class Sorting {
      * Implementation
      */
 
-    private static Comparator<NotificationEntry> chooseConfiguredComparator(PortletRequest req) {
+    public static Comparator<NotificationEntry> chooseConfiguredComparator(String strategyName, String orderName) {
 
-        final PortletPreferences prefs = req.getPreferences();
-        final String strategyName = prefs.getValue(SORT_STRATEGY_PREFERENCE, null);
-        if (strategyName == null) {
-            // No strategy means "natural" ordering;  we won't be sorting...
+        try {
+            final SortStrategy strategy = SortStrategy.valueOf(strategyName);
+
+            SortOrder order = SortOrder.ASCENDING; // Default
+            try {
+                order = SortOrder.valueOf(orderName);
+            } catch (Exception e) {
+                // value not found or not known.  Stick with default order for sort strategy.
+            }
+
+            return order.equals(SortOrder.ASCENDING)
+                    ? strategy.getComparator()                             // Default/ascending order
+                    : Collections.reverseOrder(strategy.getComparator());  // Descending order
+        } catch (Exception e) {
+            // SortStrategy value not found or not known.  Stick with natural sorting / ordering.
             return null;
         }
-
-        // We WILL be sorting;  work out the details...
-        final SortStrategy strategy = SortStrategy.valueOf(strategyName);
-        final String orderName = prefs.getValue(SORT_ORDER_PREFERENCE, SORT_ORDER_DEFAULT);
-        final SortOrder order = SortOrder.valueOf(orderName);
-
-        return order.equals(SortOrder.ASCENDING)
-                ? strategy.getComparator()                             // Default/ascending order
-                : Collections.reverseOrder(strategy.getComparator());  // Descending order
-
     }
 
 }

@@ -106,7 +106,7 @@ public class NotificationLifecycleController {
         }
 
         // Flatten the collection
-        List<NotificationEntry> allEntries = notificationResponseFlattener.flatten(notifications);
+        List<NotificationEntry> allEntries = notificationResponseFlattener.flatten(notifications, null);
 
         // Apply specified sorting (if any)...
         allEntries = Sorting.sort(req, allEntries);

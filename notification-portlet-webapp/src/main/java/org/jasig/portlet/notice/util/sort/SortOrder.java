@@ -20,5 +20,6 @@ package org.jasig.portlet.notice.util.sort;
 
 public enum SortOrder {
     ASCENDING,  // default
-    DECENDING;
+    DECENDING, // wrong spelling.  Leaving in for backwards compatibility
+    DESCENDING
 }
