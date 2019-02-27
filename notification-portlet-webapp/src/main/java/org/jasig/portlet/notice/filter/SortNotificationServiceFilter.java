@@ -1,17 +1,12 @@
 package org.jasig.portlet.notice.filter;
 
-import net.bytebuddy.TypeCache;
-import org.apache.commons.lang3.StringUtils;
-import org.jasig.portlet.notice.*;
-import org.jasig.portlet.notice.util.sort.SortStrategy;
+import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.INotificationServiceFilterChain;
+import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.util.sort.Sorting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Sorts the output of {@link INotificationService} beans based on priority.

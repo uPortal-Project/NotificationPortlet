@@ -89,9 +89,9 @@ public final class Sorting {
 
     }
 
-    public static List<NotificationEntry> sort(String strategyName, String orderName, List<NotificationEntry> entries) {
+    public static List<NotificationEntry> sort(String sortStrategy, String sortOrder, List<NotificationEntry> entries) {
 
-        final Comparator<NotificationEntry> comparator = chooseConfiguredComparator(strategyName, orderName);
+        final Comparator<NotificationEntry> comparator = chooseConfiguredComparator(sortStrategy, sortOrder);
         if (comparator == null) {
             // No sorting;  we're done...
             return entries;
@@ -108,19 +108,19 @@ public final class Sorting {
      * Implementation
      */
 
-    public static Comparator<NotificationEntry> chooseConfiguredComparator(String strategyName, String orderName) {
+    public static Comparator<NotificationEntry> chooseConfiguredComparator(String sortStrategy, String sortOrder) {
 
         try {
-            final SortStrategy strategy = SortStrategy.valueOf(strategyName);
+            final SortStrategy strategy = SortStrategy.valueOf(sortStrategy.toUpperCase());
 
             SortOrder order = SortOrder.ASCENDING; // Default
             try {
-                order = SortOrder.valueOf(orderName);
+                order = SortOrder.valueOf(sortOrder.toUpperCase());
             } catch (Exception e) {
                 // value not found or not known.  Stick with default order for sort strategy.
             }
 
-            return order.equals(SortOrder.ASCENDING)
+            return (order.equals(SortOrder.ASCENDING) || order.equals(SortOrder.ASC))
                     ? strategy.getComparator()                             // Default/ascending order
                     : Collections.reverseOrder(strategy.getComparator());  // Descending order
         } catch (Exception e) {
