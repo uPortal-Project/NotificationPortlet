@@ -1,11 +1,11 @@
 <template>
   <div class="notification-icon">
-    <dropdown id="_uid" no-caret :variant="variant">
+    <dropdown id="_uid" no-caret toggle-class="btn-icon">
       <template slot="button-content">
-        <font-awesome-icon icon="bell"/>
-        <span class="count">{{ count }}</span>
+        <font-awesome-icon icon="bell" size="2x" fixed-width/>
+        <span class="count" :class="{ 'alert': count > 1 }">{{ countDisplay }}</span>
       </template>
-      <dropdown-header>Notifications</dropdown-header>
+      <dropdown-header tag="h3">Notifications</dropdown-header>
       <slot v-if="notifications.length < 1" name="empty">
         <dropdown-item>no unread notifications</dropdown-item>
       </slot>
@@ -14,7 +14,7 @@
         :key="notification.id || notification.body"
         :notification="notification"
       ></notification-item>
-      <dropdown-item :href="seeAllNotificationsUrl">See All Notifications</dropdown-item>
+      <dropdown-item :href="seeAllNotificationsUrl" class="text-center">See All Notifications</dropdown-item>
     </dropdown>
   </div>
 </template>
@@ -110,16 +110,14 @@ export default {
   },
   computed: {
     count() {
-      if (this.countAllNotifications) {
-        return this.notifications.length;
-      } else {
-        return this.notifications.filter(
-          ({ attributes }) => !JSON.parse(attributes?.READ?.[0] || "true")
-        ).length;
-      }
+      return this.countAllNotifications ?
+          this.notifications.length :
+          this.notifications.filter(
+            ({ attributes }) => !JSON.parse(attributes?.READ?.[0] || "true")
+          ).length;
     },
-    variant() {
-      return this.count < 1 ? "default" : "danger";
+    countDisplay() {
+      return this.count < 10 ? this.count : '*';
     }
   },
   components: {
@@ -144,20 +142,78 @@ export default {
   @import "../../node_modules/bootstrap/scss/dropdown";
   @import "../../node_modules/bootstrap/scss/buttons";
 
-  svg.svg-inline--fa {
-    width: 1.25rem;
-  }
-  span.count {
+  .btn-icon {
+    background: transparent;
+    border-color: transparent;
+    width: 18px;
+    height: 25px;
+    margin-left: 4px;
+    margin-right: 4px;
+    background: transparent;
+    border: 0 none;
+    line-height: 0;
+    padding: 0;
     position: relative;
-    top: -.25rem;
-    left: .25rem;
+    color: var(--notif-icon-fg-color, #FFFFFF);
+
+    &:hover {
+      background: transparent;
+      color: var(--notif-icon-fg-hover-color, #FFFFFF);
+    }
+    &:not(:disabled), :disabled {
+      &:focus, &:active {
+        outline: none;
+        box-shadow: none;
+        background-color: transparent;
+        border-color: transparent;
+      }
+    }
+    
+
+    .count {
+      border: 1px solid var(--notif-icon-fg-color, #FFFFFF);
+      border-radius: 50%;
+      display: block;
+      width: 1.5rem;
+      height: 1.5rem;
+      font-size: 1.1rem;
+      line-height: 1.2rem;
+      position: absolute;
+      top: -.25rem;
+      right: -.5rem;
+
+      &.alert {
+        color: var(--notif-icon-fg-alert-color, #FFFFFF);
+        background-color: var(--notif-icon-bg-alert-color, #dc3545);
+        border-color: var(--notif-icon-bg-alert-color, #dc3545);
+      }
+    }
+    &:after {
+      display: none;
+    }
   }
   .dropdown-menu {
     max-width: 30rem;
+    background: var(--notif-heading-bg-color, #E5E5E5);
+    padding: 0px;
+
+    .dropdown-header {
+      padding: 1rem;
+      font-size: 1.5rem;
+      text-align: center;
+      font-weight: normal;
+    }
 
     .dropdown-item {
       overflow: hidden;
       text-overflow: ellipsis;
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+      border-top: 1px solid var(--notif-item-border-color, #E5E5E5);
+
+      &.text-center {
+        text-align: center;
+      }
     }
   }
 }

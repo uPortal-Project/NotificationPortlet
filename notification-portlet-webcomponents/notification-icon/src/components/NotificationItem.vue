@@ -52,9 +52,9 @@ export default {
 
 <style lang="scss" scoped>
 .unread {
-  background-color: aliceblue !important;
+  background-color: var(--notif-unread-bg-color, aliceblue) !important;
 }
 .read {
-  background-color: transparent !important;
+  background-color: var(--notif-read-bg-color, #FFF) !important;
 }
 </style>
