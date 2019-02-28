@@ -180,8 +180,8 @@ export default {
       font-size: 1.1rem;
       line-height: 1.2rem;
       position: absolute;
-      top: -.25rem;
-      right: -.5rem;
+      top: -0.25rem;
+      right: -0.5rem;
 
       &.alert {
         color: var(--notif-icon-fg-alert-color, #FFFFFF);
