@@ -154,6 +154,7 @@ export default {
     line-height: 0;
     padding: 0;
     position: relative;
+    color: #FFFFFF;
     color: var(--notif-icon-fg-color, #FFFFFF);
 
     &:hover {
@@ -184,7 +185,9 @@ export default {
 
       &.alert {
         color: var(--notif-icon-fg-alert-color, #FFFFFF);
+        background-color: #dc3545;
         background-color: var(--notif-icon-bg-alert-color, #dc3545);
+        border-color: #dc3545;
         border-color: var(--notif-icon-bg-alert-color, #dc3545);
       }
     }
@@ -194,6 +197,7 @@ export default {
   }
   .dropdown-menu {
     max-width: 30rem;
+    background: #E5E5E5;
     background: var(--notif-heading-bg-color, #E5E5E5);
     padding: 0px;
 
@@ -209,6 +213,7 @@ export default {
       text-overflow: ellipsis;
       padding: 1rem 1.5rem;
       font-size: 1.1rem;
+      border-top: #E5E5E5;
       border-top: 1px solid var(--notif-item-border-color, #E5E5E5);
 
       &.text-center {
