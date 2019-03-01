@@ -135,7 +135,15 @@ import org.springframework.transaction.annotation.Transactional;
         Validate.notEmpty(username, "Argument 'username' cannot be empty");
 
         final String jpql = "SELECT v.entry FROM JpaEvent v "
-                                    + "WHERE v.username = :username";
+                                    + "WHERE v.username = :username "
+                                    + "AND v.entry.priority != 0"; // See below...
+
+        /*
+         * Note on Priority 0 entries: the Notification project sometimes uses 'proxy' entries
+         * within the JPA service to track state changes.  These proxies always have a priority of
+         * zero, and should not appear in a user's visable list of notifications.
+         */
+
         TypedQuery<JpaEntry> query = entityManager.createQuery(jpql, JpaEntry.class);
 
         log.debug("Query getEntriesByRecipient={}", query.toString());
