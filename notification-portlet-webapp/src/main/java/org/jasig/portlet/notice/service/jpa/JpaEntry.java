@@ -53,29 +53,29 @@ import javax.persistence.Table;
     @Column(name="TITLE", nullable=false)
     private String title;
 
-    @Column(name="SOURCE", nullable=true)
+    @Column(name="SOURCE")
     private String source;
 
-    @Column(name="CATEGORY", nullable=true)
+    @Column(name="CATEGORY")
     private String category;
 
-    @Column(name="URL", nullable=true)
+    @Column(name="URL")
     private String url;
 
-    @Column(name="LINK_TEXT", nullable=true)
+    @Column(name="LINK_TEXT")
     private String linkText;
 
-    @Column(name="PRIORITY", nullable=true)
+    @Column(name="PRIORITY")
     private int priority;
 
-    @Column(name="DUE_DATE", nullable=true)
+    @Column(name="DUE_DATE")
     private Timestamp dueDate;
 
-    @Column(name="IMAGE", nullable=true)
+    @Column(name="IMAGE")
     private String image;
 
     @Lob
-    @Column(name="BODY", nullable=true)
+    @Column(name="BODY")
     private String body;
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
