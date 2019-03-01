@@ -3,7 +3,7 @@
     <dropdown id="_uid" no-caret toggle-class="btn-icon">
       <template slot="button-content">
         <font-awesome-icon icon="bell" size="2x" fixed-width/>
-        <span class="count" :class="{ 'alert': count > 1 }">{{ countDisplay }}</span>
+        <span class="count" :class="{ 'alert': count > 1, 'hidden': count <=0 }">{{ countDisplay }}</span>
       </template>
       <dropdown-header tag="h3">Notifications</dropdown-header>
       <slot v-if="notifications.length < 1" name="empty">
@@ -181,7 +181,7 @@ export default {
       line-height: 1.2rem;
       position: absolute;
       top: -0.25rem;
-      right: -0.5rem;
+      right: -0.75rem;
 
       &.alert {
         color: var(--notif-icon-fg-alert-color, #FFFFFF);
@@ -189,6 +189,9 @@ export default {
         background-color: var(--notif-icon-bg-alert-color, #dc3545);
         border-color: #dc3545;
         border-color: var(--notif-icon-bg-alert-color, #dc3545);
+      }
+      &.hidden {
+        display: none;
       }
     }
     &:after {
