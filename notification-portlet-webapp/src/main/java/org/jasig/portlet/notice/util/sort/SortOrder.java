@@ -20,5 +20,5 @@ package org.jasig.portlet.notice.util.sort;
 
 public enum SortOrder {
     ASCENDING,  // default
-    DECENDING;
+    DESCENDING
 }

@@ -32,14 +32,8 @@ import org.jasig.portlet.notice.NotificationEntry;
 public enum SortStrategy {
 
     PRIORITY {
-        private final Comparator<NotificationEntry> comparator = new Comparator<NotificationEntry>(){
-            @Override
-            public int compare(NotificationEntry o1, NotificationEntry o2) {
-                // Don't need to worry about null values in
-                // this case because priority is natively an int.
-                return o1.getPriority() - o2.getPriority();
-            }
-        };
+        private final Comparator<NotificationEntry> comparator =
+                Comparator.comparingInt(NotificationEntry::getPriority);
 
         @Override
         public Comparator<NotificationEntry> getComparator() {
@@ -48,30 +42,27 @@ public enum SortStrategy {
     },
 
     DUE_DATE {
-        private final Comparator<NotificationEntry> comparator = new Comparator<NotificationEntry>(){
-            @Override
-            public int compare(NotificationEntry o1, NotificationEntry o2) {
-                final Date o1due = o1.getDueDate();
-                final Date o2due = o2.getDueDate();
+        private final Comparator<NotificationEntry> comparator = (o1, o2) -> {
+            final Date o1due = o1.getDueDate();
+            final Date o2due = o2.getDueDate();
 
-                int rslt = 0;  // default
-                if (o1due == null && o2 != null) {
-                    // Non-null before null...
-                    rslt = -1;
-                } else if (o1due != null && o2 == null) {
-                    // Non-null before null...
-                    rslt = 1;
-                } else if (o1due != null && o2 != null) {
-                    // Compare time in millis
-                    final long difference = o1due.getTime() - o2due.getTime();
-                    if (difference != 0L) {
-                        // Convert to something guaranteed to
-                        // be within the precision of an integer
-                        rslt = difference > 0L ? 1 : -1;
-                    }
+            int rslt = 0;  // default
+            if (o1due == null && o2due != null) {
+                // Non-null before null...
+                rslt = -1;
+            } else if (o1due != null && o2due == null) {
+                // Non-null before null...
+                rslt = 1;
+            } else if (o1due != null && o2due != null) {
+                // Compare time in millis
+                final long difference = o1due.getTime() - o2due.getTime();
+                if (difference != 0L) {
+                    // Convert to something guaranteed to
+                    // be within the precision of an integer
+                    rslt = difference > 0L ? 1 : -1;
                 }
-                return rslt;
             }
+            return rslt;
         };
 
         @Override

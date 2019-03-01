@@ -26,6 +26,7 @@ import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.filter.ApiUrlSupportFilter;
 import org.jasig.portlet.notice.util.NotificationResponseFlattener;
 import org.jasig.portlet.notice.util.UsernameFinder;
+import org.jasig.portlet.notice.util.sort.Sorting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,9 +74,8 @@ public class NotificationRestV2Controller {
     @RequestMapping(value = "/notifications", method = RequestMethod.GET)
     public List<NotificationEntry> fetchNotifications(HttpServletRequest request) {
         final NotificationResponse response = repository.fetch(request);
-        List<NotificationEntry> rslt = notificationResponseFlattener.flatten(response);
-        // TODO:  Need sorting!
-        return rslt;
+        final List<NotificationEntry> rslt = notificationResponseFlattener.flatten(response);
+        return Sorting.sort(request, rslt);
     }
 
     @RequestMapping(value = "/action/{actionId}/{notificationId}", method = RequestMethod.POST)

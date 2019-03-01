@@ -241,6 +241,38 @@ Example:
 /NotificationPortlet/api/v2/notifications?read=false
 ```
 
+### Sorting the Notifications REST API (Web Components)
+
+You can sort the contents of the Notifications REST API using query string parameters. Some
+sorting options are available now, and others are being added periodically.
+
+Web Components in the Notification project typically support a `filter` property (HTML attribute)
+that allows you to specify sorting options without knowing or editing the `notificationApiUrl`
+property.
+
+Example:
+
+```html
+<script src="https://unpkg.com/vue@2.5.16"></script>
+<script
+  type="text/javascript"
+  src="/NotificationPortlet/scripts/notification-modal.js"
+></script>
+<notification-modal filter="sort=priority&amp;order=descending"></notification-modal>
+```
+
+#### Available Sort Strategies
+
+Currently the following sort strategies are supported:
+
+- `priority`
+- `due_date`
+
+Additionally, you may optionally specify one of the following `order` values:
+
+- `ascending` (default)
+- `descending`
+
 ### Java Portlet-Based UI Components
 
 As it's name implies, this project was originally developed as a collection of Java Portlet
