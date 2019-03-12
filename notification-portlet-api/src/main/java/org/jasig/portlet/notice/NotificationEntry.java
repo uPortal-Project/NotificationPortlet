@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -48,6 +49,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  * class contains all the entries for the same category title.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true) // When deserializing, ignore extra fields
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NotificationEntry implements Serializable, Cloneable {
 
