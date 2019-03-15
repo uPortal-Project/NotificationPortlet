@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@uportal/open-id-connect": "1.25.0",
+    "@uportal/open-id-connect": "1.26.0",
     "axios": "0.18.0",
     "bootstrap-vue": "2.0.0-rc.14",
     "vue": "2.6.9"
