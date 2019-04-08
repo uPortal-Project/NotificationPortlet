@@ -26,7 +26,7 @@ subprojects {
 
     dependencies {
         testCompileOnly 'junit:junit:4.12'
-        testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.4.1'
+        testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.4.2'
     }
 
     // TODO: wait for https://github.com/hierynomus/license-gradle-plugin/issues/161
