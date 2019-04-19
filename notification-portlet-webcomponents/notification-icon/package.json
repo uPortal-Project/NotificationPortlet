@@ -14,7 +14,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.2",
     "@uportal/open-id-connect": "^1.19.0",
     "bootstrap-vue": "^2.0.0-rc.11",
-    "ky": "^0.9.0",
+    "ky": "^0.10.0",
     "vue": "2.6.10",
     "vue-async-computed": "^3.5.0"
   },
