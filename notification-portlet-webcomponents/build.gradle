@@ -1,7 +1,0 @@
-subprojects {
-    task buildWebComponent {}
-}
-
-task buildAllComponents {
-    dependsOn subprojects.collect { it.tasks.getByName('buildWebComponent') }
-}

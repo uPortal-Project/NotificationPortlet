@@ -110,21 +110,6 @@ artifacts {
   archives classesJar
 }
 
-task copyWebComponentsJs(type: Copy, dependsOn: ':notification-portlet-webcomponents:buildAllComponents' ) {
-    from("${rootProject.projectDir}/notification-portlet-webcomponents") {
-        include "*/build/static/js/*"
-        exclude "**/*.html"
-        eachFile { details ->
-            String[] pathTokens = details.path.split(File.separator)
-            details.path = pathTokens[pathTokens.length - 1]
-            logger.lifecycle("Adding web component resource ${details} as '${details.path}'")
-        }
-    }
-    into "${buildDir}/scripts"
-    includeEmptyDirs = false
-}
-war.dependsOn copyWebComponentsJs
-
 war {
     from("${buildDir}/css") {
         into('css')
