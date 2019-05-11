@@ -91,7 +91,7 @@ public class UserAttributeParameterEvaluator extends AbstractParameterEvaluator 
             else if (claimValue instanceof List<?>) {
                 List<String> claimValues = (List<String>) claimValue;
 
-                if(claimValues.size() > 1) {
+                if (claimValues.size() > 1) {
                     logger.warn("{} contains more than one value, returning first value", this.claimName);
                 }
 
