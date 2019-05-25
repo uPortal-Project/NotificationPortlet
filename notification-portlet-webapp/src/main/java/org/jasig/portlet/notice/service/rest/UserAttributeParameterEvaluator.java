@@ -30,6 +30,7 @@ import org.springframework.http.HttpHeaders;
 import javax.annotation.Resource;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,7 +84,20 @@ public class UserAttributeParameterEvaluator extends AbstractParameterEvaluator 
         final Jws<Claims> oidcToken = parseOidcToken(req);
         if (oidcToken != null) {
             final Object claimValue = oidcToken.getBody().get(claimName);
-            if (claimValue != null) {
+
+            if (claimValue == null) {
+                //
+            }
+            else if (claimValue instanceof List<?>) {
+                List<String> claimValues = (List<String>) claimValue;
+
+                if (claimValues.size() > 1) {
+                    logger.warn("{} contains more than one value, returning first value", this.claimName);
+                }
+
+                rslt = claimValues.get(0);
+            }
+            else {
                 rslt = claimValue.toString();
             }
         }
