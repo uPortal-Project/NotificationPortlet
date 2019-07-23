@@ -42,6 +42,7 @@
      +-->
     <bean id="rootNotificationService" class="org.jasig.portlet.notice.service.CacheNotificationService">
         <property name="name" value="emergencyAlertCacheNoticationService"/>
+        <property name="useDiscoverable" value="false"/>
         <property name="embeddedServices">
             <list>
                 <bean class="org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator">
