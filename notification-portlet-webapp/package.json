@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "clean-css-cli": "^4.1.11",
-    "less": "^2.7.2",
+    "less": "^3.0.0",
     "uglifyjs-folder": "^1.5.0"
   }
 }
