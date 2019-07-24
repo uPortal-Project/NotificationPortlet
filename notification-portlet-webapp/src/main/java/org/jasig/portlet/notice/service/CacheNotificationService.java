@@ -59,6 +59,14 @@ public final class CacheNotificationService extends AbstractNotificationService 
     private List<INotificationService> embeddedServices;
     private Cache cache;
 
+    // Some portlets want to ONLY use explicit services, e.g. Emergency Alerts
+    private boolean useDiscoverable = true;
+
+    @Autowired(required=false)
+    public void setUseDiscoverable(String useDisc) {
+        this.useDiscoverable = Boolean.valueOf(useDisc);
+    }
+
     // Managed internally
     private final Map<String,INotificationService> servicesMap = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -95,30 +103,32 @@ public final class CacheNotificationService extends AbstractNotificationService 
             logger.info("Added configured Notification Service:  {}", s.getName());
         }
 
-        // Discover services provided by implementors (TODO: we should move everything to discovery)
-        final Map<String,AbstractJdbcNotificationService> discoverableServices =
-                BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext,
-                        AbstractJdbcNotificationService.class);
-        if (discoverableServices.size() != 0) {
-            /*
-             * To match the behavior/capabilities of INotificationService beans declared in the
-             * applicationContext.xml, we need to decorate these beans in a
-             * FilteringNotificationServiceDecorator.  We're also obligated to provide the
-             * dependencies of FilteringNotificationServiceDecorator.
-             */
-            final UsernameFinder usernameFinder =
-                    (UsernameFinder) applicationContext.getBean("usernameFinder");
-            final PortletXmlRoleService portletXmlRoleService =
-                    (PortletXmlRoleService) applicationContext.getBean("portletXmlRoleService");
+        if (useDiscoverable) {
+            // Discover services provided by implementors (TODO: we should move everything to discovery)
+            final Map<String,AbstractJdbcNotificationService> discoverableServices =
+                    BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext,
+                            AbstractJdbcNotificationService.class);
+            if (discoverableServices.size() != 0) {
+                /*
+                 * To match the behavior/capabilities of INotificationService beans declared in the
+                 * applicationContext.xml, we need to decorate these beans in a
+                 * FilteringNotificationServiceDecorator.  We're also obligated to provide the
+                 * dependencies of FilteringNotificationServiceDecorator.
+                 */
+                final UsernameFinder usernameFinder =
+                        (UsernameFinder) applicationContext.getBean("usernameFinder");
+                final PortletXmlRoleService portletXmlRoleService =
+                        (PortletXmlRoleService) applicationContext.getBean("portletXmlRoleService");
 
-            for (AbstractJdbcNotificationService s : discoverableServices.values()) {
-                final FilteringNotificationServiceDecorator decorator = new FilteringNotificationServiceDecorator();
-                decorator.setEnclosedNotificationService(s);
-                decorator.setUsernameFinder(usernameFinder);
-                decorator.setPortletXmlRoleService(portletXmlRoleService);
+                for (AbstractJdbcNotificationService s : discoverableServices.values()) {
+                    final FilteringNotificationServiceDecorator decorator = new FilteringNotificationServiceDecorator();
+                    decorator.setEnclosedNotificationService(s);
+                    decorator.setUsernameFinder(usernameFinder);
+                    decorator.setPortletXmlRoleService(portletXmlRoleService);
 
-                servicesMap.put(decorator.getName(), decorator);
-                logger.info("Added discovered Notification Service:  {}", s.getName());
+                    servicesMap.put(decorator.getName(), decorator);
+                    logger.info("Added discovered Notification Service:  {}", s.getName());
+                }
             }
         }
     }
