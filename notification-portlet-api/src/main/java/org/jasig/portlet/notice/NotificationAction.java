@@ -50,6 +50,7 @@ public abstract class NotificationAction implements Serializable, Cloneable {
     private String id = getClass().getSimpleName();
     private String label;
     private String apiUrl;
+    private boolean redirect = false;
 
     public final String getClazz() {
         return getClass().getName();
@@ -97,6 +98,28 @@ public abstract class NotificationAction implements Serializable, Cloneable {
      */
     public void setApiUrl(String apiUrl) {
         this.apiUrl = apiUrl;
+    }
+
+    /**
+     * Flags whether the URL should be a silent, background API call or a redirect.
+     *
+     * @return boolean if the URL is a redirect or API call
+     *
+     * @since 4.6.0
+     */
+    public boolean getRedirect() {
+        return redirect;
+    }
+
+    /**
+     * Sets whether the URL should be a silent, background API call or a redirect.
+     *
+     * @param redirect if true, URL is a redirect; otherwise, the URL is a silent API call
+     *
+     * @since 4.6.0
+     */
+    public void setRedirect(boolean redirect) {
+        this.redirect = redirect;
     }
 
     /**

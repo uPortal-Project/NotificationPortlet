@@ -30,18 +30,18 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationState;
+import org.jasig.portlet.notice.filter.ReadStateAction;
 import org.jasig.portlet.notice.rest.EventDTO;
 import org.jasig.portlet.notice.util.JpaServices;
 import org.jasig.portlet.notice.util.SpringContext;
 import org.jasig.portlet.notice.util.UsernameFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.jasig.portlet.notice.NotificationAction;
-import org.jasig.portlet.notice.NotificationEntry;
 
-public class ReadAction extends NotificationAction {
+public class ReadAction extends ReadStateAction {
 
     private static final long serialVersionUID = 1L;
 
