@@ -18,6 +18,11 @@
  */
 package org.jasig.portlet.notice.filter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.jasig.portlet.notice.INotificationServiceFilter;
 import org.jasig.portlet.notice.INotificationServiceFilterChain;
@@ -28,7 +33,6 @@ import org.jasig.portlet.notice.NotificationEntry;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.NotificationState;
 import org.jasig.portlet.notice.action.read.MarkAsReadAndRedirectAction;
-import org.jasig.portlet.notice.action.read.ReadAction;
 import org.jasig.portlet.notice.rest.EventDTO;
 import org.jasig.portlet.notice.util.IJpaServices;
 import org.jasig.portlet.notice.util.UsernameFinder;
@@ -36,10 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * For notifications based on the Servlet API, this {@link INotificationServiceFilter}
@@ -113,7 +113,7 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
                 if (!isRead) {
                     final List<NotificationAction> currentActions = entry.getAvailableActions();
                     boolean hasReadActionAlready = currentActions.stream()
-                            .anyMatch(action -> ReadAction.class.isInstance(action));
+                            .anyMatch(action -> ReadStateAction.class.isInstance(action));
                     if (!hasReadActionAlready) {
                         final List<NotificationAction> replacementList = new ArrayList<>(currentActions);
                         replacementList.add(new MarkAsReadAndRedirectAction());

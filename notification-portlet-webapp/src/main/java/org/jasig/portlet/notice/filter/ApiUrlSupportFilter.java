@@ -18,16 +18,22 @@
  */
 package org.jasig.portlet.notice.filter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.portal.soffit.Headers;
-import org.jasig.portlet.notice.*;
+import org.jasig.portlet.notice.INotificationServiceFilter;
+import org.jasig.portlet.notice.INotificationServiceFilterChain;
+import org.jasig.portlet.notice.NotificationAction;
+import org.jasig.portlet.notice.NotificationCategory;
+import org.jasig.portlet.notice.NotificationEntry;
+import org.jasig.portlet.notice.NotificationResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This {@link INotificationServiceFilter} sets the <code>apiUrl</code> property on
@@ -57,6 +63,7 @@ public class ApiUrlSupportFilter extends AbstractNotificationServiceFilter {
      * commonly add actions.
      */
     public ApiUrlSupportFilter() {
+        // needs to order after {@code ReadStateSupportFilter}
         super(AbstractNotificationServiceFilter.ORDER_VERY_LATE);
     }
 

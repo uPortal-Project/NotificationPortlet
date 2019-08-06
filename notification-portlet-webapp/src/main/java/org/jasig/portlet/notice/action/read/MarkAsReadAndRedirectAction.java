@@ -18,12 +18,13 @@
  */
 package org.jasig.portlet.notice.action.read;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jasig.portlet.notice.NotificationEntry;
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jasig.portlet.notice.NotificationEntry;
 
 /**
  * Extension of {@link ReadAction} that redirects the user to the URL associated with the
@@ -37,6 +38,7 @@ public class MarkAsReadAndRedirectAction extends ReadAction {
 
     public MarkAsReadAndRedirectAction() {
         setLabel(LABEL);
+        setRedirect(true);
     }
 
     @Override

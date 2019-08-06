@@ -31,6 +31,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 
 /**
  * Represents a behavior that a user may invoke on a notification.  The
@@ -38,6 +41,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  * and Favorite.  Concrete service impls must provide the business logic to
  * perform the action, as well as implement the invoke method.
  */
+@Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(using = JsonNotificationActionDeserializer.class)
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,19 +49,10 @@ public abstract class NotificationAction implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
 
+    @JsonIgnore
     // Instance Members
+    @Setter(AccessLevel.PACKAGE)
     private NotificationEntry target;
-    private String id = getClass().getSimpleName();
-    private String label;
-    private String apiUrl;
-
-    public final String getClazz() {
-        return getClass().getName();
-    }
-
-    public final String getId() {
-        return id;
-    }
 
     /**
      * Identifies the action, from among the available set of actions, when the
@@ -65,38 +60,25 @@ public abstract class NotificationAction implements Serializable, Cloneable {
      * the simpleName of the implementing class, so subclasses that can appear
      *  more than once within a notification should override it.
      */
-    public final void setId(String id) {
-        this.id = id;
-    }
-
-    public final String getLabel() {
-        return label;
-    }
-
-    public final void setLabel(String label) {
-        this.label = label;
-    }
-
-    @JsonIgnore
-    public final NotificationEntry getTarget() {
-        return target;
-    }
+    private String id = getClass().getSimpleName();
+    private String label;
 
     /**
      * Complete URL (ncluding CSRF token, if appropriate) that can be used to invoke this action
      * through the <code>NotificationRestV2Controller</code>.
-     */
-    public String getApiUrl() {
-        return apiUrl;
-    }
-
-    /**
-     * Sets the URL for invoking this action through the <code>NotificationRestV2Controller</code>.
+     *
      * <em>This field should not be provided by the data source</em> (i.e. Notification Service).
      * It must be set by the API layer.
      */
-    public void setApiUrl(String apiUrl) {
-        this.apiUrl = apiUrl;
+    private String apiUrl;
+
+    /**
+     * Flags whether the URL should be a silent, background API call or a redirect.
+     */
+    private boolean redirect = false;
+
+    public final String getClazz() {
+        return getClass().getName();
     }
 
     /**
@@ -135,13 +117,4 @@ public abstract class NotificationAction implements Serializable, Cloneable {
         return rslt;
 
     }
-
-    /*
-     * Non-public API
-     */
-
-    /* package-private */ void setTarget(NotificationEntry target) {
-        this.target = target;
-    }
-
 }

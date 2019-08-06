@@ -6,6 +6,8 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
     compile "commons-lang:commons-lang:${commonsLangVersion}"
     compile "org.slf4j:slf4j-api:${slf4jVersion}"
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     compileOnly "${portletApiDependency}"
     compileOnly "javax.servlet:servlet-api:${servletApiVersion}"
 }
