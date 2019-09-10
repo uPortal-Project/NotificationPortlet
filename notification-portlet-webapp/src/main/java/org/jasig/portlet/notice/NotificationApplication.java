@@ -23,11 +23,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ImportResource("classpath:/context/*.xml") // Legacy, XML-based beans
-public class NotifacationApplication {
+@ImportResource({"classpath:/context/*.xml","classpath:/properties/contextOverrides/*.xml"}) // Legacy, XML-based beans
+public class NotificationApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(NotifacationApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(NotificationApplication.class, args);
+    }
 
 }
