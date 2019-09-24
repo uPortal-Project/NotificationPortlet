@@ -123,7 +123,7 @@ This data source converts RSS into notifications. It reads from one or more feed
 following property to specify feed URLs.
 
 ```properties
-RomeNotificationService.feedUrls=https://my.university.edu/announcements/rss
+RomeNotificationService.feedUrls=https://my.university.edu/announcements/rss,https://my.university.edu/library/rss
 ```
 
 #### JDBC (RDBMS) Notification Services
