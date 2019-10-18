@@ -62,7 +62,7 @@ dependencies {
     compile "org.springframework:spring-tx:${springVersion}"
     compile "org.springframework:spring-webmvc-portlet:${springVersion}"
     compile "org.springframework.security.oauth:spring-security-oauth2:${springSecurityOAuth2Version}"
-    compile "rome:rome:${romeVersion}"
+    compile "com.rometools:rome:${romeVersion}"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
