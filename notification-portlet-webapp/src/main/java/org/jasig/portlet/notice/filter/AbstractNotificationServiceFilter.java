@@ -21,7 +21,7 @@ package org.jasig.portlet.notice.filter;
 import org.jasig.portlet.notice.INotificationServiceFilter;
 
 /**
- * Base class for conclrete {@link INotificationServiceFilter} implementations that provides an
+ * Base class for concrete {@link INotificationServiceFilter} implementations that provides an
  * implementation of <code>Comparable.compareTo</code>.
  *
  * @since 4.0
@@ -29,7 +29,7 @@ import org.jasig.portlet.notice.INotificationServiceFilter;
 public abstract class AbstractNotificationServiceFilter implements INotificationServiceFilter {
 
     /*
-     * Helper constants for ordering;  filters take effect in the reverse of the eorder in which
+     * Helper constants for ordering;  filters take effect in the reverse of the order in which
      * they are invoked.
      */
     public static final int ORDER_FIRST = Integer.MAX_VALUE;
