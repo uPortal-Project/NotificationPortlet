@@ -86,7 +86,7 @@ import javax.persistence.Table;
     @JoinColumn(name = "ENTRY_ID")
     private Set<JpaAction> actions = new HashSet<>();
 
-    @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "ENTRY_ID")
     private Set<JpaAddressee> addressees = new HashSet<>();
 
