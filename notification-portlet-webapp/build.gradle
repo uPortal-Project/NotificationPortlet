@@ -43,7 +43,7 @@ dependencies {
     compile "joda-time:joda-time:${jodaTimeVersion}"
     compile "net.sf.dozer:dozer:${dozerVersion}"
     compile "net.sf.dozer:dozer-spring:${dozerVersion}"
-    compile("net.sf.ehcache:ehcache:${ehcacheVersion}")
+    compile("org.ehcache:ehcache:${ehcacheVersion}")
     compile "org.apache.commons:commons-lang3:${commonsLang3Version}"
     compile "org.apache.httpcomponents:httpclient:${httpcomponentsVersion}"
     compile "org.aspectj:aspectjweaver:${aspectjVersion}"
