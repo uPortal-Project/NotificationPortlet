@@ -111,7 +111,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
              * REST APIs are secured by OIDC Id tokens.
              */
             .csrf()
-                .ignoringAntMatchers("/api/v1/**");
+                .ignoringAntMatchers("/api/v1/**")
+                .ignoringAntMatchers("/api/v2/**");
 
     }
 
