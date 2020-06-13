@@ -39,6 +39,7 @@ import org.jasig.portlet.notice.util.UsernameFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,6 +57,9 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
             new NotificationAttribute(READ_ATTRIBUTE_NAME, Boolean.TRUE.toString());
     public static final NotificationAttribute UNREAD_ATTRIBUTE =
             new NotificationAttribute(READ_ATTRIBUTE_NAME, Boolean.FALSE.toString());
+
+    @Value("${disable.default.action:false}")
+    private boolean disableDefaultAction;
 
     @Autowired
     private UsernameFinder usernameFinder;
@@ -78,46 +82,48 @@ public class ReadStateSupportFilter extends AbstractNotificationServiceFilter {
 
         final NotificationResponse rslt = response.cloneIfNotCloned();
 
-        // Add and implement the read behavior with our copy
-        for (NotificationCategory category : rslt.getCategories()) {
+        if (!disableDefaultAction) {
+            // Add and implement the read behavior with our copy
+            for (NotificationCategory category : rslt.getCategories()) {
 
-            for (NotificationEntry entry : category.getEntries()) {
+                for (NotificationEntry entry : category.getEntries()) {
 
-                /*
-                 * Participation in READ behavior is 100%
-                 * dependant on having an id set on the entry.
-                 */
-                if (StringUtils.isBlank(entry.getId())) {
-                    continue;
-                }
+                    /*
+                     * Participation in READ behavior is 100%
+                     * dependant on having an id set on the entry.
+                     */
+                    if (StringUtils.isBlank(entry.getId())) {
+                        continue;
+                    }
 
-                /*
-                 * Apply the READ attribute if the circumstances call for it.
-                 */
-                final String username = usernameFinder.findUsername(request);
-                final List<EventDTO> history = jpaServices.getHistory(entry, username);
+                    /*
+                     * Apply the READ attribute if the circumstances call for it.
+                     */
+                    final String username = usernameFinder.findUsername(request);
+                    final List<EventDTO> history = jpaServices.getHistory(entry, username);
 
-                logger.trace("Found the following history for username='{}' and entryId='{}': {}",
-                        username, entry.getId(), history);
+                    logger.trace("Found the following history for username='{}' and entryId='{}': {}",
+                            username, entry.getId(), history);
 
-                final List<NotificationAttribute> attributes = new ArrayList<>(entry.getAttributes());
-                final boolean isRead = history.stream()
-                        .anyMatch(event -> NotificationState.READ.equals(event.getState()));
-                attributes.add(isRead ? READ_ATTRIBUTE : UNREAD_ATTRIBUTE);
-                entry.setAttributes(attributes);
+                    final List<NotificationAttribute> attributes = new ArrayList<>(entry.getAttributes());
+                    final boolean isRead = history.stream()
+                            .anyMatch(event -> NotificationState.READ.equals(event.getState()));
+                    attributes.add(isRead ? READ_ATTRIBUTE : UNREAD_ATTRIBUTE);
+                    entry.setAttributes(attributes);
 
-                /*
-                 * Decorate with READ behavior, but only if (1) the entry is unread and (2) the
-                 * entry does not have a ReadAction already
-                 */
-                if (!isRead) {
-                    final List<NotificationAction> currentActions = entry.getAvailableActions();
-                    boolean hasReadActionAlready = currentActions.stream()
-                            .anyMatch(action -> ReadStateAction.class.isInstance(action));
-                    if (!hasReadActionAlready) {
-                        final List<NotificationAction> replacementList = new ArrayList<>(currentActions);
-                        replacementList.add(new MarkAsReadAndRedirectAction());
-                        entry.setAvailableActions(replacementList);
+                    /*
+                     * Decorate with READ behavior, but only if (1) the entry is unread and (2) the
+                     * entry does not have a ReadAction already
+                     */
+                    if (!isRead) {
+                        final List<NotificationAction> currentActions = entry.getAvailableActions();
+                        boolean hasReadActionAlready = currentActions.stream()
+                                .anyMatch(action -> ReadStateAction.class.isInstance(action));
+                        if (!hasReadActionAlready) {
+                            final List<NotificationAction> replacementList = new ArrayList<>(currentActions);
+                            replacementList.add(new MarkAsReadAndRedirectAction());
+                            entry.setAvailableActions(replacementList);
+                        }
                     }
                 }
             }
