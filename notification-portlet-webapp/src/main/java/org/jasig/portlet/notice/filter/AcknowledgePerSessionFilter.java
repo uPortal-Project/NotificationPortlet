@@ -51,7 +51,7 @@ public class AcknowledgePerSessionFilter extends AbstractNotificationServiceFilt
     private static final String REQ_ACK_PARAM = "ack";
 
     public AcknowledgePerSessionFilter() {
-        super(AbstractNotificationServiceFilter.ORDER_LATE);
+        super(AbstractNotificationServiceFilter.ORDER_EARLY);
     }
 
     @Override
@@ -62,9 +62,12 @@ public class AcknowledgePerSessionFilter extends AbstractNotificationServiceFilt
         final String ackParameter = request.getParameter(REQ_ACK_PARAM);
 
         final HttpSession session = request.getSession(true);
+        log.debug("session id = {}", session.getId());
         final NotificationResponse response = chain.doFilter().cloneIfNotCloned();
+        log.debug("response = {}", response);
 
         if (ackParameter == null) {
+            // Don't filter entries, just the acknowledge actions
             log.debug("{} was not found in the parameter list", REQ_ACK_PARAM);
             return removeAckActionsWhenAck(response, session);
         }
@@ -84,15 +87,16 @@ public class AcknowledgePerSessionFilter extends AbstractNotificationServiceFilt
                         .findFirst();
                 final AcknowledgeAction ackAction = (AcknowledgeAction) acknowledgeActionOptional.orElse(null);
                 assert (ackAction == null) || entry.equals(ackAction.getTarget());
-                if (filterAck && ackAction.isAck(session)) {
+                final boolean isAck = ackAction.isAck(session);
+                log.debug("{} acknowledge state = {}", entry.getId(), isAck);
+                if (filterAck && isAck) {
                     log.debug("entry {} ack and {}=true", entry.getId(), REQ_ACK_PARAM);
                     newEntries.add(entry);
-
-                } else if (!filterAck && (ackAction == null || !ackAction.isAck(session))) {
+                } else if (!filterAck && (ackAction == null || !isAck)) {
                     log.debug("entry {} not ack and {}=false", entry.getId(), REQ_ACK_PARAM);
                     newEntries.add(entry);
                 } else {
-                    log.debug("entry {} not selected when {}={}", entry.getId(), REQ_ACK_PARAM, filterAck);
+                    log.debug("entry {} not selected when {}={} ... removed", entry.getId(), REQ_ACK_PARAM, filterAck);
                 }
             }
             // replace entries in current category
@@ -102,10 +106,18 @@ public class AcknowledgePerSessionFilter extends AbstractNotificationServiceFilt
         return removeAckActionsWhenAck(response, session);
     }
 
+    /**
+     * Remove {@code AcknowledgeAction} actions from entries in returned {@code NotificationResponse}.
+     *
+     * @param resp response with entries that will have their acknowledge actions removed
+     * @param session session to check for acknowledgements
+     * @return processed response that is the same as the parameter
+     */
     private NotificationResponse removeAckActionsWhenAck(NotificationResponse resp, HttpSession session) {
         // perform in-place removal of AcknowledgeActions
         for (NotificationCategory category : resp.getCategories()) {
             for (NotificationEntry entry : category.getEntries()) {
+                log.debug("entry {} actions filtered", entry.getId());
                 List<NotificationAction> list = entry.getAvailableActions().stream()
                         .filter(a -> !AcknowledgeAction.class.isInstance(a)
                                 || !((AcknowledgeAction) a).isAck(session))
@@ -113,6 +125,7 @@ public class AcknowledgePerSessionFilter extends AbstractNotificationServiceFilt
                 entry.setAvailableActions(list);
             }
         }
+        log.debug("updated response = {}", resp);
         return resp;
     }
 }

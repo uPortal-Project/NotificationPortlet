@@ -75,6 +75,8 @@ public class NotificationRestV2Controller {
     public List<NotificationEntry> fetchNotifications(HttpServletRequest request) {
         final NotificationResponse response = repository.fetch(request);
         final List<NotificationEntry> rslt = notificationResponseFlattener.flatten(response);
+        logger.debug("rslt count = {}", rslt.size());
+        logger.debug("rslt = {}", rslt);
         return Sorting.sort(request, rslt);
     }
 

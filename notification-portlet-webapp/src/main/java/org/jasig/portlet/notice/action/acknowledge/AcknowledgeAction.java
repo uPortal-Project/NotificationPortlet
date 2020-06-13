@@ -46,15 +46,17 @@ public class AcknowledgeAction extends ReadStateAction {
     @Override
     public void invoke(ActionRequest req, ActionResponse res) throws IOException {
         log.debug("Calling {} portlet invoke() for notice {}", AcknowledgeAction.class.getCanonicalName(), getTarget().getId());
-        final PortletSession session = req.getPortletSession(true);
+        final PortletSession session = req.getPortletSession(false);
+        log.debug("session id = {}", session.getId());
         // Don't care the value so we will just use current time
-        session.setAttribute(getSessionAttrName(), System.currentTimeMillis());
+        session.setAttribute(getSessionAttrName(), System.currentTimeMillis(), PortletSession.APPLICATION_SCOPE);
     }
 
     @Override
     public void invoke(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        log.debug("Calling {} invoke() for notice {}", AcknowledgeAction.class.getCanonicalName(), getTarget().getId());
-        final HttpSession session = request.getSession(true);
+        log.debug("Calling {} REST invoke() for notice {}", AcknowledgeAction.class.getCanonicalName(), getTarget().getId());
+        final HttpSession session = request.getSession(false);
+        log.debug("session id = {}", session.getId());
         // Don't care the value so we will just use current time
         session.setAttribute(getSessionAttrName(), System.currentTimeMillis());
     }
@@ -67,11 +69,15 @@ public class AcknowledgeAction extends ReadStateAction {
 
     public boolean isAck(HttpSession session) {
         assert session != null;
+        log.debug("session id = {}", session.getId());
+        log.debug("session value for '{}' is {}", getSessionAttrName(), session.getAttribute(getSessionAttrName()));
         return session.getAttribute(getSessionAttrName()) != null;
     }
 
     public boolean isAck(PortletSession session) {
         assert session != null;
+        log.debug("session id = {}", session.getId());
+        log.debug("session value for '{}' is {}", getSessionAttrName(), session.getAttribute(getSessionAttrName()));
         return session.getAttribute(getSessionAttrName()) != null;
     }
 }
