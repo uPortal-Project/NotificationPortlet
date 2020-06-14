@@ -36,6 +36,7 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
 import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.IRefreshable;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.service.filter.FilteringNotificationServiceDecorator;
 import org.jasig.portlet.notice.service.jdbc.AbstractJdbcNotificationService;
@@ -52,7 +53,7 @@ import org.springframework.context.ApplicationContext;
  * This class decorates and aggregates all the notification service providers. It also provides
  * caching via EHCache. Each child context (e.g. portlet) has it's own instance of this class.
  */
-public final class CacheNotificationService extends AbstractNotificationService {
+public final class CacheNotificationService extends AbstractNotificationService implements IRefreshable {
 
     // Wired by Spring
     private ApplicationContext applicationContext;
@@ -229,6 +230,17 @@ public final class CacheNotificationService extends AbstractNotificationService 
             rslt = prepareErrorResponse(getName(), msg);
         }
         return rslt;
+    }
+
+    @Override
+    public void refresh(HttpServletRequest request, HttpServletResponse response) {
+        for (INotificationService service : this.embeddedServices) {
+            if (IRefreshable.class.isInstance(service)) {
+                logger.debug("Refreshing INotificationService bean '{}'", service.getName());
+                ((IRefreshable) service).refresh(request, response);
+            }
+        }
+        cache.removeAll();
     }
 
     /*

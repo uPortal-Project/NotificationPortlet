@@ -32,6 +32,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import io.jsonwebtoken.Claims;
@@ -45,6 +46,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apereo.portal.soffit.Headers;
 import org.jasig.portlet.notice.INotificationService;
+import org.jasig.portlet.notice.IRefreshable;
 import org.jasig.portlet.notice.NotificationResponse;
 import org.jasig.portlet.notice.service.AbstractNotificationService;
 import org.slf4j.Logger;
@@ -67,7 +69,7 @@ import static org.apereo.portal.soffit.service.AbstractJwtService.SIGNATURE_KEY_
  *
  * @since 3.2
  */
-public abstract class AbstractJdbcNotificationService extends AbstractNotificationService {
+public abstract class AbstractJdbcNotificationService extends AbstractNotificationService implements IRefreshable {
 
     @Value("${" + SIGNATURE_KEY_PROPERTY + ":" + DEFAULT_SIGNATURE_KEY + "}")
     private String signatureKey;
@@ -154,6 +156,14 @@ public abstract class AbstractJdbcNotificationService extends AbstractNotificati
 
     }
 
+    @Override
+    public void refresh(HttpServletRequest request, HttpServletResponse response) {
+        final String username = usernameFinder.findUsername(request);
+        final CacheKey cacheKey = new CacheKey(getName(), username, sql);
+        logger.debug("Refreshing/clearing cache for {}", cacheKey);
+        cache.remove(cacheKey);
+    }
+
     /**
      * General-purpose implementation of this method that wraps the <code>PortletRequest.USER_INFO</code>
      * map in a {@link MapSqlParameterSource}.  Subclasses <em>may</em> override this method to
@@ -226,13 +236,16 @@ public abstract class AbstractJdbcNotificationService extends AbstractNotificati
         NotificationResponse rslt;
         final CacheKey cacheKey = new CacheKey(getName(), username, sql);
 
+        logger.debug("cache ttl = {}", cache.getCacheConfiguration().getTimeToLiveSeconds());
         final Element m = cache.get(cacheKey);
         if (m != null) {
             // Cache hit
+            logger.debug("cache hit for {}", cacheKey);
             rslt = (NotificationResponse) m.getObjectValue();
             logger.debug("Found the following response for user='{}' from cache:  {}", username, rslt);
         } else {
             // Cache miss
+            logger.debug("cache miss for {}", cacheKey);
             rslt = supplier.get();
             cache.put(new Element(cacheKey, rslt));
             logger.debug("Notification service '{}' generated the following response" +
