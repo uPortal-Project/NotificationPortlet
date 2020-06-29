@@ -51,13 +51,17 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 
 public final class RomeNotificationService extends AbstractNotificationService {
 
     private static final String URLS_PREFERENCE = "RomeNotificationService.urls";
 
-    private static final Object NO_FURTHER_INFORMATION = "No further information is available.";
-    private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT);
+    private static final Locale locale = Locale.getDefault(Locale.Category.FORMAT);
+    private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+
+    @Autowired
+    private MessageSource messages;
 
     /**
      * Service URLs defined in an external file, in the post-Portlet API style.
@@ -226,8 +230,9 @@ public final class RomeNotificationService extends AbstractNotificationService {
                     }
                 }
                 if (body.length() == 0) {
-                    // Last resort... 
-                    body.append(NO_FURTHER_INFORMATION);
+                    // Last resort...
+                    final String noInfo = messages.getMessage("notice.noinfo", null, locale);
+                    body.append(noInfo);
                 }
                 entry.setBody(body.toString());
 
@@ -235,15 +240,18 @@ public final class RomeNotificationService extends AbstractNotificationService {
                 final List<NotificationAttribute> attributes = new ArrayList<>();
                 final String author = y.getAuthor();
                 if (StringUtils.isNotBlank(author)) {
-                    attributes.add(new NotificationAttribute("Author", author));
+                    final String authorLabel = messages.getMessage("notice.author", null, locale);
+                    attributes.add(new NotificationAttribute(authorLabel, author));
                 }
                 final Date publishedDate = y.getPublishedDate();
                 if (publishedDate != null) {
-                    attributes.add(new NotificationAttribute("Published date", DATE_FORMAT.format(publishedDate)));
+                    final String dateLabel = messages.getMessage("notice.date.published", null, locale);
+                    attributes.add(new NotificationAttribute(dateLabel, DATE_FORMAT.format(publishedDate)));
                 }
                 final Date updatededDate = y.getUpdatedDate();
                 if (updatededDate != null) {
-                    attributes.add(new NotificationAttribute("Updated date", DATE_FORMAT.format(updatededDate)));
+                    final String dateLabel = messages.getMessage("notice.date.updated", null, locale);
+                    attributes.add(new NotificationAttribute(dateLabel, DATE_FORMAT.format(updatededDate)));
                 }
                 entry.setAttributes(attributes);
                 
