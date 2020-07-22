@@ -21,6 +21,7 @@ package org.jasig.portlet.notice.service.rome;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.PostConstruct;
@@ -58,7 +59,7 @@ public final class RomeNotificationService extends AbstractNotificationService {
     private static final String URLS_PREFERENCE = "RomeNotificationService.urls";
 
     private static final Locale locale = Locale.getDefault(Locale.Category.FORMAT);
-    private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+    private static DateFormat DATE_FORMAT = DateFormat.getDateInstance(DateFormat.SHORT, locale);
 
     @Autowired
     private MessageSource messages;
@@ -86,6 +87,10 @@ public final class RomeNotificationService extends AbstractNotificationService {
 
     @PostConstruct
     public void init() {
+        final String dateFormatString = messages.getMessage("notice.date.format", null, locale);
+        logger.info("locale: {}", locale);
+        logger.info("date format: {}", dateFormatString);
+        DATE_FORMAT = new SimpleDateFormat(dateFormatString);
         if (!StringUtils.isEmpty(feedUrlsProperty)) {
             feedUrlsList =
                     Collections.unmodifiableList(Arrays.asList(feedUrlsProperty.split(",")));
@@ -97,7 +102,7 @@ public final class RomeNotificationService extends AbstractNotificationService {
 
         if (logger.isDebugEnabled()) {
             logger.debug("Performing RomeNotificationService.invoke() for user='"
-                                    + usernameFinder.findUsername(req) 
+                                    + usernameFinder.findUsername(req)
                                     + "' refresh=" + refresh);
         }
 
@@ -113,7 +118,7 @@ public final class RomeNotificationService extends AbstractNotificationService {
 
     @Override
     public NotificationResponse fetch(final PortletRequest req) {
-        
+
         final PortletPreferences prefs = req.getPreferences();
         final String[] feedUrls = prefs.getValues(URLS_PREFERENCE, new String[0]);
         final String username = usernameFinder.findUsername(req);
@@ -178,31 +183,31 @@ public final class RomeNotificationService extends AbstractNotificationService {
     }
 
     private NotificationCategory fetchFromSourceUrl(final String url) {
-        
+
         NotificationCategory rslt = null;  // default
-        
+
         XmlReader reader = null;
         try {
 
             final URL u = new URL(url);
-            
+
             reader = new XmlReader(u);
             final SyndFeedInput input = new SyndFeedInput();
             final SyndFeed feed = input.build(reader);
-            
+
             rslt = new NotificationCategory();
             rslt.setTitle(feed.getTitle());
-            
+
             final List<TimestampNotificationEntry> entries = new ArrayList<>();
-            
+
             @SuppressWarnings("unchecked")
-            final List<SyndEntry> list = feed.getEntries(); 
+            final List<SyndEntry> list = feed.getEntries();
             for (SyndEntry y : list) {
-                
+
                 if (logger.isTraceEnabled()) {
                     logger.trace("Processing SyndEntry:  \n" + y.toString());
                 }
-                
+
                 final long timestamp = y.getPublishedDate().getTime();
                 final TimestampNotificationEntry entry = new TimestampNotificationEntry(timestamp);
 
@@ -254,15 +259,15 @@ public final class RomeNotificationService extends AbstractNotificationService {
                     attributes.add(new NotificationAttribute(dateLabel, DATE_FORMAT.format(updatededDate)));
                 }
                 entry.setAttributes(attributes);
-                
+
                 entries.add(entry);
 
             }
-            
+
             // Items should be in reverse chronological order
             Collections.sort(entries);
             Collections.reverse(entries);
-            
+
             rslt.setEntries(new ArrayList<>(entries));
 
         } catch (Exception e) {
@@ -278,7 +283,7 @@ public final class RomeNotificationService extends AbstractNotificationService {
                 }
             }
         }
-        
+
         return rslt;
 
     }
