@@ -66,8 +66,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
 
     var getDateFormat = function(date) {
       var currentDate = new Date(date);
-      var locale = navigator.language || 'en-US';
-      console.log(locale);
+      var locale = opts.locale || navigator.language || 'en-US';
       return currentDate.toLocaleDateString(locale);
     };
 
