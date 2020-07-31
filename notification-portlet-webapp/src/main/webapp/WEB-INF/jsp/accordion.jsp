@@ -90,7 +90,8 @@
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
             invokeActionUrlTemplate: '${invokeActionUrlTemplate}',
             getNotificationsUrl: '<portlet:resourceURL id="GET-NOTIFICATIONS"/>',
-            hideErrorUrl: '${hideErrorUrl}'
+            hideErrorUrl: '${hideErrorUrl}',
+            locale: "${portletPreferencesValues['locale'][0]}"
         })
     );
 </script>

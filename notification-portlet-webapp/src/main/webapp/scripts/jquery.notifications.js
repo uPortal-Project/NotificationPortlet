@@ -66,12 +66,8 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
 
     var getDateFormat = function(date) {
       var currentDate = new Date(date);
-      var year = currentDate.getFullYear();
-      var month = currentDate.getMonth() + 1;
-      var day =  currentDate.getDate();
-      var formatDate = month + '/' + day + '/' + year;
-
-      return formatDate;
+      var locale = opts.locale || navigator.language || 'en-US';
+      return currentDate.toLocaleDateString(locale);
     };
 
     var isPastDue = function(date) {
@@ -237,7 +233,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
       notifications.html(" ").prepend(compiled);
     };
 
-    // Bind events object helps keep events together 
+    // Bind events object helps keep events together
     var bindEvent = {
 
       // Accordion via plugin
@@ -255,7 +251,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
       viewDetail: function () {
         notification.click(function () {
 
-          // Notification detail is retrieved from 'data-' 
+          // Notification detail is retrieved from 'data-'
           // attributes and stored in a notification object
           var notification = {
             body   : $(this).data("body"),
@@ -404,7 +400,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
             </div> \
           {% }); %} \
-        ';  
+        ';
         var compile = _.template(html, data, {
             interpolate : templateSettings.interpolate,
             evaluate : templateSettings.evaluate
@@ -417,12 +413,12 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
             var settings = [];
             $.ajax({
               url: (opts.hideErrorUrl).replace("ERRORKEY", thisErrorContainer.attr("errorkey")),
-              type: 'POST', 
+              type: 'POST',
               success: function() { return false; }
             });
           });
           return false;
-        }); 
+        });
       }
     };
   };
