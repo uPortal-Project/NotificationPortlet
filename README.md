@@ -1,8 +1,7 @@
 # Apereo Notification Portlet
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.jasig.portlet.notification/notification-portlet-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.jasig.portlet.notification/notification-portlet-parent)
-[![Linux Build Status](https://travis-ci.org/Jasig/NotificationPortlet.svg?branch=master)](https://travis-ci.org/Jasig/NotificationPortlet)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/we2hk9cv24f47oao/branch/master?svg=true)](https://ci.appveyor.com/project/ChristianMurphy/notificationportlet/branch/master)
+[![build status](https://github.com/uPortal-Project/NotificationPortlet/workflows/CI/badge.svg?branch=master)](https://github.com/uPortal-Project/NotificationPortlet/actions)
 
 This is a [Sponsored Portlet][] in the uPortal project.
 
