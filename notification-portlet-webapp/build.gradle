@@ -65,6 +65,8 @@ dependencies {
     compile "com.rometools:rome:${romeVersion}"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    compile "javax.annotation:javax.annotation-api:${annotationApiVersion}"
+    compile "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
 
     /*
      * Spring Boot
