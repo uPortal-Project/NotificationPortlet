@@ -35,6 +35,7 @@ dependencies {
      */
     compile "com.google.guava:guava:${guavaVersion}"
     compile "com.jayway.jsonpath:json-path:${jsonPathVersion}"
+    compile "net.minidev:json-smart:${jsonSmartVersion}"
     compile "commons-codec:commons-codec:${commonsCodecVersion}"
     compile "commons-dbcp:commons-dbcp:${commonsDbcpVersion}"
     compile "io.springfox:springfox-swagger2:${springfoxVersion}"
