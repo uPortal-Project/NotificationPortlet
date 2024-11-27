@@ -114,7 +114,7 @@ subprojects {
     release {
         tagTemplate = 'v${version}' // Looks like it should be a GString, but not necessary
         git {
-            requireBranch = ''
+            requireBranch.set('')
         }
     }
     afterReleaseBuild.dependsOn uploadArchives
