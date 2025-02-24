@@ -9,6 +9,7 @@ target/
 *.CSS
 bin/
 .idea/
+.java-version
 
 ### Gradle ###
 .gradle
