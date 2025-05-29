@@ -38,9 +38,11 @@ public class MappingConfiguration {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Bean("addresseePostProcessor")
+    @Autowired
+    private AddresseePostProcessor addresseePostProcessor;
+
     public AddresseePostProcessor getAddresseePostProcessor() {
-        return new AddresseePostProcessor();
+        return this.addresseePostProcessor;
     }
 
     @Bean

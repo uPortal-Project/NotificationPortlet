@@ -1,48 +1,54 @@
 description = "Simple data model for Notifications used in integrations"
 
 dependencies {
-    compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
-    compile "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
-    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
-    compile "commons-lang:commons-lang:${commonsLangVersion}"
-    compile "org.slf4j:slf4j-api:${slf4jVersion}"
-    compile "javax.annotation:javax.annotation-api:${annotationApiVersion}"
-    compile "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
+    implementation "commons-lang:commons-lang:${commonsLangVersion}"
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "javax.annotation:javax.annotation-api:${annotationApiVersion}"
+    implementation "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     compileOnly "${portletApiDependency}"
     compileOnly "javax.servlet:servlet-api:${servletApiVersion}"
 }
 
-uploadArchives{
-    repositories {
-        mavenDeployer {
-            pom.project {
-                name 'notification-portlet-api'
-                packaging 'jar'
-                // optionally artifactId can be defined here
-                description 'API jar for Apereo NotificationPortlet'
-                url 'https://github.com/Jasig/NotificationPortlet'
+publishing {
+    publications {
+        create('mavenJava', MavenPublication) {
+            from components.java
+
+            pom {
+                name = 'notification-portlet-api'
+                packaging = 'jar'
+                description = 'API jar for Apereo NotificationPortlet'
+                url = 'https://github.com/Jasig/NotificationPortlet'
 
                 scm {
-                    connection 'scm:git@github.com:Jasig/NotificationPortlet.git'
-                    url 'https://github.com/Jasig/NotificationPortlet'
+                    connection = 'scm:git@github.com:Jasig/NotificationPortlet.git'
+                    url = 'https://github.com/Jasig/NotificationPortlet'
                 }
 
                 licenses {
                     license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
 
                 developers {
                     developer {
-                        organization 'uPortal Developers'
-                        organizationUrl 'https://github.com/Jasig/uPortal/graphs/contributors'
+                        organization = 'uPortal Developers'
+                        organizationUrl = 'https://github.com/Jasig/uPortal/graphs/contributors'
                     }
                 }
             }
         }
     }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }

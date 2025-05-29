@@ -20,9 +20,14 @@ package org.jasig.portlet.notice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.ImportResource;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+        HibernateJpaAutoConfiguration.class,
+        DataSourceAutoConfiguration.class
+})
 @ImportResource({"classpath:/context/*.xml","classpath:/properties/contextOverrides/*.xml"}) // Legacy, XML-based beans
 public class NotificationApplication {
 
