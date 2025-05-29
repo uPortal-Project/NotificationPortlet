@@ -1,5 +1,5 @@
 plugins {
-    id 'net.researchgate.release' version '2.8.1'
+    id 'net.researchgate.release' version '3.1.0'
     // TODO: wait for https://github.com/hierynomus/license-gradle-plugin/issues/161
     // id "com.github.hierynomus.license" version "0.14.0" apply false
     id 'maven-publish'
@@ -27,7 +27,7 @@ subprojects {
 
     dependencies {
         testCompileOnly 'junit:junit:4.13.2'
-        testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.11.0'
+        testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.11.4'
     }
 
     // TODO: wait for https://github.com/hierynomus/license-gradle-plugin/issues/161
@@ -80,7 +80,7 @@ subprojects {
     release {
         tagTemplate = 'v${version}' // Looks like it should be a GString, but not necessary
         git {
-            requireBranch = ''
+            requireBranch.set('')
         }
     }
     afterReleaseBuild.dependsOn publish

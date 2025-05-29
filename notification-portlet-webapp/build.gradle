@@ -11,7 +11,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.node-gradle.node' version '7.0.2'
+    id 'com.github.node-gradle.node' version '7.1.0'
     id 'war'
     id 'eclipse-wtp'
     id 'org.springframework.boot' version '2.7.18'
@@ -42,6 +42,7 @@ dependencies {
      */
     implementation "com.google.guava:guava:${guavaVersion}"
     implementation "com.jayway.jsonpath:json-path:${jsonPathVersion}"
+    implementation "net.minidev:json-smart:${jsonSmartVersion}"
     implementation "commons-codec:commons-codec:${commonsCodecVersion}"
     implementation "commons-dbcp:commons-dbcp:${commonsDbcpVersion}"
 //    implementation "io.springfox:springfox-swagger2:${springfoxVersion}"
