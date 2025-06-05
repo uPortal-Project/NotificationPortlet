@@ -1,7 +1,7 @@
 # Apereo Notification Portlet
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.jasig.portlet.notification/notification-portlet-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.jasig.portlet.notification/notification-portlet-parent)
-[![build status](https://github.com/uPortal-Project/NotificationPortlet/workflows/CI/badge.svg?branch=master)](https://github.com/uPortal-Project/NotificationPortlet/actions)
+[![CI](https://github.com/uPortal-Project/NotificationPortlet/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/uPortal-Project/NotificationPortlet/actions/workflows/CI.yml)
 
 This is a [Sponsored Portlet][] in the uPortal project.
 
