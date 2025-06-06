@@ -93,7 +93,7 @@ public class ReadNotificationServiceDecorator extends AbstractNotificationServic
 
         NotificationAttribute readAttribute = new NotificationAttribute();
         readAttribute.setName(READ_ATTRIBUTE_NAME);
-        readAttribute.setValues(new ArrayList<>(Arrays.asList((new Boolean(true)).toString())));
+        readAttribute.setValues(new ArrayList<>(List.of(Boolean.toString(true))));
         
         // Add and implement the read behavior with our copy
         for (NotificationCategory category : rslt.getCategories()) {

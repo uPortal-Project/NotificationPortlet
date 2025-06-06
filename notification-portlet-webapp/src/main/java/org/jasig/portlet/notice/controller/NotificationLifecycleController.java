@@ -27,12 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.EventRequest;
-import javax.portlet.EventResponse;
-import javax.portlet.PortletPreferences;
-import javax.portlet.ResourceRequest;
+import javax.portlet.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,15 +45,20 @@ import org.jasig.portlet.notice.util.sort.Sorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.portlet.ModelAndView;
+
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.EventMapping;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.ModelAndView;
+import javax.portlet.ResourceRequest;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 /**
  * Gathering of notifications requires action and sometimes event phases.  This
  * controller serves that purpose.
  */
+@Controller
 @RequestMapping("VIEW")
 public class NotificationLifecycleController {
 
@@ -93,7 +93,7 @@ public class NotificationLifecycleController {
     private INotificationService notificationService;
 
     @ResourceMapping("GET-NOTIFICATIONS-UNCATEGORIZED")
-    public ModelAndView getNotificationsUncategorized(final ResourceRequest req, final @RequestParam(value="refresh", required=false) String doRefresh) throws IOException {
+    public ModelAndView getNotificationsUncategorized(final ResourceRequest req, final @RequestParam(value="refresh", required=false) String doRefresh) throws IOException, PortletException {
 
         // RequestParam("key") String key, HttpServletRequest request, ModelMap model
         log.debug("Invoking getNotifications for user:  " + usernameFinder.findUsername(req));

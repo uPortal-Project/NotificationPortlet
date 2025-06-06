@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.22.RELEASE'
+        springBootVersion = '2.7.18'
     }
     repositories {
         mavenCentral()
@@ -12,71 +12,83 @@ buildscript {
 
 plugins {
     id 'com.github.node-gradle.node' version '7.1.0'
+    id 'war'
+    id 'eclipse-wtp'
+    id 'org.springframework.boot' version '2.7.18'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse-wtp'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'war'
-
-configurations {
-    providedRuntime
+repositories {
+    mavenCentral()
+    maven {
+        url "https://repository.apache.org/content/repositories/releases/"
+    }
+    maven {
+        url "https://repo.spring.io/release"
+    }
 }
+
+
 
 dependencies {
 
     /*
      * Notification API
      */
-    compile project(':notification-portlet-api')
+    implementation project(':notification-portlet-api')
 
     /*
      * Standard Dependencies
      */
-    compile "com.google.guava:guava:${guavaVersion}"
-    compile "com.jayway.jsonpath:json-path:${jsonPathVersion}"
-    compile "net.minidev:json-smart:${jsonSmartVersion}"
-    compile "commons-codec:commons-codec:${commonsCodecVersion}"
-    compile "commons-dbcp:commons-dbcp:${commonsDbcpVersion}"
-    compile "io.springfox:springfox-swagger2:${springfoxVersion}"
-    compile "io.springfox:springfox-swagger-ui:${springfoxVersion}"
-    compile "javax.servlet:jstl:${jstlVersion}"
-    compile "joda-time:joda-time:${jodaTimeVersion}"
-    compile "net.sf.dozer:dozer:${dozerVersion}"
-    compile "net.sf.dozer:dozer-spring:${dozerVersion}"
-    compile("org.ehcache:ehcache:${ehcacheVersion}")
-    compile "org.apache.commons:commons-lang3:${commonsLang3Version}"
-    compile "org.apache.httpcomponents:httpclient:${httpcomponentsVersion}"
-    compile "org.aspectj:aspectjweaver:${aspectjVersion}"
-    compile "org.codehaus.janino:janino:${janinoVersion}"
-    compile "org.hibernate:hibernate-core:${hibernateVersion}"
-    compile("org.hibernate:hibernate-ehcache:${hibernateVersion}") {
+    implementation "com.google.guava:guava:${guavaVersion}"
+    implementation "com.jayway.jsonpath:json-path:${jsonPathVersion}"
+    implementation "net.minidev:json-smart:${jsonSmartVersion}"
+    implementation "commons-codec:commons-codec:${commonsCodecVersion}"
+    implementation "commons-dbcp:commons-dbcp:${commonsDbcpVersion}"
+//    implementation "io.springfox:springfox-swagger2:${springfoxVersion}"
+//    implementation "io.springfox:springfox-swagger-ui:${springfoxVersion}"
+    implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+    implementation "javax.servlet:jstl:${jstlVersion}"
+    implementation "joda-time:joda-time:${jodaTimeVersion}"
+    implementation "net.sf.dozer:dozer:${dozerVersion}"
+    implementation "net.sf.dozer:dozer-spring:${dozerVersion}"
+    implementation("org.ehcache:ehcache:${ehcacheVersion}")
+    implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
+    implementation "org.apache.httpcomponents:httpclient:${httpcomponentsVersion}"
+    implementation "org.aspectj:aspectjweaver:${aspectjVersion}"
+    implementation "org.codehaus.janino:janino:${janinoVersion}"
+    implementation "org.hibernate:hibernate-core:${hibernateVersion}"
+    implementation("org.hibernate:hibernate-ehcache:${hibernateVersion}") {
         exclude group: 'net.sf.ehcache', module: 'ehcache-core'
     }
-    compile "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
-    compile "org.jasig.resourceserver:resource-server-utils:${resourceServerVersion}"
-    compile("org.jasig.portal:uPortal-soffit-renderer:${uPortalVersion}")
-    compile "org.jasig.portal:uPortal-spring:${uPortalVersion}@jar" // Use @jar classifier to exclude transitive dependencies
-    compile "org.jasypt:jasypt-spring31:${jasyptVersion}"
-    compile "org.springframework:spring-jdbc:${springVersion}"
-    compile "org.springframework:spring-orm:${springVersion}"
-    compile "org.springframework:spring-tx:${springVersion}"
-    compile "org.springframework:spring-webmvc-portlet:${springVersion}"
-    compile "org.springframework.security.oauth:spring-security-oauth2:${springSecurityOAuth2Version}"
-    compile "com.rometools:rome:${romeVersion}"
+    implementation "org.hibernate:hibernate-entitymanager:${hibernateVersion}"
+    implementation "org.jasig.resourceserver:resource-server-utils:${resourceServerVersion}"
+    implementation("org.jasig.portal:uPortal-soffit-renderer:${uPortalVersion}")
+    implementation "org.jasig.portal:uPortal-spring:${uPortalVersion}@jar" // Use @jar classifier to exclude transitive dependencies
+    implementation "org.jasypt:jasypt-spring31:${jasyptVersion}"
+    implementation "org.springframework:spring-jdbc:${springVersion}"
+    implementation "org.springframework:spring-orm:${springVersion}"
+    implementation "org.springframework:spring-tx:${springVersion}"
+    implementation 'org.springframework:spring-webmvc-portlet:4.3.30.RELEASE'
+    implementation 'javax.portlet:portlet-api:2.0'
+    implementation 'org.apache.portals.pluto:pluto-taglib:3.1.0'
+    implementation 'org.apache.portals.pluto:pluto-container:3.1.0'
+    implementation 'org.apache.portals.pluto:pluto-portal-driver-impl:3.1.0'
+    implementation "org.springframework.security.oauth:spring-security-oauth2:${springSecurityOAuth2Version}"
+    implementation "com.rometools:rome:${romeVersion}"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    compile "javax.annotation:javax.annotation-api:${annotationApiVersion}"
-    compile "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
+    implementation "javax.annotation:javax.annotation-api:${annotationApiVersion}"
+    implementation "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
 
     /*
      * Spring Boot
      */
-    compile('org.springframework.boot:spring-boot-starter-cache')
-    compile('org.springframework.boot:spring-boot-starter-security')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    implementation('org.springframework.boot:spring-boot-starter-cache')
+    implementation('org.springframework.boot:spring-boot-starter-security')
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    compileOnly('org.springframework.boot:spring-boot-starter-tomcat')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
 
     /*
      * Portlet API
@@ -85,7 +97,7 @@ dependencies {
      * (but used) when the project is run inside Tomcat.
      */
     compileOnly "${portletApiDependency}"
-    providedRuntime "${portletApiDependency}"
+    compileOnly "${portletApiDependency}"
 
     /*
      * JDBC Driver JAR(s)
@@ -107,15 +119,21 @@ node {
  * This task produces a .jar archive from this module, which is in addition to the primary .war
  * archive.  Adopters who with to extend the project may need this additional archive.
  */
-task classesJar(type: Jar) {
+tasks.register('classesJar', Jar) {
     from sourceSets.main.output
-    classifier 'jar'
+    archiveClassifier = 'jar'
 }
 artifacts {
   archives classesJar
 }
 
+bootWar {
+    enabled = false
+}
+
 war {
+    archiveClassifier = null
+    enabled = true
     from("${buildDir}/css") {
         into('css')
     }
@@ -124,7 +142,8 @@ war {
     }
 }
 
-task createCssAndJsOutputDirs(dependsOn: 'npm_ci') {
+tasks.register('createCssAndJsOutputDirs') {
+    dependsOn 'npm_ci'
     doLast {
         mkdir "${buildDir}/css"
         mkdir "${buildDir}/scripts"
@@ -140,32 +159,33 @@ war.dependsOn 'npm_run_minify-css'
 project.tasks.getByName('npm_run_compile-js').dependsOn createCssAndJsOutputDirs
 war.dependsOn 'npm_run_minify-js'
 
-uploadArchives{
-    repositories {
-        mavenDeployer {
-            pom.project {
-                name 'notification-portlet-webapp'
-                packaging 'war'
-                // optionally artifactId can be defined here
-                description 'SR-286 (Portlet 2.0) portlet to display important notices from campus systems'
-                url 'https://github.com/Jasig/NotificationPortlet'
+publishing {
+    publications {
+        web(MavenPublication) {
+            from components.web
+
+            pom {
+                name = 'notification-portlet-webapp'
+                packaging = 'war'
+                description = 'SR-286 (Portlet 2.0) portlet to display important notices from campus systems'
+                url = 'https://github.com/Jasig/NotificationPortlet'
 
                 scm {
-                    connection 'scm:git@github.com:Jasig/NotificationPortlet.git'
-                    url 'https://github.com/Jasig/NotificationPortlet'
+                    connection = 'scm:git@github.com:Jasig/NotificationPortlet.git'
+                    url = 'https://github.com/Jasig/NotificationPortlet'
                 }
 
                 licenses {
                     license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
 
                 developers {
                     developer {
-                        organization 'uPortal Developers'
-                        organizationUrl 'https://github.com/Jasig/uPortal/graphs/contributors'
+                        organization = 'uPortal Developers'
+                        organizationUrl = 'https://github.com/Jasig/uPortal/graphs/contributors'
                     }
                 }
             }
