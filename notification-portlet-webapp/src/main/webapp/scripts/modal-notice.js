@@ -72,20 +72,16 @@ var upmodal_notice = upmodal_notice || {};
                 var actionButton = $(this);
                 var formElement = container.find(settings.selectors.form);
                 if (actionButton.attr('data-ajax') === 'false') {
-                    // This alert is an exception;  submit the form directly.
                     formElement.attr('action', actionButton.attr('data-url')).submit();
                 } else {
-                    // Submit via AJAX (default)
                     $.post(actionButton.attr('data-url'), formElement.serialize(), function(data, textStatus, jqXHR) {
                         console.log(data, textStatus, jqXHR);
                     });
-                    // Any action closes the modal window
-                    container.modal('hide');
+                    bootstrap.Modal.getInstance(container[0]).hide();
                 }
             }
 
             var resetDialog = function() {
-                container.off('hidden.bs.modal'); // Clear previous event handler(s)
                 container.find(settings.selectors.closeButton).hide();
                 container.find(settings.selectors.actions).find('.np-action').remove();
             }
@@ -104,8 +100,7 @@ var upmodal_notice = upmodal_notice || {};
                             .replace('ACTIONID', action.id);
 
                         var actionElement = actionTemplate.clone();
-                        actionElement.removeClass('np-action-template');
-                        actionElement.toggleClass('hidden');
+                        actionElement.removeClass('np-action-template d-none');
                         actionElement.addClass('np-action');
 
                         if (index === 0) {
@@ -142,10 +137,10 @@ var upmodal_notice = upmodal_notice || {};
 
                 if (alert.url) {
                     var linkText = alert.linkText || alert.url;
-                    content.find(settings.selectors.link).attr('href', alert.url).html(linkText);
+                    content.find(settings.selectors.link).attr('href', alert.url).html(linkText).show();
                 }
                 else {
-                    content.find(settings.selectors.link).remove();
+                    content.find(settings.selectors.link).hide();
                 }
 
                 // Add the actions
@@ -157,23 +152,33 @@ var upmodal_notice = upmodal_notice || {};
                 resetDialog();
                 drawAlert(alert);
 
+                var containerEl = container[0];
+                containerEl.addEventListener('hide.bs.modal', function blurHandler() {
+                    containerEl.removeEventListener('hide.bs.modal', blurHandler);
+                    if (document.activeElement && containerEl.contains(document.activeElement)) {
+                        document.activeElement.blur();
+                    }
+                });
                 if (feed.length > index + 1) {
-                    // There are more notices after this one...
-                    container.on('hidden.bs.modal', function() {
+                    containerEl.addEventListener('hidden.bs.modal', function handler() {
+                        containerEl.removeEventListener('hidden.bs.modal', handler);
                         showNextNotice(feed, index + 1);
                     });
                 }
 
-                container.on('shown.bs.modal', function(evt) {
+                containerEl.addEventListener('shown.bs.modal', function handler(evt) {
+                    containerEl.removeEventListener('shown.bs.modal', handler);
                     container.find('.modal-content').focus();
                 });
 
-                container.modal("show");
+                bootstrap.Modal.getOrCreateInstance(containerEl).show();
             }
 
             var showEachNoticeInTurn = function(feed) {
                 // Do we have any notices to show?
                 if (feed && feed.length !== 0) {
+                    // Move modal to body so Bootstrap 5 backdrop renders behind it
+                    document.body.appendChild(container[0]);
                     showNextNotice(feed, 0);
                 }
             }

@@ -31,7 +31,6 @@
     <portlet:param name="actionId" value="ACTIONID"/>
 </portlet:actionURL>
 
-<script src="<rs:resourceURL value="/rs/jquery/1.11.0/jquery-1.11.0.min.js"/>" type="text/javascript"></script>
 <rs:aggregatedResources path="/simpleListLocalResources.xml"/>
 
 <style type="text/css">
@@ -57,7 +56,7 @@
 <script type="text/javascript">
 
     var ${n} = ${n} || {};
-    ${n}.jQuery = jQuery.noConflict(true);
+    ${n}.jQuery = (typeof up !== 'undefined' && up.jQuery) ? up.jQuery : jQuery;
 
     ${n}.jQuery(function(){
         var $ = ${n}.jQuery;

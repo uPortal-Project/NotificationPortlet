@@ -109,8 +109,8 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           loading.show();
 
           // Unbind click events
-          links.unbind("click");
-          filterOptions.find("a").unbind("click");
+          links.off("click");
+          filterOptions.find("a").off("click");
 
           // Clear out notifications and errors
           notifications.html(" ");
@@ -223,11 +223,11 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
         isPastDue: isPastDue,
         getDateFormat: getDateFormat
       });
-      var compiled = _.template(html, data, {
+      var compiled = _.template(html, {
           variable: 'data',
           interpolate : templateSettings.interpolate,
           evaluate : templateSettings.evaluate
-      });
+      })(data);
 
       // Inject compiled markup into notifications container div
       notifications.html(" ").prepend(compiled);
@@ -300,10 +300,10 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
             getDateFormat: getDateFormat
           });
 
-          var compiled = _.template(html, data, {
+          var compiled = _.template(html, {
             interpolate : templateSettings.interpolate,
             evaluate : templateSettings.evaluate
-          });
+          })(data);
 
           var actionsTemplate = [
               '{% _.each(actions, function(action) { %}',
@@ -322,11 +322,11 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
               actions: actions,
               getActionUrl: getActionUrl
           };
-          var actionsHtml = _.template(actionsTemplate, templateData, templateSettings);
+          var actionsHtml = _.template(actionsTemplate, templateSettings)(templateData);
 
           $.each([notifications, errorContainer], function () {
             $(this).hide(
-              "slide", 200, function () {
+              200, function () {
                 detailContainer.html(" ").append(compiled);
                 bindEvent.goBack();
                 actionsContainer.html("").html(actionsHtml);
@@ -343,7 +343,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
         backButton = rootjQueryObj.find(".notification-back-button");
         backButton.click(function () {
           detailView.hide(
-            "slide", {direction: "right"}, 200, function () {
+            200, function () {
               notifications.show();
               errorContainer.show();
             }
@@ -397,14 +397,14 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           {% _.each(errors, function(error) { %} \
             <div class="alert alert-danger alert-dismissible" role="alert" errorkey="{{ error.key }}"> \
               {{ error.source }}: {{ error.error }} \
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
+              <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
             </div> \
           {% }); %} \
         ';
-        var compile = _.template(html, data, {
+        var compile = _.template(html, {
             interpolate : templateSettings.interpolate,
             evaluate : templateSettings.evaluate
-        });
+        })(data);
 
         errorContainer.show().append(compile);
         errorContainer.find(".remove").click(function () {

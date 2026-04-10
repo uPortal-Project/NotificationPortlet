@@ -27,10 +27,7 @@
     <portlet:param name="action" value="invokeNotificationService"/>
 </portlet:actionURL>
 
-<c:if test="${!usePortalJsLibs}">
-    <rs:aggregatedResources path="/jQueryUIResources.xml"/>
-</c:if>
-<script src="<c:url value="/scripts/jquery.notice.min.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.notice.js"/>" type="text/javascript"></script>
 
 <style>
 #${n}emergencyAlert {
@@ -109,15 +106,8 @@
 <script type="text/javascript">
 
     var ${n} = ${n} || {};
-    <c:choose>
-        <c:when test="${!usePortalJsLibs}">
-            ${n}.jQuery = jQuery.noConflict(true);
-        </c:when>
-        <c:otherwise>
-            <c:set var="ns"><c:if test="${ not empty portalJsNamespace }">${ portalJsNamespace }.</c:if></c:set>
-            ${n}.jQuery = ${ ns }jQuery;
-        </c:otherwise>
-    </c:choose>
+    <c:set var="ns"><c:if test="${ not empty portalJsNamespace }">${ portalJsNamespace }.</c:if></c:set>
+    ${n}.jQuery = ${ ns }jQuery;
 
     ${n}.jQuery(function(){
         var $ = ${n}.jQuery;
@@ -141,23 +131,23 @@
                 var advance = function() {
                     var outgoingAlert = alerts.filter(':visible');
                     var incomingAlert = outgoingAlert.next();
-                    if (incomingAlert.size() == 0) {
+                    if (incomingAlert.length == 0) {
                       // Cycle to the beginning...
                       incomingAlert = alerts.filter(':first');
                     }
-                    outgoingAlert.toggle('slide', { direction: 'left' }).toggleClass('hidden');
-                    incomingAlert.toggleClass('hidden').toggle('slide', { direction: 'right' });
+                    outgoingAlert.toggleClass('hidden').css('display', 'none');
+                    incomingAlert.css('display', '').toggleClass('hidden');
                 };
 
                 var recede = function() {
                     var outgoingAlert = alerts.filter(':visible');
                     var incomingAlert = outgoingAlert.prev();
-                    outgoingAlert.toggle('slide', { direction: 'right' }).toggleClass('hidden');
-                    incomingAlert.toggleClass('hidden').toggle('slide', { direction: 'left' });
+                    outgoingAlert.toggleClass('hidden').css('display', 'none');
+                    incomingAlert.css('display', '').toggleClass('hidden');
                 };
 
                 // Show paging controls?
-                if (alerts.size() > 1) {
+                if (alerts.length > 1) {
                     alerts.find('.alerts-pager').toggleClass('hidden');
                     // All but the first should enable the previous link
                     alerts.filter(':not(:first)').find('.alerts-previous').toggleClass('disabled');
@@ -173,7 +163,7 @@
                         window.clearInterval(intervalId);
                     });
                     // autoAdvance?
-                    if (autoAdvance && alerts.size() > 1) {
+                    if (autoAdvance && alerts.length > 1) {
                         intervalId = window.setInterval(advance, 10000);
                     }
                 }

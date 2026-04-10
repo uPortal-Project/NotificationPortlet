@@ -27,9 +27,6 @@
     <portlet:param name="action" value="invokeNotificationService"/>
 </portlet:actionURL>
 
-<c:if test="${!usePortalJsLibs}">
-    <rs:aggregatedResources path="/jQueryResources.xml"/>
-</c:if>
 <rs:aggregatedResources path="/simpleListLocalResources.xml"/>
 
 <style>
@@ -52,15 +49,8 @@
 
 <script type="text/javascript">
     var ${n} = ${n} || {};
-    <c:choose>
-        <c:when test="${!usePortalJsLibs}">
-            ${n}.jQuery = jQuery.noConflict(true);
-        </c:when>
-        <c:otherwise>
-            <c:set var="ns"><c:if test="${ not empty portalJsNamespace }">${ portalJsNamespace }.</c:if></c:set>
-            ${n}.jQuery = ${ ns }jQuery;
-        </c:otherwise>
-    </c:choose>
+    <c:set var="ns"><c:if test="${ not empty portalJsNamespace }">${ portalJsNamespace }.</c:if></c:set>
+    ${n}.jQuery = ${ ns }jQuery;
 
     ${n}.jQuery(function(){
         var $ = ${n}.jQuery;
