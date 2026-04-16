@@ -59,7 +59,7 @@
     </div>
 
     <div id="jobView">
-        <nav class="navbar navbar-expand-md" role="navigation">
+        <nav class="navbar navbar-expand-md" data-bs-theme="light" role="navigation">
           <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
