@@ -147,7 +147,7 @@ var upmodal_notice = upmodal_notice || {};
                 drawActions(alert);
             }
 
-            var showNextNotice = function(feed, index) {
+            var showNextNotice = function(feed, index, onComplete) {
                 var alert = feed[index];
                 resetDialog();
                 drawAlert(alert);
@@ -162,7 +162,12 @@ var upmodal_notice = upmodal_notice || {};
                 if (feed.length > index + 1) {
                     containerEl.addEventListener('hidden.bs.modal', function handler() {
                         containerEl.removeEventListener('hidden.bs.modal', handler);
-                        showNextNotice(feed, index + 1);
+                        showNextNotice(feed, index + 1, onComplete);
+                    });
+                } else if (onComplete) {
+                    containerEl.addEventListener('hidden.bs.modal', function handler() {
+                        containerEl.removeEventListener('hidden.bs.modal', handler);
+                        onComplete();
                     });
                 }
 
@@ -182,11 +187,9 @@ var upmodal_notice = upmodal_notice || {};
                     var containerEl = container[0];
                     var originalParent = containerEl.parentElement;
                     document.body.appendChild(containerEl);
-                    containerEl.addEventListener('hidden.bs.modal', function restoreHandler() {
-                        containerEl.removeEventListener('hidden.bs.modal', restoreHandler);
+                    showNextNotice(feed, 0, function() {
                         originalParent.appendChild(containerEl);
-                    }, { once: true });
-                    showNextNotice(feed, 0);
+                    });
                 }
             }
 
