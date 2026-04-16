@@ -177,8 +177,15 @@ var upmodal_notice = upmodal_notice || {};
             var showEachNoticeInTurn = function(feed) {
                 // Do we have any notices to show?
                 if (feed && feed.length !== 0) {
-                    // Move modal to body so Bootstrap 5 backdrop renders behind it
-                    document.body.appendChild(container[0]);
+                    // Move modal to body to escape portlet stacking context
+                    // (portlet wrapper has z-index:1 which traps the modal behind the backdrop)
+                    var containerEl = container[0];
+                    var originalParent = containerEl.parentElement;
+                    document.body.appendChild(containerEl);
+                    containerEl.addEventListener('hidden.bs.modal', function restoreHandler() {
+                        containerEl.removeEventListener('hidden.bs.modal', restoreHandler);
+                        originalParent.appendChild(containerEl);
+                    }, { once: true });
                     showNextNotice(feed, 0);
                 }
             }
