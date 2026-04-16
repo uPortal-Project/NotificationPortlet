@@ -237,7 +237,8 @@ var jobPostings = function(){
                         }
                     },
                     createdCell: function (nTd, sData, oData, iRow, iCol) {
-                        if (oData.attributes.status !== 'open') {
+                        var status = Array.isArray(oData.attributes.status) ? oData.attributes.status[0] : oData.attributes.status;
+                        if ((status || '').toLowerCase() !== 'open') {
                             $(nTd).addClass('small-text');
                         }
                     }
