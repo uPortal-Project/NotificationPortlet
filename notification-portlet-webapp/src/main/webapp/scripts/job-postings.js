@@ -282,7 +282,7 @@ var jobPostings = function(){
                     targets: [ 4 ],
                     width: "15%",
                     data: "id",
-                    className: "d-none d-sm-table-cell d-md-table-cell",
+                    className: "d-none d-md-table-cell",
                     render: function (data, type, full) {
                         return data;
                     }
