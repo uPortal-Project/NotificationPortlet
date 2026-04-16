@@ -39,7 +39,6 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 @RequestMapping("VIEW")
 public final class NotificationIconController {
 
-    private static final String USE_PPORTAL_JS_LIBS_PREFERENCE = "usePortalJsLibs";
     private static final String PPORTAL_JS_NAMESPACE_PREFERENCE = "portalJsNamespace";
     private static final String ICON_PREFERENCE = "NotificationIconController.faIcon";
     private static final String ICON_DEFAULT = "fa-bell";
@@ -54,9 +53,6 @@ public final class NotificationIconController {
 
         final Map<String,Object> model = new HashMap<String,Object>();
         final PortletPreferences prefs = req.getPreferences();
-
-        final boolean usePortalJsLibs = Boolean.valueOf(prefs.getValue(USE_PPORTAL_JS_LIBS_PREFERENCE, "true"));  // default is true
-        model.put("usePortalJsLibs", usePortalJsLibs);
 
         final String portalJsNamespace = prefs.getValue(PPORTAL_JS_NAMESPACE_PREFERENCE, "up");  // Matches the current convention in uPortal
         model.put("portalJsNamespace", portalJsNamespace);

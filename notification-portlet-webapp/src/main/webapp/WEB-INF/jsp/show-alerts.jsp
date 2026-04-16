@@ -106,15 +106,8 @@
 <script type="text/javascript">
 
     var ${n} = ${n} || {};
-    <c:set var="ns"><c:if test="${ usePortalJsLibs and not empty portalJsNamespace }">${ portalJsNamespace }.</c:if></c:set>
-    <c:choose>
-        <c:when test="${ usePortalJsLibs }">
+    <c:set var="ns"><c:if test="${ not empty portalJsNamespace }">${ portalJsNamespace }.</c:if></c:set>
     ${n}.jQuery = ${ ns }jQuery;
-        </c:when>
-        <c:otherwise>
-    ${n}.jQuery = jQuery.noConflict(true);
-        </c:otherwise>
-    </c:choose>
 
     ${n}.jQuery(function(){
         var $ = ${n}.jQuery;

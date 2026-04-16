@@ -40,7 +40,6 @@ public final class EmergencyAlertController {
 
     public static final String VIEW_SHOW_ALERTS = "show-alerts";
 
-    private static final String USE_PPORTAL_JS_LIBS_PREFERENCE = "EmergencyAlertController.usePortalJsLibs";
     private static final String PPORTAL_JS_NAMESPACE_PREFERENCE = "portalJsNamespace";
     private static final String AUTO_ADVANCE_PREFERENCE = "EmergencyAlertController.autoAdvance";
 
@@ -58,9 +57,6 @@ public final class EmergencyAlertController {
         final Map<String,Object> model = new HashMap<>();
         final PortletPreferences prefs = req.getPreferences();   
 
-        final boolean usePortalJsLibs = Boolean.valueOf(prefs.getValue(USE_PPORTAL_JS_LIBS_PREFERENCE, "true"));  // default is true
-        model.put("usePortalJsLibs", usePortalJsLibs);
-
         final String portalJsNamespace = prefs.getValue(PPORTAL_JS_NAMESPACE_PREFERENCE, "up");  // Matches the current convention in uPortal
         model.put("portalJsNamespace", portalJsNamespace);
 
@@ -68,8 +64,7 @@ public final class EmergencyAlertController {
         model.put("autoAdvance", autoAdvance);
 
         if (log.isTraceEnabled()) {
-            log.trace("Showing alerts, usePortalJsLibs=" + usePortalJsLibs 
-                            + ", portalJsNamespace=" + portalJsNamespace 
+            log.trace("Showing alerts, portalJsNamespace=" + portalJsNamespace
                             + ", autoAdvance=" + autoAdvance);
         }
 
