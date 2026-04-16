@@ -411,7 +411,8 @@ var jobPostings = function(){
                 $.ajax({
                     type: 'POST',
                     url: settings.urls.invokeNotificationServiceUrl,
-                    complete: function() { getJobs(); }
+                    success: function() { getJobs(); },
+                    error: function() { $('#errorOutput').show().html('Failed to initialize notification service.'); }
                 });
             }
         },
