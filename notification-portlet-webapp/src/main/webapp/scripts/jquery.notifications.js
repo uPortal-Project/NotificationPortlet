@@ -397,7 +397,7 @@ var notificationsPortletView = notificationsPortletView || function ($, rootSele
           {% _.each(errors, function(error) { %} \
             <div class="alert alert-danger alert-dismissible" role="alert" errorkey="{{ error.key }}"> \
               {{ error.source }}: {{ error.error }} \
-              <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> \
             </div> \
           {% }); %} \
         ';
