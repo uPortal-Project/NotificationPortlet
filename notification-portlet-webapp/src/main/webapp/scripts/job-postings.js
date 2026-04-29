@@ -72,14 +72,13 @@ var jobPostings = function(){
 
     var oTable, _,$;
 
-    var handshake = function() {
-        $.getJSON( settings.urls.invokeNotificationServiceUrl);
-    };
-
     var getJobs = function() {
         var jqxhr = $.getJSON(settings.urls.getNotificationsUrl, function(data) {
-            categories = data.categories;
             jobList = data.feed;
+            // Extract unique categories from entry attributes
+            categories = _.uniq(_.compact(_.map(jobList, function(entry) {
+                return entry.attributes && entry.attributes.category ? entry.attributes.category[0] || entry.attributes.category : null;
+            })));
             jsonErrors = data.errors;
         }).done(function() {
             if(jsonErrors.length > 0) {
@@ -104,25 +103,23 @@ var jobPostings = function(){
             sortingOffices.sort();
         }
         offices = sortingOffices;
-        var tmpl = _.template($('#' + settings.portletId + 'tmpl_hiringCenters').html(), { offices: offices });
+        var tmpl = _.template($('#' + settings.portletId + 'tmpl_hiringCenters').html())({ offices: offices });
         $('#' + settings.portletId + ' .hiringCenters').html(tmpl);
     };
     var displayCategories = function() {
-        var tmpl = _.template($('#' + settings.portletId + 'tmpl_categories').html(), { categories: categories });
+        var tmpl = _.template($('#' + settings.portletId + 'tmpl_categories').html())({ categories: categories });
         $('#' + settings.portletId + ' .filter-categories').html(tmpl);
     };
 
     var clearFilter = function() {
-        oTable.fnFilterClear();
+        oTable.search('').columns().search('').draw();
         populateHiringOffices();
         displayCategories();
-
     };
 
     var displayJob = function(row) {
-        var data = oTable.fnGetData( row );
+        var data = oTable.row(row).data();
         data.emailFriend = settings.emailFriend;
-
         populateTemplate(data);
     };
 
@@ -133,17 +130,14 @@ var jobPostings = function(){
           star.toggleClass('fa-star-o fa-star');
         })
         .fail(function() {
-            //console.log("error");
         });
 
-        var aPos = oTable.fnGetPosition( el.parentNode );
-        var aData = oTable.fnGetData( aPos[0] );
-
-        oTable.fnUpdate( !aData.favorite, aPos[0], aPos[1], false ); // Single cell
+        var cell = oTable.cell(el.parentNode);
+        cell.data(!cell.data());
     };
 
     var populateTemplate = function(data) {
-        var tmpl = _.template($('#' + settings.portletId + 'tmpl_jobDescriptionModal').html(), data);
+        var tmpl = _.template($('#' + settings.portletId + 'tmpl_jobDescriptionModal').html())(data);
         $('#' + settings.portletId + ' .jobDetailsModal').find('.modal-content').html(tmpl);
 
         toggleModal();
@@ -164,11 +158,16 @@ var jobPostings = function(){
     };
 
     var toggleModal = function() {
-        $('#' + settings.portletId + ' .jobDetailsModal').modal('toggle');
+        var modalEl = document.querySelector('#' + settings.portletId + ' .jobDetailsModal');
+        bootstrap.Modal.getOrCreateInstance(modalEl).toggle();
     };
 
     var applyFilter = function(def, col) {
-        oTable.fnFilter(def, col, true, false);
+        if (col !== null && col !== undefined) {
+            oTable.column(col).search(def, true, false).draw();
+        } else {
+            oTable.search(def).draw();
+        }
     }
 
     var returnError = function(errObj) {
@@ -193,262 +192,69 @@ var jobPostings = function(){
     };
 
     var initTable = function() {
-        $.fn.dataTableExt.oApi.fnGetHiddenNodes = function (oSettings)
-        {
-            /* Note the use of a DataTables 'private' function thought the 'oApi' object */
-            var anNodes = this.oApi._fnGetTrNodes(oSettings);
-            var anDisplay = $('tbody tr', oSettings.nTable);
-              
-            /* Remove nodes which are being displayed */
-            for ( var i=0 ; i<anDisplay.length ; i++ )
-            {
-                var iIndex = jQuery.inArray( anDisplay[i], anNodes );
-                if ( iIndex != -1 )
-                {
-                    anNodes.splice( iIndex, 1 );
-                }
-            }
-              
-            /* Fire back the array to the caller */
-            return anNodes;
-        };
+        var portletId = settings.portletId;
 
-        /**
-         * Date Filter
-         */
-        $.fn.dataTableExt.afnFiltering.push(
-            function(oSettings, aData, iDataIndex) {
-
-                var min = document.getElementById(settings.portletId + 'date-range').value;
+        // Custom date filter
+        $.fn.dataTable.ext.search.push(
+            function(dtSettings, data, dataIndex) {
+                var min = document.getElementById(portletId + 'date-range').value;
                 if (min === '' ) {
                     return true;
                 }
                 min = Date.parse(min);
-
-                var iStartDateCol = 3;
-                var iEndDateCol = 3;
-
-                var colDate = Date.parse(aData[iStartDateCol]);
-
-                if ( colDate >= min ) {
-                    return true;
-                }
-                return false;
+                var colDate = Date.parse(data[3]);
+                return colDate >= min;
             }
         );
-        // End date Filter
 
-        $.extend( true, $.fn.dataTable.defaults, {
-            "sDom": "<'row'<'col-md-6 toggleCheckbox'><'col-md-6 text-right'l>t<'row'<'col-md-6'i><'col-md-6'p>>",
-            "sPaginationType": "bootstrap",
-            "oLanguage": {
-                "sLengthMenu": "Show _MENU_ entries"
-            }
-        } );
-        
-        /* Default class modification */
-        $.extend( $.fn.dataTableExt.oStdClasses, {
-            "sWrapper": "dataTables_wrapper form-inline"
-        } );
-
-        $.fn.dataTableExt.oApi.fnFilterClear  = function(oSettings) {
-            /* Remove global filter */
-            oSettings.oPreviousSearch.sSearch = "";
-              
-            /* Remove the text of the global filter in the input boxes */
-            if (typeof oSettings.aanFeatures.f != 'undefined')
-            {
-                var n = oSettings.aanFeatures.f;
-                for (var i=0, iLen=n.length ; i<iLen ; i++)
+        // Default sort: Date (col 3), newest first
+        oTable = new DataTable('#' + settings.portletId + 'jobPostings', {
+            data: jobList,
+            order: [[ 3, "desc" ]],
+            layout: {
+                topStart: null,
+                topEnd: null,
+                bottomStart: ['pageLength', 'info'],
+                bottomEnd: 'paging'
+            },
+            language: {
+                lengthMenu: "Show _MENU_ entries"
+            },
+            columnDefs: [
                 {
-                    $('input', n[i]).val('');
-                }
-            }
-              
-            /* Remove the search text for the column filters - NOTE - if you have input boxes for these
-             * filters, these will need to be reset
-             */
-            for ( var i=0, iLen=oSettings.aoPreSearchCols.length ; i<iLen ; i++ )
-            {
-                oSettings.aoPreSearchCols[i].sSearch = "";
-            }
-              
-            /* Redraw */
-            oSettings.oApi._fnReDraw(oSettings);
-        };
-
-        /* API method to get paging information */
-        $.fn.dataTableExt.oApi.fnPagingInfo = function (oSettings)
-        {
-            return {
-                "iStart":         oSettings._iDisplayStart,
-                "iEnd":           oSettings.fnDisplayEnd(),
-                "iLength":        oSettings._iDisplayLength,
-                "iTotal":         oSettings.fnRecordsTotal(),
-                "iFilteredTotal": oSettings.fnRecordsDisplay(),
-                "iPage":          oSettings._iDisplayLength === -1 ?
-                    0 : Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
-                "iTotalPages":    oSettings._iDisplayLength === -1 ?
-                    0 : Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
-            };
-        };
-        /* Bootstrap style pagination control */
-        $.extend( $.fn.dataTableExt.oPagination, {
-            "bootstrap": {
-                "fnInit": function( oSettings, nPaging, fnDraw ) {
-                    var oLang = oSettings.oLanguage.oPaginate;
-                    var fnClickHandler = function ( e ) {
-                        e.preventDefault();
-                        if (oSettings.oApi._fnPageChange(oSettings, e.data.action)) {
-                            fnDraw(oSettings);
-                        }
-                    };
-
-                    $(nPaging).append(
-                        '<ul class="pagination">'+
-                            '<li class="prev disabled"><a href="#"><i class="fa fa-caret-left"></i> '+oLang.sPrevious+'</a></li>'+
-                            '<li class="next disabled"><a href="#">'+oLang.sNext+' </a></li>'+
-                        '</ul>'
-                    );
-                    var els = $('a', nPaging);
-                    $(els[0]).bind( 'click.DT', { action: "previous" }, fnClickHandler );
-                    $(els[1]).bind( 'click.DT', { action: "next" }, fnClickHandler );
-                },
-
-                "fnUpdate": function (oSettings, fnDraw) {
-                    var iListLength = 5;
-                    var oPaging = oSettings.oInstance.fnPagingInfo();
-                    var an = oSettings.aanFeatures.p;
-                    var i, ien, j, sClass, iStart, iEnd, iHalf=Math.floor(iListLength/2);
-
-                    if ( oPaging.iTotalPages < iListLength) {
-                        iStart = 1;
-                        iEnd = oPaging.iTotalPages;
-                    }
-                    else if ( oPaging.iPage <= iHalf ) {
-                        iStart = 1;
-                        iEnd = iListLength;
-                    } else if ( oPaging.iPage >= (oPaging.iTotalPages-iHalf) ) {
-                        iStart = oPaging.iTotalPages - iListLength + 1;
-                        iEnd = oPaging.iTotalPages;
-                    } else {
-                        iStart = oPaging.iPage - iHalf + 1;
-                        iEnd = iStart + iListLength - 1;
-                    }
-
-                    for ( i=0, ien=an.length ; i<ien ; i++ ) {
-                        // Remove the middle elements
-                        $('li:gt(0)', an[i]).filter(':not(:last)').remove();
-
-                        // Add the new list items and their event handlers
-                        for ( j=iStart ; j<=iEnd ; j++ ) {
-                            sClass = (j==oPaging.iPage+1) ? 'class="active"' : '';
-                            $('<li '+sClass+'><a href="#">'+j+'</a></li>')
-                                .insertBefore( $('li:last', an[i])[0] )
-                                .bind('click', function (e) {
-                                    e.preventDefault();
-                                    oSettings._iDisplayStart = (parseInt($('a', this).text(),10)-1) * oPaging.iLength;
-                                    fnDraw(oSettings);
-                                } );
-                        }
-
-                        // Add / remove disabled classes from the static elements
-                        if ( oPaging.iPage === 0 ) {
-                            $('li:first', an[i]).addClass('disabled');
-                        } else {
-                            $('li:first', an[i]).removeClass('disabled');
-                        }
-
-                        if ( oPaging.iPage === oPaging.iTotalPages-1 || oPaging.iTotalPages === 0 ) {
-                            $('li:last', an[i]).addClass('disabled');
-                        } else {
-                            $('li:last', an[i]).removeClass('disabled');
-                        }
-                    }
-                }
-            }
-        } );
-
-
-        /*
-         * TableTools Bootstrap compatibility
-         * Required TableTools 2.1+
-         */
-        if ($.fn.DataTable.TableTools) {
-            // Set the classes that TableTools uses to something suitable for Bootstrap
-            $.extend( true, $.fn.DataTable.TableTools.classes, {
-                "container": "DTTT btn-group",
-                "buttons": {
-                    "normal": "btn",
-                    "disabled": "disabled"
-                },
-                "collection": {
-                    "container": "DTTT_dropdown dropdown-menu",
-                    "buttons": {
-                        "normal": "",
-                        "disabled": "disabled"
-                    }
-                },
-                "print": {
-                    "info": "DTTT_print_info modal"
-                },
-                "select": {
-                    "row": "active"
-                }
-            } );
-
-            // Have the collection use a bootstrap compatible dropdown
-            $.extend( true, $.fn.DataTable.TableTools.DEFAULTS.oTags, {
-                "collection": {
-                    "container": "ul",
-                    "button": "li",
-                    "liner": "a"
-                }
-            } );
-        }
-
-        /**
-         * Default sort: Date (col 3), newest first
-         */
-        $('#' + settings.portletId + 'jobPostings').dataTable( {
-            "aaData": jobList,
-            "aaSorting": [[ 3, "desc" ]],
-            "aoColumnDefs": [
-                {
-                    "bSortable": false,
-                    "aTargets": [ 0, 1 ]
+                    orderable: false,
+                    targets: [ 0, 1 ]
                 },
                 {
-                    "aTargets": [ 0 ],
-                    "sWidth": "10%",
-                    "mData": "attributes.status",
-                    "mRender": function ( data, type, full ) {
+                    targets: [ 0 ],
+                    width: "10%",
+                    data: "attributes.status",
+                    render: function ( data, type, full ) {
                         if (data[0].toLowerCase() === 'open') {
                             return '<a href="' + full.url + '" target="_blank" class="btn btn-sm btn-success">Apply</a>';
                         } else {
-                            return 'Apply in Person';//data[0].toLowerCase();
+                            return 'Apply in Person';
                         }
                     },
-                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        if (oData.attributes.status !== 'open') {
+                    createdCell: function (nTd, sData, oData, iRow, iCol) {
+                        var status = Array.isArray(oData.attributes.status) ? oData.attributes.status[0] : oData.attributes.status;
+                        if ((status || '').toLowerCase() !== 'open') {
                             $(nTd).addClass('small-text');
                         }
                     }
-
                 },
                 {
-                    "aTargets": [ 1 ],
-                    "sWidth": "5%",
-                    "mData": "favorite",
-                    "sClass": "favorite hidden-xs",
-                    "mRender": function ( data, type, full ) {
-                        var favClass, linkTitle;
+                    targets: [ 1 ],
+                    width: "5%",
+                    data: "favorite",
+                    className: "favorite d-none d-sm-table-cell",
+                    render: function ( data, type, full ) {
                         if (full.attributes.status[0].toLowerCase() === 'open') {
                             var url = settings.urls.invokeActionUrlTemplate.replace(/NOTIFICATIONID/,full.id).replace(/ACTIONID/, 'FavoriteAction');
                             if (data === true) {
-                                return '<span class="sr-only">' + data + '</span><a href="' + url + '" title="Remove from saved jobs"><i class="fa fa-star"></i></a>';
+                                return '<span class="visually-hidden">' + data + '</span><a href="' + url + '" title="Remove from saved jobs"><i class="fa fa-star"></i></a>';
                             } else {
-                                return '<span class="sr-only">' + data + '</span><a href="' + url + '" title="Add to saved jobs"><i class="fa fa-star-o"></i></a>';
+                                return '<span class="visually-hidden">' + data + '</span><a href="' + url + '" title="Add to saved jobs"><i class="fa fa-star-o"></i></a>';
                             }
                         } else {
                             return '';
@@ -456,62 +262,59 @@ var jobPostings = function(){
                     }
                 },
                 {
-                    "aTargets": [ 2 ],
-                    "sWidth": "30%",
-                    "mData": "title",
-                    "sClass": 'jobTitle',
-                    "mRender": function( data, type, full ) {
+                    targets: [ 2 ],
+                    width: "30%",
+                    data: "title",
+                    className: 'jobTitle',
+                    render: function( data, type, full ) {
                         return '<a href="' + full.id + '" title="' + full.linkText + '" class="jobDetailsLink" >' + data + '</a>';
                     }
                 },
                 {
-                    "aTargets": [ 3 ],
-                    "sWidth": "10%",
-                    "sClass": "hidden-xs",
-                    "mData": "attributes.postDate",
-                    "mRender": function( data, type, full ) {
-                        //var d = Date.parse(data);
+                    targets: [ 3 ],
+                    width: "10%",
+                    className: "d-none d-sm-table-cell",
+                    data: "attributes.postDate",
+                    render: function( data, type, full ) {
                         return data[0];
-                        // return data + '('+d+')';
                     }
                 },
                 {
-                    "aTargets": [ 4 ],
-                    "sWidth": "15%",
-                    "mData": "id",
-                    "sClass": "hidden-xs hidden-sm",
-                    "mRender": function (data, type, full) {
+                    targets: [ 4 ],
+                    width: "15%",
+                    data: "id",
+                    className: "d-none d-md-table-cell",
+                    render: function (data, type, full) {
                         return data;
                     }
                 },
                 {
-                    "aTargets": [ 5 ],
-                    "mData": "attributes.department",
-                    "sClass": "hidden-xs"
+                    targets: [ 5 ],
+                    data: "attributes.department",
+                    className: "d-none d-sm-table-cell"
                 },
                 {
-                    "aTargets": [ 6 ],
-                    "mData": "attributes.category",
-                    "bVisible": false
+                    targets: [ 6 ],
+                    data: "attributes.category",
+                    visible: false
                 },
                 {
-                    "aTargets": [ 7 ],
-                    "mData": "source",
-                    "bVisible": false
+                    targets: [ 7 ],
+                    data: "source",
+                    visible: false
                 },
                 {
-                    "aTargets": [ 8 ],
-                    "mData": "attributes.description",
-                    "bVisible": false
+                    targets: [ 8 ],
+                    data: "attributes.description",
+                    visible: false
                 },
                 {
-                    "aTargets": [ 9 ],
-                    "mData": "attributes.qualifications",
-                    "bVisible": false
+                    targets: [ 9 ],
+                    data: "attributes.qualifications",
+                    visible: false
                 }
             ],
-            "fnInitComplete": function(oSettings, json) {
-                oTable = this;
+            initComplete: function(dtSettings, json) {
 
                 // Apply filters
                 // Category filters
@@ -554,7 +357,7 @@ var jobPostings = function(){
 
                 // Date range dropdown filter
                 $('#' + settings.portletId + 'date-range').change( function() {
-                    oTable.fnDraw();
+                    oTable.draw();
                 });
 
                 // Hiring center dropdown filter
@@ -562,11 +365,11 @@ var jobPostings = function(){
                     applyFilter(this.value, 7);
                 });
 
-                $('#' + settings.portletId + 'jobPostings').delegate( 'td.favorite a', 'click', function(e) {
+                $('#' + settings.portletId + 'jobPostings').on( 'click', 'td.favorite a', function(e) {
                     e.preventDefault();
                     toggleFavorite(this);
                 });
-                $('#' + settings.portletId + 'jobPostings').delegate( 'td.jobTitle a', 'click', function(e) {
+                $('#' + settings.portletId + 'jobPostings').on( 'click', 'td.jobTitle a', function(e) {
                     e.preventDefault();
                     displayJob($(this).closest('tr')[0]);
                 });
@@ -577,7 +380,7 @@ var jobPostings = function(){
                     $('.primary-nav').children().removeClass('active');
                     $(e.target).parent().addClass('active');
                 });
-                
+
                 // Create toggle in person jobs checkbox
                 var cbl = $('<label>');
                 var tcb = $('<input>', {
@@ -585,12 +388,11 @@ var jobPostings = function(){
                     id:"inPersonCb",
                     checked:true
                 });
-                // cbl.html(tcb);
                 $('.toggleCheckbox').append(cbl.html(tcb).append('Show "apply in person" jobs'));
 
                 removeLoadingOverlay();
             }
-        } );
+        });
     };
 
     // initialization *******
@@ -606,8 +408,12 @@ var jobPostings = function(){
             settings.portletId = portletId;
             if (args) {
                 settings.urls = args;
-                handshake();
-                getJobs();
+                $.ajax({
+                    type: 'POST',
+                    url: settings.urls.invokeNotificationServiceUrl,
+                    success: function() { getJobs(); },
+                    error: function() { $('#errorOutput').show().html('Failed to initialize notification service.'); }
+                });
             }
         },
         clearFilter: function() {

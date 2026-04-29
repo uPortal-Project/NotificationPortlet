@@ -177,13 +177,6 @@
                 <name>FilteringNotificationServiceDecorator.bodyRegex</name>
             </preference>
 
-            <!-- If true, notifications will piggyback on the portal's JavaScript library (jQuery).
-                 Currently as of 2017/09/07, setting this preference to 'true' doesn't work;  there
-                 appears to be a library incompatibility. -->
-            <preference>
-                <name>usePortalJsLibs</name>
-                <value>false</value>
-            </preference>
         </portlet-preferences>
 
         <!-- The role-name (the internal name used by the portlet) should not have spaces in it -->
@@ -290,15 +283,8 @@
                 <value>false</value>
             </preference>
 
-            <!-- If true, emergency alerts will piggyback on the portal's JavaScript library (jQuery).  The needs
-                 of this portlet are very lightweight so we'll default to 'true' in this case. -->
-            <preference>
-                <name>EmergencyAlertController.usePortalJsLibs</name>
-                <value>true</value>
-            </preference>
-
-            <!-- If 'EmergencyAlertController.usePortalJsLibs' is true, this value will help find the portal's
-                 JavaScript library (jQuery).  If not, it has no impact. -->
+            <!-- If 'portalJsNamespace' is true, this value will help find the portal's
+                 JavaScript library (jQuery). -->
             <preference>
                 <name>portalJsNamespace</name>
                 <value>up</value>
@@ -472,15 +458,7 @@
                 <value>false</value>
             </preference>
 
-            <!-- If true, notification icon will piggyback on the portal's JavaScript library (jQuery).  The needs
-                 of this portlet are very lightweight so we'll default to 'true' in this case. -->
-            <preference>
-                <name>usePortalJsLibs</name>
-                <value>true</value>
-            </preference>
-
-            <!-- If 'usePortalJsLibs' is true, this value will help find the portal's JavaScript library (jQuery).
-                 If not, it has no impact. -->
+            <!-- This value will help find the portal's JavaScript library (jQuery). -->
             <preference>
                 <name>portalJsNamespace</name>
                 <value>up</value>

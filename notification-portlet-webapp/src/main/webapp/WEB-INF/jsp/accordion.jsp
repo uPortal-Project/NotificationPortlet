@@ -35,9 +35,6 @@
     <portlet:param name="actionId" value="ACTIONID"/>
 </portlet:actionURL>
 
-<c:if test="${portletPreferencesValues['usePortalJsLibs'][0] != 'true'}">
-    <rs:aggregatedResources path="/accordianResources.xml"/>
-</c:if>
 <rs:aggregatedResources path="/accordianLocalResources.xml"/>
 
 <div id="${n}container" class="notification-portlet">
@@ -75,16 +72,8 @@
 <!-- call ajax on dynamic portlet id -->
 <script type="text/javascript">
     var ${n} = ${n} || {};
-<c:choose>
-    <c:when test="${portletPreferencesValues['usePortalJsLibs'][0] != 'true'}">
-        ${n}.jQuery = jQuery.noConflict(true);
-        ${n}.underscore = _.noConflict();
-    </c:when>
-    <c:otherwise>
-        ${n}.jQuery = up.jQuery;
-        ${n}.underscore = up._;
-    </c:otherwise>
-</c:choose>
+    ${n}.jQuery = (typeof up !== 'undefined' && up.jQuery) ? up.jQuery : jQuery;
+    ${n}.underscore = (typeof up !== 'undefined' && up._) ? up._ : _;
     ${n}.jQuery(document).ready(
         notificationsPortletView(${n}.jQuery, "#${n}container", ${n}.underscore, {
             invokeNotificationServiceUrl: '${invokeNotificationServiceUrl}',
