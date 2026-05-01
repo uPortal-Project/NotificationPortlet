@@ -56,6 +56,11 @@
       "matchPackageNames": ["javax.servlet:javax.servlet-api"],
       "allowedVersions": "< 5.0",
       "description": "Servlet API 5+ is in the Jakarta EE namespace and incompatible with this portlet's javax.servlet imports. Runtime is Tomcat 8.5/9 (Servlet 3.1)."
+    },
+    {
+      "matchManagers": ["gradle-wrapper"],
+      "allowedVersions": "< 9.0",
+      "description": "Gradle 9 requires Java 17; this portlet builds on the fleet's Java 11 floor. Revisit when the fleet moves to Java 17 (gated on the Spring 6 / Jakarta EE migration)."
     }
   ]
 }
