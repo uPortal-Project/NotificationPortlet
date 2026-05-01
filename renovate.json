@@ -61,6 +61,11 @@
       "matchManagers": ["gradle-wrapper"],
       "allowedVersions": "< 9.0",
       "description": "Gradle 9 requires Java 17; this portlet builds on the fleet's Java 11 floor. Revisit when the fleet moves to Java 17 (gated on the Spring 6 / Jakarta EE migration)."
+    },
+    {
+      "matchPackageNames": ["com.jayway.jsonpath:json-path"],
+      "allowedVersions": "< 3.0",
+      "description": "json-path 3.x raised its build-time floor to Java 17 and only publishes Java 17+ class-file variants. This portlet builds on the fleet's Java 11 floor. Revisit when the fleet moves to Java 17."
     }
   ]
 }
