@@ -79,7 +79,10 @@ subprojects {
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                // OSSRH oss.sonatype.org was sunset in June 2025; uploads now go
+                // to the Central Portal's compatibility staging URL. The same
+                // change shipped in uportal-portlet-parent v48 for Maven repos.
+                repository(url: "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/") {
                     authentication(userName: publishingUsername, password: publishingPassword)
                 }
 
