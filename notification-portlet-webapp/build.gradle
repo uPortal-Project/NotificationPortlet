@@ -19,6 +19,18 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
 
+// We deploy this module as a WAR (the Pluto-deployable portlet) plus a
+// secondary classesJar (classifier 'jar') consumed by adopters extending
+// the project. The plain `jar` task (auto-enabled by the war + java
+// plugins, then re-packaged by Spring Boot 1.x's bootRepackage) would
+// otherwise produce a third `<artifactId>-<ver>.jar`. That artifact has
+// never been part of a notification-portlet-webapp release on Maven
+// Central (verified against 4.8.0's central layout) and the Central
+// Portal upload validator rejects manifests referencing a primary `.jar`
+// that doesn't reach the staging area. Disable the plain jar task so the
+// layout matches prior releases and the upload validates cleanly.
+jar.enabled = false
+
 configurations {
     providedRuntime
 }
