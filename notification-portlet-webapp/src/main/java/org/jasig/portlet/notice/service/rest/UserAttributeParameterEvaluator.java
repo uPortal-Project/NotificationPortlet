@@ -21,6 +21,9 @@ package org.jasig.portlet.notice.service.rest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.portal.soffit.Headers;
 import org.slf4j.Logger;
@@ -83,7 +86,7 @@ public class UserAttributeParameterEvaluator extends AbstractParameterEvaluator 
 
         final Jws<Claims> oidcToken = parseOidcToken(req);
         if (oidcToken != null) {
-            final Object claimValue = oidcToken.getBody().get(claimName);
+            final Object claimValue = oidcToken.getPayload().get(claimName);
 
             if (claimValue == null) {
                 //
@@ -130,8 +133,9 @@ public class UserAttributeParameterEvaluator extends AbstractParameterEvaluator 
 
         try {
             // Validate & parse the JWT
+            final SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(signatureKey));
             final Jws<Claims> rslt =
-                    Jwts.parser().setSigningKey(signatureKey).parseClaimsJws(bearerToken);
+                    Jwts.parser().verifyWith(key).build().parseSignedClaims(bearerToken);
 
             logger.debug("Found the following OIDC Id token:  {}", rslt.toString());
 
