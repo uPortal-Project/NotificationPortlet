@@ -66,6 +66,11 @@
       "matchPackageNames": ["com.jayway.jsonpath:json-path"],
       "allowedVersions": "< 3.0",
       "description": "json-path 3.x raised its build-time floor to Java 17 and only publishes Java 17+ class-file variants. This portlet builds on the fleet's Java 11 floor. Revisit when the fleet moves to Java 17."
+    },
+    {
+      "matchPackageNames": ["org.ehcache:ehcache"],
+      "allowedVersions": "< 3.12.0",
+      "description": "Ehcache 3.12+ requires Java 17. The 3.10.x and 3.11.x lines still support Java 8+ and are safe on the fleet's Java 11 floor."
     }
   ]
 }
