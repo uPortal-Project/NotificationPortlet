@@ -20,6 +20,17 @@ subprojects {
         mavenLocal()
     }
 
+    // Guava 32.1+ publishes Gradle Module Metadata with two variants
+    // (android / standard-jvm) distinguished by the org.gradle.jvm.environment
+    // attribute. Gradle 6.x doesn't resolve this automatically — tell it to
+    // prefer the standard-jvm (JRE) variant.
+    configurations.all {
+        attributes.attribute(
+            Attribute.of('org.gradle.jvm.environment', String),
+            'standard-jvm'
+        )
+    }
+
     test {
         useJUnitPlatform()
     }
