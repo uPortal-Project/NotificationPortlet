@@ -66,6 +66,12 @@
       "matchPackageNames": ["com.jayway.jsonpath:json-path"],
       "allowedVersions": "< 3.0",
       "description": "json-path 3.x raised its build-time floor to Java 17 and only publishes Java 17+ class-file variants. This portlet builds on the fleet's Java 11 floor. Revisit when the fleet moves to Java 17."
+    },
+    {
+      "matchPackagePrefixes": ["org.junit.vintage:", "org.junit.jupiter:", "org.junit.platform:"],
+      "matchPackageNames": ["org.junit:junit-bom"],
+      "allowedVersions": "< 6.0",
+      "description": "JUnit 6 (junit-framework) requires Java 17+. This portlet builds on Java 11 and uses the JUnit 5.x vintage engine to run JUnit 4 tests. Stay on the 5.x platform line."
     }
   ]
 }
