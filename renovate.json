@@ -71,6 +71,12 @@
       "matchDatasources": ["java-version"],
       "allowedVersions": "< 12",
       "description": "CI's setup-java builds on the fleet's Java 11 floor, matching the runtime. Moving to a newer JDK (e.g. 25) is a deliberate platform migration, not a routine bump; Spring 4.3.x, Hibernate 5.6.x and Gradle < 9 keep this portlet on Java 11. Revisit when the fleet moves to Java 17."
+    },
+    {
+      "matchPackagePrefixes": ["org.junit.vintage:", "org.junit.jupiter:", "org.junit.platform:"],
+      "matchPackageNames": ["org.junit:junit-bom"],
+      "allowedVersions": "< 6.0",
+      "description": "JUnit 6 (junit-framework) requires Java 17+. This portlet builds on Java 11 and uses the JUnit 5.x vintage engine to run JUnit 4 tests. Stay on the 5.x platform line."
     }
   ]
 }
