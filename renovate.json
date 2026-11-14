@@ -66,6 +66,11 @@
       "matchPackageNames": ["com.jayway.jsonpath:json-path"],
       "allowedVersions": "< 3.0",
       "description": "json-path 3.x raised its build-time floor to Java 17 and only publishes Java 17+ class-file variants. This portlet builds on the fleet's Java 11 floor. Revisit when the fleet moves to Java 17."
+    },
+    {
+      "matchDatasources": ["java-version"],
+      "allowedVersions": "< 12",
+      "description": "CI's setup-java builds on the fleet's Java 11 floor, matching the runtime. Moving to a newer JDK (e.g. 25) is a deliberate platform migration, not a routine bump; Spring 4.3.x, Hibernate 5.6.x and Gradle < 9 keep this portlet on Java 11. Revisit when the fleet moves to Java 17."
     }
   ]
 }
