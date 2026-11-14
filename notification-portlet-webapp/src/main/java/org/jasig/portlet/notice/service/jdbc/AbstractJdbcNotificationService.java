@@ -38,6 +38,9 @@ import javax.sql.DataSource;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 import org.apache.commons.lang3.StringUtils;
@@ -194,11 +197,12 @@ public abstract class AbstractJdbcNotificationService extends AbstractNotificati
 
         try {
             // Validate & parse the JWT
+            final SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(signatureKey));
             final Jws<Claims> claims =
-                    Jwts.parser().setSigningKey(signatureKey).parseClaimsJws(bearerToken);
+                    Jwts.parser().verifyWith(key).build().parseSignedClaims(bearerToken);
             // Convert to MapSqlParameterSource
             Map<String,Object> map = new HashMap<>();
-            claims.getBody().entrySet()
+            claims.getPayload().entrySet()
                     .forEach(entry -> {
                         final Object value = entry.getValue();
                         if (List.class.isInstance(value) && ((List<Object>)value).size() != 0) {
